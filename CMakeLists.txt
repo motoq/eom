@@ -1,0 +1,67 @@
+cmake_minimum_required(VERSION 3.17)
+
+project (eom)
+
+find_package(VTK COMPONENTS
+  vtkCommonColor
+  vtkCommonCore
+  vtkFiltersSources
+  vtkInteractionStyle
+  vtkRenderingContextOpenGL2
+  vtkRenderingCore
+  vtkRenderingFreeType
+  vtkRenderingGL2PSOpenGL2
+  vtkRenderingOpenGL2
+  QUIET
+)
+
+
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+set(SOURCES
+  src/eom.cpp
+)
+
+if (MSVC)
+    # warning level 4 and all warnings as errors
+  add_compile_options(/W4 /WX)
+else()
+    # lots of warnings and all warnings as errors
+  message(STATUS "Defaulting to gcc compatible warning flags")
+  add_compile_options(-Wall -Wextra -pedantic -Werror)
+endif()
+
+
+
+if (NOT VTK_FOUND)
+  message("Skipping OS: ${VTK_NOT_FOUND_MESSAGE}")
+  return ()
+endif()
+message (STATUS "VTK_VERSION: ${VTK_VERSION}")
+if (VTK_VERSION VERSION_LESS "8.90.0")
+  # old system
+  include(${VTK_USE_FILE})
+  add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${SOURCES})
+  target_include_directories(${PROJECT_NAME}
+    PRIVATE
+      ${PROJECT_SOURCE_DIR}/include
+  )
+  target_link_libraries(${PROJECT_NAME} PRIVATE ${VTK_LIBRARIES})
+else ()
+  # include all components
+  add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${SOURCES})
+  target_include_directories(${PROJECT_NAME}
+    PRIVATE
+      ${PROJECT_SOURCE_DIR}/include
+  )
+  target_link_libraries(${PROJECT_NAME} PRIVATE ${VTK_LIBRARIES})
+  # vtk_module_autoinit is needed
+  vtk_module_autoinit(
+    TARGETS ${PROJECT_NAME}
+    MODULES ${VTK_LIBRARIES}
+    )
+endif ()
+
+
