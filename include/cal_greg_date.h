@@ -6,8 +6,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef UTL_GREG_DATE_H
-#define UTL_GREG_DATE_H
+#ifndef CAL_GREG_DATE_H
+#define CAL_GREG_DATE_H
 
 #include <string>
 
@@ -64,32 +64,38 @@ public:
   void set(int year, int month, int day);
 
   /** @return   Four digit representation of the year */
-  double year() const noexcept { return yr; }
+  double getYear() const noexcept { return yr; }
 
   /** @return   Month number, 1->12 */
-  double month() const noexcept { return mnth; }
+  double getMonth() const noexcept { return mnth; }
 
   /** @return   Day of the month, 1->{28,29,30,31} */
-  double day() const noexcept { return dy; }
+  double getDay() const noexcept { return dy; }
 
   /**
+   * Determins if the given year is a leapyear.  The method used to determine
+   * this is as follows.  If the year is divisible by 4 but not divisible by
+   * 100 then the year is a leap year.  If the year is divisible by 4, and
+   * divisible by 100, then it is a leap year only if it is also divisible by 
+   * 400.  This method should be valid from the year 1582 forward since that is
+   * when Pope Gregory XIII decided that this would be the method used to 
+   * determie leap years as opposed to the previous method that only required 
+   * the year be divisible by 4.  If the year is before 1582 then the year will
+   * be considered a leap year if it is divisible by 4.  Not sure how far back 
+   * that will work, but hey, nothing important happended back then.
+   *
    * @param   year   Four digit representation of the year
+   *
+   * @return  If true, then this is a leap year
    */
   bool isLeapYear(int year) const noexcept;
 
 private:
-  static constexpr int GREGYEAR {1582};        ///< Gregorian Calendar epoch
-  static constexpr int MAXYEAR  {9999};
-  static constexpr int JAN  {1};
-  static constexpr int FEB  {2};
-  static constexpr int DEC {12};
-
-  int yr {1957};
-  int  mnth {10};
-  int  dy {4};
+  int year {1957};
+  int month {10};
+  int day {4};
 };
-
 
 }
 
-#endif  // UTL_GREG_DATE_H
+#endif
