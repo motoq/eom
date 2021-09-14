@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Kurt Motekew
+ * Copyright 2016, 2021 Kurt Motekew
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,23 +9,13 @@
 #include <string>
 #include <cmath>
 
-#include <utl_greg_date.h>
-#include <astro_julian_date.h>
+#include <cal_const.h>
+#include <cal_greg_date.h>
+#include <cal_julian_date.h>
 
-/*
- * Set whole and fractional values - seconds will be lumped with
- * fractional value (converted to days).
- */
-JulianDate::JulianDate(const JulianDate& jd)
-{
-  this->set(jd);
-}
+static double gd2jd(int iyear, int imonth, int iday);
 
-
-JulianDate::JulianDate(double jdDays, double jdFrac, double jdSeconds) :
-                         jdHi{jdDays}, jdLow{jdFrac}, jdSec{jdSeconds}
-{
-}
+namespace eom {
 
 
 JulianDate::JulianDate(const GregDate& gd, int hr, int min, double sec)
@@ -34,36 +24,16 @@ JulianDate::JulianDate(const GregDate& gd, int hr, int min, double sec)
 }
 
 
-/*
- * Set whole and fractional values - seconds will be lumped with
- * fractional value (converted to days).
- */
-void JulianDate::set(const JulianDate& jd)
-{
-  jdHi = jd.jdHiVal();
-  jdLow = jd.jdLowVal();
-  jdSec = 0.0;
-}
-
-
-void JulianDate::set(double jdDays, double jdFrac, double jdSeconds)
-{
-  jdHi = jdDays;
-  jdLow = jdFrac;
-  jdSec = jdSeconds;
-}
-
-
 void JulianDate::set(const GregDate& gd, int hr, int min, double sec)
 {
   jdSec = sec;
-  jdHi = gd2jd(gd.year(), gd.month(), gd.day());
-  jdLow = DAY_PER_MIN*(60*hr + min);
+  jdHi = gd2jd(gd.getYear(), gd.getMonth(), gd.getDay());
+  jdLo = cal_const::DAY_PER_MIN*(60*hr + min);
 
-  if (jdLow != 0.0) {
-    double more_days = static_cast<int>(jdLow);
+  if (jdLo != 0.0) {
+    double more_days = static_cast<long>(jdLo);
     jdHi += more_days;
-    jdLow -= more_days;
+    jdLo -= more_days;
   }
 }
 
@@ -71,9 +41,9 @@ void JulianDate::set(const GregDate& gd, int hr, int min, double sec)
 double JulianDate::getJd() const
 {
   if (jdSec == 0.0) {
-    return jdLow + jdHi;
+    return jdLo + jdHi;
   } else {
-    return DAY_PER_SEC*jdSec + jdLow + jdHi;
+    return cal_const::DAY_PER_SEC*jdSec + jdLo + jdHi;
   }
 }
 
@@ -81,9 +51,9 @@ double JulianDate::getJd() const
 double JulianDate::getMjd() const
 {
   if (jdSec == 0.0) {
-    return DAY_PER_MIN*jdLow + (jdHi - MJD);
+    return jdLo + (jdHi - cal_const::MJD);
   } else {
-    return DAY_PER_SEC*jdSec + DAY_PER_MIN*jdLow + (jdHi - MJD);
+    return cal_const::DAY_PER_SEC*jdSec + jdLo + (jdHi - cal_const::MJD);
   }
 }
 
@@ -91,9 +61,9 @@ double JulianDate::getMjd() const
 double JulianDate::getJdLow() const
 {
   if (jdSec == 0.0) {
-    return jdLow;
+    return jdLo;
   } else {
-    return DAY_PER_SEC*jdSec + jdLow;
+    return cal_const::DAY_PER_SEC*jdSec + jdLo;
   }
 }
 
@@ -103,10 +73,10 @@ double JulianDate::getJdLow() const
  */
 JulianDate& JulianDate::operator+=(double days)
 {
-  int full_days = static_cast<int>(days);
+  double full_days = static_cast<long>(days);
 
   jdHi += full_days;
-  jdLow += (days - full_days);
+  jdLo += (days - full_days);
 
   return *this;
 }
@@ -123,18 +93,10 @@ JulianDate JulianDate::operator+(double days)
 
 double JulianDate::operator-(const JulianDate& jd)
 {
-  return this->jdHiVal() - jd.jdHiVal() + (this->jdLowVal() - jd.jdLowVal());
+  return jdHi - jd.jdHi + (jdLo - jd.jdLo) +
+         cal_const::DAY_PER_SEC*(jdSec - jd.jdSec);
 }
 
-
-/*
-std::ostream& operator<<(std::ostream& out, const JulianDate& jd)
-{
-  JulianDate jd2 {jd};
-  out << jd2.to_str();
-  return out;
-}
-*/
 
 
 /**
@@ -147,8 +109,7 @@ std::string JulianDate::to_str()
   jd2gd(year, month, day, hour, minutes, seconds);
 
     // Stop *printf from rounding to silly values like xx:xx:60 sec
-  int isec = static_cast<int>(100.0*seconds);
-  seconds = 0.01*static_cast<double>(isec);
+  seconds = 0.01*static_cast<long>(100.0*seconds);
 
   char buf[32];
   snprintf(buf, sizeof(buf), "%4i/%02i/%02i %02i:%02i:%05.2f",
@@ -160,49 +121,36 @@ std::string JulianDate::to_str()
 
 
 /*
- * @return   The JD at 00:00:00 of the input Gregorian Date
- */
-double JulianDate::gd2jd(int year, int month, int day)
-{
-  int jd = day - 32075
-               + 1461*(year+4800+(month-14)/12)/4+367*(month-2-(month-14)/12*12)
-               / 12-3*((year+4900+(month-14)/12)/100)/4;
-
-  return jd - 0.5;
-}
-
-
-/*
  * Sets internal jdHi to be at the beginning of the day (ends in .5) with
- * seconds rolled into jdLow and jdLow positive and less than one day.
+ * seconds rolled into jdLo and jdLo positive and less than one day.
  */
 void JulianDate::normalize()
 {
-    // First move jdHi to noon and move seconds to jdLow
+    // First move jdHi to noon and move seconds to jdLo
     // (floor goes back to the previous day, then add 1 for today at noon)
-  double tmp = std::floor(jdHi) + 1.0;
-  jdLow += (jdHi - tmp);
+  double tmp {std::floor(jdHi) + 1.0};
+  jdLo += (jdHi - tmp);
   if (jdSec != 0.0) {
-    jdLow += DAY_PER_SEC*jdSec;
+    jdLo += cal_const::DAY_PER_SEC*jdSec;
     jdSec = 0.0;
   }
   jdHi = tmp;
 
-    // Now, push whole days of jdLow into jdHi - jdLow sign may be +/-
-  double more_days = static_cast<int>(jdLow);
+    // Now, push whole days of jdLo into jdHi - jdLo sign may be +/-
+  double more_days = static_cast<long>(jdLo);
   jdHi  += more_days;
-  jdLow -= more_days;
+  jdLo -= more_days;
 
     // Move jdHi to 00:00:00
   jdHi  -= 0.5;
-  jdLow += 0.5;
+  jdLo += 0.5;
 
-    // Keep jdLow positive and in the range 00:00:00 <= jdLow < 24:00:00
-  if (jdLow < 0.0) {
-    jdLow += 1.0;
+    // Keep jdLo positive and in the range 00:00:00 <= jdLo < 24:00:00
+  if (jdLo < 0.0) {
+    jdLo += 1.0;
     jdHi  -= 1.0;
-  } else if (jdLow > 1.0) {
-    jdLow -= 1.0;
+  } else if (jdLo > 1.0) {
+    jdLo -= 1.0;
     jdHi  += 1.0;
   }
 }
@@ -210,6 +158,18 @@ void JulianDate::normalize()
 
 /*
  * Converts this JulianDate to a Gregorian date and time of day.
+ * This algorithm comes from the U.S. Naval Observatory website, the
+ * astronomical Applications Department.  They got the formula from the
+ * Fliegel reference.
+ *
+ * Note: The USNO website had this formula back around the year 2000.
+ * As the site is currently undergoing "modernization", most likely by
+ * useless agile deveolpers, everything that made the site great before
+ * will most likely be lost forever.  The interested reader is encouraged
+ * to pick up a copy of the Explanatory Supplement to the Astronomical
+ * Almanac, if interested in the source of these formulas.  Also, the
+ * IAU publishes easy to use C and FORTRAN code that performs these
+ * calculations.
  *
  *   @param   year     Four digit year                                 (output)
  *   @param   month    Month, 1-12                                     (output)
@@ -221,32 +181,69 @@ void JulianDate::normalize()
 void JulianDate::jd2gd(int& year, int& month, int& day,
                        int& hour, int& minutes, double& seconds)
 {
-    // Must get jdHi and jdLow in proper form first
-  normalize();
+    // Must get jdHi and jdLo in proper form first
+  JulianDate tmpJd = *this;
+  tmpJd.normalize();
 
-  int jd = 1 + static_cast<int>(jdHi);
-  int i, j, k, m, n;
+  long jd {1L + static_cast<long>(tmpJd.jdHi)};
+  long i, j, k, m, n;
 
-  m = jd+68569;
-  n = 4*m/146097;
-  m = m-(146097*n+3)/4;
-  i = 4000*(m+1)/1461001;
-  m = m-1461*i/4+31;
-  j = 80*m/2447;
-  k = m-2447*j/80;             // day
-  m = j/11;
-  j = j+2-12*m;                // month
-  i = 100*(n-49)+i+m;          // year
+  m = jd + 68569L;
+  n = 4L*m/146097L;
+  m = m - (146097L*n + 3L)/4L;
+  i = 4000L*(m + 1L)/1461001L;
+  m = m - 1461L*i/4L + 31L;
+  j = 80L*m/2447L;
+  k = m - 2447L*j/80L;            // day
+  m = j/11L;
+  j = j + 2L - 12L*m;             // month
+  i = 100L*(n - 49L) + i + m;     // year
     //
   year  = i;
   month = j;
   day   = k;
 
-  double hours_left = HR_PER_DAY*jdLow;
+  double hours_left {cal_const::HR_PER_DAY*tmpJd.jdLo};
   hour = static_cast<int>(hours_left);
 
-  double minutes_left = 60.0*(hours_left - hour);
+  double minutes_left {60.0*(hours_left - hour)};
   minutes = static_cast<int>(minutes_left);
 
   seconds = 60.0*(minutes_left - minutes);
+}
+
+
+}
+
+
+/*
+ * Calculates the Julan Date jd from the year, month, and day values.
+ * This formula comes from the U.S. Naval Observatory website, the
+ * astronomical Applications Department.  They got the formula from the
+ * Fliegel reference.  It should be valid for any  dates that result in
+ * a Julian date greater than zero.
+ *
+ * Note: The USNO website had this formula back around the year 2000.
+ * As the site is currently undergoing "modernization", most likely by
+ * useless agile deveolpers, everything that made the site great before
+ * will most likely be lost forever.  The interested reader is encouraged
+ * to pick up a copy of the Explanatory Supplement to the Astronomical
+ * Almanac, if interested in the source of these formulas.  Also, the
+ * IAU publishes easy to use C and FORTRAN code that performs these
+ * calculations.
+ *
+ * @return   The JD at 00:00:00 of the input Gregorian Date
+ */
+static double gd2jd(int iyear, int imonth, int iday)
+{
+  long year {iyear};
+  long month {imonth};
+  long day {iday};
+
+  long jd {day - 32075L +
+                 1461L*(year + 4800L + (month - 14L)/12L)/4L +
+                  367L*(month - 2L - (month-14L)/12L*12L)/12L -
+                    3L*((year + 4900L + (month -14L)/12L)/100L)/4L};
+
+  return static_cast<double>(jd) - 0.5;
 }

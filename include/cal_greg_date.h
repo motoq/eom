@@ -13,6 +13,7 @@
 
 namespace eom {
 
+
 /**
  * A simple Gregorian Date class primarily used to error verify that a
  * year, month, and day are valid.
@@ -30,10 +31,10 @@ public:
   /**
    * Initialize with integer representations of calendar values.
    *
-   * @param   year   Four digit representation of the year
-   * @param   month  1 <= month <= 12
-   * @param   day    1 <= day <= {28, 29, 30, 31}, depending on the
-   *                 month/year combination.
+   * @param  year   Four digit representation of the year
+   * @param  month  1 <= month <= 12
+   * @param  day    1 <= day <= {28, 29, 30, 31}, depending on the
+   *                month/year combination.
    *
    * @throws invalid_argument
    */
@@ -42,9 +43,9 @@ public:
   /**
    * Initialize with a string representations of calendar values.
    *
-   * @param   year   Four digit representation of the year
-   * @param   month  1 <= month <= 12
-   * @param   day    1 <= day <= {28, 29, 30, 31}, depending on the
+   * @param  year   Four digit representation of the year
+   * @param  month  1 <= month <= 12
+   * @param  day    1 <= day <= {28, 29, 30, 31}, depending on the
    *                 month/year combination.
    *
    * @throws invalid_argument
@@ -54,23 +55,29 @@ public:
   /**
    * Set date with integer representations of calendar values.
    *
-   * @param   year   Four digit representation of the year
-   * @param   month  1 <= month <= 12
-   * @param   day    1 <= day <= {28, 29, 30, 31}, depending on the
+   * @param  year   Four digit representation of the year
+   * @param  month  1 <= month <= 12
+   * @param  day    1 <= day <= {28, 29, 30, 31}, depending on the
    *                 month/year combination.
    *
    * @throws invalid_argument
    */
   void set(int year, int month, int day);
 
-  /** @return   Four digit representation of the year */
-  double getYear() const noexcept { return yr; }
+  /**
+   * @return  Four digit representation of the year
+   */
+  double getYear() const noexcept { return year; }
 
-  /** @return   Month number, 1->12 */
-  double getMonth() const noexcept { return mnth; }
+  /**
+   * @return  Month number, 1->12
+   */
+  double getMonth() const noexcept { return month; }
 
-  /** @return   Day of the month, 1->{28,29,30,31} */
-  double getDay() const noexcept { return dy; }
+  /**
+   * @return  Day of the month, 1->{28,29,30,31}
+   */
+  double getDay() const noexcept { return day; }
 
   /**
    * Determins if the given year is a leapyear.  The method used to determine
@@ -84,7 +91,7 @@ public:
    * be considered a leap year if it is divisible by 4.  Not sure how far back 
    * that will work, but hey, nothing important happended back then.
    *
-   * @param   year   Four digit representation of the year
+   * @param  year  Four digit representation of the year
    *
    * @return  If true, then this is a leap year
    */
@@ -95,6 +102,7 @@ private:
   int month {10};
   int day {4};
 };
+
 
 }
 

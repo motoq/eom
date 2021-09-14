@@ -22,6 +22,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(SOURCES
   src/eom.cpp
+  src/cal_greg_date.cpp
+  src/cal_julian_date.cpp
 )
 
 if (MSVC)

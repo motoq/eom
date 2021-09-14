@@ -21,6 +21,7 @@ namespace {
 
 namespace eom {
 
+
 GregDate::GregDate(int year, int month, int day)
 {
   this->set(year, month, day);
@@ -67,7 +68,7 @@ void GregDate::set(int year, int month, int day)
 }
 
 
-bool GregDate::isLeapYear(int year)
+bool GregDate::isLeapYear(int year) const noexcept
 {
   bool leap = false;
 
@@ -88,5 +89,6 @@ bool GregDate::isLeapYear(int year)
   }
   return leap;
 }
+
 
 }

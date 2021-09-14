@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Kurt Motekew
+ * Copyright 2016, 2021 Kurt Motekew
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,6 +16,7 @@
 
 namespace eom {
 
+
 /**
  * A Julian Date class designed to preserve precision by splitting the date
  * into high and low values along with an optional seconds storage counter.
@@ -25,40 +26,27 @@ namespace eom {
  */
 class JulianDate {
 public:
-  /** Initialize with J2000 */
+  /**
+   * Initialize with January 1, 2000
+   */
   JulianDate() {}
 
   /**
-   * See equivalent set method for details.
-   */
-  JulianDate(double jdDays, double jdFrac = 0.0, double jdSeconds = 0.0);
-
-  /**
-   * See equivalent set method for details.
-   */
-  JulianDate(const JulianDate& jd);
-
-  /**
-   * See equivalent set method for details.
-   */
-  JulianDate(const GregDate& gd, int hr = 0, int min = 0, double sec = 0.0);
-
-  /**
-   * Initialize using Julian Date components
+   * Initialize using Julian Date components.  The sum of all values, with
+   * seconds converted to days, is the full Julian Date.
    *
-   * @param   jdDays      Days portion of Julian Date, or full JD if other
-   *                      parameters are zero
-   * @param   jdFrac      Fractional days to add to jdDays
-   * @param   jsSeconds   Seconds to add to jdDays and jdFrac
+   * @param  jdDays   Days portion of Julian Date, or full JD if other
+   *                  parameters are zero or not included.  Allowing
+   *                  implicit conversion seems appropriate for this
+   *                  class.
+   * @param  jdFrac   Additional days and fraction of a day to add to
+   *                  the Julian Date.
+   * @param  seconds  Additional Seconds to add to the Julian Date.
    */
-  void set(double jdDays, double jdFrac = 0.0, double jdSeconds = 0.0);
-
-  /**
-   * Initialize using an existing JulianDate.
-   *
-   * @param   jd   JD to copy
-   */
-  void set(const JulianDate& jd);
+  JulianDate(double jdDays, double jdFrac = 0.0, double seconds = 0.0) :
+             jdHi {jdDays}, jdLo {jdFrac}, jdSec {seconds}
+  {
+  }
 
   /**
    * Initialize with a Gregorian date and time of day.  The time parameters
@@ -66,10 +54,14 @@ public:
    * hours, minutes, and seconds from the gd, +/-, are allowed and
    * incorporated into the internal JD representation.
    *
-   * @param   gd    Gregorian Date
-   * @param   hr    Hours from gd
-   * @param   min   Minutes from gd and hr
-   * @param   sec   Seconds from gd, hr, and min
+   * @param  gd   Gregorian Date
+   * @param  hr   Hours from gd
+   * @param  min  Minutes from gd and hr
+   * @param  sec  Seconds from gd, hr, and min
+   */
+  JulianDate(const GregDate& gd, int hr, int min, double sec);
+
+  /**
    */
   void set(const GregDate& gd, int hr = 0, int min = 0, double sec = 0.0);
 
@@ -84,26 +76,36 @@ public:
   double getMjd() const;
 
   /**
+   * This method allows for compatibility with external libraries
+   * that are designed to make use of a two part Julian date.
+   *
    * @return   Large portion of the Julian Date, on the order of
    *           2,400,000.  Ideally, this would be the Julian Date
    *           corresponding to noon, but this is not necessary,
-   *           depending on the value of jdLowVal.  Units of days.
+   *           depending on the value of jdLo.  Units of days.
    */
   double getJdHigh()   const { return jdHi; }
 
   /**
+   * This method allows for compatibility with external libraries
+   * that are designed to make use of a two part Julian date.
+   *
    * @return   Small portion of the Julian Date, typically on the order
    *           of a fraction of a day.  Units of days.
    */
   double getJdLow() const;
 
   /**
+   * Update this Julian Date by the given number of days.
+   *
    * @param   days   Days to add to this Julian Date (or subtracted, if
    *                 negative).
    */
   JulianDate& operator+=(double days);
 
   /**
+   * Return a Julian date adjusted by the given number of days.
+   *
    * @param   days   Days to add (or subtract, if negative).
    *
    * @return   Copy of this JulianDate, adjusted by days
@@ -111,10 +113,17 @@ public:
   JulianDate operator+(double days);
 
   /**
-   * @return  The days and fraction difference between the two Julian
-   *          dates:  LargerJD - SmallerJD = PositiveDays
+   * @return  The time difference, in days, between this JD and the
+   *          input JD.  This - input.
    */
   double operator-(const JulianDate& jd);
+
+/*
+  bool operator<(const JulianDate& jd);
+    diff =
+    return diff < 0.0;
+*/
+
 
     /**
      * @return   Gregorian Date and time as a string.  Time is
@@ -123,15 +132,26 @@ public:
   std::string to_str();
 
 private:
-  double jdHi {cal_const::J2000};         // Days
-  double jdLow {0.0};                     // Fraction of a day
-  double jdSec {0.0};                     // Seconds
-
-  double gd2jd(int year, int month, int day);
   void normalize();
+
+  /*
+   * Converts this JulianDate to a Gregorian date and time of day.
+   *
+   *   @param   year     Four digit year                                (output)
+   *   @param   month    Month, 1-12                                    (output)
+   *   @param   day      Day, 1-{28,29,30,31}                           (output)
+   *   @param   hour     Hour of day, 0 <= hour < 24                    (output)
+   *   @param   minutes  Minutes, 0 <= minutes < 60                     (output)
+   *   @param   seconds  Seconds, 0 <= seconds < 60                     (output)
+   */
   void jd2gd(int& year, int& month, int& day,
              int& hour, int& minutes, double& seconds);
+
+  double jdHi {cal_const::J2000};         // Days
+  double jdLo {0.0};                     // Fraction of a day
+  double jdSec {0.0};                     // Seconds
 };
+
 
 }
 
