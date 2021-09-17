@@ -23,6 +23,8 @@ namespace cal_const {
   constexpr double DAY_PER_MIN {1.0/MIN_PER_DAY};
   constexpr double SEC_PER_DAY {86400.0};
   constexpr double DAY_PER_SEC {1.0/SEC_PER_DAY};
+  constexpr double SEC_PER_MIN {60.0};
+  constexpr double MIN_PER_SEC {1.0/SEC_PER_MIN};
 
 }
 

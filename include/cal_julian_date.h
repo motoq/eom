@@ -19,10 +19,11 @@ namespace eom {
 
 /**
  * A Julian Date class designed to preserve precision by splitting the date
- * into high and low values along with an optional seconds storage counter.
+ * into high and low values.
  *
  * @author  Kurt Motekew
  * @date    20160314
+ * @date    20210916  Removed fractional second to simplify logic
  */
 class JulianDate {
 public:
@@ -32,8 +33,7 @@ public:
   JulianDate() {}
 
   /**
-   * Initialize using Julian Date components.  The sum of all values, with
-   * seconds converted to days, is the full Julian Date.
+   * Initialize using Julian Date components.
    *
    * @param  jdDays   Days portion of Julian Date, or full JD if other
    *                  parameters are zero or not included.  Allowing
@@ -41,10 +41,8 @@ public:
    *                  class.
    * @param  jdFrac   Additional days and fraction of a day to add to
    *                  the Julian Date.
-   * @param  seconds  Additional Seconds to add to the Julian Date.
    */
-  JulianDate(double jdDays, double jdFrac = 0.0, double seconds = 0.0) :
-             jdHi {jdDays}, jdLo {jdFrac}, jdSec {seconds}
+  JulianDate(double jdDays, double jdFrac = 0.0) : jdHi {jdDays}, jdLo {jdFrac}
   {
   }
 
@@ -66,14 +64,24 @@ public:
   void set(const GregDate& gd, int hr = 0, int min = 0, double sec = 0.0);
 
   /**
+   * Returns the Julian date as a single double precision value.
+   * For a single value representing time, the MJD preserves more
+   * precision.
+   *
    * @return   Julian Date, scalar form
    */
-  double getJd() const;
+  double getJd() const noexcept
+  {
+    return jdLo + jdHi;
+  }
 
   /**
    * @return   Modified Julian Date, scalar
    */
-  double getMjd() const;
+  double getMjd() const noexcept
+  {
+    return jdLo + (jdHi - cal_const::MJD);
+  }
 
   /**
    * This method allows for compatibility with external libraries
@@ -84,16 +92,22 @@ public:
    *           corresponding to noon, but this is not necessary,
    *           depending on the value of jdLo.  Units of days.
    */
-  double getJdHigh()   const { return jdHi; }
+  double getJdHigh() const noexcept
+  {
+    return jdHi;
+  }
 
   /**
    * This method allows for compatibility with external libraries
    * that are designed to make use of a two part Julian date.
    *
    * @return   Small portion of the Julian Date, typically on the order
-   *           of a fraction of a day.  Units of days.
+   *           of a day or fraction of a day.  Units of days.
    */
-  double getJdLow() const;
+  double getJdLow() const noexcept
+  {
+    return jdLo;
+  }
 
   /**
    * Update this Julian Date by the given number of days.
@@ -101,7 +115,7 @@ public:
    * @param   days   Days to add to this Julian Date (or subtracted, if
    *                 negative).
    */
-  JulianDate& operator+=(double days);
+  JulianDate& operator+=(double days) noexcept;
 
   /**
    * Return a Julian date adjusted by the given number of days.
@@ -110,13 +124,16 @@ public:
    *
    * @return   Copy of this JulianDate, adjusted by days
    */
-  JulianDate operator+(double days);
+  JulianDate operator+(double days) const noexcept;
 
   /**
    * @return  The time difference, in days, between this JD and the
    *          input JD.  This - input.
    */
-  double operator-(const JulianDate& jd);
+  double operator-(const JulianDate& jd) const noexcept
+  {
+    return jdHi - jd.jdHi + (jdLo - jd.jdLo);
+  }
 
 /*
   bool operator<(const JulianDate& jd);
@@ -147,9 +164,8 @@ private:
   void jd2gd(int& year, int& month, int& day,
              int& hour, int& minutes, double& seconds);
 
-  double jdHi {cal_const::J2000};         // Days
-  double jdLo {0.0};                     // Fraction of a day
-  double jdSec {0.0};                     // Seconds
+  double jdHi {cal_const::J2000};           // Days
+  double jdLo {0.0};                        // Fraction of a day
 };
 
 

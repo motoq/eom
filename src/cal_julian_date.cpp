@@ -26,9 +26,8 @@ JulianDate::JulianDate(const GregDate& gd, int hr, int min, double sec)
 
 void JulianDate::set(const GregDate& gd, int hr, int min, double sec)
 {
-  jdSec = sec;
   jdHi = gd2jd(gd.getYear(), gd.getMonth(), gd.getDay());
-  jdLo = cal_const::DAY_PER_MIN*(60*hr + min);
+  jdLo = cal_const::DAY_PER_MIN*(60*hr + min + cal_const::MIN_PER_SEC*sec);
 
   if (jdLo != 0.0) {
     double more_days = static_cast<long>(jdLo);
@@ -38,40 +37,10 @@ void JulianDate::set(const GregDate& gd, int hr, int min, double sec)
 }
 
 
-double JulianDate::getJd() const
-{
-  if (jdSec == 0.0) {
-    return jdLo + jdHi;
-  } else {
-    return cal_const::DAY_PER_SEC*jdSec + jdLo + jdHi;
-  }
-}
-
-
-double JulianDate::getMjd() const
-{
-  if (jdSec == 0.0) {
-    return jdLo + (jdHi - cal_const::MJD);
-  } else {
-    return cal_const::DAY_PER_SEC*jdSec + jdLo + (jdHi - cal_const::MJD);
-  }
-}
-
-
-double JulianDate::getJdLow() const
-{
-  if (jdSec == 0.0) {
-    return jdLo;
-  } else {
-    return cal_const::DAY_PER_SEC*jdSec + jdLo;
-  }
-}
-
-
 /*
  * Break into low and high for more precision
  */
-JulianDate& JulianDate::operator+=(double days)
+JulianDate& JulianDate::operator+=(double days) noexcept
 {
   double full_days = static_cast<long>(days);
 
@@ -82,21 +51,13 @@ JulianDate& JulianDate::operator+=(double days)
 }
 
 
-JulianDate JulianDate::operator+(double days)
+JulianDate JulianDate::operator+(double days) const noexcept
 {
   JulianDate jd {*this};
   jd += days;
 
   return jd;
 }
-
-
-double JulianDate::operator-(const JulianDate& jd)
-{
-  return jdHi - jd.jdHi + (jdLo - jd.jdLo) +
-         cal_const::DAY_PER_SEC*(jdSec - jd.jdSec);
-}
-
 
 
 /**
@@ -130,10 +91,6 @@ void JulianDate::normalize()
     // (floor goes back to the previous day, then add 1 for today at noon)
   double tmp {std::floor(jdHi) + 1.0};
   jdLo += (jdHi - tmp);
-  if (jdSec != 0.0) {
-    jdLo += cal_const::DAY_PER_SEC*jdSec;
-    jdSec = 0.0;
-  }
   jdHi = tmp;
 
     // Now, push whole days of jdLo into jdHi - jdLo sign may be +/-
