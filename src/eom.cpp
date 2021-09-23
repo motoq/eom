@@ -8,6 +8,8 @@
 //#include <map>
 #include <stdexcept>
 
+#include <eom_config.h>
+
 
 
 /**
@@ -33,17 +35,20 @@ int main(int argc, char* argv[])
     return 0;
   }
   std::cout << "\nOpened " << argv[1] << '\n';
+
+  eom::EomConfig cfg;
+
     // Read each line and pass to parser while tracking line number
   int line_number {0};
   std::string input_line;
   bool parse_tokens = false;
-  bool no_error = true;
+  bool input_error = false;
   std::deque<std::string> tokens;
   while (std::getline(ifs,input_line)) {
     line_number++;
     std::istringstream iss(input_line);
     std::string token;
-    while (iss >> token  &&  no_error) {
+    while (iss >> token  &&  !input_error) {
       if (token.front() == '#') {
         break;
       } else {
@@ -57,54 +62,49 @@ int main(int argc, char* argv[])
           tokens.push_back(token);
         }
         if (parse_tokens) {
-          no_error = false;
+          input_error = true;
           parse_tokens = false;
           if (tokens.size() > 0) {
-            std::string make = tokens[0];
+            auto make = tokens[0];
             tokens.pop_front();
-            if (make == "SimStart"  &&  tokens.size() > 1) {
-              //std::string name = tokens[1];
-              //tokens.erase(tokens.begin()+1);
-              //surface_table.emplace(std::make_pair(name,
-              //                      cog_make_surface(tokens)));
-              std::cout << "\nSimStart model: " << tokens[0];
-              no_error = true;
-            } else if (make == "SimDuration"  &&  tokens.size() > 1) {
-              /*
-              try {
-                std::string name = tokens[0];
-                mth::Sphere* sptr = 
-                  dynamic_cast<mth::Sphere*>(surface_table.at(name).get());
-                std::cout << " A sphere of size " << sptr->getRadius();
-                plt_sphere(sptr);
-                no_error = true;
-              } catch (std::out_of_range const& exc) {
-                std::cout << exc.what() << '\n';
-                no_error = false;
-              }
-              */
-              std::cout << "\nSimDuration model: " << tokens[0];
-              no_error = true;
+            if (make == "SimStart") {
+              cfg.setStartTime(tokens);
+              input_error = !cfg.isValid();
+            } else if (make == "SimDuration") {
+              cfg.setDuration(tokens);
+              input_error = !cfg.isValid();
             }
           }
           tokens.clear();
         }
       }
     }
-    if (!no_error) {
+    if (input_error) {
       std::cout << "\nError on line: " << line_number;
       break;
     }
   }
   ifs.close();
 
-  //if (surface_table.at("SPH")->getType() == mth::SurfaceType::SPHERE) {
-  //  std::cout << "\nYes, a sphere";
-  //}
   
+  cfg.print(std::cout);
 
   std::cout << "\n\n";
 
 }
 
+  //if (surface_table.at("SPH")->getType() == mth::SurfaceType::SPHERE) {
+  //  std::cout << "\nYes, a sphere";
+  //}
 
+              //try {
+              //  std::string name = tokens[0];
+              //  mth::Sphere* sptr = 
+              //    dynamic_cast<mth::Sphere*>(surface_table.at(name).get());
+              //  std::cout << " A sphere of size " << sptr->getRadius();
+              //  plt_sphere(sptr);
+              //  input_error = false;
+              //} catch (std::out_of_range const& exc) {
+              //  std::cout << exc.what() << '\n';
+              //  input_error = false;
+              //}

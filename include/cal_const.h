@@ -9,6 +9,10 @@
 #ifndef CAL_CONST_H
 #define CAL_CONST_H
 
+/**
+ * Constants relating to dates and standard (non-canonical) time
+ * transformations.
+ */
 namespace cal_const {
 
     // Useful Julian dates

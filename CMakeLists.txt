@@ -24,6 +24,7 @@ set(SOURCES
   src/eom.cpp
   src/cal_greg_date.cpp
   src/cal_julian_date.cpp
+  src/eom_config.cpp
 )
 
 if (MSVC)
