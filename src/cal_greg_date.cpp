@@ -34,6 +34,12 @@ GregDate::GregDate(std::string year, std::string month, std::string day)
 }
 
 
+void GregDate::set(std::string year, std::string month, std::string day)
+{
+  this->set(std::stoi(year), std::stoi(month), std::stoi(day));
+}
+
+
 void GregDate::set(int year, int month, int day)
 {
     // Days in a standard (non leap year) month.

@@ -80,11 +80,14 @@ int main(int argc, char* argv[])
       }
     }
     if (input_error) {
-      std::cout << "\nError on line: " << line_number;
+      std::cout << "\nError on line: " << line_number << '\n';
       break;
     }
   }
   ifs.close();
+  if (input_error) {
+    return 0;
+  }
 
   
   cfg.print(std::cout);

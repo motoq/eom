@@ -53,6 +53,18 @@ public:
   GregDate(std::string year, std::string month, std::string day);
 
   /**
+   * Set with a string representations of calendar values.
+   *
+   * @param  year   Four digit representation of the year
+   * @param  month  1 <= month <= 12
+   * @param  day    1 <= day <= {28, 29, 30, 31}, depending on the
+   *                 month/year combination.
+   *
+   * @throws invalid_argument
+   */
+  void set(std::string year, std::string month, std::string day);
+
+  /**
    * Set date with integer representations of calendar values.
    *
    * @param  year   Four digit representation of the year

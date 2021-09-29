@@ -13,6 +13,7 @@
 
 #include <cal_const.h>
 #include <cal_greg_date.h>
+#include <cal_duration.h>
 
 namespace eom {
 
@@ -125,6 +126,23 @@ public:
    * @return   Copy of this JulianDate, adjusted by days
    */
   JulianDate operator+(double days) const noexcept;
+
+  /**
+   * Update this Julian Date by the given duration.
+   *
+   * @param   dur   Duration to add to this Julian Date (or subtracted, if
+   *                negative).
+   */
+  JulianDate& operator+=(const Duration& dur) noexcept;
+
+  /**
+   * Return a Julian date adjusted by the given duration.
+   *
+   * @param   dur  Duration to add (or subtrack, if negative).
+   *
+   * @return   Copy of this JulianDate, adjusted by days
+   */
+  JulianDate operator+(const Duration& dur) const noexcept;
 
   /**
    * @return  The time difference, in days, between this JD and the

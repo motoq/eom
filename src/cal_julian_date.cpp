@@ -60,6 +60,31 @@ JulianDate JulianDate::operator+(double days) const noexcept
 }
 
 
+/*
+ * Break into low and high for more precision
+ */
+JulianDate& JulianDate::operator+=(const Duration& dur) noexcept
+{
+  double days {dur.getDays()};
+  double full_days = static_cast<long>(days);
+
+  jdHi += full_days;
+  jdLo += (days - full_days);
+
+  return *this;
+}
+
+
+JulianDate JulianDate::operator+(const Duration& dur) const noexcept
+{
+  JulianDate jd {*this};
+  double days {dur.getDays()};
+  jd += days;
+
+  return jd;
+}
+
+
 /**
  * Note: Seconds are truncated to 1/100 th of a second
  */
