@@ -36,7 +36,7 @@ int main(int argc, char* argv[])
   }
   std::cout << "\nOpened " << argv[1] << '\n';
 
-  eom::EomConfig cfg;
+  eom_app::EomConfig cfg;
 
     // Read each line and pass to parser while tracking line number
   int line_number {0};

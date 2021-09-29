@@ -15,7 +15,6 @@
 
 namespace phy_const {
 
-
   //
   // Base constants defining the earth and rotation rate
   //
@@ -31,11 +30,9 @@ namespace phy_const {
   /** Nominal mean angular velocity of earth w.r.t ECI, GRS80/WGS 84, rad/sec */
   constexpr double WE_RAD_SEC {7292115.0e-11};
   
-  
   //
   // Derived
   //
-
   
   /** Time unit definition */
   constexpr double SEC_PER_TU {std::sqrt(KM_PER_DU*
@@ -46,6 +43,7 @@ namespace phy_const {
   constexpr double TU_PER_SEC {1.0/SEC_PER_TU};
   constexpr double TU_PER_MIN {1.0/MIN_PER_TU};
   constexpr double TU_PER_DAY {1.0/DAY_PER_TU};
+
   /** Gravitation parameter */
   constexpr double GM {1.0};
 }

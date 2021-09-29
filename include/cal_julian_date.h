@@ -25,6 +25,7 @@ namespace eom {
  * @author  Kurt Motekew
  * @date    20160314
  * @date    20210916  Removed fractional second to simplify logic
+ * @date    20210929  Added use of Duration for + and +=
  */
 class JulianDate {
 public:

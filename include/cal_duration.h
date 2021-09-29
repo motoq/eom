@@ -15,6 +15,10 @@ namespace eom {
 
 
 /**
+ * Represents a duration in time that will provides time in appropriate
+ * units for functions that need to increment/decrement time.  E.G.,
+ * when added to a JulianDate, the getDays() method can be used.  Most
+ * other astrodynamics uses would request time units.
  *
  * @author  Kurt Motekew
  * @date    20210923
@@ -23,17 +27,30 @@ class Duration {
 public:
 
   /**
+   * Initialize with a scalar duration and scale factor to convert to
+   * time units.
+   *
+   * @param  dur    Duration
+   * @param  to_tu  Converts dur to TU.  Note utl_units.h has
+   *                useful operators (e.g., 5 minutes as 5.0_min).
    */
   Duration(double dur, double to_tu) : tu {dur*to_tu},
                                        days {dur*to_tu*phy_const::DAY_PER_TU}
   {
   }
 
+  /**
+   * @return  Duration in days.
+   */
   double getDays() const noexcept
   {
     return days;
   }
 
+  /**
+   * @return  Duration in TU, the standard computational time units
+   *          established by the application.
+   */
   double getTU() const noexcept
   {
     return tu;

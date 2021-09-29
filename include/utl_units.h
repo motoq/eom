@@ -12,24 +12,45 @@
 #include <phy_const.h>
 
 /**
- * Utility functions allowing for conversion of external to internal
- * units.
+ * Utility functions allowing for conversion of external to
+ * computational (internal) units of TU (time units) and DU
+ * (distance units).
  *
  * @author  Kurt Motekew
  * @date    20210925
  */
 namespace utl_units {
 
-constexpr double operator"" _day(long double days)
+/**
+ * @param  Duration in days
+ *
+ * @return  Duration in TU
+ */
+constexpr double operator"" _day(long double days) noexcept
 {
   return phy_const::TU_PER_DAY*days;
 }
 
-constexpr double operator"" _min(long double minutes)
+/**
+ * @param  Duration in minutes
+ *
+ * @return  Duration in TU
+ */
+constexpr double operator"" _min(long double minutes) noexcept
 {
   return phy_const::TU_PER_MIN*minutes;
 }
 
+}
+
+/**
+ * @param  Duration in seconds
+ *
+ * @return  Duration in TU
+ */
+constexpr double operator"" _sec(long double seconds) noexcept
+{
+  return phy_const::TU_PER_SEC*seconds;
 }
 
 #endif

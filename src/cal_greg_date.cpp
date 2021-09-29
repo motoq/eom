@@ -11,6 +11,7 @@
 
 #include <cal_greg_date.h>
 
+// Internal constants
 namespace {
   static constexpr int gregyear {1582};        ///< Gregorian Calendar epoch
   static constexpr int maxyear  {9999};

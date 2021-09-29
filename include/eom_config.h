@@ -15,7 +15,7 @@
 
 #include <cal_julian_date.h>
 
-namespace eom {
+namespace eom_app {
 
 
 /**
@@ -33,11 +33,11 @@ public:
 
   void setStartTime(std::deque<std::string> tokens);
 
-  JulianDate getStartTime() const noexcept { return jdStart; }
+  eom::JulianDate getStartTime() const noexcept { return jdStart; }
 
   void setDuration(std::deque<std::string> tokens);
 
-  JulianDate getStopTime() const noexcept { return jdStop; }
+  eom::JulianDate getStopTime() const noexcept { return jdStop; }
 
   bool isValid() const noexcept { return valid; }
 
@@ -46,8 +46,8 @@ public:
 private:
   bool valid {true};
   std::string error_string {""};
-  JulianDate jdStart;
-  JulianDate jdStop;
+  eom::JulianDate jdStart;
+  eom::JulianDate jdStop;
 };
 
 
