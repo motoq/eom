@@ -81,35 +81,15 @@ void EomConfig::setStartTime(std::deque<std::string> tokens)
 
 void EomConfig::setDuration(std::deque<std::string> tokens)
 {
-  using namespace utl_units;
-
   valid = false;
-  if (tokens.size() < 1) {
-    return;
+  try {
+    auto dur = parse_duration(tokens);
+    jdStop = jdStart + dur;
+    valid = true;
+  } catch(std::invalid_argument& ia) {
+    error_string = ia.what();
+    error_string += "  EomConfig::setDuration";
   }
-
-  auto model = tokens[0];
-  tokens.pop_front();
-
-    // All single value duration types
-  if (tokens.size() == 1) {
-    double dur {0.0};
-    try {
-      dur = std::stod(tokens[0]);
-    } catch(std::invalid_argument& ia) {
-      error_string = "Invalid Simulation Duration";
-      return;
-    }
-    if (model == "Days") {
-      jdStop = jdStart + dur;
-      valid = true;
-    } else if (model == "Minutes") {
-      eom::Duration minutes(dur, 1.0_min);
-      jdStop = jdStart + minutes;
-      valid = true;
-    }
-  }
-
 }
 
 
@@ -121,6 +101,7 @@ void EomConfig::setEcfEciRate(std::deque<std::string> tokens)
     valid = true;
   } catch(std::invalid_argument& ia) {
     error_string = ia.what();
+    error_string += "  EomConfig::setEcfEciRate";
   }
 }
 
@@ -136,6 +117,13 @@ void EomConfig::print(std::ostream& stream) const
 
 }
 
+/**
+ * Parses two tokens, the first a string representing the units of time,
+ * and the second a string that will be converted to a double.  If there
+ * are not exactly two arguments, or if a double can't be parsed from
+ * the 2nd entry, an exception is thrown.  The input list is modified -
+ * it should be empty upon return from this function.
+ */
 static eom::Duration parse_duration(std::deque<std::string>& tokens)
 {
   using namespace utl_units;
@@ -152,7 +140,7 @@ static eom::Duration parse_duration(std::deque<std::string>& tokens)
   try {
     dur = std::stod(tokens[0]);
   } catch(std::invalid_argument& ia) {
-    throw std::invalid_argument("Invalid Simulation Duration");
+    throw std::invalid_argument("Invalid Duration");
   }
   if (model == "Days") {
     return {dur, 1.0_day};
