@@ -73,6 +73,9 @@ int main(int argc, char* argv[])
             } else if (make == "SimDuration") {
               cfg.setDuration(tokens);
               input_error = !cfg.isValid();
+            } else if (make == "EcfEciRate") {
+              cfg.setEcfEciRate(tokens);
+              input_error = !cfg.isValid();
             }
           }
           tokens.clear();

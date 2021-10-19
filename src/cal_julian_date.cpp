@@ -88,7 +88,7 @@ JulianDate JulianDate::operator+(const Duration& dur) const noexcept
 /**
  * Note: Seconds are truncated to 1/100 th of a second
  */
-std::string JulianDate::to_str()
+std::string JulianDate::to_str() const
 {
   int year, month, day, hour, minutes;
   double seconds; 
@@ -161,7 +161,7 @@ void JulianDate::normalize()
  *   @param   seconds  Seconds, 0 <= seconds <= 60 (60th for leapsec)  (output)
  */
 void JulianDate::jd2gd(int& year, int& month, int& day,
-                       int& hour, int& minutes, double& seconds)
+                       int& hour, int& minutes, double& seconds) const
 {
     // Must get jdHi and jdLo in proper form first
   JulianDate tmpJd = *this;

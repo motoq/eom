@@ -165,7 +165,7 @@ public:
      * @return   Gregorian Date and time as a string.  Time is
      *           in base 24:60:60 format.
      */
-  std::string to_str();
+  std::string to_str() const;
 
 private:
   void normalize();
@@ -181,7 +181,7 @@ private:
    *   @param   seconds  Seconds, 0 <= seconds < 60                     (output)
    */
   void jd2gd(int& year, int& month, int& day,
-             int& hour, int& minutes, double& seconds);
+             int& hour, int& minutes, double& seconds) const;
 
   double jdHi {cal_const::J2000};           // Days
   double jdLo {0.0};                        // Fraction of a day

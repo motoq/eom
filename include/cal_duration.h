@@ -25,6 +25,12 @@ namespace eom {
  */
 class Duration {
 public:
+  /**
+   * Default zero duration
+   */
+  Duration() : tu {0.0}, days {0.0}
+  {
+  }
 
   /**
    * Initialize with a scalar duration and scale factor to convert to

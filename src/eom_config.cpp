@@ -20,6 +20,8 @@
 #include <cal_greg_date.h>
 #include <cal_duration.h>
 
+static eom::Duration parse_duration(std::deque<std::string>&);
+
 namespace eom_app {
 
 
@@ -95,7 +97,7 @@ void EomConfig::setDuration(std::deque<std::string> tokens)
     try {
       dur = std::stod(tokens[0]);
     } catch(std::invalid_argument& ia) {
-      error_string = "Invalid Days";
+      error_string = "Invalid Simulation Duration";
       return;
     }
     if (model == "Days") {
@@ -111,11 +113,55 @@ void EomConfig::setDuration(std::deque<std::string> tokens)
 }
 
 
+void EomConfig::setEcfEciRate(std::deque<std::string> tokens)
+{
+  valid = false;
+  try {
+    dtEcfEci = parse_duration(tokens);
+    valid = true;
+  } catch(std::invalid_argument& ia) {
+    error_string = ia.what();
+  }
+}
+
 
 void EomConfig::print(std::ostream& stream) const
 {
-  stream << "\nSimulation Start Time: " << getStartTime().to_str();
-  stream << "\nSimulation Stop Time:  " << getStopTime().to_str();
+  stream << "\nSimulation Start Time: " << jdStart.to_str();
+  stream << "\nSimulation Stop Time:  " << jdStop.to_str();
+  stream << "\nEcfEci Output Rate is " << 
+            cal_const::MIN_PER_DAY*dtEcfEci.getDays() << " minutes";
 }
 
+
+}
+
+static eom::Duration parse_duration(std::deque<std::string>& tokens)
+{
+  using namespace utl_units;
+
+  if (tokens.size() != 2) {
+    throw std::invalid_argument("Invalid number of arguments to Duration");
+  }
+
+  auto model = tokens[0];
+  tokens.pop_front();
+
+    // All single value duration types
+  double dur {0.0};
+  try {
+    dur = std::stod(tokens[0]);
+  } catch(std::invalid_argument& ia) {
+    throw std::invalid_argument("Invalid Simulation Duration");
+  }
+  if (model == "Days") {
+    return {dur, 1.0_day};
+  } else if (model == "Minutes") {
+    return {dur, 1.0_min};
+  } else if (model == "Seconds") {
+    return {dur, 1.0_sec};
+  } else {
+    throw std::invalid_argument("Invalid Duration Units Type");
+  }
+    
 }

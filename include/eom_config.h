@@ -14,6 +14,7 @@
 #include <deque>
 
 #include <cal_julian_date.h>
+#include <cal_duration.h>
 
 namespace eom_app {
 
@@ -39,6 +40,8 @@ public:
 
   eom::JulianDate getStopTime() const noexcept { return jdStop; }
 
+  void setEcfEciRate(std::deque<std::string> tokens);
+
   bool isValid() const noexcept { return valid; }
 
   void print(std::ostream& stream) const;
@@ -48,6 +51,7 @@ private:
   std::string error_string {""};
   eom::JulianDate jdStart;
   eom::JulianDate jdStop;
+  eom::Duration dtEcfEci;
 };
 
 
