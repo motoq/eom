@@ -8,7 +8,9 @@
 //#include <map>
 #include <stdexcept>
 
+
 #include <eom_config.h>
+#include <astro_ecfeci_sys.h>
 
 
 
@@ -67,6 +69,7 @@ int main(int argc, char* argv[])
           if (tokens.size() > 0) {
             auto make = tokens[0];
             tokens.pop_front();
+              // Start Input Types
             if (make == "SimStart") {
               cfg.setStartTime(tokens);
               input_error = !cfg.isValid();
@@ -77,13 +80,16 @@ int main(int argc, char* argv[])
               cfg.setEcfEciRate(tokens);
               input_error = !cfg.isValid();
             }
+              // End Input Types
           }
           tokens.clear();
         }
       }
     }
     if (input_error) {
-      std::cout << "\nError on line: " << line_number << '\n';
+      std::cout << "\nError on line: " << line_number;
+      std::cout << '\n' << cfg.getError();
+      std::cout << '\n';
       break;
     }
   }
@@ -91,9 +97,14 @@ int main(int argc, char* argv[])
   if (input_error) {
     return 0;
   }
-
   
   cfg.print(std::cout);
+
+  auto f2iSys = std::make_shared<eom::EcfEciSys>(cfg.getStartTime(),
+                                                 cfg.getStopTime(),
+                                                 cfg.getEcfEciRate());
+
+  //x = init(cfg);
 
   std::cout << "\n\n";
 

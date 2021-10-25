@@ -14,9 +14,10 @@ find_package(VTK COMPONENTS
   vtkRenderingOpenGL2
   QUIET
 )
+find_package (Eigen3 3.3 REQUIRED NO_MODULE)
 
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -51,7 +52,8 @@ if (VTK_VERSION VERSION_LESS "8.90.0")
     PRIVATE
       ${PROJECT_SOURCE_DIR}/include
   )
-  target_link_libraries(${PROJECT_NAME} PRIVATE ${VTK_LIBRARIES})
+  target_link_libraries(${PROJECT_NAME} PUBLIC Eigen3::Eigen
+                                        PRIVATE ${VTK_LIBRARIES})
 else ()
   # include all components
   add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${SOURCES})
@@ -59,7 +61,8 @@ else ()
     PRIVATE
       ${PROJECT_SOURCE_DIR}/include
   )
-  target_link_libraries(${PROJECT_NAME} PRIVATE ${VTK_LIBRARIES})
+  target_link_libraries(${PROJECT_NAME} PUBLIC Eigen3::Eigen
+                                        PRIVATE ${VTK_LIBRARIES})
   # vtk_module_autoinit is needed
   vtk_module_autoinit(
     TARGETS ${PROJECT_NAME}

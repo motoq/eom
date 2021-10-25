@@ -32,22 +32,28 @@ public:
    */
   EomConfig() {}
 
-  void setStartTime(std::deque<std::string> tokens);
+  void setStartTime(std::deque<std::string>& tokens);
 
   eom::JulianDate getStartTime() const noexcept { return jdStart; }
 
-  void setDuration(std::deque<std::string> tokens);
+  void setDuration(std::deque<std::string>& tokens);
 
   eom::JulianDate getStopTime() const noexcept { return jdStop; }
 
-  void setEcfEciRate(std::deque<std::string> tokens);
+  void setEcfEciRate(std::deque<std::string>& tokens);
+
+  eom::Duration getEcfEciRate() const noexcept { return dtEcfEci; }
 
   bool isValid() const noexcept { return valid; }
+
+  std::string getError() { return error_string; }
 
   void print(std::ostream& stream) const;
 
 private:
   bool valid {true};
+  bool epoch_set {false};
+  bool f2i_rate_set {false};
   std::string error_string {""};
   eom::JulianDate jdStart;
   eom::JulianDate jdStop;

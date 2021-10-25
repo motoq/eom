@@ -25,10 +25,15 @@ static eom::Duration parse_duration(std::deque<std::string>&);
 namespace eom_app {
 
 
-void EomConfig::setStartTime(std::deque<std::string> tokens)
+void EomConfig::setStartTime(std::deque<std::string>& tokens)
 {
   valid = false;
+  if (epoch_set) {
+    error_string = "Error:  Simulation Start Time Set More Than Once!";
+    return;
+  }
   if (tokens.size() < 1) {
+    error_string = "Invalid Number of Arguments for Start Time";
     return;
   }
 
@@ -65,6 +70,7 @@ void EomConfig::setStartTime(std::deque<std::string> tokens)
         if (tokens.size() == 0) {
           jdStart.set(gd, hours, minutes, seconds);
           valid = true;
+          epoch_set = true;
         }
       } catch(std::invalid_argument& ia) {
         error_string = ia.what();
@@ -79,7 +85,7 @@ void EomConfig::setStartTime(std::deque<std::string> tokens)
 }
 
 
-void EomConfig::setDuration(std::deque<std::string> tokens)
+void EomConfig::setDuration(std::deque<std::string>& tokens)
 {
   valid = false;
   try {
@@ -93,12 +99,13 @@ void EomConfig::setDuration(std::deque<std::string> tokens)
 }
 
 
-void EomConfig::setEcfEciRate(std::deque<std::string> tokens)
+void EomConfig::setEcfEciRate(std::deque<std::string>& tokens)
 {
   valid = false;
   try {
     dtEcfEci = parse_duration(tokens);
     valid = true;
+    f2i_rate_set = true;
   } catch(std::invalid_argument& ia) {
     error_string = ia.what();
     error_string += "  EomConfig::setEcfEciRate";
