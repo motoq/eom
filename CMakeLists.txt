@@ -41,8 +41,6 @@ else()
   add_compile_options(-Wall -Wextra -pedantic -Werror)
 endif()
 
-
-
 if (NOT VTK_FOUND)
   message("Skipping OS: ${VTK_NOT_FOUND_MESSAGE}")
   return ()
@@ -56,8 +54,9 @@ if (VTK_VERSION VERSION_LESS "8.90.0")
     PUBLIC /home/conan/include
     PRIVATE ${PROJECT_SOURCE_DIR}/include
   )
-  target_link_libraries(${PROJECT_NAME} PUBLIC sofalib Eigen3::Eigen
-                                        PRIVATE ${VTK_LIBRARIES})
+  target_link_libraries(${PROJECT_NAME}
+    PUBLIC Eigen3::Eigen
+    PRIVATE sofalib ${VTK_LIBRARIES})
 else ()
   # include all components
   add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${SOURCES})
@@ -65,8 +64,9 @@ else ()
     PUBLIC /home/conan/include
     PRIVATE ${PROJECT_SOURCE_DIR}/include
   )
-  target_link_libraries(${PROJECT_NAME} PUBLIC sofalib Eigen3::Eigen
-                                        PRIVATE ${VTK_LIBRARIES})
+  target_link_libraries(${PROJECT_NAME}
+    PUBLIC Eigen3::Eigen
+    PRIVATE sofalib ${VTK_LIBRARIES})
   # vtk_module_autoinit is needed
   vtk_module_autoinit(
     TARGETS ${PROJECT_NAME}
