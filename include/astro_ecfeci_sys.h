@@ -48,10 +48,7 @@ public:
   /**
    * Default zero EcfEciSys
    */
-  EcfEciSys(JulianDate startTime, JulianDate stopTime, Duration dt) :
-            jdStart {startTime}, jdStop {stopTime}, dt_days {dt.getDays()}
-  {
-  }
+  EcfEciSys(JulianDate startTime, JulianDate stopTime, Duration dt);
 
 private:
   JulianDate jdStart;

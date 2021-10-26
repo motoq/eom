@@ -6,15 +6,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+#include <eom_config.h>
+
 #include <ostream>
 #include <stdexcept>
 #include <string>
-#include <array>
 #include <deque>
-
-
-#include <eom_config.h>
-
 
 #include <utl_units.h>
 #include <cal_greg_date.h>

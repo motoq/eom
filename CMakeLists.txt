@@ -16,7 +16,6 @@ find_package(VTK COMPONENTS
 )
 find_package (Eigen3 3.3 REQUIRED NO_MODULE)
 
-
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -26,7 +25,12 @@ set(SOURCES
   src/cal_greg_date.cpp
   src/cal_julian_date.cpp
   src/eom_config.cpp
+  src/astro_ecfeci_sys.cpp
 )
+
+add_library(sofalib STATIC IMPORTED)
+set_property(TARGET sofalib
+             PROPERTY IMPORTED_LOCATION "/home/conan/lib/libsofa_c.a")
 
 if (MSVC)
     # warning level 4 and all warnings as errors
@@ -49,19 +53,19 @@ if (VTK_VERSION VERSION_LESS "8.90.0")
   include(${VTK_USE_FILE})
   add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${SOURCES})
   target_include_directories(${PROJECT_NAME}
-    PRIVATE
-      ${PROJECT_SOURCE_DIR}/include
+    PUBLIC /home/conan/include
+    PRIVATE ${PROJECT_SOURCE_DIR}/include
   )
-  target_link_libraries(${PROJECT_NAME} PUBLIC Eigen3::Eigen
+  target_link_libraries(${PROJECT_NAME} PUBLIC sofalib Eigen3::Eigen
                                         PRIVATE ${VTK_LIBRARIES})
 else ()
   # include all components
   add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${SOURCES})
   target_include_directories(${PROJECT_NAME}
-    PRIVATE
-      ${PROJECT_SOURCE_DIR}/include
+    PUBLIC /home/conan/include
+    PRIVATE ${PROJECT_SOURCE_DIR}/include
   )
-  target_link_libraries(${PROJECT_NAME} PUBLIC Eigen3::Eigen
+  target_link_libraries(${PROJECT_NAME} PUBLIC sofalib Eigen3::Eigen
                                         PRIVATE ${VTK_LIBRARIES})
   # vtk_module_autoinit is needed
   vtk_module_autoinit(
