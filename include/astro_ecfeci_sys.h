@@ -9,7 +9,7 @@
 #ifndef ASTRO_ECFECI_SYS_H
 #define ASTRO_ECFECI_SYS_H
 
-#include <memory>
+#include <vector>
 
 #include <Eigen/Geometry>
 
@@ -18,6 +18,7 @@
 
 namespace eom {
 
+/* Enable after adding parsing of IERS EOP
 struct raw_eop {
   long mjd {0L};
   double xp {0.0};
@@ -27,10 +28,11 @@ struct raw_eop {
   double dx {0.0};
   double dy {0.0};
 };
+*/
 
   // The transformation directoin is ECF to ECI
 struct ecf_eci {
-  double mjd {0.0};
+  double jd2000 {0.0};
   double ut1mutc {0.0};
   double lod {0.0};
   Eigen::Quaterniond pm;     ///< Polar motion; ITRF to TIRF
@@ -46,7 +48,7 @@ struct ecf_eci {
 class EcfEciSys {
 public:
   /**
-   * Default zero EcfEciSys
+   * Default zero EcfEciSys using no EOP data
    */
   EcfEciSys(JulianDate startTime, JulianDate stopTime, Duration dt);
 
@@ -55,7 +57,7 @@ private:
   JulianDate jdStop;
   double dt_days {0.0};
   long nfi {0L};
-  std::unique_ptr<ecf_eci> f2iData {nullptr};
+  std::vector<ecf_eci> f2iData;
 };
 
 

@@ -86,6 +86,14 @@ public:
   }
 
   /**
+   * @return  Days since Jan 1, 2000
+   */
+  double getJd2000() const noexcept
+  {
+    return jdLo + (jdHi - cal_const::J2000);
+  }
+
+  /**
    * This method allows for compatibility with external libraries
    * that are designed to make use of a two part Julian date.
    *
@@ -154,11 +162,10 @@ public:
     return jdHi - jd.jdHi + (jdLo - jd.jdLo);
   }
 
-/*
-  bool operator<(const JulianDate& jd);
-    diff =
-    return diff < 0.0;
-*/
+  bool operator<(const JulianDate& jd)
+  {
+    return jdHi - jd.jdHi + (jdLo - jd.jdLo) < 0.0;
+  }
 
 
     /**

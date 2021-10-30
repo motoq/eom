@@ -8,10 +8,8 @@
 //#include <map>
 #include <stdexcept>
 
-
 #include <eom_config.h>
 #include <astro_ecfeci_sys.h>
-
 
 
 /**
@@ -76,6 +74,9 @@ int main(int argc, char* argv[])
             } else if (make == "SimDuration") {
               cfg.setDuration(tokens);
               input_error = !cfg.isValid();
+            } else if (make == "LeapSeconds") {
+              cfg.setLeapSeconds(tokens);
+              input_error = !cfg.isValid();
             } else if (make == "EcfEciRate") {
               cfg.setEcfEciRate(tokens);
               input_error = !cfg.isValid();
@@ -103,8 +104,6 @@ int main(int argc, char* argv[])
   auto f2iSys = std::make_shared<eom::EcfEciSys>(cfg.getStartTime(),
                                                  cfg.getStopTime(),
                                                  cfg.getEcfEciRate());
-
-  //x = init(cfg);
 
   std::cout << "\n\n";
 

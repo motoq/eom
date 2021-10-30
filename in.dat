@@ -3,5 +3,6 @@
 
 SimStart GD 2021 08 19 01 25 55.0;  # Gregorian date, UTC
 SimDuration Days 365;
+LeapSeconds 37;
 #SimDuration Minutes 120;
 EcfEciRate Minutes  240;

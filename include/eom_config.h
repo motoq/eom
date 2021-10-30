@@ -38,6 +38,8 @@ public:
 
   void setDuration(std::deque<std::string>& tokens);
 
+  void setLeapSeconds(std::deque<std::string>& tokens);
+
   eom::JulianDate getStopTime() const noexcept { return jdStop; }
 
   void setEcfEciRate(std::deque<std::string>& tokens);
@@ -54,6 +56,7 @@ private:
   bool valid {true};
   bool epoch_set {false};
   bool f2i_rate_set {false};
+  bool leapsec_set {false};
   std::string error_string {""};
   eom::JulianDate jdStart;
   eom::JulianDate jdStop;

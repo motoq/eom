@@ -16,6 +16,7 @@
 #include <utl_units.h>
 #include <cal_greg_date.h>
 #include <cal_duration.h>
+#include <cal_leap_seconds.h>
 
 static eom::Duration parse_duration(std::deque<std::string>&);
 
@@ -96,6 +97,25 @@ void EomConfig::setDuration(std::deque<std::string>& tokens)
 }
 
 
+void EomConfig::setLeapSeconds(std::deque<std::string>& tokens)
+{
+  valid = false;
+  try {
+    if (tokens.size() == 1) {
+      auto seconds = std::stod(tokens[0]);
+      tokens.pop_front();
+      eom::LeapSeconds& ls = eom::LeapSeconds::getInstance();
+      ls.setTai_Utc(seconds);
+      valid = true;
+      leapsec_set = true;
+    }
+  } catch(std::invalid_argument& ia) {
+    error_string = ia.what();
+    error_string += "  EomConfig::setLeapSeconds";
+  }
+}
+
+
 void EomConfig::setEcfEciRate(std::deque<std::string>& tokens)
 {
   valid = false;
@@ -115,7 +135,9 @@ void EomConfig::print(std::ostream& stream) const
   stream << "\nSimulation Start Time: " << jdStart.to_str();
   stream << "\nSimulation Stop Time:  " << jdStop.to_str();
   stream << "\nEcfEci Output Rate is " << 
-            cal_const::MIN_PER_DAY*dtEcfEci.getDays() << " minutes";
+             cal_const::MIN_PER_DAY*dtEcfEci.getDays() << " minutes";
+  eom::LeapSeconds& ls = eom::LeapSeconds::getInstance();
+  stream << "\nLeap Seconds (TAI - UTC): " << ls.getTai_Utc();
 }
 
 
