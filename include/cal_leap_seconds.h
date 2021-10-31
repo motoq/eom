@@ -60,7 +60,7 @@ public:
   }
 
   JulianDate utc2tt(const JulianDate& utc) const noexcept {
-    return utc + (taimutc + cal_const::ttmtai)*cal_const::DAY_PER_SEC;
+    return utc + (taimutc + cal_const::ttmtai)*cal_const::day_per_sec;
   }
 
 private:

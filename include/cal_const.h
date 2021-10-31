@@ -16,21 +16,21 @@
 namespace cal_const {
 
     // Useful Julian dates
-  constexpr double J2000 {2451545.0};       ///< Jan 1, 2000 12:00:00 TT
-  constexpr double J1900 {2415021.0};       ///< Jan 1, 1900 12:00:00 UT1
-  constexpr double GPS0  {2444244.5};       ///< Jan 6, 1980 00:00:00 UT
-  constexpr double MJD   {2400000.5};       ///< Subtract from JD to get MJD
+  constexpr double j2000 {2451545.0};       ///< Jan 1, 2000 12:00:00 TT
+  constexpr double j1900 {2415021.0};       ///< Jan 1, 1900 12:00:00 UT1
+  constexpr double gps0  {2444244.5};       ///< Jan 6, 1980 00:00:00 UT
+  constexpr double mjd   {2400000.5};       ///< Subtract from JD to get MJD
     // Time scale conversions
   constexpr double ttmtai {32.184};         ///< TT - TAI, seconds
     // Time unit conversions
-  constexpr double HR_PER_DAY  {24.0};
-  constexpr double DAY_PER_HR  {1.0/HR_PER_DAY};
-  constexpr double MIN_PER_DAY {1440.0};
-  constexpr double DAY_PER_MIN {1.0/MIN_PER_DAY};
-  constexpr double SEC_PER_DAY {86400.0};
-  constexpr double DAY_PER_SEC {1.0/SEC_PER_DAY};
-  constexpr double SEC_PER_MIN {60.0};
-  constexpr double MIN_PER_SEC {1.0/SEC_PER_MIN};
+  constexpr double hr_per_day  {24.0};
+  constexpr double day_per_hr  {1.0/hr_per_day};
+  constexpr double min_per_day {1440.0};
+  constexpr double day_per_min {1.0/min_per_day};
+  constexpr double sec_per_day {86400.0};
+  constexpr double day_per_sec {1.0/sec_per_day};
+  constexpr double sec_per_min {60.0};
+  constexpr double min_per_sec {1.0/sec_per_min};
 
 }
 

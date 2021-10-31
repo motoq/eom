@@ -27,7 +27,7 @@ JulianDate::JulianDate(const GregDate& gd, int hr, int min, double sec)
 void JulianDate::set(const GregDate& gd, int hr, int min, double sec)
 {
   jdHi = gd2jd(gd.getYear(), gd.getMonth(), gd.getDay());
-  jdLo = cal_const::DAY_PER_MIN*(60*hr + min + cal_const::MIN_PER_SEC*sec);
+  jdLo = cal_const::day_per_min*(60*hr + min + cal_const::min_per_sec*sec);
 
   if (jdLo != 0.0) {
     double more_days = static_cast<long>(jdLo);
@@ -185,7 +185,7 @@ void JulianDate::jd2gd(int& year, int& month, int& day,
   month = j;
   day   = k;
 
-  double hours_left {cal_const::HR_PER_DAY*tmpJd.jdLo};
+  double hours_left {cal_const::hr_per_day*tmpJd.jdLo};
   hour = static_cast<int>(hours_left);
 
   double minutes_left {60.0*(hours_left - hour)};

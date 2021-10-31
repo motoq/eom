@@ -14,6 +14,7 @@
 #include <deque>
 
 #include <utl_units.h>
+#include <phy_const.h>
 #include <cal_greg_date.h>
 #include <cal_duration.h>
 #include <cal_leap_seconds.h>
@@ -67,6 +68,7 @@ void EomConfig::setStartTime(std::deque<std::string>& tokens)
         }
         if (tokens.size() == 0) {
           jdStart.set(gd, hours, minutes, seconds);
+          jdStop = jdStart;
           valid = true;
           epoch_set = true;
         }
@@ -86,6 +88,14 @@ void EomConfig::setStartTime(std::deque<std::string>& tokens)
 void EomConfig::setDuration(std::deque<std::string>& tokens)
 {
   valid = false;
+  if (!epoch_set) {
+    error_string = "Error:  Must set Simulation Start Time before Duration!";
+    return;
+  }
+  if (tokens.size() != 2) {
+    error_string = "Invalid number of parameters EomConfig::setDuration";
+    return;
+  }
   try {
     auto dur = parse_duration(tokens);
     jdStop = jdStart + dur;
@@ -100,18 +110,20 @@ void EomConfig::setDuration(std::deque<std::string>& tokens)
 void EomConfig::setLeapSeconds(std::deque<std::string>& tokens)
 {
   valid = false;
+  if (tokens.size() != 1) {
+    error_string = "Invalid number of parameters EomConfig::setLeapSeconds";
+    return;
+  }
   try {
-    if (tokens.size() == 1) {
-      auto seconds = std::stod(tokens[0]);
-      tokens.pop_front();
-      eom::LeapSeconds& ls = eom::LeapSeconds::getInstance();
-      ls.setTai_Utc(seconds);
-      valid = true;
-      leapsec_set = true;
-    }
+    auto seconds = std::stod(tokens[0]);
+    tokens.pop_front();
+    eom::LeapSeconds& ls = eom::LeapSeconds::getInstance();
+    ls.setTai_Utc(seconds);
+    valid = true;
+    leapsec_set = true;
   } catch(std::invalid_argument& ia) {
     error_string = ia.what();
-    error_string += "  EomConfig::setLeapSeconds";
+    error_string += " EomConfig::setLeapSeconds";
   }
 }
 
@@ -119,6 +131,10 @@ void EomConfig::setLeapSeconds(std::deque<std::string>& tokens)
 void EomConfig::setEcfEciRate(std::deque<std::string>& tokens)
 {
   valid = false;
+  if (tokens.size() != 2) {
+    error_string = "Invalid number of parameters EomConfig::setEcfEciRate";
+    return;
+  }
   try {
     dtEcfEci = parse_duration(tokens);
     valid = true;
@@ -135,9 +151,11 @@ void EomConfig::print(std::ostream& stream) const
   stream << "\nSimulation Start Time: " << jdStart.to_str();
   stream << "\nSimulation Stop Time:  " << jdStop.to_str();
   stream << "\nEcfEci Output Rate is " << 
-             cal_const::MIN_PER_DAY*dtEcfEci.getDays() << " minutes";
+             cal_const::min_per_day*dtEcfEci.getDays() << " minutes";
   eom::LeapSeconds& ls = eom::LeapSeconds::getInstance();
   stream << "\nLeap Seconds (TAI - UTC): " << ls.getTai_Utc();
+  stream << "\nUsing dt eps: " <<
+             phy_const::epsdt*phy_const::sec_per_tu << " seconds";
 }
 
 
@@ -146,15 +164,15 @@ void EomConfig::print(std::ostream& stream) const
 /**
  * Parses two tokens, the first a string representing the units of time,
  * and the second a string that will be converted to a double.  If there
- * are not exactly two arguments, or if a double can't be parsed from
- * the 2nd entry, an exception is thrown.  The input list is modified -
- * it should be empty upon return from this function.
+ * are not less than two tokens, or if a double can't be parsed from
+ * the 2nd token, an exception is thrown.  The input list is modified -
+ * by removing the two ingested tokens.
  */
 static eom::Duration parse_duration(std::deque<std::string>& tokens)
 {
   using namespace utl_units;
 
-  if (tokens.size() != 2) {
+  if (tokens.size() < 2) {
     throw std::invalid_argument("Invalid number of arguments to Duration");
   }
 
@@ -165,6 +183,7 @@ static eom::Duration parse_duration(std::deque<std::string>& tokens)
   double dur {0.0};
   try {
     dur = std::stod(tokens[0]);
+    tokens.pop_front();
   } catch(std::invalid_argument& ia) {
     throw std::invalid_argument("Invalid Duration");
   }

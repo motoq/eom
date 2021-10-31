@@ -28,7 +28,7 @@ namespace utl_units {
  */
 constexpr double operator"" _day(long double days) noexcept
 {
-  return phy_const::TU_PER_DAY*days;
+  return phy_const::tu_per_day*days;
 }
 
 /**
@@ -38,7 +38,7 @@ constexpr double operator"" _day(long double days) noexcept
  */
 constexpr double operator"" _min(long double minutes) noexcept
 {
-  return phy_const::TU_PER_MIN*minutes;
+  return phy_const::tu_per_min*minutes;
 }
 
 }
@@ -50,7 +50,7 @@ constexpr double operator"" _min(long double minutes) noexcept
  */
 constexpr double operator"" _sec(long double seconds) noexcept
 {
-  return phy_const::TU_PER_SEC*seconds;
+  return phy_const::tu_per_sec*seconds;
 }
 
 #endif

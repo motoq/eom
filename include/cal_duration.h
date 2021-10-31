@@ -41,7 +41,7 @@ public:
    *                useful operators (e.g., 5 minutes as 5.0_min).
    */
   Duration(double dur, double to_tu) : tu {dur*to_tu},
-                                       days {dur*to_tu*phy_const::DAY_PER_TU}
+                                       days {dur*to_tu*phy_const::day_per_tu}
   {
   }
 

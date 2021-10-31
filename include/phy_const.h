@@ -20,32 +20,35 @@ namespace phy_const {
   //
 
   /** Ellipsoid radius, GRS80/WGS 84, km */
-  constexpr double KM_PER_ER {6378.1370};
+  constexpr double km_per_er {6378.1370};
   /** Ellipsoid flattening, WGS 84 */
-  constexpr double FLAT {1.0/298.257223563};
+  constexpr double flat {1.0/298.257223563};
   /** Gravitational parameter, EGM96/EGM2008, TN 36 TT compatible, km^3/s^2 */
-  constexpr double GM_KM3_SEC2 {398600.4415};
+  constexpr double gm_km3_sec2 {398600.4415};
   /** Gravitational scaling radius, EGM96/EGM2008, TN 36 TT compatible, km */
-  constexpr double KM_PER_DU {6378.1363};
+  constexpr double km_per_du {6378.1363};
   /** Nominal mean angular velocity of earth w.r.t ECI, GRS80/WGS 84, rad/sec */
-  constexpr double WE_RAD_SEC {7292115.0e-11};
+  constexpr double we_rad_sec {7292115.0e-11};
   
   //
   // Derived
   //
   
   /** Time unit definition */
-  constexpr double SEC_PER_TU {std::sqrt(KM_PER_DU*
-                                         ((KM_PER_DU*KM_PER_DU)/GM_KM3_SEC2))};
-  constexpr double MIN_PER_TU {cal_const::MIN_PER_SEC*SEC_PER_TU};
-  constexpr double DAY_PER_TU {cal_const::DAY_PER_SEC*SEC_PER_TU};
+  constexpr double sec_per_tu {std::sqrt(km_per_du*
+                                         ((km_per_du*km_per_du)/gm_km3_sec2))};
+  constexpr double min_per_tu {cal_const::min_per_sec*sec_per_tu};
+  constexpr double day_per_tu {cal_const::day_per_sec*sec_per_tu};
     //
-  constexpr double TU_PER_SEC {1.0/SEC_PER_TU};
-  constexpr double TU_PER_MIN {1.0/MIN_PER_TU};
-  constexpr double TU_PER_DAY {1.0/DAY_PER_TU};
+  constexpr double tu_per_sec {1.0/sec_per_tu};
+  constexpr double tu_per_min {1.0/min_per_tu};
+  constexpr double tu_per_day {1.0/day_per_tu};
 
   /** Gravitation parameter */
-  constexpr double GM {1.0};
+  constexpr double gm {1.0};
+
+  /** 1 mm movement at a sea level orbital altitude */
+  constexpr double epsdt {1.0e-6/km_per_du};
 }
 
 #endif

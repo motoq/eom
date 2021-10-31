@@ -52,6 +52,8 @@ public:
    */
   EcfEciSys(JulianDate startTime, JulianDate stopTime, Duration dt);
 
+  ecf_eci getEcfEciData(JulianDate& utc);
+
 private:
   JulianDate jdStart;
   JulianDate jdStop;

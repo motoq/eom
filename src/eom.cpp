@@ -104,6 +104,9 @@ int main(int argc, char* argv[])
   auto f2iSys = std::make_shared<eom::EcfEciSys>(cfg.getStartTime(),
                                                  cfg.getStopTime(),
                                                  cfg.getEcfEciRate());
+  auto jdTmp = cfg.getStartTime() + 0.5*cfg.getEcfEciRate().getDays();
+  auto f2i = f2iSys->getEcfEciData(jdTmp);
+  std::cout << "\nJD2000: " << f2i.jd2000;
 
   std::cout << "\n\n";
 

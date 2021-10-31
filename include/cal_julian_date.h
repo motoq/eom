@@ -82,7 +82,7 @@ public:
    */
   double getMjd() const noexcept
   {
-    return jdLo + (jdHi - cal_const::MJD);
+    return jdLo + (jdHi - cal_const::mjd);
   }
 
   /**
@@ -90,7 +90,7 @@ public:
    */
   double getJd2000() const noexcept
   {
-    return jdLo + (jdHi - cal_const::J2000);
+    return jdLo + (jdHi - cal_const::j2000);
   }
 
   /**
@@ -162,11 +162,21 @@ public:
     return jdHi - jd.jdHi + (jdLo - jd.jdLo);
   }
 
+  /**
+   * @return  true if this JD is less than the other, jd1 < jd2.
+   */
   bool operator<(const JulianDate& jd)
   {
     return jdHi - jd.jdHi + (jdLo - jd.jdLo) < 0.0;
   }
 
+  /**
+   * @return  true if this JD is less than or equal to the other, jd1 <= jd2.
+   */
+  bool operator<=(const JulianDate& jd)
+  {
+    return jdHi - jd.jdHi + (jdLo - jd.jdLo) <= 0.0;
+  }
 
     /**
      * @return   Gregorian Date and time as a string.  Time is
@@ -190,7 +200,7 @@ private:
   void jd2gd(int& year, int& month, int& day,
              int& hour, int& minutes, double& seconds) const;
 
-  double jdHi {cal_const::J2000};           // Days
+  double jdHi {cal_const::j2000};           // Days
   double jdLo {0.0};                        // Fraction of a day
 };
 
