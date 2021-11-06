@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.17)
 
 project (eom)
 
+set(CMAKE_BUILD_TYPE Debug)
+
 find_package(VTK COMPONENTS
   vtkCommonColor
   vtkCommonCore

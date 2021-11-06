@@ -106,7 +106,11 @@ int main(int argc, char* argv[])
                                                  cfg.getEcfEciRate());
   auto jdTmp = cfg.getStartTime() + 0.5*cfg.getEcfEciRate().getDays();
   auto f2i = f2iSys->getEcfEciData(jdTmp);
-  std::cout << "\nJD2000: " << f2i.jd2000;
+  std::cout << "\nJD2000: " << f2i.mjd2000;
+  std::cout << '\n' << f2i.bpn.w();
+  std::cout << '\n' << f2i.bpn.vec();
+  std::cout << '\n' << f2i.pm.w();
+  std::cout << '\n' << f2i.pm.vec();
 
   std::cout << "\n\n";
 

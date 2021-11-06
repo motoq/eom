@@ -15,6 +15,7 @@
 
 #include <sofa.h>
 
+#include <mth_quaternion_interp.h>
 #include <cal_julian_date.h>
 #include <cal_greg_date.h>
 #include <cal_duration.h>
@@ -78,7 +79,7 @@ EcfEciSys::EcfEciSys(JulianDate startTime, JulianDate stopTime, Duration dt) :
     Eigen::Matrix3d mpm = from3x3(itrf2tirf);
     Eigen::Quaterniond qbpn(mbpn);
     Eigen::Quaterniond qpm(mpm);
-    ecf_eci f2i {jd.getJd2000(), 0.0, 0.0, qpm, qbpn};
+    ecf_eci f2i {jd.getMjd2000(), 0.0, 0.0, qpm, qbpn};
     f2iData.push_back(f2i);
 
     jd += dt_days;
@@ -89,18 +90,27 @@ EcfEciSys::EcfEciSys(JulianDate startTime, JulianDate stopTime, Duration dt) :
 ecf_eci EcfEciSys::getEcfEciData(JulianDate& utc)
 {
   double days {utc - jdStart};
-  if (days < 0.0) {
+  if (days < 0.0  ||  jdStop-utc < 0.0) {
     throw std::out_of_range ("EcfEciSys::getEcfEciData Time out of range");
   }
 
-  unsigned long int ndx0 {static_cast<unsigned long int>(days/dt_days)};
-  unsigned long int ndx1 {ndx0 + 1UL};
+  unsigned long int ndx1 {static_cast<unsigned long int>(days/dt_days)};
+  unsigned long int ndx2 {ndx1 + 1UL};
 
-  ecf_eci& f2i0 = f2iData[ndx0];
   ecf_eci& f2i1 = f2iData[ndx1];
+  ecf_eci& f2i2 = f2iData[ndx2];
 
-  ecf_eci f2i;
-  f2i.jd2000 = (f2i0.jd2000 + f2i1.jd2000)/2.0;
+  double dur_days {f2i2.mjd2000 - f2i1.mjd2000};
+  eom::QuaternionInterp<double> bpnNterp(dur_days, f2i1.bpn, f2i2.bpn);
+  eom::QuaternionInterp<double> pmNterp(dur_days, f2i1.pm, f2i2.pm);
+
+  double mjd2000 {utc.getMjd2000()};
+  double dt_days {mjd2000 - f2i1.mjd2000};
+  Eigen::Quaternion<double> qbpn {bpnNterp.get(dt_days)};
+  Eigen::Quaternion<double> qpm {pmNterp.get(dt_days)};
+
+  ecf_eci f2i {mjd2000, 0.0, 0.0, qpm, qbpn};
+  
   return f2i;
 }
 

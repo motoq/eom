@@ -88,7 +88,7 @@ public:
   /**
    * @return  Days since Jan 1, 2000
    */
-  double getJd2000() const noexcept
+  double getMjd2000() const noexcept
   {
     return jdLo + (jdHi - cal_const::j2000);
   }

@@ -32,7 +32,7 @@ struct raw_eop {
 
   // The transformation directoin is ECF to ECI
 struct ecf_eci {
-  double jd2000 {0.0};
+  double mjd2000 {0.0};
   double ut1mutc {0.0};
   double lod {0.0};
   Eigen::Quaterniond pm;     ///< Polar motion; ITRF to TIRF
