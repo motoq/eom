@@ -15,7 +15,6 @@
 
 #include <sofa.h>
 
-#include <mth_quaternion_interp.h>
 #include <cal_julian_date.h>
 #include <cal_greg_date.h>
 #include <cal_duration.h>
@@ -40,13 +39,14 @@ static Eigen::Matrix3d from3x3(double mtx[3][3]);
 
 namespace eom {
 
-EcfEciSys::EcfEciSys(JulianDate startTime, JulianDate stopTime, Duration dt) :
+EcfEciSys::EcfEciSys(const JulianDate& startTime, const JulianDate& stopTime,
+                     const Duration& dt, bool interpolate) :
                      jdStart {startTime}, jdStop {stopTime},
-                                          dt_days {dt.getDays()}
+                     rate_days {dt.getDays()}, interpolate_bpnpm {interpolate}
 {
     // Put a small buffer around start and stop to minimize logic
     // locating ECFECI data
-  double offset {0.25*dt_days};
+  double offset {0.25*rate_days};
   jdStart += -offset;
   jdStop  +=  offset;
 
@@ -82,36 +82,41 @@ EcfEciSys::EcfEciSys(JulianDate startTime, JulianDate stopTime, Duration dt) :
     ecf_eci f2i {jd.getMjd2000(), 0.0, 0.0, qpm, qbpn};
     f2iData.push_back(f2i);
 
-    jd += dt_days;
+    jd += rate_days;
   }
+
+  nfi = f2iData.size();
 }
 
 
 ecf_eci EcfEciSys::getEcfEciData(JulianDate& utc)
 {
+    // Check for valid date
   double days {utc - jdStart};
-  if (days < 0.0  ||  jdStop-utc < 0.0) {
+  if (days < 0.0  ||  jdStop - utc < 0.0) {
     throw std::out_of_range ("EcfEciSys::getEcfEciData Time out of range");
   }
 
-  unsigned long int ndx1 {static_cast<unsigned long int>(days/dt_days)};
-  unsigned long int ndx2 {ndx1 + 1UL};
-
+    // Always need first index
+  unsigned long int ndx1 {static_cast<unsigned long int>(days/rate_days)};
   ecf_eci& f2i1 = f2iData[ndx1];
-  ecf_eci& f2i2 = f2iData[ndx2];
 
-  double dur_days {f2i2.mjd2000 - f2i1.mjd2000};
-  eom::QuaternionInterp<double> bpnNterp(dur_days, f2i1.bpn, f2i2.bpn);
-  eom::QuaternionInterp<double> pmNterp(dur_days, f2i1.pm, f2i2.pm);
-
-  double mjd2000 {utc.getMjd2000()};
-  double dt_days {mjd2000 - f2i1.mjd2000};
-  Eigen::Quaternion<double> qbpn {bpnNterp.get(dt_days)};
-  Eigen::Quaternion<double> qpm {pmNterp.get(dt_days)};
-
-  ecf_eci f2i {mjd2000, 0.0, 0.0, qpm, qbpn};
+    // Get second data set if interpolating - otherwise,
+    // return data less than or equal to requested time
+  if (interpolate_bpnpm) {
+    double mjd2000 {utc.getMjd2000()};
+    double dt_days {mjd2000 - f2i1.mjd2000};
+    double dt {dt_days/rate_days};
+    unsigned long int ndx2 {ndx1 + 1UL};
+    ecf_eci& f2i2 = f2iData[ndx2];
+    Eigen::Quaternion<double> bpn {f2i1.bpn.slerp(dt, f2i2.bpn)};
+    Eigen::Quaternion<double> pm {f2i1.pm.slerp(dt, f2i2.pm)};
+    ecf_eci f2i {mjd2000, f2i1.ut1mutc, f2i1.lod, pm, bpn};
+    return f2i;
+  } else {
+    return f2i1;
+  }
   
-  return f2i;
 }
 
 
