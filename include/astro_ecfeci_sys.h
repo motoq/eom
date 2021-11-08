@@ -69,13 +69,13 @@ public:
   EcfEciSys(const JulianDate& startTime, const JulianDate& stopTime,
             const Duration& dt, bool interpolate = true);
 
-  ecf_eci getEcfEciData(JulianDate& utc);
+  ecf_eci getEcfEciData(JulianDate& utc) const;
 
 private:
   JulianDate jdStart;
   JulianDate jdStop;
   double rate_days {0.0};
-  long nfi {0L};
+  unsigned long nfi {0UL};
   bool interpolate_bpnpm {true};
   std::vector<ecf_eci> f2iData;
 };

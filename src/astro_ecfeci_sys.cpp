@@ -37,6 +37,13 @@ static Eigen::Matrix3d from3x3(double mtx[3][3]);
  *   GCRF  Geocentric  celestial reference frame (ECI)
  */
 
+namespace {
+    // Default buffer from jdStart and jdStop with a zero rate_days
+  constexpr double offset_0 {0.25};
+    // Percentage of rate_days to use as buffer for jdStart and jdStop
+  constexpr double p_offset {0.25};
+}
+
 namespace eom {
 
 EcfEciSys::EcfEciSys(const JulianDate& startTime, const JulianDate& stopTime,
@@ -46,9 +53,15 @@ EcfEciSys::EcfEciSys(const JulianDate& startTime, const JulianDate& stopTime,
 {
     // Put a small buffer around start and stop to minimize logic
     // locating ECFECI data
-  double offset {0.25*rate_days};
-  jdStart += -offset;
-  jdStop  +=  offset;
+  if (rate_days == 0.0) {
+    double offset {offset_0};
+    jdStart += -offset;
+    jdStop  +=  offset;
+  } else {
+    double offset {p_offset*rate_days};
+    jdStart += -offset;
+    jdStop  +=  offset;
+  }
 
     // Replace with EOP data source when parsing implemented
   double xp {0.0};
@@ -62,6 +75,12 @@ EcfEciSys::EcfEciSys(const JulianDate& startTime, const JulianDate& stopTime,
     //
   eom::LeapSeconds& ls = eom::LeapSeconds::getInstance();
   auto jd = jdStart;
+    // If only one message, compute for middle time and set rate
+    // to be the full duration of the time period
+  if (rate_days == 0.0) {
+    rate_days = jdStop - jdStart;
+    jd += rate_days/2.0;
+  }
   while (jd <= jdStop) {
     auto jdTT = ls.utc2tt(jd);
       // Pole locations for BPN
@@ -84,12 +103,12 @@ EcfEciSys::EcfEciSys(const JulianDate& startTime, const JulianDate& stopTime,
 
     jd += rate_days;
   }
-
-  nfi = f2iData.size();
+    // Size fixed after initialization
+  nfi = static_cast<unsigned long>(f2iData.size());
 }
 
 
-ecf_eci EcfEciSys::getEcfEciData(JulianDate& utc)
+ecf_eci EcfEciSys::getEcfEciData(JulianDate& utc) const
 {
     // Check for valid date
   double days {utc - jdStart};
@@ -99,16 +118,18 @@ ecf_eci EcfEciSys::getEcfEciData(JulianDate& utc)
 
     // Always need first index
   unsigned long int ndx1 {static_cast<unsigned long int>(days/rate_days)};
-  ecf_eci& f2i1 = f2iData[ndx1];
+  const ecf_eci& f2i1 = f2iData[ndx1];
 
     // Get second data set if interpolating - otherwise,
     // return data less than or equal to requested time
-  if (interpolate_bpnpm) {
+  if (nfi == 1UL) {
+    return f2iData[0UL];
+  } else if (interpolate_bpnpm) {
     double mjd2000 {utc.getMjd2000()};
     double dt_days {mjd2000 - f2i1.mjd2000};
     double dt {dt_days/rate_days};
     unsigned long int ndx2 {ndx1 + 1UL};
-    ecf_eci& f2i2 = f2iData[ndx2];
+    const ecf_eci& f2i2 = f2iData[ndx2];
     Eigen::Quaternion<double> bpn {f2i1.bpn.slerp(dt, f2i2.bpn)};
     Eigen::Quaternion<double> pm {f2i1.pm.slerp(dt, f2i2.pm)};
     ecf_eci f2i {mjd2000, f2i1.ut1mutc, f2i1.lod, pm, bpn};
@@ -116,7 +137,6 @@ ecf_eci EcfEciSys::getEcfEciData(JulianDate& utc)
   } else {
     return f2i1;
   }
-  
 }
 
 
