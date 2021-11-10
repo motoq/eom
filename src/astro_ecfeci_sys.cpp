@@ -15,6 +15,7 @@
 
 #include <sofa.h>
 
+#include <cal_const.h>
 #include <cal_julian_date.h>
 #include <cal_greg_date.h>
 #include <cal_duration.h>
@@ -108,7 +109,7 @@ EcfEciSys::EcfEciSys(const JulianDate& startTime, const JulianDate& stopTime,
 }
 
 
-ecf_eci EcfEciSys::getEcfEciData(JulianDate& utc) const
+ecf_eci EcfEciSys::getEcfEciData(const JulianDate& utc) const
 {
     // Check for valid date
   double days {utc - jdStart};
@@ -130,13 +131,42 @@ ecf_eci EcfEciSys::getEcfEciData(JulianDate& utc) const
     double dt {dt_days/rate_days};
     unsigned long int ndx2 {ndx1 + 1UL};
     const ecf_eci& f2i2 = f2iData[ndx2];
-    Eigen::Quaternion<double> bpn {f2i1.bpn.slerp(dt, f2i2.bpn)};
-    Eigen::Quaternion<double> pm {f2i1.pm.slerp(dt, f2i2.pm)};
+    Eigen::Quaterniond bpn {f2i1.bpn.slerp(dt, f2i2.bpn)};
+    Eigen::Quaterniond pm {f2i1.pm.slerp(dt, f2i2.pm)};
     ecf_eci f2i {mjd2000, f2i1.ut1mutc, f2i1.lod, pm, bpn};
     return f2i;
   } else {
     return f2i1;
   }
+}
+
+
+Eigen::Matrix<double, 3, 1>
+EcfEciSys::ecf2eci(const JulianDate& utc,
+                   const Eigen::Matrix<double, 3, 1>& posf) const
+{
+
+  ecf_eci f2i {this->getEcfEciData(utc)};
+  auto ut1 {utc + cal_const::day_per_sec*f2i.ut1mutc};
+  double era {iauEra00(ut1.getJdHigh(), ut1.getJdLow())};
+  Eigen::Quaterniond qera{Eigen::AngleAxisd(era, Eigen::Vector3d::UnitZ())};
+  Eigen::Matrix<double, 3, 1> posi = f2i.bpn*qera*f2i.pm*posf;
+  return posi;
+}
+
+
+Eigen::Matrix<double, 3, 1>
+EcfEciSys::eci2ecf(const JulianDate& utc,
+                  const Eigen::Matrix<double, 3, 1>& posi) const
+{
+  ecf_eci f2i {this->getEcfEciData(utc)};
+  auto ut1 {utc + cal_const::day_per_sec*f2i.ut1mutc};
+  double era {iauEra00(ut1.getJdHigh(), ut1.getJdLow())};
+  Eigen::Quaterniond qera{Eigen::AngleAxisd(-era, Eigen::Vector3d::UnitZ())};
+  Eigen::Matrix<double, 3, 1> posf =
+                              f2i.pm.conjugate()*qera*f2i.bpn.conjugate()*posi;
+
+  return posf;
 }
 
 

@@ -11,6 +11,7 @@
 
 #include <vector>
 
+#include <Eigen/Dense>
 #include <Eigen/Geometry>
 
 #include <mth_quaternion_interp.h>
@@ -69,7 +70,40 @@ public:
   EcfEciSys(const JulianDate& startTime, const JulianDate& stopTime,
             const Duration& dt, bool interpolate = true);
 
-  ecf_eci getEcfEciData(JulianDate& utc) const;
+  /**
+   * Returns an ecf_eci struucture.  Primarily intended for internal use
+   * but public given the potential usefulness.
+   *
+   * @param  utc  Time for which to return and ecf_eci structure
+   *
+   * @return  Structure of ECF to ECI parameters.  All transformations
+   *          are in the direction of ECF to ECI.
+   */
+  ecf_eci getEcfEciData(const JulianDate& utc) const;
+
+  /**
+   * Convert an ECF position vector to ECI.
+   *
+   * @param  utc   UTC time of position vector
+   * @param  posf  Cartesian ECF position vector
+   *
+   * @return  Cartesian ECI position vector of same units as innput
+   *          vector
+   */
+  Eigen::Matrix<double, 3, 1>
+  ecf2eci(const JulianDate& utc, const Eigen::Matrix<double, 3, 1>& posf) const;
+
+  /**
+   * Convert an ECI position vector to ECF.
+   *
+   * @param  utc   UTC time of position vector
+   * @param  posf  Cartesian ECI position vector
+   *
+   * @return  Cartesian ECF position vector of same units as innput
+   *          vector
+   */
+  Eigen::Matrix<double, 3, 1>
+  eci2ecf(const JulianDate& utc, const Eigen::Matrix<double, 3, 1>& posi) const;
 
 private:
   JulianDate jdStart;
