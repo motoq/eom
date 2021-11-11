@@ -20,6 +20,7 @@
 #include <cal_greg_date.h>
 #include <cal_duration.h>
 #include <cal_leap_seconds.h>
+#include <phy_const.h>
 
 /*
  * Local utility for converting a C double[3][3] to an Eigen Matrix3d.
@@ -155,6 +156,32 @@ EcfEciSys::ecf2eci(const JulianDate& utc,
 }
 
 
+Eigen::Matrix<double, 6, 1>
+EcfEciSys::ecf2eci(const JulianDate& utc,
+                   const Eigen::Matrix<double, 3, 1>& posf,
+                   const Eigen::Matrix<double, 3, 1>& velf) const
+{
+  ecf_eci f2i {this->getEcfEciData(utc)};
+  auto ut1 {utc + cal_const::day_per_sec*f2i.ut1mutc};
+  double era {iauEra00(ut1.getJdHigh(), ut1.getJdLow())};
+  Eigen::Quaterniond qera{Eigen::AngleAxisd(era, Eigen::Vector3d::UnitZ())};
+  Eigen::Matrix<double, 3, 1> pos_tirf = f2i.pm*posf;
+  Eigen::Quaterniond qbpn_era {f2i.bpn*qera};
+  double we {phy_const::earth_angular_velocity(f2i.lod)};
+  Eigen::Matrix<double, 3, 1> wvec {0.0, 0.0, we};
+
+  Eigen::Matrix<double, 3, 1> posi = qbpn_era*pos_tirf;
+  Eigen::Matrix<double, 3, 1> veli = qbpn_era*(f2i.pm*velf +
+                                               wvec.cross(pos_tirf));
+
+  Eigen::Matrix<double, 6, 1> xeci;
+  xeci.block<3, 1>(0, 0) = posi;
+  xeci.block<3, 1>(3, 0) = veli;
+
+  return xeci;
+}
+
+
 Eigen::Matrix<double, 3, 1>
 EcfEciSys::eci2ecf(const JulianDate& utc,
                   const Eigen::Matrix<double, 3, 1>& posi) const
@@ -167,6 +194,33 @@ EcfEciSys::eci2ecf(const JulianDate& utc,
                               f2i.pm.conjugate()*qera*f2i.bpn.conjugate()*posi;
 
   return posf;
+}
+
+
+Eigen::Matrix<double, 6, 1>
+EcfEciSys::eci2ecf(const JulianDate& utc,
+                   const Eigen::Matrix<double, 3, 1>& posi,
+                   const Eigen::Matrix<double, 3, 1>& veli) const
+{
+  ecf_eci f2i {this->getEcfEciData(utc)};
+  auto ut1 {utc + cal_const::day_per_sec*f2i.ut1mutc};
+  double era {iauEra00(ut1.getJdHigh(), ut1.getJdLow())};
+  Eigen::Quaterniond qera{Eigen::AngleAxisd(-era, Eigen::Vector3d::UnitZ())};
+  Eigen::Quaterniond qera_bpnt {qera*f2i.bpn.conjugate()};
+  Eigen::Matrix<double, 3, 1> pos_tirf = qera_bpnt*posi;
+  double we {phy_const::earth_angular_velocity(f2i.lod)};
+  Eigen::Matrix<double, 3, 1> wvec {0.0, 0.0, we};
+
+  Eigen::Matrix<double, 3, 1> posf = f2i.pm.conjugate()*pos_tirf;
+  Eigen::Matrix<double, 3, 1> velf = f2i.pm.conjugate()*(qera_bpnt*veli -
+                                                         wvec.cross(pos_tirf));
+  
+  Eigen::Matrix<double, 6, 1> xecf;
+  xecf.block<3, 1>(0, 0) = posf;
+  xecf.block<3, 1>(3, 0) = velf;
+
+  return xecf;
+  
 }
 
 

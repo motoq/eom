@@ -94,6 +94,19 @@ public:
   ecf2eci(const JulianDate& utc, const Eigen::Matrix<double, 3, 1>& posf) const;
 
   /**
+   * Convert an ECF position and velocity state vector to ECI.
+   *
+   * @param  utc   UTC time of state vector
+   * @param  posf  Cartesian ECF position vector, DU
+   * @param  posf  Cartesian ECF velocity vector, DU/TU
+   *
+   * @return  Cartesian ECI state vector, DU and DU/TU
+   */
+  Eigen::Matrix<double, 6, 1>
+  ecf2eci(const JulianDate& utc, const Eigen::Matrix<double, 3, 1>& posf,
+                                 const Eigen::Matrix<double, 3, 1>& velf) const;
+
+  /**
    * Convert an ECI position vector to ECF.
    *
    * @param  utc   UTC time of position vector
@@ -104,6 +117,19 @@ public:
    */
   Eigen::Matrix<double, 3, 1>
   eci2ecf(const JulianDate& utc, const Eigen::Matrix<double, 3, 1>& posi) const;
+
+  /**
+   * Convert an ECI position and velocity state vector to ECF.
+   *
+   * @param  utc   UTC time of state vector
+   * @param  posf  Cartesian ECI position vector, DU
+   * @param  posf  Cartesian ECI velocity vector, DU/TU
+   *
+   * @return  Cartesian ECF state vector, DU and DU/TU
+   */
+  Eigen::Matrix<double, 6, 1>
+  eci2ecf(const JulianDate& utc, const Eigen::Matrix<double, 3, 1>& posi,
+                                 const Eigen::Matrix<double, 3, 1>& veli) const;
 
 private:
   JulianDate jdStart;

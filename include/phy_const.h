@@ -49,6 +49,24 @@ namespace phy_const {
 
   /** 1 mm movement at a sea level orbital altitude */
   constexpr double epsdt {1.0e-6/km_per_du};
+
+  /**
+   * Computes the angular velocity of the earth w.r.t. inertial space.
+   * This is the correct angular velocity to use when accounting for the
+   * Coriolis effect and/or centripetal acceleration.  Supplying this
+   * function with a literal "0.0" when LOD is not available provides a
+   * more accurate angular velocity than we_rad_sec above while incuring
+   * no additional computational burden since it will be evaluated at
+   * compile time.
+   *
+   * @param  lod  Length of day, seconds
+   *
+   * @return  Earth angular velocity, radians/TU
+   */
+  constexpr double earth_angular_velocity(double lod)
+  {
+    return 7.292115146706979e-5*sec_per_tu*(1.0 - lod/cal_const::sec_per_day);
+  }
 }
 
 #endif
