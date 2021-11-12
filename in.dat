@@ -4,5 +4,13 @@
 SimStart GD 2021 08 19 01 25 55.0;  # Gregorian date, UTC
 SimDuration Days 1;
 LeapSeconds 37;
-#SimDuration Minutes 120;
-EcfEciRate Minutes  0; #240;
+EcfEciRate Minutes 240;
+#end;
+#ToKm  1.0;
+#ToSec 1.0;
+#     Epoch
+#Orbit VintiProp
+#      2021 08 19 01 00 00.0
+#      GCRF Vinti
+#      -5551.89830588  -2563.04968199   3257.75675542
+#          2.149073080    -7.539456520    -2.185708850
