@@ -131,6 +131,35 @@ public:
   eci2ecf(const JulianDate& utc, const Eigen::Matrix<double, 3, 1>& posi,
                                  const Eigen::Matrix<double, 3, 1>& veli) const;
 
+  /**
+   * Convert an ECF position and velocity state vector to true equator
+   * true equinox (TEME) using the IAU 1982 gmst angular rotation.
+   *
+   * @param  utc   UTC time of state vector
+   * @param  posf  Cartesian ECF position vector, DU
+   * @param  posf  Cartesian ECF velocity vector, DU/TU
+   *
+   * @return  Cartesian TEME state vector, DU and DU/TU
+   */
+  Eigen::Matrix<double, 6, 1>
+  ecf2teme(const JulianDate& utc,
+           const Eigen::Matrix<double, 3, 1>& posf,
+           const Eigen::Matrix<double, 3, 1>& velf) const;
+
+  /**
+   * Convert a TEME position and velocity state vector to ECF.
+   *
+   * @param  utc   UTC time of state vector
+   * @param  posf  Cartesian TEME position vector, DU
+   * @param  posf  Cartesian TEME velocity vector, DU/TU
+   *
+   * @return  Cartesian ECF state vector, DU and DU/TU
+   */
+  Eigen::Matrix<double, 6, 1>
+  teme2ecf(const JulianDate& utc,
+           const Eigen::Matrix<double, 3, 1>& posi,
+           const Eigen::Matrix<double, 3, 1>& veli) const;
+
 private:
   JulianDate jdStart;
   JulianDate jdStop;

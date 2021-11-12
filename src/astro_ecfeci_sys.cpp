@@ -224,6 +224,55 @@ EcfEciSys::eci2ecf(const JulianDate& utc,
 }
 
 
+Eigen::Matrix<double, 6, 1>
+EcfEciSys::ecf2teme(const JulianDate& utc,
+                    const Eigen::Matrix<double, 3, 1>& posf,
+                    const Eigen::Matrix<double, 3, 1>& velf) const
+{
+  ecf_eci f2i {this->getEcfEciData(utc)};
+  auto ut1 {utc + cal_const::day_per_sec*f2i.ut1mutc};
+  double gmst {iauGmst82(ut1.getJdHigh(), ut1.getJdLow())};
+  Eigen::Quaterniond qgmst{Eigen::AngleAxisd(gmst, Eigen::Vector3d::UnitZ())};
+  Eigen::Matrix<double, 3, 1> pos_tirf = f2i.pm*posf;
+  double we {phy_const::earth_angular_velocity(f2i.lod)};
+  Eigen::Matrix<double, 3, 1> wvec {0.0, 0.0, we};
+
+  Eigen::Matrix<double, 3, 1> posi = qgmst*pos_tirf;
+  Eigen::Matrix<double, 3, 1> veli = qgmst*(f2i.pm*velf + wvec.cross(pos_tirf));
+
+  Eigen::Matrix<double, 6, 1> xeci;
+  xeci.block<3, 1>(0, 0) = posi;
+  xeci.block<3, 1>(3, 0) = veli;
+
+  return xeci;
+}
+
+
+Eigen::Matrix<double, 6, 1>
+EcfEciSys::teme2ecf(const JulianDate& utc,
+                    const Eigen::Matrix<double, 3, 1>& posi,
+                    const Eigen::Matrix<double, 3, 1>& veli) const
+{
+  ecf_eci f2i {this->getEcfEciData(utc)};
+  auto ut1 {utc + cal_const::day_per_sec*f2i.ut1mutc};
+  double gmst {iauGmst82(ut1.getJdHigh(), ut1.getJdLow())};
+  Eigen::Quaterniond qera{Eigen::AngleAxisd(-gmst, Eigen::Vector3d::UnitZ())};
+  Eigen::Matrix<double, 3, 1> pos_tirf = gmst*posi;
+  double we {phy_const::earth_angular_velocity(f2i.lod)};
+  Eigen::Matrix<double, 3, 1> wvec {0.0, 0.0, we};
+
+  Eigen::Matrix<double, 3, 1> posf = f2i.pm.conjugate()*pos_tirf;
+  Eigen::Matrix<double, 3, 1> velf = f2i.pm.conjugate()*(gmst*veli -
+                                                         wvec.cross(pos_tirf));
+  
+  Eigen::Matrix<double, 6, 1> xecf;
+  xecf.block<3, 1>(0, 0) = posf;
+  xecf.block<3, 1>(3, 0) = velf;
+
+  return xecf;
+  
+}
+
 }
 
 static Eigen::Matrix3d from3x3(double mtx[3][3])
