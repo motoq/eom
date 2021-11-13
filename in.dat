@@ -1,7 +1,7 @@
 
 # Test Scenario
 
-SimStart GD 2021 08 19 01 25 55.0;  # Gregorian date, UTC
+SimStart GD 2021 11 12 17 00 00.0;  # Gregorian date, UTC
 SimDuration Days 1;
 LeapSeconds 37;
 EcfEciRate Minutes 240;

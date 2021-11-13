@@ -8,6 +8,11 @@
 //#include <map>
 #include <stdexcept>
 
+
+#include <Eigen/Dense>
+#include <phy_const.h>
+#include <utl_units.h>
+
 #include <eom_config.h>
 #include <astro_ecfeci_sys.h>
 
@@ -111,6 +116,37 @@ int main(int argc, char* argv[])
   std::cout << '\n' << f2i.bpn.vec();
   std::cout << '\n' << f2i.pm.w();
   std::cout << '\n' << f2i.pm.vec();
+
+  using namespace utl_units;
+  Eigen::Matrix<double, 6, 1> eci0;
+  eci0(0,0) = -5552.0_km;
+  eci0(1,0) = -2563.0_km;
+  eci0(2,0) =  3258.0_km;
+  eci0(3,0) =     2.149_kms;
+  eci0(4,0) =    -7.539_kms;
+  eci0(5,0) =    -2.186_kms;
+  Eigen::Matrix<double, 6, 1> ecf = f2iSys->eci2ecf(cfg.getStartTime(),
+                                                    eci0.block<3,1>(0,0),
+                                                    eci0.block<3,1>(3,0));
+  Eigen::Matrix<double, 6, 1> eci = f2iSys->ecf2eci(cfg.getStartTime(),
+                                                    ecf.block<3,1>(0,0),
+                                                    ecf.block<3,1>(3,0));
+
+  std::cout << '\n';
+  std::cout.precision(17);
+  std::cout << "\nJD Start: " << cfg.getStartTime().getJdHigh() +
+                                 cfg.getStartTime().getJdLow();
+  std::cout << '\n' << phy_const::km_per_du*eci0.block<3,1>(0,0);
+  std::cout << '\n' << phy_const::km_per_du*phy_const::tu_per_sec*
+                       eci0.block<3,1>(3,0);
+  std::cout << '\n';
+  std::cout << '\n' << phy_const::km_per_du*ecf.block<3,1>(0,0);
+  std::cout << '\n' << phy_const::km_per_du*phy_const::tu_per_sec*
+                       ecf.block<3,1>(3,0);
+  std::cout << '\n';
+  std::cout << '\n' << phy_const::km_per_du*eci.block<3,1>(0,0);
+  std::cout << '\n' << phy_const::km_per_du*phy_const::tu_per_sec*
+                       eci.block<3,1>(3,0);
 
   std::cout << "\n\n";
 

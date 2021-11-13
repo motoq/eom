@@ -15,12 +15,11 @@
 
 #include <sofa.h>
 
-#include <cal_const.h>
+#include <phy_const.h>
 #include <cal_julian_date.h>
 #include <cal_greg_date.h>
 #include <cal_duration.h>
 #include <cal_leap_seconds.h>
-#include <phy_const.h>
 
 /*
  * Local utility for converting a C double[3][3] to an Eigen Matrix3d.
@@ -148,7 +147,7 @@ EcfEciSys::ecf2eci(const JulianDate& utc,
 {
 
   ecf_eci f2i {this->getEcfEciData(utc)};
-  auto ut1 {utc + cal_const::day_per_sec*f2i.ut1mutc};
+  auto ut1 {utc + phy_const::tu_per_sec*f2i.ut1mutc};
   double era {iauEra00(ut1.getJdHigh(), ut1.getJdLow())};
   Eigen::Quaterniond qera{Eigen::AngleAxisd(era, Eigen::Vector3d::UnitZ())};
   Eigen::Matrix<double, 3, 1> posi = f2i.bpn*qera*f2i.pm*posf;
@@ -162,7 +161,7 @@ EcfEciSys::ecf2eci(const JulianDate& utc,
                    const Eigen::Matrix<double, 3, 1>& velf) const
 {
   ecf_eci f2i {this->getEcfEciData(utc)};
-  auto ut1 {utc + cal_const::day_per_sec*f2i.ut1mutc};
+  auto ut1 {utc + phy_const::tu_per_sec*f2i.ut1mutc};
   double era {iauEra00(ut1.getJdHigh(), ut1.getJdLow())};
   Eigen::Quaterniond qera{Eigen::AngleAxisd(era, Eigen::Vector3d::UnitZ())};
   Eigen::Matrix<double, 3, 1> pos_tirf = f2i.pm*posf;
@@ -187,7 +186,7 @@ EcfEciSys::eci2ecf(const JulianDate& utc,
                   const Eigen::Matrix<double, 3, 1>& posi) const
 {
   ecf_eci f2i {this->getEcfEciData(utc)};
-  auto ut1 {utc + cal_const::day_per_sec*f2i.ut1mutc};
+  auto ut1 {utc + phy_const::tu_per_sec*f2i.ut1mutc};
   double era {iauEra00(ut1.getJdHigh(), ut1.getJdLow())};
   Eigen::Quaterniond qera{Eigen::AngleAxisd(-era, Eigen::Vector3d::UnitZ())};
   Eigen::Matrix<double, 3, 1> posf =
@@ -203,7 +202,7 @@ EcfEciSys::eci2ecf(const JulianDate& utc,
                    const Eigen::Matrix<double, 3, 1>& veli) const
 {
   ecf_eci f2i {this->getEcfEciData(utc)};
-  auto ut1 {utc + cal_const::day_per_sec*f2i.ut1mutc};
+  auto ut1 {utc + phy_const::tu_per_sec*f2i.ut1mutc};
   double era {iauEra00(ut1.getJdHigh(), ut1.getJdLow())};
   Eigen::Quaterniond qera{Eigen::AngleAxisd(-era, Eigen::Vector3d::UnitZ())};
   Eigen::Quaterniond qera_bpnt {qera*f2i.bpn.conjugate()};
@@ -230,7 +229,7 @@ EcfEciSys::ecf2teme(const JulianDate& utc,
                     const Eigen::Matrix<double, 3, 1>& velf) const
 {
   ecf_eci f2i {this->getEcfEciData(utc)};
-  auto ut1 {utc + cal_const::day_per_sec*f2i.ut1mutc};
+  auto ut1 {utc + phy_const::tu_per_sec*f2i.ut1mutc};
   double gmst {iauGmst82(ut1.getJdHigh(), ut1.getJdLow())};
   Eigen::Quaterniond qgmst{Eigen::AngleAxisd(gmst, Eigen::Vector3d::UnitZ())};
   Eigen::Matrix<double, 3, 1> pos_tirf = f2i.pm*posf;
@@ -254,7 +253,7 @@ EcfEciSys::teme2ecf(const JulianDate& utc,
                     const Eigen::Matrix<double, 3, 1>& veli) const
 {
   ecf_eci f2i {this->getEcfEciData(utc)};
-  auto ut1 {utc + cal_const::day_per_sec*f2i.ut1mutc};
+  auto ut1 {utc + phy_const::tu_per_sec*f2i.ut1mutc};
   double gmst {iauGmst82(ut1.getJdHigh(), ut1.getJdLow())};
   Eigen::Quaterniond qera{Eigen::AngleAxisd(-gmst, Eigen::Vector3d::UnitZ())};
   Eigen::Matrix<double, 3, 1> pos_tirf = gmst*posi;

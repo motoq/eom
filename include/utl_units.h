@@ -22,6 +22,26 @@
 namespace utl_units {
 
 /**
+ * @param  kilometers  Distance, in kilometers
+ *
+ * @return  Distance in DU
+ */
+constexpr double operator"" _km(long double kilometers) noexcept
+{
+  return phy_const::du_per_km*kilometers;
+}
+
+/**
+ * @param  km_sec  Velocity, in kilometers/sec
+ *
+ * @return  Velocity in DU/TU
+ */
+constexpr double operator"" _kms(long double km_sec) noexcept
+{
+  return phy_const::du_per_km*km_sec*phy_const::sec_per_tu;
+}
+
+/**
  * @param  Duration in days
  *
  * @return  Duration in TU
