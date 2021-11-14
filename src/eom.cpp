@@ -94,6 +94,8 @@ int main(int argc, char* argv[])
             } else if (make == "ToSeconds") {
               cfg.setToSeconds(tokens);
               input_error = !cfg.isValid();
+            } else if (make == "Orbit") {
+              input_error = false;
             }
               // End Input Types
           }

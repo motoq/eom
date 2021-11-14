@@ -23,6 +23,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(SOURCES
+  src/Vinti6.c
   src/eom.cpp
   src/eom_config.cpp
   src/parse_datetime.cpp
@@ -30,6 +31,7 @@ set(SOURCES
   src/cal_greg_date.cpp
   src/cal_julian_date.cpp
   src/astro_ecfeci_sys.cpp
+  src/astro_kepler.cpp
 )
 
 add_library(sofalib STATIC IMPORTED)
