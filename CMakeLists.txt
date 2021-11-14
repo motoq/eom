@@ -24,9 +24,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(SOURCES
   src/eom.cpp
+  src/eom_config.cpp
+  src/parse_datetime.cpp
+  src/parse_duration.cpp
   src/cal_greg_date.cpp
   src/cal_julian_date.cpp
-  src/eom_config.cpp
   src/astro_ecfeci_sys.cpp
 )
 

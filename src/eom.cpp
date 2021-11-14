@@ -85,6 +85,15 @@ int main(int argc, char* argv[])
             } else if (make == "EcfEciRate") {
               cfg.setEcfEciRate(tokens);
               input_error = !cfg.isValid();
+            } else if (make == "end") {
+              input_error = false;
+              ifs.seekg(0, std::ios::end);
+            } else if (make == "ToKilometers") {
+              cfg.setToKilometers(tokens);
+              input_error = !cfg.isValid();
+            } else if (make == "ToSeconds") {
+              cfg.setToSeconds(tokens);
+              input_error = !cfg.isValid();
             }
               // End Input Types
           }

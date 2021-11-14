@@ -36,15 +36,19 @@ public:
 
   eom::JulianDate getStartTime() const noexcept { return jdStart; }
 
+  eom::JulianDate getStopTime() const noexcept { return jdStop; }
+
   void setDuration(std::deque<std::string>& tokens);
 
   void setLeapSeconds(std::deque<std::string>& tokens);
 
-  eom::JulianDate getStopTime() const noexcept { return jdStop; }
-
   void setEcfEciRate(std::deque<std::string>& tokens);
 
   eom::Duration getEcfEciRate() const noexcept { return dtEcfEci; }
+
+  void setToKilometers(std::deque<std::string>& tokens);
+
+  void setToSeconds(std::deque<std::string>& tokens);
 
   bool isValid() const noexcept { return valid; }
 
@@ -53,6 +57,8 @@ public:
   void print(std::ostream& stream) const;
 
 private:
+  double to_km {1.0};
+  double to_sec {1.0};
   bool valid {true};
   bool epoch_set {false};
   bool f2i_rate_set {false};
