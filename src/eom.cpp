@@ -3,7 +3,7 @@
 #include <sstream>
 #include <string>
 #include <memory>
-//#include <vector>
+#include <vector>
 #include <deque>
 //#include <map>
 #include <stdexcept>
@@ -14,6 +14,7 @@
 #include <utl_units.h>
 
 #include <eom_config.h>
+#include <astro_ephemeris.h>
 #include <astro_ecfeci_sys.h>
 
 
@@ -42,6 +43,7 @@ int main(int argc, char* argv[])
   std::cout << "\nOpened " << argv[1] << '\n';
 
   eom_app::EomConfig cfg;
+  std::vector<std::shared_ptr<eom::Ephemeris>> orbits;
 
     // Read each line and pass to parser while tracking line number
   int line_number {0};
@@ -95,6 +97,19 @@ int main(int argc, char* argv[])
               cfg.setToSeconds(tokens);
               input_error = !cfg.isValid();
             } else if (make == "Orbit") {
+              /*
+              std::shared_ptr<IShoot> sp_m14 =
+                                      std::make_shared<M14>("make_shared");
+              shooters_shared.emplace_back(sp_m14);
+
+              void shoot_sp(std::vector<std::shared_ptr<IShoot>>& shooter_lst)
+              {
+                unsigned int n = static_cast<unsigned int>(shooter_lst.size());
+                for (unsigned int ii=0;  ii<n; ++ii) {
+                  shooter_lst[ii]->fire();
+                }
+              }
+              */
               input_error = false;
             }
               // End Input Types
