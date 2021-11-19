@@ -48,7 +48,11 @@ public:
 
   void setToKilometers(std::deque<std::string>& tokens);
 
+  double getToKilometers() const noexcept { return to_km; }
+
   void setToSeconds(std::deque<std::string>& tokens);
+
+  double getToSeconds() const noexcept { return to_sec; }
 
   bool isValid() const noexcept { return valid; }
 

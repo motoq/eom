@@ -28,9 +28,12 @@ set(SOURCES
   src/eom_config.cpp
   src/parse_datetime.cpp
   src/parse_duration.cpp
+  src/parse_orbit_def.cpp
+  src/parse_state_vector.cpp
   src/cal_greg_date.cpp
   src/cal_julian_date.cpp
   src/astro_ecfeci_sys.cpp
+  src/astro_orbit_def.cpp
   src/astro_kepler.cpp
 )
 

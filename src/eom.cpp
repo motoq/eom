@@ -14,9 +14,10 @@
 #include <utl_units.h>
 
 #include <eom_config.h>
+#include <eom_parse.h>
+#include <astro_orbit_def.h>
 #include <astro_ephemeris.h>
 #include <astro_ecfeci_sys.h>
-
 
 /**
  * Table of surfaces
@@ -43,7 +44,9 @@ int main(int argc, char* argv[])
   std::cout << "\nOpened " << argv[1] << '\n';
 
   eom_app::EomConfig cfg;
-  std::vector<std::shared_ptr<eom::Ephemeris>> orbits;
+  std::shared_ptr<const eom::EcfEciSys> f2iSys {nullptr};
+  //std::vector<std::shared_ptr<eom::Ephemeris>> orbits;
+  std::vector<eom::OrbitDef> orbitDefs;
 
     // Read each line and pass to parser while tracking line number
   int line_number {0};
@@ -86,6 +89,9 @@ int main(int argc, char* argv[])
               input_error = !cfg.isValid();
             } else if (make == "EcfEciRate") {
               cfg.setEcfEciRate(tokens);
+              f2iSys = std::make_shared<eom::EcfEciSys>(cfg.getStartTime(),
+                                                        cfg.getStopTime(),
+                                                        cfg.getEcfEciRate());
               input_error = !cfg.isValid();
             } else if (make == "end") {
               input_error = false;
@@ -110,6 +116,10 @@ int main(int argc, char* argv[])
                 }
               }
               */
+              //std::shared_ptr<eom::Ephemeris> orbit =
+              //                           eom::parse_orbit(tokens, cfg, f2iSys);
+              //orbits.push_back(orbit);
+              orbitDefs.push_back(eom::parse_orbit_def(tokens, cfg));
               input_error = false;
             }
               // End Input Types
@@ -132,9 +142,6 @@ int main(int argc, char* argv[])
   
   cfg.print(std::cout);
 
-  auto f2iSys = std::make_shared<eom::EcfEciSys>(cfg.getStartTime(),
-                                                 cfg.getStopTime(),
-                                                 cfg.getEcfEciRate());
   auto jdTmp = cfg.getStartTime() + 0.5*cfg.getEcfEciRate().getDays();
   auto f2i = f2iSys->getEcfEciData(jdTmp);
   std::cout << "\nJD2000: " << f2i.mjd2000;
@@ -157,6 +164,10 @@ int main(int argc, char* argv[])
   Eigen::Matrix<double, 6, 1> eci = f2iSys->ecf2eci(cfg.getStartTime(),
                                                     ecf.block<3,1>(0,0),
                                                     ecf.block<3,1>(3,0));
+
+
+  //eom::Kepler orbit(cfg.getStartTime(), eci, f2iSys);
+
 
   std::cout << '\n';
   std::cout.precision(17);

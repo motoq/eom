@@ -21,10 +21,10 @@ Kepler::Kepler(const JulianDate& epoch,
   ecfeci = ecfeciSys;
   Eigen::Matrix<double, 6, 1> xecf = ecfeci->eci2ecf(jd0,
                                                      xeci.block<3,1>(0,0),
-                                                     xeci.block<3,1>(3,1));
+                                                     xeci.block<3,1>(3,0));
   Eigen::Matrix<double, 6, 1> xteme = ecfeci->ecf2teme(jd0,
                                                        xecf.block<3,1>(0,0),
-                                                       xecf.block<3,1>(3,1));
+                                                       xecf.block<3,1>(3,0));
   x0[0] = phy_const::km_per_du*xteme(0,0);
   x0[1] = phy_const::km_per_du*xteme(1,0);
   x0[2] = phy_const::km_per_du*xteme(2,0);

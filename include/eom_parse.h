@@ -9,11 +9,14 @@
 #ifndef EOM_PARSE_H
 #define EOM_PARSE_H
 
+#include <array>
 #include <string>
 #include <deque>
 
+#include <eom_config.h>
 #include <cal_julian_date.h>
 #include <cal_duration.h>
+#include <astro_orbit_def.h>
 
 namespace eom {
 
@@ -46,6 +49,14 @@ JulianDate parse_datetime(std::deque<std::string>& tokens);
  * @throws  An invalid_argument exception if parsing fails.
  */
 Duration parse_duration(std::deque<std::string>& tokens);
+
+
+OrbitDef parse_orbit_def(std::deque<std::string>& tokens,
+                         const eom_app::EomConfig& cfg);
+
+std::array<double, 6> parse_state_vector(std::deque<std::string>& tokens,
+                                         const eom_app::EomConfig& cfg);
+
 
 }
 
