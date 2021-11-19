@@ -18,7 +18,7 @@
 #include <cal_duration.h>
 #include <astro_orbit_def.h>
 
-namespace eom {
+namespace eom_app {
 
 /**
  * Parses a list of string tokens representing a date and time.  The
@@ -33,7 +33,7 @@ namespace eom {
  *
  * @throws  An invalid_argument exception if parsing fails.
  */
-JulianDate parse_datetime(std::deque<std::string>& tokens);
+eom::JulianDate parse_datetime(std::deque<std::string>& tokens);
 
 
 /**
@@ -48,14 +48,14 @@ JulianDate parse_datetime(std::deque<std::string>& tokens);
  *
  * @throws  An invalid_argument exception if parsing fails.
  */
-Duration parse_duration(std::deque<std::string>& tokens);
+eom::Duration parse_duration(std::deque<std::string>& tokens);
 
 
-OrbitDef parse_orbit_def(std::deque<std::string>& tokens,
-                         const eom_app::EomConfig& cfg);
+eom::OrbitDef parse_orbit_def(std::deque<std::string>& tokens,
+                                         const EomConfig& cfg);
 
 std::array<double, 6> parse_state_vector(std::deque<std::string>& tokens,
-                                         const eom_app::EomConfig& cfg);
+                                                    const EomConfig& cfg);
 
 
 }

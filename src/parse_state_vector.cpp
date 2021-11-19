@@ -15,10 +15,10 @@
 #include <eom_config.h>
 #include <phy_const.h>
 
-namespace eom {
+namespace eom_app {
 
 std::array<double, 6> parse_state_vector(std::deque<std::string>& tokens,
-                                         const eom_app::EomConfig& cfg)
+                                                    const EomConfig& cfg)
 {
     // Need at least the name and type of orbit
   if (tokens.size() < 8) {

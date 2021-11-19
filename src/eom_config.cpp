@@ -28,7 +28,7 @@ void EomConfig::setStartTime(std::deque<std::string>& tokens)
     return;
   }
   try {
-    jdStart = eom::parse_datetime(tokens);
+    jdStart = parse_datetime(tokens);
     jdStop = jdStart;
     valid = true;
     epoch_set = true;
@@ -47,7 +47,7 @@ void EomConfig::setDuration(std::deque<std::string>& tokens)
     return;
   }
   try {
-    auto dur = eom::parse_duration(tokens);
+    auto dur = parse_duration(tokens);
     jdStop = jdStart + dur;
     valid = true;
   } catch(std::invalid_argument& ia) {
@@ -86,7 +86,7 @@ void EomConfig::setEcfEciRate(std::deque<std::string>& tokens)
     return;
   }
   try {
-    dtEcfEci = eom::parse_duration(tokens);
+    dtEcfEci = parse_duration(tokens);
     valid = true;
     f2i_rate_set = true;
   } catch(std::invalid_argument& ia) {

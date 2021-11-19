@@ -14,9 +14,9 @@
 
 #include <cal_greg_date.h>
 
-namespace eom {
+namespace eom_app {
 
-JulianDate parse_datetime(std::deque<std::string>& tokens)
+eom::JulianDate parse_datetime(std::deque<std::string>& tokens)
 {
     // Need at least the type of date/time format and the value(s)
   if (tokens.size() < 2) {
@@ -36,14 +36,14 @@ JulianDate parse_datetime(std::deque<std::string>& tokens)
       auto day_str = tokens[0];
       tokens.pop_front();
       try {
-        GregDate gd(year_str, month_str, day_str);
+        eom::GregDate gd(year_str, month_str, day_str);
         int hours {std::stoi(tokens[0])};
         tokens.pop_front();
         int minutes {std::stoi(tokens[0])};
         tokens.pop_front();
         double seconds {std::stod(tokens[0])};
         tokens.pop_front();
-        JulianDate jd(gd, hours, minutes, seconds);
+        eom::JulianDate jd(gd, hours, minutes, seconds);
         return jd;
       } catch(std::invalid_argument& ia) {
         throw std::invalid_argument("parse_date_time: error parsing GD values");

@@ -44,8 +44,6 @@ int main(int argc, char* argv[])
   std::cout << "\nOpened " << argv[1] << '\n';
 
   eom_app::EomConfig cfg;
-  std::shared_ptr<const eom::EcfEciSys> f2iSys {nullptr};
-  //std::vector<std::shared_ptr<eom::Ephemeris>> orbits;
   std::vector<eom::OrbitDef> orbitDefs;
 
     // Read each line and pass to parser while tracking line number
@@ -89,9 +87,6 @@ int main(int argc, char* argv[])
               input_error = !cfg.isValid();
             } else if (make == "EcfEciRate") {
               cfg.setEcfEciRate(tokens);
-              f2iSys = std::make_shared<eom::EcfEciSys>(cfg.getStartTime(),
-                                                        cfg.getStopTime(),
-                                                        cfg.getEcfEciRate());
               input_error = !cfg.isValid();
             } else if (make == "end") {
               input_error = false;
@@ -117,9 +112,9 @@ int main(int argc, char* argv[])
               }
               */
               //std::shared_ptr<eom::Ephemeris> orbit =
-              //                           eom::parse_orbit(tokens, cfg, f2iSys);
+              //              eom_app::parse_orbit(tokens, cfg, f2iSys);
               //orbits.push_back(orbit);
-              orbitDefs.push_back(eom::parse_orbit_def(tokens, cfg));
+              orbitDefs.push_back(eom_app::parse_orbit_def(tokens, cfg));
               input_error = false;
             }
               // End Input Types
@@ -141,6 +136,20 @@ int main(int argc, char* argv[])
   }
   
   cfg.print(std::cout);
+
+  eom::JulianDate minJd = cfg.getStartTime();
+  eom::JulianDate maxJd = cfg.getStopTime();
+  for (auto& orbit : orbitDefs) {
+    if (orbit.getEpoch() < minJd) {
+      minJd = orbit.getEpoch();
+    }
+    if (maxJd < orbit.getEpoch()) {
+      maxJd = orbit.getEpoch();
+    }
+  }
+  auto f2iSys = std::make_shared<eom::EcfEciSys>(minJd, maxJd,
+                                                 cfg.getEcfEciRate());
+  //std::vector<std::shared_ptr<eom::Ephemeris>> orbits;
 
   auto jdTmp = cfg.getStartTime() + 0.5*cfg.getEcfEciRate().getDays();
   auto f2i = f2iSys->getEcfEciData(jdTmp);

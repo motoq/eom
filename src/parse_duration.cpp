@@ -15,9 +15,9 @@
 #include <utl_units.h>
 #include <cal_duration.h>
 
-namespace eom {
+namespace eom_app {
 
-Duration parse_duration(std::deque<std::string>& tokens)
+eom::Duration parse_duration(std::deque<std::string>& tokens)
 {
   using namespace utl_units;
 

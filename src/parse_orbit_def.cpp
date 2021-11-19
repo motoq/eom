@@ -16,10 +16,10 @@
 #include <cal_julian_date.h>
 #include <astro_orbit_def.h>
 
-namespace eom {
+namespace eom_app {
 
-OrbitDef parse_orbit_def(std::deque<std::string>& tokens,
-                         const eom_app::EomConfig& cfg)
+eom::OrbitDef parse_orbit_def(std::deque<std::string>& tokens,
+                                         const EomConfig& cfg)
 {
     // Need at least the name and type of orbit
   if (tokens.size() < 2) {
@@ -31,10 +31,10 @@ OrbitDef parse_orbit_def(std::deque<std::string>& tokens,
   tokens.pop_front();
 
   if (model == "Kepler1"  &&  tokens.size() > 0 ) {
-    JulianDate epoch = parse_datetime(tokens);
+    eom::JulianDate epoch = parse_datetime(tokens);
     std::array<double, 6> xeci = parse_state_vector(tokens, cfg);
-    OrbitDef orbit {name, epoch, xeci, CoordType::cartesian, FrameType::gcrf};
-
+    eom::OrbitDef orbit {name, epoch, xeci,
+                         eom::CoordType::cartesian, eom::FrameType::gcrf};
     return orbit;
   }
 
