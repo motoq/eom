@@ -10,6 +10,7 @@
 #define ASTRO_ECFECI_SYS_H
 
 #include <vector>
+#include <iostream>
 
 #include <Eigen/Dense>
 #include <Eigen/Geometry>
@@ -159,6 +160,13 @@ public:
   teme2ecf(const JulianDate& utc,
            const Eigen::Matrix<double, 3, 1>& posi,
            const Eigen::Matrix<double, 3, 1>& veli) const;
+
+  /**
+   * Print stored ECF2ECI data to the supplied stream.
+   *
+   * @out  Output stream
+   */
+  void print(std::ostream& out);
 
 private:
   JulianDate jdStart;

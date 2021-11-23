@@ -35,6 +35,8 @@ namespace phy_const {
   //
   
   constexpr double du_per_km {1.0/km_per_du};
+  constexpr double m_per_du {1000.0*km_per_du};
+  constexpr double du_per_m {1.0/km_per_du};
 
   /** Time unit definition */
   constexpr double sec_per_tu {std::sqrt(km_per_du*

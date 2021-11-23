@@ -5,8 +5,9 @@
 
 #include <Vinti.h>
 
-#include <phy_const.h>
+#include <cal_const.h>
 #include <cal_julian_date.h>
+#include <phy_const.h>
 #include <astro_ephemeris.h>
 #include <astro_ecfeci_sys.h>
 
@@ -38,7 +39,7 @@ Eigen::Matrix<double, 6, 1> Kepler::getStateVector(const JulianDate& jd,
                                                    EphemFrame frame) const 
 {
   double x {0.0};
-  double t1 {phy_const::tu_per_day*(jd - jd0)};
+  double t1 {cal_const::sec_per_day*(jd - jd0)};
   std::array<double, 6> x1;
   Kepler1(planet.data(), 0.0, x0.data(), t1, x1.data(), &x);
 
@@ -51,12 +52,12 @@ Eigen::Matrix<double, 6, 1> Kepler::getStateVector(const JulianDate& jd,
   xteme(5,0) = phy_const::du_per_km*x1[5]*phy_const::sec_per_tu;
   Eigen::Matrix<double, 6, 1> xecf = ecfeci->teme2ecf(jd,
                                                       xteme.block<3,1>(0,0),
-                                                      xteme.block<3,1>(3,1));
+                                                      xteme.block<3,1>(3,0));
 
   if (frame == EphemFrame::eci) {
     Eigen::Matrix<double, 6, 1> xeci = ecfeci->ecf2eci(jd,
                                                        xecf.block<3,1>(0,0),
-                                                       xecf.block<3,1>(3,1));
+                                                       xecf.block<3,1>(3,0));
     return xeci;
   }
   return xecf;

@@ -34,6 +34,8 @@ set(SOURCES
   src/cal_julian_date.cpp
   src/astro_ecfeci_sys.cpp
   src/astro_orbit_def.cpp
+  src/astro_build_orbit.cpp
+  src/astro_print_ephemeris.cpp
   src/astro_kepler.cpp
 )
 

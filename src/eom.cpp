@@ -18,6 +18,8 @@
 #include <astro_orbit_def.h>
 #include <astro_ephemeris.h>
 #include <astro_ecfeci_sys.h>
+#include <astro_build.h>
+#include <astro_print.h>
 
 /**
  * Table of surfaces
@@ -149,8 +151,26 @@ int main(int argc, char* argv[])
   }
   auto f2iSys = std::make_shared<eom::EcfEciSys>(minJd, maxJd,
                                                  cfg.getEcfEciRate());
-  //std::vector<std::shared_ptr<eom::Ephemeris>> orbits;
+  std::cout << "\nMinJd " << minJd.to_str();
+  std::cout << "\nMaxJd " << maxJd.to_str();
 
+  std::vector<std::shared_ptr<eom::Ephemeris>> orbits;
+  for (auto& orbit : orbitDefs) {
+    orbits.emplace_back(eom::build_orbit(orbit, f2iSys));
+  }
+
+  using namespace utl_units;
+  std::cout << "\nSize of orbits: " << orbits.size();
+  if (orbits.size() > 0) {
+    eom::print_ephemeris("test_i.e", cfg.getStartTime(), cfg.getStopTime(),
+                         {60.0, phy_const::tu_per_sec},
+                         eom::EphemFrame::eci, orbits[0]);
+  }
+
+  f2iSys->print(std::cout);
+
+
+/*
   auto jdTmp = cfg.getStartTime() + 0.5*cfg.getEcfEciRate().getDays();
   auto f2i = f2iSys->getEcfEciData(jdTmp);
   std::cout << "\nJD2000: " << f2i.mjd2000;
@@ -159,7 +179,6 @@ int main(int argc, char* argv[])
   std::cout << '\n' << f2i.pm.w();
   std::cout << '\n' << f2i.pm.vec();
 
-  using namespace utl_units;
   Eigen::Matrix<double, 6, 1> eci0;
   eci0(0,0) = -5552.0_km;
   eci0(1,0) = -2563.0_km;
@@ -174,10 +193,12 @@ int main(int argc, char* argv[])
                                                     ecf.block<3,1>(0,0),
                                                     ecf.block<3,1>(3,0));
 
+*/
 
   //eom::Kepler orbit(cfg.getStartTime(), eci, f2iSys);
 
 
+/*
   std::cout << '\n';
   std::cout.precision(17);
   std::cout << "\nJD Start: " << cfg.getStartTime().getJdHigh() +
@@ -193,6 +214,7 @@ int main(int argc, char* argv[])
   std::cout << '\n' << phy_const::km_per_du*eci.block<3,1>(0,0);
   std::cout << '\n' << phy_const::km_per_du*phy_const::tu_per_sec*
                        eci.block<3,1>(3,0);
+*/
 
   std::cout << "\n\n";
 

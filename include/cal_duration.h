@@ -57,7 +57,7 @@ public:
    * @return  Duration in TU, the standard computational time units
    *          established by the application.
    */
-  double getTU() const noexcept
+  double getTu() const noexcept
   {
     return tu;
   }

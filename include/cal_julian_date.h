@@ -85,6 +85,8 @@ public:
     return jdLo + (jdHi - cal_const::mjd);
   }
 
+  void setMjd2000(double mjd2000);
+
   /**
    * @return  Days since Jan 1, 2000
    */
@@ -180,9 +182,15 @@ public:
 
     /**
      * @return   Gregorian Date and time as a string.  Time is
-     *           in base 24:60:60 format.
+     *           in base 24:60:60 format:  yyyy/mm/dd hh:mm:ss.00
      */
   std::string to_str() const;
+
+    /**
+     * @return   Gregorian Date and time as a string.  Time is
+     *           in base 24:60:60 format:  dd month yyyy hh:mm:ss.000000
+     */
+  std::string to_dmy_str() const;
 
 private:
   void normalize();

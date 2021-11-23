@@ -37,6 +37,13 @@ void JulianDate::set(const GregDate& gd, int hr, int min, double sec)
 }
 
 
+void JulianDate::setMjd2000(double mjd2000)
+{
+  jdHi = cal_const::j2000;
+  jdLo = mjd2000;
+}
+
+
 /*
  * Break into low and high for more precision
  */
@@ -100,6 +107,29 @@ std::string JulianDate::to_str() const
   char buf[32];
   snprintf(buf, sizeof(buf), "%4i/%02i/%02i %02i:%02i:%05.2f",
                               year, month, day, hour, minutes, seconds);
+
+  std::string dts{buf};
+  return dts;
+}
+
+
+/**
+ * Note: Seconds are truncated to 1/100 th of a second
+ */
+std::string JulianDate::to_dmy_str() const
+{
+  int year, month, day, hour, minutes;
+  double seconds; 
+  jd2gd(year, month, day, hour, minutes, seconds);
+  GregDate gd(year, month, day);
+
+    // Stop *printf from rounding to silly values like xx:xx:60 sec
+  seconds = 0.000001*static_cast<long>(1000000.0*seconds);
+
+  char buf[32];
+  snprintf(buf, sizeof(buf), "%i %s %i %02i:%02i:%09.6f", 
+                              day, gd.getMonthStr().c_str(), year,
+                              hour, minutes, seconds);
 
   std::string dts{buf};
   return dts;

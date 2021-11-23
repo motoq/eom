@@ -92,6 +92,11 @@ public:
   double getDay() const noexcept { return day; }
 
   /**
+   * @return  Three letter text abbreviation of the month
+   */
+  std::string getMonthStr() const;
+
+  /**
    * Determins if the given year is a leapyear.  The method used to determine
    * this is as follows.  If the year is divisible by 4 but not divisible by
    * 100 then the year is a leap year.  If the year is divisible by 4, and

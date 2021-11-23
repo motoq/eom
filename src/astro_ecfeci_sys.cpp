@@ -8,6 +8,7 @@
 
 #include <astro_ecfeci_sys.h>
 
+#include <iostream>
 #include <stdexcept>
 
 #include <Eigen/Dense>
@@ -61,7 +62,9 @@ EcfEciSys::EcfEciSys(const JulianDate& startTime, const JulianDate& stopTime,
   } else {
     double offset {p_offset*rate_days};
     jdStart += -offset;
-    jdStop  +=  offset;
+      // Since backing off start time, need to push end time a
+      // full message forward to not end up short
+    jdStop  +=  rate_days;
   }
 
     // Replace with EOP data source when parsing implemented
@@ -255,13 +258,13 @@ EcfEciSys::teme2ecf(const JulianDate& utc,
   ecf_eci f2i {this->getEcfEciData(utc)};
   auto ut1 {utc + phy_const::tu_per_sec*f2i.ut1mutc};
   double gmst {iauGmst82(ut1.getJdHigh(), ut1.getJdLow())};
-  Eigen::Quaterniond qera{Eigen::AngleAxisd(-gmst, Eigen::Vector3d::UnitZ())};
-  Eigen::Matrix<double, 3, 1> pos_tirf = gmst*posi;
+  Eigen::Quaterniond qgmst{Eigen::AngleAxisd(-gmst, Eigen::Vector3d::UnitZ())};
+  Eigen::Matrix<double, 3, 1> pos_tirf = qgmst*posi;
   double we {phy_const::earth_angular_velocity(f2i.lod)};
   Eigen::Matrix<double, 3, 1> wvec {0.0, 0.0, we};
 
   Eigen::Matrix<double, 3, 1> posf = f2i.pm.conjugate()*pos_tirf;
-  Eigen::Matrix<double, 3, 1> velf = f2i.pm.conjugate()*(gmst*veli -
+  Eigen::Matrix<double, 3, 1> velf = f2i.pm.conjugate()*(qgmst*veli -
                                                          wvec.cross(pos_tirf));
   
   Eigen::Matrix<double, 6, 1> xecf;
@@ -270,6 +273,16 @@ EcfEciSys::teme2ecf(const JulianDate& utc,
 
   return xecf;
   
+}
+
+
+void EcfEciSys::print(std::ostream& out)
+{
+  for (auto& f2i : f2iData) {
+    JulianDate jd;
+    jd.setMjd2000(f2i.mjd2000);
+    out << "\nMJD: " << jd.to_str();
+  }
 }
 
 }

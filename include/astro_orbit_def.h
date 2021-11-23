@@ -5,6 +5,7 @@
 #include <string>
 
 #include <cal_julian_date.h>
+#include <astro_propagator_config.h>
 
 namespace eom {
 
@@ -21,11 +22,13 @@ enum class FrameType {
 
 class OrbitDef {
 public:
-  OrbitDef(std::string orbit_name,
+  OrbitDef(std::string orbit_name, const PropagatorConfig& propConfig,
            const JulianDate& epoch, const std::array<double, 6>& state,
-           CoordType coord_type, FrameType frame_type);
+                            CoordType coord_type, FrameType frame_type);
 
   std::string getOrbitName() const noexcept { return name; }
+
+  PropagatorConfig getPropagatorConfig() const noexcept { return propCfg; }
 
   JulianDate getEpoch() const noexcept { return jd0; }
 
@@ -37,6 +40,7 @@ public:
 
 private:
   std::string name;
+  PropagatorConfig propCfg;
   CoordType coord;
   FrameType frame;
   JulianDate jd0;

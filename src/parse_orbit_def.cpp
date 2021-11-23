@@ -14,6 +14,7 @@
 
 #include <eom_config.h>
 #include <cal_julian_date.h>
+#include <astro_propagator_config.h>
 #include <astro_orbit_def.h>
 
 namespace eom_app {
@@ -30,10 +31,11 @@ eom::OrbitDef parse_orbit_def(std::deque<std::string>& tokens,
   auto model = tokens[0];
   tokens.pop_front();
 
-  if (model == "Kepler1"  &&  tokens.size() > 0 ) {
+  if (model == "Kepler"  &&  tokens.size() > 0 ) {
+    eom::PropagatorConfig propCfg {eom::PropagatorType::Kepler1};
     eom::JulianDate epoch = parse_datetime(tokens);
     std::array<double, 6> xeci = parse_state_vector(tokens, cfg);
-    eom::OrbitDef orbit {name, epoch, xeci,
+    eom::OrbitDef orbit {name, propCfg, epoch, xeci,
                          eom::CoordType::cartesian, eom::FrameType::gcrf};
     return orbit;
   }
