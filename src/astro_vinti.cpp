@@ -1,4 +1,4 @@
-#include <astro_kepler.h>
+#include <astro_vinti.h>
 
 #include <array>
 #include <cmath>
@@ -14,9 +14,9 @@
 namespace eom {
 
 
-Kepler::Kepler(const JulianDate& epoch,
-               const Eigen::Matrix<double, 6, 1>& xeci,
-               const std::shared_ptr<const EcfEciSys>& ecfeciSys)
+Vinti::Vinti(const JulianDate& epoch,
+             const Eigen::Matrix<double, 6, 1>& xeci,
+             const std::shared_ptr<const EcfEciSys>& ecfeciSys)
 {
   jd0 = epoch;
   ecfeci = ecfeciSys;
@@ -35,13 +35,13 @@ Kepler::Kepler(const JulianDate& epoch,
 }
 
 
-Eigen::Matrix<double, 6, 1> Kepler::getStateVector(const JulianDate& jd,
-                                                   EphemFrame frame) const 
+Eigen::Matrix<double, 6, 1> Vinti::getStateVector(const JulianDate& jd,
+                                                  EphemFrame frame) const
 {
-  double x {0.0};
+  std::array<double, 6> oe;
   std::array<double, 6> x1;
   double t1 {cal_const::sec_per_day*(jd - jd0)};
-  Kepler1(planet.data(), 0.0, x0.data(), t1, x1.data(), &x);
+  Vinti6(planet.data(), 0.0, x0.data(), t1, x1.data(), oe.data());
 
   Eigen::Matrix<double, 6, 1> xteme;
   xteme(0,0) = phy_const::du_per_km*x1[0];

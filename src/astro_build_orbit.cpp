@@ -18,6 +18,7 @@
 #include <astro_ephemeris.h>
 #include <astro_ecfeci_sys.h>
 #include <astro_kepler.h>
+#include <astro_vinti.h>
 
 namespace eom {
 
@@ -38,6 +39,10 @@ build_orbit(const OrbitDef& orbitParams,
   if (pCfg.getPropagatorType() == PropagatorType::Kepler1) {
     std::unique_ptr<Ephemeris> orbit =
            std::make_unique<Kepler>(orbitParams.getEpoch(), xeciVec, ecfeciSys);
+    return orbit;
+  } else if (pCfg.getPropagatorType() == PropagatorType::Vinti6) {
+    std::unique_ptr<Ephemeris> orbit =
+           std::make_unique<Vinti>(orbitParams.getEpoch(), xeciVec, ecfeciSys);
     return orbit;
   } else {
     std::unique_ptr<Ephemeris> orbit =

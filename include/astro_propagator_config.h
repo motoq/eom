@@ -5,7 +5,8 @@ namespace eom {
 
 
 enum class PropagatorType {
-  Kepler1
+  Kepler1,
+  Vinti6
 };
 
 

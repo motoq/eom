@@ -23,6 +23,8 @@ namespace phy_const {
   constexpr double km_per_er {6378.1370};
   /** Ellipsoid flattening, WGS 84 */
   constexpr double flat {1.0/298.257223563};
+  constexpr double j2 {1.08262668355e-3};
+  constexpr double j3 {-2.5327e-6};
   /** Gravitational parameter, EGM96/EGM2008, TN 36 TT compatible, km^3/s^2 */
   constexpr double gm_km3_sec2 {398600.4415};
   /** Gravitational scaling radius, EGM96/EGM2008, TN 36 TT compatible, km */

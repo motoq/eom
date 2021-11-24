@@ -9,7 +9,9 @@ ToKilometers  1.0;                     # Sticky distance and time settings
 ToSeconds 1.0;                         # For inputs without unit specifications
 # Create Kepler1 orbit
 #Orbit  KepTest  Kepler  GD 2021 11 12 12 00 00.0
-Orbit  KepTest  Kepler  GD 2021 11 12 17 00 00.0
+Orbit  KepTest  Kepler1  GD 2021 11 12 17 00 00.0
+       CART  GCRF  -5552.0  -2563.0  3258.0   2.149  -7.539  -2.186;
+Orbit  VintiTest  Vinti6  GD 2021 11 12 17 00 00.0
        CART  GCRF  -5552.0  -2563.0  3258.0   2.149  -7.539  -2.186;
 end;
 Command PrintEphemeris KepTest ITRF kep_test.e

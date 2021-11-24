@@ -37,6 +37,7 @@ set(SOURCES
   src/astro_build_orbit.cpp
   src/astro_print_ephemeris.cpp
   src/astro_kepler.cpp
+  src/astro_vinti.cpp
 )
 
 add_library(sofalib STATIC IMPORTED)
