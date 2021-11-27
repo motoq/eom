@@ -1,7 +1,9 @@
 #include <astro_vinti.h>
 
 #include <array>
-#include <cmath>
+#include <memory>
+
+#include <Eigen/Dense>
 
 #include <Vinti.h>
 

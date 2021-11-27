@@ -5,7 +5,7 @@
 #include <memory>
 #include <vector>
 #include <deque>
-//#include <map>
+#include <unordered_map>
 #include <stdexcept>
 
 
@@ -20,11 +20,6 @@
 #include <astro_ecfeci_sys.h>
 #include <astro_build.h>
 #include <astro_print.h>
-
-/**
- * Table of surfaces
- */
-//std::map<std::string, std::unique_ptr<mth::Surface>> surface_table;
 
 /**
  * Parses an input file and passes each line to the parser.
@@ -45,9 +40,11 @@ int main(int argc, char* argv[])
   }
   std::cout << "\nOpened " << argv[1] << '\n';
 
+    // Parse input file and generate the simulation configuration
+    // parameters along with modeling component definitions (that will
+    // be used to create the actual modeling components)
   eom_app::EomConfig cfg;
-  std::vector<eom::OrbitDef> orbitDefs;
-
+  std::vector<eom::OrbitDef> orbit_defs;
     // Read each line and pass to parser while tracking line number
   int line_number {0};
   std::string input_line;
@@ -77,7 +74,7 @@ int main(int argc, char* argv[])
           if (tokens.size() > 0) {
             auto make = tokens[0];
             tokens.pop_front();
-              // Start Input Types
+            // Start Input Types
             if (make == "SimStart") {
               cfg.setStartTime(tokens);
               input_error = !cfg.isValid();
@@ -100,26 +97,13 @@ int main(int argc, char* argv[])
               cfg.setToSeconds(tokens);
               input_error = !cfg.isValid();
             } else if (make == "Orbit") {
-              /*
-              std::shared_ptr<IShoot> sp_m14 =
-                                      std::make_shared<M14>("make_shared");
-              shooters_shared.emplace_back(sp_m14);
-
-              void shoot_sp(std::vector<std::shared_ptr<IShoot>>& shooter_lst)
-              {
-                unsigned int n = static_cast<unsigned int>(shooter_lst.size());
-                for (unsigned int ii=0;  ii<n; ++ii) {
-                  shooter_lst[ii]->fire();
-                }
-              }
-              */
-              //std::shared_ptr<eom::Ephemeris> orbit =
-              //              eom_app::parse_orbit(tokens, cfg, f2iSys);
-              //orbits.push_back(orbit);
-              orbitDefs.push_back(eom_app::parse_orbit_def(tokens, cfg));
+              orbit_defs.push_back(eom_app::parse_orbit_def(tokens, cfg));
+              input_error = false;
+            } else if (make == "Command") {
+              //commands.push_back(eom_app::parse_command(tokens);
               input_error = false;
             }
-              // End Input Types
+            // End Input Types
           }
           tokens.clear();
         }
@@ -136,12 +120,13 @@ int main(int argc, char* argv[])
   if (input_error) {
     return 0;
   }
-  
   cfg.print(std::cout);
 
+    // Determine time span that must be supported by the simulation
+    // based on the input scenario time and orbit epoch times.
   eom::JulianDate minJd = cfg.getStartTime();
   eom::JulianDate maxJd = cfg.getStopTime();
-  for (auto& orbit : orbitDefs) {
+  for (const auto& orbit : orbit_defs) {
     if (orbit.getEpoch() < minJd) {
       minJd = orbit.getEpoch();
     }
@@ -149,14 +134,29 @@ int main(int argc, char* argv[])
       maxJd = orbit.getEpoch();
     }
   }
+
+  //
+  // Create resources and modeling components
+  //
+  // Integrity of the application relies on the lists containing
+  // models within the environment to remain unchanged during the
+  // duration of the simulation once initialization has completed.
+  //
+
+    // Ecf to Eci transformation service, pass as
+    // const std::shared_ptr<const EcfEciSys>&
+    // for maximum safety
   auto f2iSys = std::make_shared<eom::EcfEciSys>(minJd, maxJd,
                                                  cfg.getEcfEciRate());
-  std::cout << "\nMinJd " << minJd.to_str();
-  std::cout << "\nMaxJd " << maxJd.to_str();
-
+    // Internal numeric orbit ID is the location of the orbit in the
+    // ephemeris vector.  Generate orbits, and note Name/ID association.
+  std::unordered_map<std::string, int> orbit_ids;
   std::vector<std::shared_ptr<eom::Ephemeris>> orbits;
-  for (auto& orbit : orbitDefs) {
+  int ii {0};
+  for (const auto& orbit : orbit_defs) {
+    orbit_ids[orbit.getOrbitName()] = ii;
     orbits.emplace_back(eom::build_orbit(orbit, f2iSys));
+    ii++;
   }
 
   using namespace utl_units;
@@ -170,51 +170,6 @@ int main(int argc, char* argv[])
   f2iSys->print(std::cout);
 
 
-/*
-  auto jdTmp = cfg.getStartTime() + 0.5*cfg.getEcfEciRate().getDays();
-  auto f2i = f2iSys->getEcfEciData(jdTmp);
-  std::cout << "\nJD2000: " << f2i.mjd2000;
-  std::cout << '\n' << f2i.bpn.w();
-  std::cout << '\n' << f2i.bpn.vec();
-  std::cout << '\n' << f2i.pm.w();
-  std::cout << '\n' << f2i.pm.vec();
-
-  Eigen::Matrix<double, 6, 1> eci0;
-  eci0(0,0) = -5552.0_km;
-  eci0(1,0) = -2563.0_km;
-  eci0(2,0) =  3258.0_km;
-  eci0(3,0) =     2.149_kms;
-  eci0(4,0) =    -7.539_kms;
-  eci0(5,0) =    -2.186_kms;
-  Eigen::Matrix<double, 6, 1> ecf = f2iSys->eci2ecf(cfg.getStartTime(),
-                                                    eci0.block<3,1>(0,0),
-                                                    eci0.block<3,1>(3,0));
-  Eigen::Matrix<double, 6, 1> eci = f2iSys->ecf2eci(cfg.getStartTime(),
-                                                    ecf.block<3,1>(0,0),
-                                                    ecf.block<3,1>(3,0));
-
-*/
-
-  //eom::Kepler orbit(cfg.getStartTime(), eci, f2iSys);
-
-
-/*
-  std::cout << '\n';
-  std::cout.precision(17);
-  std::cout << "\nJD Start: " << cfg.getStartTime().getJdHigh() +
-                                 cfg.getStartTime().getJdLow();
-  std::cout << '\n' << phy_const::km_per_du*eci0.block<3,1>(0,0);
-  std::cout << '\n' << phy_const::km_per_du*phy_const::tu_per_sec*
-                       eci0.block<3,1>(3,0);
-  std::cout << '\n';
-  std::cout << '\n' << phy_const::km_per_du*ecf.block<3,1>(0,0);
-  std::cout << '\n' << phy_const::km_per_du*phy_const::tu_per_sec*
-                       ecf.block<3,1>(3,0);
-  std::cout << '\n';
-  std::cout << '\n' << phy_const::km_per_du*eci.block<3,1>(0,0);
-  std::cout << '\n' << phy_const::km_per_du*phy_const::tu_per_sec*
-                       eci.block<3,1>(3,0);
-*/
 
   std::cout << "\n\n";
 
