@@ -11,6 +11,7 @@
 #include <memory>
 #include <string>
 #include <deque>
+#include <stdexcept>
 
 #include <eom_config.h>
 #include <cal_julian_date.h>

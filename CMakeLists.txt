@@ -26,6 +26,8 @@ set(SOURCES
   src/Vinti6.c
   src/eom.cpp
   src/eom_config.cpp
+  src/eom_command_builder.cpp
+  src/eom_ephem_printer.cpp
   src/parse_datetime.cpp
   src/parse_duration.cpp
   src/parse_orbit_def.cpp

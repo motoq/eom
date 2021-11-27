@@ -15,6 +15,8 @@
 
 #include <eom_config.h>
 #include <eom_parse.h>
+#include <eom_command.h>
+#include <eom_command_builder.h>
 #include <astro_orbit_def.h>
 #include <astro_ephemeris.h>
 #include <astro_ecfeci_sys.h>
@@ -44,7 +46,14 @@ int main(int argc, char* argv[])
     // parameters along with modeling component definitions (that will
     // be used to create the actual modeling components)
   eom_app::EomConfig cfg;
-  std::vector<eom::OrbitDef> orbit_defs;
+  auto orbit_defs = std::make_shared<std::vector<eom::OrbitDef>>();
+  auto orbits =
+         std::make_shared<std::vector<std::shared_ptr<eom::Ephemeris>>>();
+    // Internal numeric orbit ID is the location of the orbit in the
+    // ephemeris vector.  Generate orbits, and note Name/ID association.
+  auto orbit_ids = std::make_shared<std::unordered_map<std::string, int>>();
+  eom_app::EomCommandBuilder cmdBuilder(orbit_ids, orbit_defs, orbits);
+  std::vector<std::shared_ptr<eom_app::EomCommand>> commands;
     // Read each line and pass to parser while tracking line number
   int line_number {0};
   std::string input_line;
@@ -53,6 +62,7 @@ int main(int argc, char* argv[])
   std::deque<std::string> tokens;
   while (std::getline(ifs,input_line)) {
     line_number++;
+    std::string other_error {""};
     std::istringstream iss(input_line);
     std::string token;
     while (iss >> token  &&  !input_error) {
@@ -74,7 +84,9 @@ int main(int argc, char* argv[])
           if (tokens.size() > 0) {
             auto make = tokens[0];
             tokens.pop_front();
-            // Start Input Types
+            // Start Input Types - cfg updates attempt to handle
+            // exceptions.  Other inputs may require try blocks (see
+            // "Orbit" as an example).
             if (make == "SimStart") {
               cfg.setStartTime(tokens);
               input_error = !cfg.isValid();
@@ -97,11 +109,26 @@ int main(int argc, char* argv[])
               cfg.setToSeconds(tokens);
               input_error = !cfg.isValid();
             } else if (make == "Orbit") {
-              orbit_defs.push_back(eom_app::parse_orbit_def(tokens, cfg));
-              input_error = false;
+              auto id_ndx = orbit_defs->size();
+              try {
+                orbit_defs->push_back(eom_app::parse_orbit_def(tokens, cfg));
+                (*orbit_ids)[(*orbit_defs)[id_ndx].getOrbitName()] =
+                                                     static_cast<int>(id_ndx);
+                input_error = false;
+              } catch (std::invalid_argument& ia) {
+                std::string xerror = ia.what();
+                other_error = "Invalid Orbit definition: " + xerror;
+              }
             } else if (make == "Command") {
-              //commands.push_back(eom_app::parse_command(tokens);
-              input_error = false;
+              try {
+                commands.push_back(cmdBuilder.buildCommand(tokens, cfg));
+                input_error = false;
+              } catch (std::invalid_argument& ia) {
+                std::string xerror = ia.what();
+                other_error = "Invalid Command definition: " + xerror;
+              }
+            } else {
+              other_error = "Invalid input line type: " + make;
             }
             // End Input Types
           }
@@ -112,6 +139,7 @@ int main(int argc, char* argv[])
     if (input_error) {
       std::cout << "\nError on line: " << line_number;
       std::cout << '\n' << cfg.getError();
+      std::cout << "\nOther Error: " << other_error;
       std::cout << '\n';
       break;
     }
@@ -126,7 +154,7 @@ int main(int argc, char* argv[])
     // based on the input scenario time and orbit epoch times.
   eom::JulianDate minJd = cfg.getStartTime();
   eom::JulianDate maxJd = cfg.getStopTime();
-  for (const auto& orbit : orbit_defs) {
+  for (const auto& orbit : *orbit_defs) {
     if (orbit.getEpoch() < minJd) {
       minJd = orbit.getEpoch();
     }
@@ -148,32 +176,23 @@ int main(int argc, char* argv[])
     // for maximum safety
   auto f2iSys = std::make_shared<eom::EcfEciSys>(minJd, maxJd,
                                                  cfg.getEcfEciRate());
-    // Internal numeric orbit ID is the location of the orbit in the
-    // ephemeris vector.  Generate orbits, and note Name/ID association.
-  std::unordered_map<std::string, int> orbit_ids;
-  std::vector<std::shared_ptr<eom::Ephemeris>> orbits;
-  int ii {0};
-  for (const auto& orbit : orbit_defs) {
-    orbit_ids[orbit.getOrbitName()] = ii;
-    orbits.emplace_back(eom::build_orbit(orbit, f2iSys));
-    ii++;
+  for (const auto& orbit : *orbit_defs) {
+    std::cout << "\nOrbit name and ID " << orbit.getOrbitName() <<
+                                   "  " << (*orbit_ids)[orbit.getOrbitName()];
+        
+    orbits->emplace_back(eom::build_orbit(orbit, f2iSys));
   }
 
-  using namespace utl_units;
-  std::cout << "\nSize of orbits: " << orbits.size();
-  if (orbits.size() > 0) {
-    eom::print_ephemeris("test_i.e", cfg.getStartTime(), cfg.getStopTime(),
-                         {60.0, phy_const::tu_per_sec},
-                         eom::EphemFrame::eci, orbits[0]);
+  for (auto& cmd : commands) {
+    cmd->execute();
   }
-
-  f2iSys->print(std::cout);
-
-
 
   std::cout << "\n\n";
 
 }
+
+  //f2iSys->print(std::cout);
+
 
   //if (surface_table.at("SPH")->getType() == mth::SurfaceType::SPHERE) {
   //  std::cout << "\nYes, a sphere";
