@@ -8,24 +8,27 @@
 
 #include <eom_parse.h>
 
+#include <stdexcept>
 #include <memory>
 #include <string>
 #include <deque>
-#include <stdexcept>
 
-#include <eom_config.h>
 #include <cal_julian_date.h>
 #include <astro_propagator_config.h>
 #include <astro_orbit_def.h>
 
+#include <eom_config.h>
+
 namespace eom_app {
 
 eom::OrbitDef parse_orbit_def(std::deque<std::string>& tokens,
-                                         const EomConfig& cfg)
+                              const EomConfig& cfg)
 {
+  using namespace std::string_literals;
     // Need at least the name and type of orbit
   if (tokens.size() < 2) {
-     throw std::invalid_argument("Invalid number of tokens to parse_orbit");
+     throw std::invalid_argument("eom_app::parse_orbit_def:"s +
+                                 "  Invalid number of tokens to parse_orbit"s);
   }
   auto name = tokens[0];
   tokens.pop_front();
@@ -48,7 +51,8 @@ eom::OrbitDef parse_orbit_def(std::deque<std::string>& tokens,
     return orbit;
   }
 
-  throw std::invalid_argument("Invalid parse_orbit type: " + model);
+  throw std::invalid_argument("eom_app::parse_orbit_def:"s +
+                              "  Invalid parse_orbit type: "s + model);
 }
 
 }

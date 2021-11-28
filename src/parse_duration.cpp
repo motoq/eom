@@ -19,11 +19,13 @@ namespace eom_app {
 
 eom::Duration parse_duration(std::deque<std::string>& tokens)
 {
+  using namespace std::string_literals;
   using namespace utl_units;
 
     // Only single value duration types at this time
-  if (tokens.size() != 2) {
-    throw std::invalid_argument("Invalid number of arguments to Duration");
+  if (tokens.size() < 2) {
+    throw std::invalid_argument("eom_app::parse_duration():"s +
+                                "  Invalid number of tokens"s);
   }
 
   auto model = tokens[0];
@@ -33,7 +35,7 @@ eom::Duration parse_duration(std::deque<std::string>& tokens)
     dur = std::stod(tokens[0]);
     tokens.pop_front();
   } catch(std::invalid_argument& ia) {
-    throw std::invalid_argument("Invalid Duration");
+    throw std::invalid_argument("eom_app::parse_duration(): Invalid Duration");
   }
   if (model == "Days") {
     return {dur, 1.0_day};
@@ -42,10 +44,11 @@ eom::Duration parse_duration(std::deque<std::string>& tokens)
   } else if (model == "Seconds") {
     return {dur, 1.0_sec};
   } else {
-    throw std::invalid_argument("Invalid Duration Units Type");
+    throw std::invalid_argument("eom_app::parse_duration():"s +
+                                "  Invalid Duration Units Type"s);
   }
-
 }
+
 
 }
 

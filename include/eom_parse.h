@@ -29,12 +29,12 @@ namespace eom_app {
  * @param  List of tokens to be parsed.  This list is modified such that
  *         all parsed values are consumed (pop_front()).
  *
- * @return  A point in time
+ * @return  A point in time defined by a Julian date.
  *
- * @throws  An invalid_argument exception if parsing fails.
+ * @throws  An invalid_argument exception if parsing fails.  No error is
+ *          thrown if the list of tokens is not empty upon completion.
  */
 eom::JulianDate parse_datetime(std::deque<std::string>& tokens);
-
 
 /**
  * Parses two tokens to form a duration in time.
@@ -44,18 +44,42 @@ eom::JulianDate parse_datetime(std::deque<std::string>& tokens);
  *         This list is modified such that all parsed values are consumed
  *         (pop_front()).
  *
- * @return  A duration.
+ * @return  A duration
  *
- * @throws  An invalid_argument exception if parsing fails.
+ * @throws  An invalid_argument exception if parsing fails.  No error is
+ *          thrown if the list of tokens is not empty upon completion.
  */
 eom::Duration parse_duration(std::deque<std::string>& tokens);
 
-
+/**
+ * Parses an orbit definition
+ *
+ * @param  Tokens consisting of an orbit name, type, epoch, and state
+ *         vector.  This list is modified such that all parsed values
+ *         are consumedi (pop_front()).
+ *
+ * @return  An orbit definition, used in the generation of an orbit
+ *          model
+ *
+ * @throws  An invalid_argument exception if parsing fails.  No error is
+ *          thrown if the list of tokens is not empty upon completion.
+ */
 eom::OrbitDef parse_orbit_def(std::deque<std::string>& tokens,
-                                         const EomConfig& cfg);
+                              const EomConfig& cfg);
 
+/**
+ * Parses an orbit state vector
+ *
+ * @param  Tokens consisting of coordinat system time, reference frame,
+ *         and 6 components of the state vector.
+ *
+ * @return  Orbit state vector.
+ *
+ * @throws  An invalid_argument exception if parsing fails.  No error is
+ *          thrown if the list of tokens is not empty upon completion.
+ */
 std::array<double, 6> parse_state_vector(std::deque<std::string>& tokens,
-                                                    const EomConfig& cfg);
+                                         const EomConfig& cfg);
 
 
 }

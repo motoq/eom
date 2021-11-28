@@ -12,17 +12,20 @@
 #include <string>
 #include <deque>
 
-#include <eom_config.h>
 #include <phy_const.h>
+
+#include <eom_config.h>
 
 namespace eom_app {
 
 std::array<double, 6> parse_state_vector(std::deque<std::string>& tokens,
-                                                    const EomConfig& cfg)
+                                         const EomConfig& cfg)
 {
+  using namespace std::string_literals;
     // Need at least the name and type of orbit
   if (tokens.size() < 8) {
-    throw std::invalid_argument("8 tokens required by parse_state_vector");
+    throw std::invalid_argument("eom_app::parse_state_vector"s +
+                                "  8 tokens required"s);
   }
   auto coord_type = tokens[0];
   tokens.pop_front();
@@ -41,7 +44,8 @@ std::array<double, 6> parse_state_vector(std::deque<std::string>& tokens,
         }
       }
     } catch(std::invalid_argument& ia) {
-      throw std::invalid_argument("parse_state_vector: invalid parameter type");
+      throw std::invalid_argument("eom_app::parse_state_vector"s +
+                                  "  invalid parameter type"s);
     }
     for (unsigned int ii=0; ii<6; ++ii) {
       xeci[ii] *= phy_const::du_per_km;
@@ -52,8 +56,9 @@ std::array<double, 6> parse_state_vector(std::deque<std::string>& tokens,
     return xeci;
   }
 
-  throw std::invalid_argument("Invalid parse_state_vector frame or system: " +
-                                                        coord_type + coord_sys);
+  throw std::invalid_argument("eom_app::parse_state_vector"s +
+                              "  Invalid frame or system - "s +
+                              coord_type + coord_sys);
 }
 
 }

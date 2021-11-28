@@ -1,6 +1,13 @@
+/*
+ * Copyright 2021 Kurt Motekew
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 #include <iostream>
 #include <fstream>
-#include <sstream>
 #include <string>
 #include <memory>
 #include <vector>
@@ -24,11 +31,14 @@
 #include <astro_print.h>
 
 /**
- * Parses an input file and passes each line to the parser.
+ * Equations of Motion:  An application focused on astrodynamics related
+ * problems.  This program parses an input file building models and
+ * commands to be applied to those models.
+ *
+ * @author  Kurt Motekew
  */
 int main(int argc, char* argv[])
 {
-
     // Check for filename
   if (argc != 2) {
     std::cerr << "\nProper use is:  " << argv[0] << " <input_file_name>\n";
@@ -42,23 +52,46 @@ int main(int argc, char* argv[])
   }
   std::cout << "\nOpened " << argv[1] << '\n';
 
-    // Parse input file and generate the simulation configuration
-    // parameters along with modeling component definitions (that will
-    // be used to create the actual modeling components)
+  //
+  // Parse input file and generate the simulation configuration
+  // parameters along with modeling component definitions (that will
+  // be used to create the actual modeling components) and commands to
+  // be applied to those models.
+  //
+  // Integrity of the application relies on the lists containing
+  // models within the environment to remain unchanged after scenario
+  // initialization.  During initialization, pointers to containers will
+  // be populated (modified).  The order of objects within these lists
+  // should not be changed - they should remain in the order as they are
+  // created as "orbit_nids", "orbit_defs", and "orbits" all have a one to
+  // one association.
+  //
+
+    // General configuration parameter for the simulation
   eom_app::EomConfig cfg;
-  auto orbit_defs = std::make_shared<std::vector<eom::OrbitDef>>();
-  auto orbits =
-         std::make_shared<std::vector<std::shared_ptr<eom::Ephemeris>>>();
-    // Internal numeric orbit ID is the location of the orbit in the
-    // ephemeris vector.  Generate orbits, and note Name/ID association.
-  auto orbit_ids = std::make_shared<std::unordered_map<std::string, int>>();
-  eom_app::EomCommandBuilder cmdBuilder(orbit_ids, orbit_defs, orbits);
+    // Orbit Numeric ID is also the location of the orbit in the
+    // ephemeris vector given the orbit/platform name
+  const auto orbit_nids =
+               std::make_shared<std::unordered_map<std::string, int>>();
+    // Orbit definitions, used to initialize propagators and/or generate
+    // classes with buffered ephemeris
+  const auto orbit_defs = std::make_shared<std::vector<eom::OrbitDef>>();
+    // Ephemeris objects.  Only the pointer is needed during parsing.
+    // Objects are created after orbit_defs and orbit_nids are done being
+    // generated
+  const auto orbits =
+               std::make_shared<std::vector<std::shared_ptr<eom::Ephemeris>>>();
+    // A bucket of resources allowing for parsing and building of
+    // commands to be applied to models during the simulation
+  eom_app::EomCommandBuilder cmdBuilder(orbit_nids, orbit_defs, orbits);
+    // The commands populated by cmdBuilder
   std::vector<std::shared_ptr<eom_app::EomCommand>> commands;
     // Read each line and pass to parser while tracking line number
+    // Keep track of line number for error messages
   int line_number {0};
   std::string input_line;
-  bool parse_tokens = false;
-  bool input_error = false;
+  bool parse_tokens {false};
+  bool input_error = {false};
   std::deque<std::string> tokens;
   while (std::getline(ifs,input_line)) {
     line_number++;
@@ -112,8 +145,8 @@ int main(int argc, char* argv[])
               auto id_ndx = orbit_defs->size();
               try {
                 orbit_defs->push_back(eom_app::parse_orbit_def(tokens, cfg));
-                (*orbit_ids)[(*orbit_defs)[id_ndx].getOrbitName()] =
-                                                     static_cast<int>(id_ndx);
+                (*orbit_nids)[(*orbit_defs)[id_ndx].getOrbitName()] =
+                                                      static_cast<int>(id_ndx);
                 input_error = false;
               } catch (std::invalid_argument& ia) {
                 std::string xerror = ia.what();
@@ -145,9 +178,18 @@ int main(int argc, char* argv[])
     }
   }
   ifs.close();
+  if (tokens.size() > 0) {
+    std::cout << "\n\n=== Warning: Reached EOF non-empty que ===";
+    std::cout << "\n        (Probably left out a ';')\n\n";
+  }
   if (input_error) {
     return 0;
   }
+
+  //
+  // Parsing complete - print scenario and generate models and services
+  //
+
   cfg.print(std::cout);
 
     // Determine time span that must be supported by the simulation
@@ -163,25 +205,23 @@ int main(int argc, char* argv[])
     }
   }
 
-  //
-  // Create resources and modeling components
-  //
-  // Integrity of the application relies on the lists containing
-  // models within the environment to remain unchanged during the
-  // duration of the simulation once initialization has completed.
-  //
-
-    // Ecf to Eci transformation service, pass as
-    // const std::shared_ptr<const EcfEciSys>&
-    // for maximum safety
+    // Ecf to Eci transformation service - immutable - pass as
+    //   const std::shared_ptr<const EcfEciSys>&
   auto f2iSys = std::make_shared<eom::EcfEciSys>(minJd, maxJd,
                                                  cfg.getEcfEciRate());
+    // Ephemeris is also immutable although vector contents can be
+    // changed
   for (const auto& orbit : *orbit_defs) {
     std::cout << "\nOrbit name and ID " << orbit.getOrbitName() <<
-                                   "  " << (*orbit_ids)[orbit.getOrbitName()];
-        
+                                   "  " << (*orbit_nids)[orbit.getOrbitName()];
     orbits->emplace_back(eom::build_orbit(orbit, f2iSys));
   }
+
+
+  //
+  // Model and command lists completed - no further modifications
+  // Execute commands
+  //
 
   for (auto& cmd : commands) {
     cmd->execute();
@@ -191,21 +231,3 @@ int main(int argc, char* argv[])
 
 }
 
-  //f2iSys->print(std::cout);
-
-
-  //if (surface_table.at("SPH")->getType() == mth::SurfaceType::SPHERE) {
-  //  std::cout << "\nYes, a sphere";
-  //}
-
-              //try {
-              //  std::string name = tokens[0];
-              //  mth::Sphere* sptr = 
-              //    dynamic_cast<mth::Sphere*>(surface_table.at(name).get());
-              //  std::cout << " A sphere of size " << sptr->getRadius();
-              //  plt_sphere(sptr);
-              //  input_error = false;
-              //} catch (std::out_of_range const& exc) {
-              //  std::cout << exc.what() << '\n';
-              //  input_error = false;
-              //}

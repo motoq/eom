@@ -13,15 +13,18 @@
 #include <deque>
 
 #include <cal_greg_date.h>
+#include <cal_julian_date.h>
 
 namespace eom_app {
 
 eom::JulianDate parse_datetime(std::deque<std::string>& tokens)
 {
+  using namespace std::string_literals;
     // Need at least the type of date/time format and the value(s)
   if (tokens.size() < 2) {
     throw std::invalid_argument(
-               "Invalid number of arguments to parse_date_time");
+                 "eom_app::parse_datetime:"s +
+                 "  Invalid number of arguments to parse_date_time"s);
   }
   auto model = tokens[0];
   tokens.pop_front();
@@ -46,15 +49,18 @@ eom::JulianDate parse_datetime(std::deque<std::string>& tokens)
         eom::JulianDate jd(gd, hours, minutes, seconds);
         return jd;
       } catch(std::invalid_argument& ia) {
-        throw std::invalid_argument("parse_date_time: error parsing GD values");
+        throw std::invalid_argument("eom_app::parse_datetime:"s +
+                                    "  error parsing GD values"s);
       }
     } else {
-      throw std::invalid_argument(
-                 "parse_date_time GD type requires 6 arguments");
+      throw std::invalid_argument("eom_app::parse_datetime:"s +
+                                  "  GD type requires 6 arguments"s);
     }
   }
-  throw std::invalid_argument("Invalid parse_date_time type: " + model);
+  throw std::invalid_argument("eom_app::parse_datetime:"s + 
+                              "  Invalid type: "s + model);
 }
+
 
 }
 
