@@ -8,17 +8,17 @@
 
 #include <eom_config.h>
 
-#include <ostream>
 #include <stdexcept>
+#include <ostream>
 #include <string>
 #include <deque>
 
 #include <phy_const.h>
-#include <eom_parse.h>
 #include <cal_leap_seconds.h>
 
-namespace eom_app {
+#include <eom_parse.h>
 
+namespace eom_app {
 
 void EomConfig::setStartTime(std::deque<std::string>& tokens)
 {

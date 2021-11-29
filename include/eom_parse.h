@@ -13,10 +13,11 @@
 #include <string>
 #include <deque>
 
-#include <eom_config.h>
 #include <cal_julian_date.h>
 #include <cal_duration.h>
 #include <astro_orbit_def.h>
+
+#include <eom_config.h>
 
 namespace eom_app {
 
