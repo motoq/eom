@@ -13,7 +13,6 @@
 
 namespace eom {
 
-
 /**
  * Represents a duration in time that will provides time in appropriate
  * units for functions that need to increment/decrement time.  E.G.,

@@ -13,6 +13,13 @@
 
 #include <cal_const.h>
 
+/**
+ * Constants and functions related physical properties.  Units defined
+ * here are dependent on such properties, such as an ER (earth radius),
+ * DU (distance unit), and the TU (time unit).
+ *
+ * @author  Kurt Motekew
+ */
 namespace phy_const {
 
   //

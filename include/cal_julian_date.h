@@ -17,7 +17,6 @@
 
 namespace eom {
 
-
 /**
  * A Julian Date class designed to preserve precision by splitting the date
  * into high and low values.
@@ -62,6 +61,7 @@ public:
   JulianDate(const GregDate& gd, int hr, int min, double sec);
 
   /**
+   * See the constructor with the same signature
    */
   void set(const GregDate& gd, int hr = 0, int min = 0, double sec = 0.0);
 
@@ -85,7 +85,7 @@ public:
     return jdLo + (jdHi - cal_const::mjd);
   }
 
-  void setMjd2000(double mjd2000);
+  void setMjd2000(double mjd2000) noexcept;
 
   /**
    * @return  Days since Jan 1, 2000
@@ -126,6 +126,8 @@ public:
    *
    * @param   days   Days to add to this Julian Date (or subtracted, if
    *                 negative).
+   *
+   * @return  This + days
    */
   JulianDate& operator+=(double days) noexcept;
 
@@ -134,7 +136,7 @@ public:
    *
    * @param   days   Days to add (or subtract, if negative).
    *
-   * @return   Copy of this JulianDate, adjusted by days
+   * @return   Copy of this JulianDate + days
    */
   JulianDate operator+(double days) const noexcept;
 
@@ -151,11 +153,13 @@ public:
    *
    * @param   dur  Duration to add (or subtrack, if negative).
    *
-   * @return   Copy of this JulianDate, adjusted by days
+   * @return   Copy of this JulianDate + the input Duration
    */
   JulianDate operator+(const Duration& dur) const noexcept;
 
   /**
+   * @param  Julian date to subtract
+   *
    * @return  The time difference, in days, between this JD and the
    *          input JD.  This - input.
    */
@@ -165,6 +169,8 @@ public:
   }
 
   /**
+   * @param  Julian date to compare to
+   *
    * @return  true if this JD is less than the other, jd1 < jd2.
    */
   bool operator<(const JulianDate& jd)
@@ -173,6 +179,8 @@ public:
   }
 
   /**
+   * @param  Julian date to compare to
+   *
    * @return  true if this JD is less than or equal to the other, jd1 <= jd2.
    */
   bool operator<=(const JulianDate& jd)
@@ -180,10 +188,10 @@ public:
     return jdHi - jd.jdHi + (jdLo - jd.jdLo) <= 0.0;
   }
 
-    /**
-     * @return   Gregorian Date and time as a string.  Time is
-     *           in base 24:60:60 format:  yyyy/mm/dd hh:mm:ss.00
-     */
+  /**
+   * @return   Gregorian Date and time as a string.  Time is
+   *           in base 24:60:60 format:  yyyy/mm/dd hh:mm:ss.00
+   */
   std::string to_str() const;
 
     /**

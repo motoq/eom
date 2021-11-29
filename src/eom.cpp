@@ -209,8 +209,9 @@ int main(int argc, char* argv[])
     //   const std::shared_ptr<const EcfEciSys>&
   auto f2iSys = std::make_shared<eom::EcfEciSys>(minJd, maxJd,
                                                  cfg.getEcfEciRate());
-    // Ephemeris is also immutable although vector contents can be
-    // changed
+    // Ephemeris class is immutable.
+    // If a multithreaded implementation is implemented, be sure the
+    // final orbits vector has ephemeris ordered according to orbit_nids
   for (const auto& orbit : *orbit_defs) {
     std::cout << "\nOrbit name and ID " << orbit.getOrbitName() <<
                                    "  " << (*orbit_nids)[orbit.getOrbitName()];

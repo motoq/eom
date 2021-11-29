@@ -24,6 +24,8 @@ namespace eom {
  *   ls.setTai_Utc(100.0);
  *   std::cout << ls.getTai_Utc();
  *
+ * @author  Kurt Motekew
+ * @date    202109  Initial
  */
 class LeapSeconds
 {
@@ -71,7 +73,7 @@ private:
   double taimutc {0.0};
 };
 
-}
 
+}
 
 #endif

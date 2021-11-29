@@ -11,15 +11,19 @@
 
 namespace eom_app {
 
-//enum class EphemFrame {
-//  eci,                            ///< GCRF (IAU 2000A/2006)
-//  ecf                             ///< ITRF (~WGS 84)
-//};
-
+/**
+ * Interface for an EOM application command function.
+ *
+ * @author  Kurt Motekew
+ * @date    202111xx
+ */
 class EomCommand {
 public:
   virtual ~EomCommand() {}
 
+  /**
+   * Carry out the functionality of the implementing class
+   */
   virtual void execute() const=0;
 };
 

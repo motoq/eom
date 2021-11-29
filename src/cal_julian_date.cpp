@@ -6,17 +6,18 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+#include <cal_julian_date.h>
+
 #include <string>
 #include <cmath>
 
 #include <cal_const.h>
 #include <cal_greg_date.h>
-#include <cal_julian_date.h>
+#include <cal_duration.h>
 
 static double gd2jd(int iyear, int imonth, int iday);
 
 namespace eom {
-
 
 JulianDate::JulianDate(const GregDate& gd, int hr, int min, double sec)
 {
@@ -37,7 +38,7 @@ void JulianDate::set(const GregDate& gd, int hr, int min, double sec)
 }
 
 
-void JulianDate::setMjd2000(double mjd2000)
+void JulianDate::setMjd2000(double mjd2000) noexcept
 {
   jdHi = cal_const::j2000;
   jdLo = mjd2000;

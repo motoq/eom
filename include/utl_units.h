@@ -61,8 +61,6 @@ constexpr double operator"" _min(long double minutes) noexcept
   return phy_const::tu_per_min*minutes;
 }
 
-}
-
 /**
  * @param  Duration in seconds
  *
@@ -71,6 +69,9 @@ constexpr double operator"" _min(long double minutes) noexcept
 constexpr double operator"" _sec(long double seconds) noexcept
 {
   return phy_const::tu_per_sec*seconds;
+}
+
+
 }
 
 #endif

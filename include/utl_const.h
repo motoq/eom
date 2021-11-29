@@ -16,7 +16,6 @@
  * @author  Kurt Motekew
  * @date    20160314
  */
-
 namespace utl_const {
 
 constexpr double pi   {3.141592653589793238462643383279502884};

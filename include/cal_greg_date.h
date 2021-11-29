@@ -13,9 +13,8 @@
 
 namespace eom {
 
-
 /**
- * A simple Gregorian Date class primarily used to error verify that a
+ * A simple Gregorian Date class primarily used to verify that a
  * year, month, and day are valid.
  *
  * @author  Kurt Motekew
@@ -24,7 +23,8 @@ namespace eom {
 class GregDate {
 public:
   /**
-   * Initialized to the date of the Sputnik launch.
+   * Initialized to the the earliest date of relevance in the world of
+   * astrodynamics.
    */
   GregDate() {}
 
@@ -36,7 +36,7 @@ public:
    * @param  day    1 <= day <= {28, 29, 30, 31}, depending on the
    *                month/year combination.
    *
-   * @throws invalid_argument
+   * @throws invalid_argument when initialized with invalid arugments
    */
   GregDate(int year, int month, int day);
  
@@ -94,7 +94,7 @@ public:
   /**
    * @return  Three letter text abbreviation of the month
    */
-  std::string getMonthStr() const;
+  std::string getMonthStr() const noexcept;
 
   /**
    * Determins if the given year is a leapyear.  The method used to determine
@@ -105,8 +105,7 @@ public:
    * when Pope Gregory XIII decided that this would be the method used to 
    * determie leap years as opposed to the previous method that only required 
    * the year be divisible by 4.  If the year is before 1582 then the year will
-   * be considered a leap year if it is divisible by 4.  Not sure how far back 
-   * that will work, but hey, nothing important happended back then.
+   * be considered a leap year if it is divisible by 4.
    *
    * @param  year  Four digit representation of the year
    *

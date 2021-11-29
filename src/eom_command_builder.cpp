@@ -24,14 +24,13 @@
 
 namespace eom_app {
 
-
 EomCommandBuilder::EomCommandBuilder(
-  const std::shared_ptr<std::unordered_map<std::string, int>>& orbit_ids,
+  const std::shared_ptr<std::unordered_map<std::string, int>>& orbit_nids,
   const std::shared_ptr<std::vector<eom::OrbitDef>>& orbit_definitions,
-  const std::shared_ptr<std::vector<std::shared_ptr<eom::Ephemeris>>>&
-                                                                  orbit_ephems)
+  const std::shared_ptr<std::vector<
+                        std::shared_ptr<eom::Ephemeris>>>& orbit_ephems)
 {
-  vids = orbit_ids;
+  nids = orbit_nids;
   orbit_defs = orbit_definitions;
   orbits = orbit_ephems;
 }
@@ -49,14 +48,13 @@ EomCommandBuilder::buildCommand(std::deque<std::string>& tokens,
   tokens.pop_front();
   if (command_str == "PrintEphemeris") {
     std::unique_ptr<EomCommand> command =
-      std::make_unique<EomEphemPrinter>(tokens,
-                                        cfg.getStartTime(), cfg.getStopTime(),
-                                        vids, orbits);
+        std::make_unique<EomEphemPrinter>(tokens,
+                                          cfg.getStartTime(), cfg.getStopTime(),
+                                          nids, orbits);
     return command;
   } else {
     throw std::invalid_argument("Invalid command type: " + command_str);
   }
-
 }
 
 

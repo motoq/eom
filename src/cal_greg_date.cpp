@@ -6,10 +6,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+#include <cal_greg_date.h>
+
 #include <stdexcept>
 #include <string>
-
-#include <cal_greg_date.h>
 
 // Internal constants
 namespace {
@@ -75,7 +75,7 @@ void GregDate::set(int year, int month, int day)
 }
 
 
-std::string GregDate::getMonthStr() const
+std::string GregDate::getMonthStr() const noexcept
 {
   switch (month) {
     case 1:  return "Jan";

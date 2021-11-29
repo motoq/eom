@@ -12,6 +12,8 @@
 /**
  * Constants relating to dates and standard (non-canonical) time
  * transformations.
+ *
+ * @author  Kurt Motekew
  */
 namespace cal_const {
 

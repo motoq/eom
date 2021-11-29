@@ -14,6 +14,14 @@
 
 namespace eom {
 
+/*
+ * Supplemental Material
+ * https://arc.aiaa.org/doi/suppl/10.2514/4.866487
+ *
+ * Orbital and Celestial Mechanics
+ * Nino L. Bonavito, Gim J. Der, and John P. Vinti
+ * AIAA, 1998
+ */
 class Vinti : public Ephemeris {
 public:
   Vinti(const JulianDate& epoch,
