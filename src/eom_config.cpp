@@ -18,6 +18,12 @@
 
 #include <eom_parse.h>
 
+/*
+ * The parsing functions here should generally indicate an error
+ * condition if all of the input tokens are not consumed.  This is in
+ * contrast to the more generalized parsing fuctions from eom_parse.h
+ * that could be a subset of a larger block of text to parse.
+ */
 namespace eom_app {
 
 void EomConfig::setStartTime(std::deque<std::string>& tokens)

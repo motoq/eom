@@ -165,7 +165,10 @@ int main(int argc, char* argv[])
             }
             // End Input Types
           }
-          tokens.clear();
+          if (tokens.size() > 0) {
+            input_error = true;
+            other_error += " Did not use all tokens in last input record";
+          }
         }
       }
     }

@@ -58,6 +58,7 @@ EomEphemPrinter::EomEphemPrinter(std::deque<std::string>& tokens,
                                 frame_name);
   }
   file_name = tokens[0];
+  tokens.pop_front();
   jdStart = jdEphStart;
   jdStop = jdEphStop;
   orbits = orbit_ephems;
