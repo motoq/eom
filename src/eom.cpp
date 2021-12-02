@@ -167,7 +167,7 @@ int main(int argc, char* argv[])
           }
           if (tokens.size() > 0) {
             input_error = true;
-            other_error += " Did not use all tokens in last input record";
+            other_error += "\n  Did not use all tokens in last input record";
           }
         }
       }
@@ -181,7 +181,7 @@ int main(int argc, char* argv[])
     }
   }
   ifs.close();
-  if (tokens.size() > 0) {
+  if (tokens.size() > 0  &&  !input_error) {
     std::cout << "\n\n=== Warning: Reached EOF non-empty que ===";
     std::cout << "\n        (Probably left out a ';')\n\n";
   }

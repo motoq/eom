@@ -51,20 +51,20 @@ public:
   eom::JulianDate getStopTime() const noexcept { return jdStop; }
 
   /**
-   * @param  Tokenized parameters indicating the duration of the
-   *         scenario
+   * @param  tokens  Tokenized parameters indicating the duration of the
+   *                 scenario
    */
   void setDuration(std::deque<std::string>& tokens);
 
   /**
-   * @param  Tokenized parameters indicating the number of assumed leap
-   *         seconds
+   * @param  tokens  Tokenized parameters indicating the number of assumed leap
+   *                 seconds
    */
   void setLeapSeconds(std::deque<std::string>& tokens);
 
   /**
-   * @param  Tokenized parameters representing the time update rate
-   *         that will be used when storing reduction parameters
+   * @param  tokens  Tokenized parameters representing the time update rate
+   *                 that will be used when storing reduction parameters
    */
   void setEcfEciRate(std::deque<std::string>& tokens);
 
@@ -74,9 +74,9 @@ public:
   eom::Duration getEcfEciRate() const noexcept { return dtEcfEci; }
 
   /**
-   * @param  Change the distance conversion factor used for values
-   *         being parsed from tokenized inputs.  This factor will
-   *         convert input distance units to kilometers.
+   * @param  tokens  Change the distance conversion factor used for values
+   *                 being parsed from tokenized inputs.  This factor will
+   *                 convert input distance units to kilometers.
    */
   void setToKilometers(std::deque<std::string>& tokens);
 
@@ -88,9 +88,9 @@ public:
   double getToKilometers() const noexcept { return to_km; }
 
   /**
-   * @param  Change the time conversion factor to be used for values
-   *         being parsed from tokenized inputs.  This factor will
-   *         convert input time units to seconds.
+   * @param  tokens  Change the time conversion factor to be used for values
+   *                 being parsed from tokenized inputs.  This factor will
+   *                 convert input time units to seconds.
    */
   void setToSeconds(std::deque<std::string>& tokens);
 
