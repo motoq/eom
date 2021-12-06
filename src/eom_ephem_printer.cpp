@@ -29,7 +29,7 @@ EomEphemPrinter::EomEphemPrinter(std::deque<std::string>& tokens,
        const std::shared_ptr<std::vector<std::shared_ptr<eom::Ephemeris>>>&
                                                                   orbit_ephems)
 {
-    // First consume the rest of the tokens
+    // Read orbit name, output frame, and output filename
   using namespace std::string_literals;
   if (tokens.size() != 3) {
     throw std::invalid_argument("EomEphemPrinter::EomEphemPrinter:"s +
@@ -64,6 +64,8 @@ EomEphemPrinter::EomEphemPrinter(std::deque<std::string>& tokens,
   orbits = orbit_ephems;
 }
 
+// Add functionality to determine proper output rate given orbit type
+// Currently defaulting to a 60 second output rate
 void EomEphemPrinter::execute() const
 {
   eom::print_ephemeris(file_name, jdStart, jdStop,

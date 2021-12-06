@@ -17,6 +17,22 @@
 
 namespace eom {
 
+/**
+ * EOM build utility function declarations
+ */
+
+/**
+ * Creates an ephemeris "service" given an orbit definition.
+ * The orbit definition is similar to a declaration, while the result of
+ * this function is the full implementation behind the eom::Ephemeris
+ * interface.
+ *
+ * @param  orbitParams  Orbit definition
+ * @param  ecfeciSys    Ecf/Eci utility service pointer that will be
+ *                      copied into the Ephemeris object.
+ *
+ * @return  Orbit implementation
+ */
 std::unique_ptr<Ephemeris>
 build_orbit(const OrbitDef& orbitParams,
             const std::shared_ptr<const EcfEciSys>& ecfeciSys);

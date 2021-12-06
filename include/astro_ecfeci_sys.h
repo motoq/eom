@@ -10,12 +10,11 @@
 #define ASTRO_ECFECI_SYS_H
 
 #include <vector>
-#include <iostream>
+#include <ostream>
 
 #include <Eigen/Dense>
 #include <Eigen/Geometry>
 
-#include <mth_quaternion_interp.h>
 #include <cal_julian_date.h>
 #include <cal_duration.h>
 
@@ -34,12 +33,15 @@ struct raw_eop {
 */
 
   // The transformation directoin is ECF to ECI
+/**
+ * ECF to ECI transformations
+ */
 struct ecf_eci {
-  double mjd2000 {0.0};
-  double ut1mutc {0.0};
-  double lod {0.0};
+  double mjd2000 {0.0};      ///< Modified Julian Date w.r.t. 2000, days
+  double ut1mutc {0.0};      ///< UT1-UTC, seconds
+  double lod {0.0};          ///< Length of day, seconds (for TIRF to CIRF)
   Eigen::Quaterniond pm;     ///< Polar motion; ITRF to TIRF
-  Eigen::Quaterniond bpn;    ///< Frame bias, precession, nutation; TIRF to CIRF
+  Eigen::Quaterniond bpn;    ///< Frame bias, precession, nutation; CIRF to GCRF
 };
 
 /**
@@ -53,19 +55,20 @@ public:
   /**
    * This constructor creates an ECF to ECI conversion utility that
    * makes use of a list of generated precession and nutation data.  It
-   * allows for the most accurate conversions with some upfront
-   * computational burden.  Full benefit of this option comes with
-   * enabling interpolation.  Interpolation also comes at a price since
-   * it requires interpolating ECF to ECI data vs. directly referencing
-   * an existing structure of data in a list.
+   * allows for accurate conversions with some upfront computational burden.
+   * Full benefit of this option comes with enabling interpolation.
+   * Interpolation also comes at a price since it requires interpolating
+   * ECF to ECI data vs. directly referencing an existing structure of
+   * data in a list.
    *
    * @param  startTime    Earliest UTC time for which ECF to ECI data is
    *                      to be generated or available.
    * @param  startTime    Latest UTC time for which ECF to ECI data is
    *                      to be generated or available.
    * @param  dt           Rate at which to generate ECF to ECI data
+   *                      If zero, one set of data is generated at the
+   *                      center of the timeframe.
    * @param  interpolate  If true, ECF to ECI data will be interpolated.
-   *                      Note that UT1-UTC will always be interpolated.
    *                      Defaults to true.
    */
   EcfEciSys(const JulianDate& startTime, const JulianDate& stopTime,

@@ -22,6 +22,10 @@
 namespace eom_app {
 
 /**
+ * EOM parsing utility function declarations
+ */
+
+/**
  * Parses a list of string tokens representing a date and time.  The
  * first token indicates which type.  Gregorian date with time of day is
  * the only available input format at this time:

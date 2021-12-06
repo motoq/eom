@@ -18,6 +18,21 @@
 
 namespace eom {
 
+/**
+ * Print utility function declarations
+ */
+
+/**
+ * Write .e format ephemeris to a file.  Position and velocity are
+ * output in meters and meters/sec
+ * 
+ * @param  file_name  Name of the output file to be created.
+ * @param  jdStart    Time of first ephemeris output
+ * @param  jdStop     Time of final ephemeris output
+ * @param  dtout      Output rate
+ * @param  frame      Output reference frame
+ * @param  orbit      Ephemeris source
+ */
 void print_ephemeris(std::string file_name, 
                      const JulianDate& jdStart, const JulianDate& jdStop, 
                      const Duration& dtout, EphemFrame frame,

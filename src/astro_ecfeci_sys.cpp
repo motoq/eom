@@ -8,7 +8,7 @@
 
 #include <astro_ecfeci_sys.h>
 
-#include <iostream>
+#include <ostream>
 #include <stdexcept>
 
 #include <Eigen/Dense>
@@ -36,7 +36,7 @@ static Eigen::Matrix3d from3x3(double mtx[3][3]);
  *   ITRF  International terrestrial reference frame (ECEF)
  *   TIRF  Terrestrial intermediate reference frame (PEF)
  *   CIRF  Celestial intermediate reference frame (non-equinox based TETE)
- *   GCRF  Geocentric  celestial reference frame (ECI)
+ *   GCRF  Geocentric  celestial reference frame (ECI, within ~20 mas of J2000)
  */
 
 namespace {
@@ -148,7 +148,6 @@ Eigen::Matrix<double, 3, 1>
 EcfEciSys::ecf2eci(const JulianDate& utc,
                    const Eigen::Matrix<double, 3, 1>& posf) const
 {
-
   ecf_eci f2i {this->getEcfEciData(utc)};
   auto ut1 {utc + phy_const::tu_per_sec*f2i.ut1mutc};
   double era {iauEra00(ut1.getJdHigh(), ut1.getJdLow())};
@@ -284,6 +283,7 @@ void EcfEciSys::print(std::ostream& out)
     out << "\nMJD: " << jd.to_str();
   }
 }
+
 
 }
 

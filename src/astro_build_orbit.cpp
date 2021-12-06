@@ -6,8 +6,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <astro_build.h>
-
 #include <memory>
 #include <array>
 
@@ -19,6 +17,8 @@
 #include <astro_ecfeci_sys.h>
 #include <astro_kepler.h>
 #include <astro_vinti.h>
+
+#include <astro_build.h>
 
 namespace eom {
 

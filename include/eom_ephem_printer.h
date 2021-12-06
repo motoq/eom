@@ -39,8 +39,8 @@ public:
    *                       used.
    * @param  jdEphStart    Time of first ephemeris output
    * @param  jdEphStop     Time of final ephemeris output
-   * @param  orbit_ndxs    Orbit name to index
-   * @param  orbit_ephems  Ordered list of ephemeris servers
+   * @param  orbit_ndxs    Locates orbit index given the orbit name
+   * @param  orbit_ephems  Ordered list of orbits
    *
    * @throw  invalid_argument if exactly 3 tokens are not present, or an
    *         error is encountered (such as the input orbit name is not a
@@ -53,6 +53,9 @@ public:
       const std::shared_ptr<std::vector<std::shared_ptr<eom::Ephemeris>>>&
                                                                   orbit_ephems);
 
+  /**
+   * Writes .e format ephemeris to the previously specified file.
+   */
   void execute() const override;
 
 private:

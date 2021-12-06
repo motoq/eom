@@ -23,7 +23,6 @@
 
 namespace eom {
 
-
 void print_ephemeris(std::string file_name,
                      const JulianDate& jdStart, const JulianDate& jdStop,
                      const Duration& dtout, EphemFrame frame,
@@ -78,6 +77,7 @@ void print_ephemeris(std::string file_name,
   }
 
 }
+
 
 }
 
