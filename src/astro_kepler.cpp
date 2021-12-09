@@ -1,3 +1,11 @@
+/*
+ * Copyright 2021 Kurt Motekew
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 #include <astro_kepler.h>
 
 #include <array>
@@ -5,13 +13,13 @@
 
 #include <Eigen/Dense>
 
-#include <Vinti.h>
-
 #include <cal_const.h>
 #include <cal_julian_date.h>
 #include <phy_const.h>
 #include <astro_ephemeris.h>
 #include <astro_ecfeci_sys.h>
+
+#include <Vinti.h>
 
 namespace eom {
 

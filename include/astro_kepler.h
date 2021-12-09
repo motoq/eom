@@ -1,3 +1,11 @@
+/*
+ * Copyright 2021 Kurt Motekew
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 #ifndef ASTRO_KEPLER_H
 #define ASTRO_KEPLER_H
 
@@ -14,12 +22,32 @@
 
 namespace eom {
 
+/**
+ * Wrapper class to the Gim J. Der & Herbert B. Reynolds Kepler1 2-body
+ * analytic propagator.  See the Vinti6.c source code.
+ */
 class Kepler : public Ephemeris {
 public:
+  /**
+   * Initialize Keppler1
+   *
+   * @param  epoch      Orbit state vector epoch, UTC
+   * @param  xeci       Cartesian GCRF state vector, DU and DU/TU
+   * @param  ecfeciSys  ECF/ECI conversion resource
+   */
   Kepler(const JulianDate& epoch,
          const Eigen::Matrix<double, 6, 1>& xeci,
          const std::shared_ptr<const EcfEciSys>& ecfeciSys);
 
+  /**
+   * Compute state vector given a time
+   *
+   * @param  jd     Time of desired state vector, UTC
+   * @param  frame  Desired output reference frame
+   *
+   * @return  Cartesian state vector at requested time in the requested
+   *          reference frame
+   */
   Eigen::Matrix<double, 6, 1> getStateVector(const JulianDate& jd,
                                              EphemFrame frame) const override;
 
