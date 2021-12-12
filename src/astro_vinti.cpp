@@ -1,3 +1,11 @@
+/*
+ * Copyright 2021 Kurt Motekew
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 #include <astro_vinti.h>
 
 #include <array>
@@ -22,6 +30,7 @@ Vinti::Vinti(const JulianDate& epoch,
 {
   jd0 = epoch;
   ecfeci = ecfeciSys;
+    // A true equator ECI frame is required for propagation
   Eigen::Matrix<double, 6, 1> xecf = ecfeci->eci2ecf(jd0,
                                                      xeci.block<3,1>(0,0),
                                                      xeci.block<3,1>(3,0));

@@ -25,6 +25,14 @@ namespace eom {
 /**
  * Wrapper class to the Gim J. Der & Herbert B. Reynolds Kepler1 2-body
  * analytic propagator.  See the Vinti6.c source code.
+ *
+ * Vinti6.c and Vinti.h source:
+ * Supplemental Material
+ * https://arc.aiaa.org/doi/suppl/10.2514/4.866487
+ *
+ * Orbital and Celestial Mechanics
+ * Nino L. Bonavito, Gim J. Der, and John P. Vinti
+ * AIAA, 1998
  */
 class Kepler : public Ephemeris {
 public:
@@ -46,7 +54,7 @@ public:
    * @param  frame  Desired output reference frame
    *
    * @return  Cartesian state vector at requested time in the requested
-   *          reference frame
+   *          reference frame, DU and DU/TU
    */
   Eigen::Matrix<double, 6, 1> getStateVector(const JulianDate& jd,
                                              EphemFrame frame) const override;

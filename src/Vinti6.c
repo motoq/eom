@@ -41,6 +41,15 @@
  *    x1[6] = state vector, position and velocity, (km, km/s)                 *
  *    oe[6] = Vinti mean elements                                             *
  *                                                                            *
+ *                                                                            *
+ * Modifications history since release                                        *
+ *   Kurt Motekew  December, 2021                                             *
+ *     - Removed causes of compile time warnings (mostly unused variables)    *
+ *     - Updated a few variables to be constants                              *
+ *     - The goal was to make as few changes as possible - no algorithm or    *
+ *       code structure changes were made, so sticking with the function      *
+ *       names Vinti6 and Kepler1 with the hope these minor updates are not   *
+ *       viewed as disrespectful towards the original codebase.                *
  *****************************************************************************/
 
 #include "Vinti.h"
@@ -1117,7 +1126,7 @@ void VintToKep(double planet[4], double vmean[6], double kmean[6])
    double p, e, si2, b1, b2, b3;
    double a, nsq, n, M, i;
    double GM, RE;
-   double DEGS = 57.2957795130823200;    // Radians to degrees
+   const double DEGS = 57.2957795130823200;      // Radians to degrees
 
    RE = planet[0];
    GM = planet[1];
