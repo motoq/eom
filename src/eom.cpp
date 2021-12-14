@@ -63,27 +63,27 @@ int main(int argc, char* argv[])
   // initialization.  During initialization, pointers to containers will
   // be populated (modified).  The order of objects within these lists
   // should not be changed - they should remain in the order as they are
-  // created as "orbit_nids", "orbit_defs", and "orbits" all have a one to
-  // one association.
+  // created as "ephem_nids", "orbit_defs", and "ephemerides" all have a
+  // one to one association.
   //
 
     // General configuration parameter for the simulation
   eom_app::EomConfig cfg;
     // Orbit Numeric ID is also the location of the orbit in the
     // ephemeris vector given the orbit/platform name
-  const auto orbit_nids =
+  const auto ephem_nids =
                std::make_shared<std::unordered_map<std::string, int>>();
     // Orbit definitions, used to initialize propagators and/or generate
     // classes with buffered ephemeris
   const auto orbit_defs = std::make_shared<std::vector<eom::OrbitDef>>();
     // Ephemeris objects.  Only the pointer is needed during parsing.
-    // Objects are created after orbit_defs and orbit_nids are done being
+    // Objects are created after orbit_defs and ephem_nids are done being
     // generated
-  const auto orbits =
+  const auto ephemerides =
                std::make_shared<std::vector<std::shared_ptr<eom::Ephemeris>>>();
     // A bucket of resources allowing for parsing and building of
     // commands to be applied to models during the simulation
-  eom_app::EomCommandBuilder cmdBuilder(orbit_nids, orbit_defs, orbits);
+  eom_app::EomCommandBuilder cmdBuilder(ephem_nids, orbit_defs, ephemerides);
     // The commands populated by cmdBuilder
   std::vector<std::shared_ptr<eom_app::EomCommand>> commands;
     // Read each line and pass to parser while tracking line number
@@ -145,7 +145,7 @@ int main(int argc, char* argv[])
               auto id_ndx = orbit_defs->size();
               try {
                 orbit_defs->push_back(eom_app::parse_orbit_def(tokens, cfg));
-                (*orbit_nids)[(*orbit_defs)[id_ndx].getOrbitName()] =
+                (*ephem_nids)[(*orbit_defs)[id_ndx].getOrbitName()] =
                                                       static_cast<int>(id_ndx);
                 input_error = false;
               } catch (std::invalid_argument& ia) {
@@ -214,11 +214,11 @@ int main(int argc, char* argv[])
                                                  cfg.getEcfEciRate());
     // Ephemeris class is immutable.
     // If a multithreaded implementation is implemented, be sure the
-    // final orbits vector has ephemeris ordered according to orbit_nids
+    // final ephemerides vector has ephemeris ordered according to ephem_nids
   for (const auto& orbit : *orbit_defs) {
     std::cout << "\nOrbit name and ID " << orbit.getOrbitName() <<
-                                   "  " << (*orbit_nids)[orbit.getOrbitName()];
-    orbits->emplace_back(eom::build_orbit(orbit, f2iSys));
+                                   "  " << (*ephem_nids)[orbit.getOrbitName()];
+    ephemerides->emplace_back(eom::build_orbit(orbit, f2iSys));
   }
 
 

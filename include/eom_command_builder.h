@@ -36,25 +36,25 @@ public:
    * Initialize with resources needed to build commands.  All input
    * collections are expected to grow.  Additions to each list can be
    * made, but the order of objects must not be altered after being
-   * added to any list, with the exception of orbit_nids, which maps
+   * added to any list, with the exception of ephem_nids, which maps
    * orbit names to NIDS.  Orbit and other definitions must be
    * be present before a command can be processed making use of such
    * models and resources.
    *
-   * @param  orbit_nids         List of currently existing orbit Numeric IDs.
+   * @param  ephem_nids         List of currently existing orbit Numeric IDs.
    *                            Each ID represents the indext into the
    *                            Ephemeris vector and any other resource
    *                            lists generated during EOM initialization.
    * @param  orbit_definitions  List of orbit definitions that will be
    *                            used to generate ephemeris providers.
-   * @param  orbit_ephems       List of Ephemeris definitions      
+   * @param  ephem_list         List of Ephemeris definitions      
    */
   EomCommandBuilder(const std::shared_ptr<
-                          std::unordered_map<std::string, int>>& orbit_nids,
+                          std::unordered_map<std::string, int>>& ephem_nids,
                     const std::shared_ptr<
                           std::vector<eom::OrbitDef>>& orbit_definitions,
                     const std::shared_ptr<std::vector<
-                          std::shared_ptr<eom::Ephemeris>>>& orbit_ephems);
+                          std::shared_ptr<eom::Ephemeris>>>& ephem_list);
 
   /**
    * Builds a command given tokens, stored resources, and the simulation
@@ -68,12 +68,12 @@ public:
                                            const EomConfig& cfg);
 
 private:
-    // NIDS maps orbit names to orbit_def and orbits indexing
-  std::shared_ptr<std::unordered_map<std::string, int>> nids;
-    // Order may not be changed without updating nids.  Containers may
+    // NIDS maps orbit names to orbit_def and ephemerides indexing
+  std::shared_ptr<std::unordered_map<std::string, int>> eph_nids;
+    // Order may not be changed without updating eph_nids.  Containers may
     // grow due to actions external to this class.  
   std::shared_ptr<std::vector<eom::OrbitDef>> orbit_defs;
-  std::shared_ptr<std::vector<std::shared_ptr<eom::Ephemeris>>> orbits;
+  std::shared_ptr<std::vector<std::shared_ptr<eom::Ephemeris>>> ephemerides;
 };
 
 

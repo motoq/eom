@@ -18,6 +18,7 @@
 #include <eom_config.h>
 #include <eom_command.h>
 #include <eom_ephem_printer.h>
+#include <eom_range_printer.h>
 
 #include <astro_orbit_def.h>
 #include <astro_ephemeris.h>
@@ -25,14 +26,14 @@
 namespace eom_app {
 
 EomCommandBuilder::EomCommandBuilder(
-  const std::shared_ptr<std::unordered_map<std::string, int>>& orbit_nids,
+  const std::shared_ptr<std::unordered_map<std::string, int>>& ephem_nids,
   const std::shared_ptr<std::vector<eom::OrbitDef>>& orbit_definitions,
   const std::shared_ptr<std::vector<
-                        std::shared_ptr<eom::Ephemeris>>>& orbit_ephems)
+                        std::shared_ptr<eom::Ephemeris>>>& ephem_list)
 {
-  nids = orbit_nids;
+  eph_nids = ephem_nids;
   orbit_defs = orbit_definitions;
-  orbits = orbit_ephems;
+  ephemerides = ephem_list;
 }
 
 
@@ -40,17 +41,22 @@ std::unique_ptr<EomCommand>
 EomCommandBuilder::buildCommand(std::deque<std::string>& tokens,
                                 const EomConfig& cfg)
 {
-
   if (tokens.size() < 1) {
     throw std::invalid_argument("EomCommandBuilder::buildCommand: No tokens");
   }
   auto command_str = tokens[0];
   tokens.pop_front();
-  if (command_str == "PrintEphemeris") {
+  if (command_str == "PrintRange") {
+    std::unique_ptr<EomCommand> command =
+        std::make_unique<EomRangePrinter>(tokens,
+                                          cfg.getStartTime(), cfg.getStopTime(),
+                                          eph_nids, ephemerides);
+    return command;
+  } else if (command_str == "PrintEphemeris") {
     std::unique_ptr<EomCommand> command =
         std::make_unique<EomEphemPrinter>(tokens,
                                           cfg.getStartTime(), cfg.getStopTime(),
-                                          nids, orbits);
+                                          eph_nids, ephemerides);
     return command;
   } else {
     throw std::invalid_argument("Invalid command type: " + command_str);

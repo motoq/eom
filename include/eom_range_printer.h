@@ -6,13 +6,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef EOM_EPHEM_PRINTER_H
-#define EOM_EPHEM_PRINTER_H
+#ifndef EOM_RANGE_PRINTER_H
+#define EOM_RANGE_PRINTER_H
 
 #include <memory>
 #include <string>
 #include <vector>
 #include <deque>
+#include <array>
 
 #include <cal_julian_date.h>
 #include <astro_ephemeris.h>
@@ -28,17 +29,18 @@ namespace eom_app {
  * @author  Kurt Motekew
  * @date    202111
  */
-class EomEphemPrinter : public EomCommand {
+class EomRangePrinter : public EomCommand {
 public:
   /**
-   * Converts string tokens into an ephemeris print command.
+   * Converts string tokens into a command computing the range between
+   * two ephemeris sources as a function of time.
    *
    * @param  tokens        Tokenized parameters with the orbit name, output
    *                       reference frame type (ITRF or GCRF), and output
    *                       filename.  Tokens are consumed as they are
    *                       used.
-   * @param  jdEphStart    Time of first ephemeris output
-   * @param  jdEphStop     Time of final ephemeris output
+   * @param  jdEphStart    Time of first range output
+   * @param  jdEphStop     Time of final range output
    * @param  ephem_ndxs    Locates orbit index given the orbit name
    * @param  ephem_list    Ordered list of ephemeris sources
    *
@@ -47,7 +49,7 @@ public:
    *         valid orbit, or an invalid output reference frame is not
    *         selected.
    */
-  EomEphemPrinter(std::deque<std::string>& tokens,
+  EomRangePrinter(std::deque<std::string>& tokens,
       const eom::JulianDate& jdEphStart, const eom::JulianDate& jdEphStop,
       const std::shared_ptr<std::unordered_map<std::string, int>>& ephem_ndxs,
       const std::shared_ptr<std::vector<std::shared_ptr<eom::Ephemeris>>>&
@@ -59,11 +61,12 @@ public:
   void execute() const override;
 
 private:
-  int endx;                                 // Index into ephemerides
+  std::array<double, 2> endxs;              // Index into ephemeris sources
   eom::EphemFrame frame;
   std::string file_name;
   eom::JulianDate jdStart;
   eom::JulianDate jdStop;
+  eom::Duration dt;
   std::shared_ptr<std::vector<std::shared_ptr<eom::Ephemeris>>> ephemerides;
 };
 

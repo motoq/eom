@@ -6,7 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <eom_ephem_printer.h>
+#include <eom_range_printer.h>
 
 #include <memory>
 #include <string>
@@ -19,11 +19,12 @@
 #include <astro_ephemeris.h>
 #include <astro_print.h>
 
+#include <eom_parse.h>
 
 namespace eom_app {
 
 
-EomEphemPrinter::EomEphemPrinter(std::deque<std::string>& tokens,
+EomRangePrinter::EomRangePrinter(std::deque<std::string>& tokens,
        const eom::JulianDate& jdEphStart, const eom::JulianDate& jdEphStop,
        const std::shared_ptr<std::unordered_map<std::string, int>>& ephem_ndxs,
        const std::shared_ptr<std::vector<std::shared_ptr<eom::Ephemeris>>>&
@@ -31,32 +32,24 @@ EomEphemPrinter::EomEphemPrinter(std::deque<std::string>& tokens,
 {
     // Read orbit name, output frame, and output filename
   using namespace std::string_literals;
-  if (tokens.size() != 3) {
-    throw std::invalid_argument("EomEphemPrinter::EomEphemPrinter:"s +
-                                " PrintEphemeris requires 3 arguments"s +
+  if (tokens.size() != 5) {
+    throw std::invalid_argument("EomRangePrinter::EomRangePrinter:"s +
+                                " PrintRange requires 4 arguments"s +
                                 " vs. input "s +
                                 std::to_string(tokens.size()));
   }
-  auto orbit_name = tokens[0];
-  tokens.pop_front();
-  try {
-    endx = ephem_ndxs->at(orbit_name);
-  } catch (std::out_of_range& oor) {
-    throw std::invalid_argument("EomEphemPrinter::EomEphemPrinter:"s +
-                                " Invalid orbit name in PrintEphemeris: "s +
-                                orbit_name);
+  for (int ii=0; ii<2; ++ii) {
+    auto orbit_name = tokens[0];
+    tokens.pop_front();
+    try {
+      endxs[ii] = ephem_ndxs->at(orbit_name);
+    } catch (std::out_of_range& oor) {
+      throw std::invalid_argument("EomRangePrinter::EomRangePrinter:"s +
+                                  " Invalid orbit name in PrintRange: "s +
+                                    orbit_name);
+    }
   }
-  auto frame_name = tokens[0];
-  tokens.pop_front();
-  if (frame_name == "GCRF") {
-    frame = eom::EphemFrame::eci;
-  } else if (frame_name == "ITRF") {
-    frame = eom::EphemFrame::ecf;
-  } else {
-    throw std::invalid_argument("EomEphemPrinter::EomEphemPrinter:"s +
-                                " Invalid frame type in PrintEphemeris: "s +
-                                frame_name);
-  }
+  dt = parse_duration(tokens);
   file_name = tokens[0];
   tokens.pop_front();
   jdStart = jdEphStart;
@@ -66,11 +59,13 @@ EomEphemPrinter::EomEphemPrinter(std::deque<std::string>& tokens,
 
 // Add functionality to determine proper output rate given orbit type
 // Currently defaulting to a 60 second output rate
-void EomEphemPrinter::execute() const
+void EomRangePrinter::execute() const
 {
-  eom::print_ephemeris(file_name, jdStart, jdStop,
-                       {60.0, phy_const::tu_per_sec},
-                       frame, (*ephemerides)[endx]);
+  auto jd = jdStart;
+  while (jd < jdStop) {
+   ;
+    jd += dt;
+  }
 }
 
 }
