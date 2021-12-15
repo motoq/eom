@@ -37,7 +37,6 @@ void print_ephemeris(std::string file_name,
     nrec++;
     nrec++;
 
-
     fout << "stk.v.11.0";
     fout << "\n\n# WrittenBy    eom";
     fout << "\n\nBEGIN Ephemeris";
@@ -73,7 +72,7 @@ void print_ephemeris(std::string file_name,
     fout << "\n\n\nEND Ephemeris\n";
     fout.close();
   } else {
-    std::cerr << "\nCan't open " << file_name;
+    std::cerr << "\nCan't open " << file_name << '\n';
   }
 
 }

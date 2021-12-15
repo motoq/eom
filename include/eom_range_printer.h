@@ -66,7 +66,9 @@ private:
   std::string file_name;
   eom::JulianDate jdStart;
   eom::JulianDate jdStop;
-  eom::Duration dt;
+  eom::Duration dtout;
+  std::string units;
+  double to_units;
   std::shared_ptr<std::vector<std::shared_ptr<eom::Ephemeris>>> ephemerides;
 };
 

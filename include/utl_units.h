@@ -9,6 +9,8 @@
 #ifndef UTL_UNITS_H
 #define UTL_UNITS_H
 
+#include <unordered_map>
+
 #include <phy_const.h>
 
 /**
@@ -20,6 +22,11 @@
  * @date    20210925
  */
 namespace utl_units {
+
+const std::unordered_map<std::string, double> per_du = {
+  {"meters",     phy_const::m_per_du},
+  {"kilometers", phy_const::km_per_du}
+};
 
 /**
  * @param  kilometers  Distance, in kilometers
