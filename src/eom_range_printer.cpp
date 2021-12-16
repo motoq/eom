@@ -56,7 +56,7 @@ EomRangePrinter::EomRangePrinter(std::deque<std::string>& tokens,
     }
   }
   dtout = parse_duration(tokens);
-  file_name = tokens[0];
+  file_name = tokens[0] + ".m"s;
   tokens.pop_front();
   units = tokens[0];
   tokens.pop_front();
@@ -81,14 +81,18 @@ void EomRangePrinter::execute() const
     unsigned long int nrec {static_cast<unsigned long int>(seconds/dtsec)};
     nrec++;
 
-    fout << "# " << orbit_names[0] << '-' << orbit_names[1];
-    fout << " Range (" << units << ") vs. seconds, beginning ";
-    fout << jdStart.to_dmy_str();
+    fout << "function rng";
+    fout << "\n% RNG is an EOM generated Matlab/Octave function that";
+    fout << "\n% plots range as a function of time\n";
+    fout << "\ntime_range = [";
     fout << std::scientific;
     fout.precision(16);
     for (unsigned long int ii=0UL; ii<nrec; ++ii) {
+      if (ii > 0UL) {
+        fout << ';';
+      }
       double tsec {ii*dtsec};
-      fout << "\n " << tsec << " ";
+      fout << "\n  " << tsec << " ";
       eom::JulianDate jdNow {jdStart + cal_const::day_per_sec*tsec};
       Eigen::Matrix<double, 6, 1> pv1 =
         (*ephemerides)[endxs[0]]->getStateVector(jdNow, eom::EphemFrame::eci);
@@ -100,6 +104,14 @@ void EomRangePrinter::execute() const
       double range = dr.norm();
       fout << " " << to_units*range;
     }
+    fout << "\n];";
+    fout << "\nfigure; hold on;";
+    fout << "\nplot(time_range(:,1), time_range(:,2));";
+    fout << "\nxlabel('seconds');";
+    fout << "\nylabel('" << units << "');";
+    fout << "\ntitle('" << orbit_names[0] << '-' << orbit_names[1] <<
+            " Range on " << jdStart.to_dmy_str() << "');";
+    fout << "\nend\n";
     fout.close();
   } else {
     std::cerr << "\nCan't open " << file_name << '\n';

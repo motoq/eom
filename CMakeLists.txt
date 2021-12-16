@@ -4,18 +4,6 @@ project (eom)
 
 set(CMAKE_BUILD_TYPE Debug)
 
-find_package(VTK COMPONENTS
-  vtkCommonColor
-  vtkCommonCore
-  vtkFiltersSources
-  vtkInteractionStyle
-  vtkRenderingContextOpenGL2
-  vtkRenderingCore
-  vtkRenderingFreeType
-  vtkRenderingGL2PSOpenGL2
-  vtkRenderingOpenGL2
-  QUIET
-)
 find_package (Eigen3 3.3 REQUIRED NO_MODULE)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -56,37 +44,12 @@ else()
   add_compile_options(-Wall -Wextra -pedantic -Werror)
 endif()
 
-if (NOT VTK_FOUND)
-  message("Skipping OS: ${VTK_NOT_FOUND_MESSAGE}")
-  return ()
-endif()
-message (STATUS "VTK_VERSION: ${VTK_VERSION}")
-if (VTK_VERSION VERSION_LESS "8.90.0")
-  # old system
-  include(${VTK_USE_FILE})
-  add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${SOURCES})
-  target_include_directories(${PROJECT_NAME}
-    PUBLIC /home/conan/include
-    PRIVATE ${PROJECT_SOURCE_DIR}/include
-  )
-  target_link_libraries(${PROJECT_NAME}
-    PUBLIC Eigen3::Eigen
-    PRIVATE sofalib ${VTK_LIBRARIES})
-else ()
-  # include all components
-  add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${SOURCES})
-  target_include_directories(${PROJECT_NAME}
-    PUBLIC /home/conan/include
-    PRIVATE ${PROJECT_SOURCE_DIR}/include
-  )
-  target_link_libraries(${PROJECT_NAME}
-    PUBLIC Eigen3::Eigen
-    PRIVATE sofalib ${VTK_LIBRARIES})
-  # vtk_module_autoinit is needed
-  vtk_module_autoinit(
-    TARGETS ${PROJECT_NAME}
-    MODULES ${VTK_LIBRARIES}
-    )
-endif ()
-
-
+# include all components
+add_executable(${PROJECT_NAME} ${SOURCES})
+target_include_directories(${PROJECT_NAME}
+  PUBLIC /home/conan/include
+  PRIVATE ${PROJECT_SOURCE_DIR}/include
+)
+target_link_libraries(${PROJECT_NAME}
+  PUBLIC Eigen3::Eigen
+  PRIVATE sofalib)
