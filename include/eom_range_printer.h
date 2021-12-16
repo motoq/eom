@@ -27,7 +27,7 @@ namespace eom_app {
  * Cartesian ITRF or GCRF are supported as outputs.
  *
  * @author  Kurt Motekew
- * @date    202111
+ * @date    20211215
  */
 class EomRangePrinter : public EomCommand {
 public:
@@ -61,6 +61,7 @@ public:
   void execute() const override;
 
 private:
+  std::array<std::string, 2> orbit_names;
   std::array<double, 2> endxs;              // Index into ephemeris sources
   eom::EphemFrame frame;
   std::string file_name;

@@ -45,14 +45,14 @@ EomRangePrinter::EomRangePrinter(std::deque<std::string>& tokens,
                                 std::to_string(tokens.size()));
   }
   for (int ii=0; ii<2; ++ii) {
-    auto orbit_name = tokens[0];
+    orbit_names[ii] = tokens[0];
     tokens.pop_front();
     try {
-      endxs[ii] = ephem_ndxs->at(orbit_name);
+      endxs[ii] = ephem_ndxs->at(orbit_names[ii]);
     } catch (std::out_of_range& oor) {
       throw std::invalid_argument("EomRangePrinter::EomRangePrinter:"s +
                                   " Invalid orbit name in PrintRange: "s +
-                                    orbit_name);
+                                    orbit_names[ii]);
     }
   }
   dtout = parse_duration(tokens);
@@ -71,8 +71,6 @@ EomRangePrinter::EomRangePrinter(std::deque<std::string>& tokens,
   ephemerides = ephem_list;
 }
 
-// Add functionality to determine proper output rate given orbit type
-// Currently defaulting to a 60 second output rate
 void EomRangePrinter::execute() const
 {
   std::ofstream fout(file_name.c_str());
@@ -83,7 +81,8 @@ void EomRangePrinter::execute() const
     unsigned long int nrec {static_cast<unsigned long int>(seconds/dtsec)};
     nrec++;
 
-    fout << "#Range (" << units << ") vs. seconds, beginning ";
+    fout << "# " << orbit_names[0] << '-' << orbit_names[1];
+    fout << " Range (" << units << ") vs. seconds, beginning ";
     fout << jdStart.to_dmy_str();
     fout << std::scientific;
     fout.precision(16);
