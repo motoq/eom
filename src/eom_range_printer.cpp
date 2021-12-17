@@ -81,9 +81,17 @@ void EomRangePrinter::execute() const
     unsigned long int nrec {static_cast<unsigned long int>(seconds/dtsec)};
     nrec++;
 
-    fout << "function rng";
+      // Function header
+    fout << "function [gxh, time_range] = rng";
     fout << "\n% RNG is an EOM generated Matlab/Octave function that";
-    fout << "\n% plots range as a function of time\n";
+    fout << "\n% plots range as a function of time";
+    fout << "\n%";
+    fout << "\n% Outputs:";
+    fout << "\n%   gxh         Graphics handle to new image";
+    fout << "\n%   time_range  Nx2 matrix of time and range values";
+    fout << '\n';
+
+      // Create time and range data
     fout << "\ntime_range = [";
     fout << std::scientific;
     fout.precision(16);
@@ -104,6 +112,7 @@ void EomRangePrinter::execute() const
       double range = dr.norm();
       fout << " " << to_units*range;
     }
+      // Make the plot and annotate
     fout << "\n];";
     fout << "\nfigure; hold on;";
     fout << "\nplot(time_range(:,1), time_range(:,2));";
