@@ -74,32 +74,38 @@ public:
   eom::Duration getEcfEciRate() const noexcept { return dtEcfEci; }
 
   /**
-   * @param  tokens  Change the distance conversion factor used for values
-   *                 being parsed from tokenized inputs.  This factor will
-   *                 convert input distance units to kilometers.
+   * @param  tokens  Label used to determine and set the conversion
+   *                 factor from input/output units to internal distance
+   *                 units.
    */
-  void setToKilometers(std::deque<std::string>& tokens);
+  void setIoPerDu(std::deque<std::string>& tokens);
 
   /**
-   * @return  Conversion factor to kilometers for distance based values
-   *          being parsed from tokenized inputs.  This factor converts
-   *          input distance units to kilometers.
+   * @return  Get input/output units per internal distance units.
    */
-  double getToKilometers() const noexcept { return to_km; }
+  double getIoPerDu() const noexcept { return io_per_du; }
 
   /**
-   * @param  tokens  Change the time conversion factor to be used for values
-   *                 being parsed from tokenized inputs.  This factor will
-   *                 convert input time units to seconds.
+   * @return  Label describing output and expected input distance units
    */
-  void setToSeconds(std::deque<std::string>& tokens);
+  std::string getIoDistansUnits() const noexcept { return units_distance; }
 
   /**
-   * @return  Conversion factor to seconds for time based values being
-   *          parsed from tokenized inputs.  This factor converts
-   *          input times units to seconds.
+   * @param  tokens  Label used to determine and set the conversion
+   *                 factor from input/output units to internal time
+   *                 units.
    */
-  double getToSeconds() const noexcept { return to_sec; }
+  void setIoPerTu(std::deque<std::string>& tokens);
+
+  /**
+   * @return  Get input/output units per internal time units.
+   */
+  double getIoPerTu() const noexcept { return io_per_tu; }
+
+  /**
+   * @return  Label describing output and expected input time units
+   */
+  std::string getIoTimeUnits() const noexcept { return units_time; }
 
   /**
    * @return  If an error was encountered while building the scenario,
@@ -121,8 +127,10 @@ public:
   void print(std::ostream& stream) const;
 
 private:
-  double to_km {1.0};
-  double to_sec {1.0};
+  std::string units_distance {"DU"};
+  std::string units_time {"TU"};
+  double io_per_du {1.0};
+  double io_per_tu {1.0};
   bool valid {true};
   bool epoch_set {false};
   bool f2i_rate_set {false};

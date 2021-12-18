@@ -32,26 +32,21 @@ std::array<double, 6> parse_state_vector(std::deque<std::string>& tokens,
   auto coord_sys = tokens[0];
   tokens.pop_front();
 
+  double du_per_io {1.0/cfg.getIoPerDu()};
+  double io_per_tu {cfg.getIoPerTu()};
   if (coord_type == "CART"  &&  coord_sys == "GCRF") {
     std::array<double, 6> xeci;
     try {
       for (unsigned int ii=0; ii<6; ++ii) {
-        xeci[ii] = cfg.getToKilometers()*std::stod(tokens[0]);
+        xeci[ii] = du_per_io*std::stod(tokens[0]);
         tokens.pop_front();
         if (ii > 2L) {
-          cfg.getToSeconds();
-          xeci[ii] /= cfg.getToSeconds();
+          xeci[ii] *= io_per_tu;
         }
       }
     } catch(std::invalid_argument& ia) {
       throw std::invalid_argument("eom_app::parse_state_vector"s +
                                   "  invalid parameter type"s);
-    }
-    for (unsigned int ii=0; ii<6; ++ii) {
-      xeci[ii] *= phy_const::du_per_km;
-      if (ii > 2L) {
-        xeci[ii] *= phy_const::sec_per_tu;
-      }
     }
     return xeci;
   }

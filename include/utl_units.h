@@ -23,9 +23,16 @@
  */
 namespace utl_units {
 
+const std::unordered_map<std::string, double> per_tu = {
+  {"TU", 1.0},
+  {"Seconds", phy_const::sec_per_tu},
+  {"Minutes", phy_const::min_per_tu}
+};
+
 const std::unordered_map<std::string, double> per_du = {
-  {"meters",     phy_const::m_per_du},
-  {"kilometers", phy_const::km_per_du}
+  {"DU", 1.0},
+  {"Meters",     phy_const::m_per_du},
+  {"Kilometers", phy_const::km_per_du}
 };
 
 /**

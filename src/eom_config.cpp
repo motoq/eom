@@ -14,6 +14,7 @@
 #include <deque>
 
 #include <phy_const.h>
+#include <utl_units.h>
 #include <cal_leap_seconds.h>
 
 #include <eom_parse.h>
@@ -102,38 +103,42 @@ void EomConfig::setEcfEciRate(std::deque<std::string>& tokens)
 }
 
 
-void EomConfig::setToKilometers(std::deque<std::string>& tokens)
+void EomConfig::setIoPerDu(std::deque<std::string>& tokens)
 {
   valid = false;
   if (tokens.size() != 1) {
-    error_string = "Invalid number of parameters EomConfig::setToKilometers";
+    error_string = "Invalid number of parameters EomConfig::setIoPerDu";
     return;
   }
+  auto units_distance = tokens[0];
+  tokens.pop_front();
   try {
-    to_km = std::stod(tokens[0]);
-    tokens.pop_front();
+    io_per_du = utl_units::per_du.at(units_distance);
     valid = true;
-  } catch(std::invalid_argument& ia) {
-    error_string = ia.what();
-    error_string += "  EomConfig::setToKilometers";
+  } catch (std::out_of_range& oor) {
+    throw std::invalid_argument("EomConfig::setIoPerDu");
+    //throw std::invalid_argument("EomConfig::setIoPerDu:"s +
+    //                            " Invalid units type: "s + units_distance);
   }
 }
 
 
-void EomConfig::setToSeconds(std::deque<std::string>& tokens)
+void EomConfig::setIoPerTu(std::deque<std::string>& tokens)
 {
   valid = false;
   if (tokens.size() != 1) {
-    error_string = "Invalid number of parameters EomConfig::setToSeconds";
+    error_string = "Invalid number of parameters EomConfig::setIoPerTu";
     return;
   }
+  auto units_time = tokens[0];
+  tokens.pop_front();
   try {
-    to_sec = std::stod(tokens[0]);
-    tokens.pop_front();
+    io_per_tu = utl_units::per_tu.at(units_time);
     valid = true;
-  } catch(std::invalid_argument& ia) {
-    error_string = ia.what();
-    error_string += "  EomConfig::setToSeconds";
+  } catch (std::out_of_range& oor) {
+    throw std::invalid_argument("EomConfig::setIoPerTu");
+    //throw std::invalid_argument("EomConfig::setIoPerTu:"s +
+    //                            " Invalid units type: "s + units_time);
   }
 }
 

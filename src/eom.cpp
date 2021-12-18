@@ -135,11 +135,11 @@ int main(int argc, char* argv[])
             } else if (make == "end") {
               input_error = false;
               ifs.seekg(0, std::ios::end);
-            } else if (make == "ToKilometers") {
-              cfg.setToKilometers(tokens);
+            } else if (make == "DistanceUnits") {
+              cfg.setIoPerDu(tokens);
               input_error = !cfg.isValid();
-            } else if (make == "ToSeconds") {
-              cfg.setToSeconds(tokens);
+            } else if (make == "TimeUnits") {
+              cfg.setIoPerTu(tokens);
               input_error = !cfg.isValid();
             } else if (make == "Orbit") {
               auto id_ndx = orbit_defs->size();
