@@ -20,25 +20,25 @@
 
 #include <cal_const.h>
 #include <phy_const.h>
-#include <utl_units.h>
 #include <cal_julian_date.h>
 #include <astro_ephemeris.h>
 #include <astro_print.h>
 
+#include <eom_config.h>
 #include <eom_parse.h>
 
 namespace eom_app {
 
 
-EomRangePrinter::EomRangePrinter(std::deque<std::string>& tokens,
-       const eom::JulianDate& jdEphStart, const eom::JulianDate& jdEphStop,
+EomRangePrinter::EomRangePrinter(
+       std::deque<std::string>& tokens, const EomConfig& cfg,
        const std::shared_ptr<std::unordered_map<std::string, int>>& ephem_ndxs,
        const std::shared_ptr<std::vector<std::shared_ptr<eom::Ephemeris>>>&
                                                                   ephem_list)
 {
     // Read orbit name, output frame, and output filename
   using namespace std::string_literals;
-  if (tokens.size() != 6) {
+  if (tokens.size() != 5) {
     throw std::invalid_argument("EomRangePrinter::EomRangePrinter:"s +
                                 " PrintRange requires 6 arguments"s +
                                 " vs. input "s +
@@ -58,16 +58,12 @@ EomRangePrinter::EomRangePrinter(std::deque<std::string>& tokens,
   dtout = parse_duration(tokens);
   file_name = tokens[0] + ".m"s;
   tokens.pop_front();
-  units = tokens[0];
-  tokens.pop_front();
-  try {
-    to_units = utl_units::per_du.at(units);
-  } catch (std::out_of_range& oor) {
-    throw std::invalid_argument("EomRangePrinter::EomRangePrinter:"s +
-                                " Invalid units type: "s + units);
-  }
-  jdStart = jdEphStart;
-  jdStop = jdEphStop;
+  jdStart = cfg.getStartTime();
+  jdStop = cfg.getStopTime();
+  timeUnitsLbl = cfg.getIoTimeUnits();
+  distanceUnitsLbl = cfg.getIoDistansUnits();
+  to_distance_units = cfg.getIoPerDu();
+  to_time_units = cfg.getIoPerTu();
   ephemerides = ephem_list;
 }
 
@@ -76,9 +72,9 @@ void EomRangePrinter::execute() const
   std::ofstream fout(file_name.c_str());
 
   if (fout.is_open()) {
-    double seconds {cal_const::sec_per_day*(jdStop - jdStart)};
-    double dtsec   {phy_const::sec_per_tu*dtout.getTu()};
-    unsigned long int nrec {static_cast<unsigned long int>(seconds/dtsec)};
+    double tot_time {to_time_units*phy_const::tu_per_day*(jdStop - jdStart)};
+    double dt {to_time_units*dtout.getTu()};
+    unsigned long int nrec {static_cast<unsigned long int>(tot_time/dt)};
     nrec++;
 
       // Function header
@@ -99,9 +95,10 @@ void EomRangePrinter::execute() const
       if (ii > 0UL) {
         fout << ';';
       }
-      double tsec {ii*dtsec};
-      fout << "\n  " << tsec << " ";
-      eom::JulianDate jdNow {jdStart + cal_const::day_per_sec*tsec};
+      double dtnow {ii*dt};
+      fout << "\n  " << dtnow << " ";
+      eom::JulianDate jdNow {jdStart +
+                             phy_const::day_per_tu*(dtnow/to_time_units)};
       Eigen::Matrix<double, 6, 1> pv1 =
         (*ephemerides)[endxs[0]]->getStateVector(jdNow, eom::EphemFrame::eci);
       Eigen::Matrix<double, 6, 1> pv2 =
@@ -110,14 +107,14 @@ void EomRangePrinter::execute() const
       Eigen::Matrix<double, 3, 1> r2 = pv2.block<3,1>(0,0);
       Eigen::Matrix<double, 3, 1> dr = r1 - r2;
       double range = dr.norm();
-      fout << " " << to_units*range;
+      fout << " " << to_distance_units*range;
     }
       // Make the plot and annotate
     fout << "\n];";
-    fout << "\nfigure; hold on;";
+    fout << "\ngxh = figure; hold on;";
     fout << "\nplot(time_range(:,1), time_range(:,2));";
-    fout << "\nxlabel('seconds');";
-    fout << "\nylabel('" << units << "');";
+    fout << "\nxlabel('" << timeUnitsLbl << "');";
+    fout << "\nylabel('" << distanceUnitsLbl << "');";
     fout << "\ntitle('" << orbit_names[0] << '-' << orbit_names[1] <<
             " Range on " << jdStart.to_dmy_str() << "');";
     fout << "\nend\n";

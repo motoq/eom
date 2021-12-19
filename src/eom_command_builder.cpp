@@ -48,9 +48,7 @@ EomCommandBuilder::buildCommand(std::deque<std::string>& tokens,
   tokens.pop_front();
   if (command_str == "PrintRange") {
     std::unique_ptr<EomCommand> command =
-        std::make_unique<EomRangePrinter>(tokens,
-                                          cfg.getStartTime(), cfg.getStopTime(),
-                                          eph_nids, ephemerides);
+        std::make_unique<EomRangePrinter>(tokens, cfg, eph_nids, ephemerides);
     return command;
   } else if (command_str == "PrintEphemeris") {
     std::unique_ptr<EomCommand> command =

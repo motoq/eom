@@ -110,7 +110,7 @@ void EomConfig::setIoPerDu(std::deque<std::string>& tokens)
     error_string = "Invalid number of parameters EomConfig::setIoPerDu";
     return;
   }
-  auto units_distance = tokens[0];
+  units_distance = tokens[0];
   tokens.pop_front();
   try {
     io_per_du = utl_units::per_du.at(units_distance);
@@ -130,7 +130,7 @@ void EomConfig::setIoPerTu(std::deque<std::string>& tokens)
     error_string = "Invalid number of parameters EomConfig::setIoPerTu";
     return;
   }
-  auto units_time = tokens[0];
+  units_time = tokens[0];
   tokens.pop_front();
   try {
     io_per_tu = utl_units::per_tu.at(units_time);

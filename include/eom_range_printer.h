@@ -19,6 +19,7 @@
 #include <astro_ephemeris.h>
 
 #include <eom_command.h>
+#include <eom_config.h>
 
 namespace eom_app {
 
@@ -49,8 +50,7 @@ public:
    *         valid orbit, or an invalid output reference frame is not
    *         selected.
    */
-  EomRangePrinter(std::deque<std::string>& tokens,
-      const eom::JulianDate& jdEphStart, const eom::JulianDate& jdEphStop,
+  EomRangePrinter(std::deque<std::string>& tokens, const EomConfig& cfg,
       const std::shared_ptr<std::unordered_map<std::string, int>>& ephem_ndxs,
       const std::shared_ptr<std::vector<std::shared_ptr<eom::Ephemeris>>>&
                                                                     ephem_list);
@@ -68,8 +68,10 @@ private:
   eom::JulianDate jdStart;
   eom::JulianDate jdStop;
   eom::Duration dtout;
-  std::string units;
-  double to_units;
+  std::string timeUnitsLbl;
+  std::string distanceUnitsLbl;
+  double to_time_units;
+  double to_distance_units;
   std::shared_ptr<std::vector<std::shared_ptr<eom::Ephemeris>>> ephemerides;
 };
 
