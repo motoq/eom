@@ -108,6 +108,17 @@ public:
   std::string getIoTimeUnits() const noexcept { return units_time; }
 
   /**
+   * @param  tokens  Tokenized parameters indicating the duration of the
+   *                 scenario
+   */
+  void setOutputRate(std::deque<std::string>& tokens);
+
+  /**
+   * @return  The period of time between outputs
+   */
+  eom::Duration getOutputRate() const noexcept { return dtOut; }
+
+  /**
    * @return  If an error was encountered while building the scenario,
    *          the return value is false.  Call getError().
    */
@@ -139,6 +150,7 @@ private:
   eom::JulianDate jdStart;
   eom::JulianDate jdStop;
   eom::Duration dtEcfEci;
+  eom::Duration dtOut;
 };
 
 

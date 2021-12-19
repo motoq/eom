@@ -67,7 +67,7 @@ private:
   std::string file_name;
   eom::JulianDate jdStart;
   eom::JulianDate jdStop;
-  eom::Duration dtout;
+  eom::Duration dtOut;
   std::string timeUnitsLbl;
   std::string distanceUnitsLbl;
   double to_time_units;

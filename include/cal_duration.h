@@ -27,7 +27,7 @@ public:
   /**
    * Default zero duration
    */
-  Duration() : tu {0.0}, days {0.0}
+  Duration() : tu {1.0}, days {phy_const::day_per_tu}
   {
   }
 

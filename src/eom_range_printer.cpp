@@ -38,7 +38,7 @@ EomRangePrinter::EomRangePrinter(
 {
     // Read orbit name, output frame, and output filename
   using namespace std::string_literals;
-  if (tokens.size() != 5) {
+  if (tokens.size() != 3) {
     throw std::invalid_argument("EomRangePrinter::EomRangePrinter:"s +
                                 " PrintRange requires 6 arguments"s +
                                 " vs. input "s +
@@ -55,11 +55,11 @@ EomRangePrinter::EomRangePrinter(
                                     orbit_names[ii]);
     }
   }
-  dtout = parse_duration(tokens);
   file_name = tokens[0] + ".m"s;
   tokens.pop_front();
   jdStart = cfg.getStartTime();
   jdStop = cfg.getStopTime();
+  dtOut = cfg.getOutputRate();
   timeUnitsLbl = cfg.getIoTimeUnits();
   distanceUnitsLbl = cfg.getIoDistansUnits();
   to_distance_units = cfg.getIoPerDu();
@@ -73,7 +73,7 @@ void EomRangePrinter::execute() const
 
   if (fout.is_open()) {
     double tot_time {to_time_units*phy_const::tu_per_day*(jdStop - jdStart)};
-    double dt {to_time_units*dtout.getTu()};
+    double dt {to_time_units*dtOut.getTu()};
     unsigned long int nrec {static_cast<unsigned long int>(tot_time/dt)};
     nrec++;
 

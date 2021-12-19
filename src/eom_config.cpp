@@ -143,6 +143,23 @@ void EomConfig::setIoPerTu(std::deque<std::string>& tokens)
 }
 
 
+void EomConfig::setOutputRate(std::deque<std::string>& tokens)
+{
+  valid = false;
+  if (tokens.size() != 2) {
+    error_string = "Invalid number of parameters EomConfig::setOutputRate";
+    return;
+  }
+  try {
+    dtOut = parse_duration(tokens);
+    valid = true;
+  } catch(std::invalid_argument& ia) {
+    error_string = ia.what();
+    error_string += "  EomConfig::setOutputRate";
+  }
+}
+
+
 void EomConfig::print(std::ostream& stream) const
 {
   stream << "\nSimulation Start Time: " << jdStart.to_str();
@@ -153,6 +170,11 @@ void EomConfig::print(std::ostream& stream) const
   stream << "\nLeap Seconds (TAI - UTC): " << ls.getTai_Utc();
   stream << "\nUsing dt eps: " <<
              phy_const::epsdt*phy_const::sec_per_tu << " seconds";
+  stream << "\nOne ER is " <<
+            static_cast<long>(phy_const::m_per_er) << " meters";
+  stream << "\nOne DU is " <<
+            static_cast<long>(phy_const::m_per_du) << " meters";
+  stream << "\nOne TU is " << phy_const::sec_per_tu << " seconds";
 }
 
 

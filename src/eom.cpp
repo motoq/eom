@@ -141,6 +141,9 @@ int main(int argc, char* argv[])
             } else if (make == "TimeUnits") {
               cfg.setIoPerTu(tokens);
               input_error = !cfg.isValid();
+            } else if (make == "OutputRate") {
+              cfg.setOutputRate(tokens);
+              input_error = !cfg.isValid();
             } else if (make == "Orbit") {
               auto id_ndx = orbit_defs->size();
               try {

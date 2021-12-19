@@ -43,9 +43,13 @@ namespace phy_const {
   // Derived
   //
   
+  constexpr double er_per_km {1.0/km_per_er};
+  constexpr double m_per_er {1000.0*km_per_er};
+  constexpr double er_per_m {1.0/m_per_er};
+
   constexpr double du_per_km {1.0/km_per_du};
   constexpr double m_per_du {1000.0*km_per_du};
-  constexpr double du_per_m {1.0/km_per_du};
+  constexpr double du_per_m {1.0/m_per_du};
 
   /** Time unit definition */
   constexpr double sec_per_tu {std::sqrt(km_per_du*
