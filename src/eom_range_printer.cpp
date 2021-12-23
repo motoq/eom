@@ -55,8 +55,9 @@ EomRangePrinter::EomRangePrinter(
                                     orbit_names[ii]);
     }
   }
-  file_name = tokens[0] + ".m"s;
+  func_name = tokens[0];
   tokens.pop_front();
+  file_name = func_name + ".m"s;
   jdStart = cfg.getStartTime();
   jdStop = cfg.getStopTime();
   dtOut = cfg.getOutputRate();
@@ -78,7 +79,7 @@ void EomRangePrinter::execute() const
     nrec++;
 
       // Function header
-    fout << "function [gxh, time_range] = rng";
+    fout << "function [gxh, time_range] = " << func_name;
     fout << "\n% RNG is an EOM generated Matlab/Octave function that";
     fout << "\n% plots range as a function of time";
     fout << "\n%";

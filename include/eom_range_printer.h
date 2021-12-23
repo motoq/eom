@@ -64,6 +64,7 @@ private:
   std::array<std::string, 2> orbit_names;
   std::array<double, 2> endxs;              // Index into ephemeris sources
   eom::EphemFrame frame;
+  std::string func_name;
   std::string file_name;
   eom::JulianDate jdStart;
   eom::JulianDate jdStop;

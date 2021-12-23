@@ -16,7 +16,9 @@ namespace eom {
  */
 enum class PropagatorType {
   Kepler1,                        ///< Gim J. Der version
-  Vinti6                          ///< Gim J. Der version
+  Vinti6,                         ///< Gim J. Der version
+  VintiJ2,                        ///< Gim J. Der version with J3 = 0
+  OscJ2
 };
 
 

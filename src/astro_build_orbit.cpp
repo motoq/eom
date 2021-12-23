@@ -17,6 +17,8 @@
 #include <astro_ecfeci_sys.h>
 #include <astro_kepler.h>
 #include <astro_vinti.h>
+#include <astro_vinti_j2.h>
+#include <astro_oscj2.h>
 
 #include <astro_build.h>
 
@@ -43,6 +45,14 @@ build_orbit(const OrbitDef& orbitParams,
   } else if (pCfg.getPropagatorType() == PropagatorType::Vinti6) {
     std::unique_ptr<Ephemeris> orbit =
            std::make_unique<Vinti>(orbitParams.getEpoch(), xeciVec, ecfeciSys);
+    return orbit;
+  } else if (pCfg.getPropagatorType() == PropagatorType::VintiJ2) {
+    std::unique_ptr<Ephemeris> orbit =
+         std::make_unique<VintiJ2>(orbitParams.getEpoch(), xeciVec, ecfeciSys);
+    return orbit;
+  } else if (pCfg.getPropagatorType() == PropagatorType::OscJ2) {
+    std::unique_ptr<Ephemeris> orbit =
+           std::make_unique<OscJ2>(orbitParams.getEpoch(), xeciVec, ecfeciSys);
     return orbit;
   } else {
     std::unique_ptr<Ephemeris> orbit =

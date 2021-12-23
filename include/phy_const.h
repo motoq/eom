@@ -61,8 +61,9 @@ namespace phy_const {
   constexpr double tu_per_min {1.0/min_per_tu};
   constexpr double tu_per_day {1.0/day_per_tu};
 
-  /** Gravitation parameter */
+  /** Gravitation parameter and scaling */
   constexpr double gm {1.0};
+  constexpr double re {1.0};
 
   /** 1 mm movement at a sea level orbital altitude */
   constexpr double epsdt {1.0e-6/km_per_du};
