@@ -26,8 +26,12 @@ namespace eom {
 
 Vinti::Vinti(const JulianDate& epoch,
              const Eigen::Matrix<double, 6, 1>& xeci,
-             const std::shared_ptr<const EcfEciSys>& ecfeciSys)
+             const std::shared_ptr<const EcfEciSys>& ecfeciSys,
+             VintiPertModel pertModel)
 {
+  if (pertModel == VintiPertModel::J2_ONLY) {
+    planet[3] = 0.0;
+  }
   jd0 = epoch;
   ecfeci = ecfeciSys;
     // A true equator ECI frame is required for propagation

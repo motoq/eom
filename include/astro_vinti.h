@@ -22,6 +22,11 @@
 
 namespace eom {
 
+enum class VintiPertModel {
+  J2_ONLY,                             ///< Include only J2 effects
+  J2_J3                                ///< Vinti J2 with J3 approx
+};
+
 /*
  * Wrapper class to the Gim J. Der, Albert T. Monuki, & Herb Reynolds
  * Vinti (Vinti6) orbit propagator.  See the Vinti6.c source code.
@@ -39,13 +44,17 @@ public:
   /**
    * Initialize Vinti6
    *
-   * @param  epoch      Orbit state vector epoch, UTC
-   * @param  xeci       Cartesian GCRF state vector, DU and DU/TU
-   * @param  ecfeciSys  ECF/ECI conversion resource
+   * @param  epoch           Orbit state vector epoch, UTC
+   * @param  xeci            Cartesian GCRF state vector, DU and DU/TU
+   * @param  ecfeciSys       ECF/ECI conversion resource
+   * @param  VintiPertModel  Inidcates if J2 only or J2 with the J3
+   *                         approximation should be included in the
+   *                         gravity model.
    */
   Vinti(const JulianDate& epoch,
         const Eigen::Matrix<double, 6, 1>& xeci,
-        const std::shared_ptr<const EcfEciSys>& ecfeciSys);
+        const std::shared_ptr<const EcfEciSys>& ecfeciSys,
+        VintiPertModel pertModel = VintiPertModel::J2_J3);
 
   /**
    * Compute state vector given a time

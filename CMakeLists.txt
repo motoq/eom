@@ -34,7 +34,6 @@ set(SOURCES
   src/astro_kepler.cpp
   src/astro_oscj2.cpp
   src/astro_vinti.cpp
-  src/astro_vinti_j2.cpp
 )
 
 add_library(sofalib STATIC IMPORTED)
