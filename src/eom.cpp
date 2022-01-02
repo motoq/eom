@@ -17,8 +17,6 @@
 
 
 #include <Eigen/Dense>
-#include <phy_const.h>
-#include <utl_units.h>
 
 #include <eom_config.h>
 #include <eom_parse.h>
@@ -29,6 +27,10 @@
 #include <astro_ecfeci_sys.h>
 #include <astro_build.h>
 #include <astro_print.h>
+
+#include <utl_const.h>
+#include <phy_const.h>
+#include <astro_keplerian.h>
 
 /**
  * Equations of Motion:  An application focused on astrodynamics related
@@ -219,9 +221,17 @@ int main(int argc, char* argv[])
     // If a multithreaded implementation is implemented, be sure the
     // final ephemerides vector has ephemeris ordered according to ephem_nids
   for (const auto& orbit : *orbit_defs) {
-    std::cout << "\nOrbit name and ID " << orbit.getOrbitName() <<
-                                   "  " << (*ephem_nids)[orbit.getOrbitName()];
+    std::cout << "\nNID " << (*ephem_nids)[orbit.getOrbitName()] <<
+                 ":  " << orbit.getOrbitName();
     ephemerides->emplace_back(eom::build_orbit(orbit, f2iSys));
+    eom::Keplerian oeCart(ephemerides->back()->getStateVector(
+                          cfg.getStartTime(), eom::EphemFrame::eci));
+    oeCart.print(std::cout);
+    auto oe = oeCart.getOrbitalElements();
+    auto xyz1 {oeCart.getCartesian()};
+    eom::Keplerian oeKep(oe);
+    auto xyz2 = oeKep.getCartesian();
+    std::cout << "  \nxyz Delta:\n" << (xyz1 - xyz2).norm();
   }
 
 

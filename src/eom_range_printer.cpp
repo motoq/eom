@@ -104,8 +104,8 @@ void EomRangePrinter::execute() const
         (*ephemerides)[endxs[0]]->getStateVector(jdNow, eom::EphemFrame::eci);
       Eigen::Matrix<double, 6, 1> pv2 =
         (*ephemerides)[endxs[1]]->getStateVector(jdNow, eom::EphemFrame::eci);
-      Eigen::Matrix<double, 3, 1> r1 = pv1.block<3,1>(0,0);
-      Eigen::Matrix<double, 3, 1> r2 = pv2.block<3,1>(0,0);
+      Eigen::Matrix<double, 3, 1> r1 {pv1.block<3,1>(0,0)};
+      Eigen::Matrix<double, 3, 1> r2 {pv2.block<3,1>(0,0)};
       Eigen::Matrix<double, 3, 1> dr = r1 - r2;
       double range = dr.norm();
       fout << " " << to_distance_units*range;
