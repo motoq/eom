@@ -19,6 +19,9 @@ namespace eom {
 /**
  * Interface defining as set of orbital elements with conversions to and
  * from Cartesian state vectors.
+ *
+ * @author  Kurt Motekew
+ * @date    2022/01/01
  */
 class OrbitalElements {
 public:

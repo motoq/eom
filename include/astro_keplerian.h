@@ -20,25 +20,41 @@ namespace eom {
 
 /**
  * Supports conversions between Cartesian state vectors and Keplerian
- * element sets.
+ * element sets.  The fast variable is true anomaly.  Mean and eccentric
+ * anomaly are available via function calls.  Only elliptical orbits are
+ * considered.
+ *
+ * Exceptions for invalid orbits and edge case handling has not been
+ * implemented.
+ *
+ * @author  Kurt Motekew
+ * @date    2022/01/01
  */
 class Keplerian : public OrbitalElements {
 public:
   /**
-   * Initialize 
+   * Initialize with Keplerian orbital elements.
+   *
+   * @param  oe  Keplarian orbital elements
+   *              [0] a, semimajor axis, DU
+   *              [1] e, eccentricity
+   *              [2] i, inclination, radians
+   *              [3] o, RAAN, radians
+   *              [4] w, argument of perigee, radians
+   *              [5] v, true anomaly, radians
    */
-  Keplerian(const std::array<double, 6>& kep);
+  Keplerian(const std::array<double, 6>& oe);
 
+  /**
+   * Initialize with a Cartesian state vector
+   *
+   * @param  cart  Position and velocity, DU and DU/TU
+   */
   Keplerian(const Eigen::Matrix<double, 6, 1>& cart);
 
   /**
-   * @return  Keplerian element set
-   *            [0] a, semimajor axis, DU
-   *            [1] e, eccentricity
-   *            [2] i, inclination, radians
-   *            [3] o, RAAN, radians
-   *            [4] w, argument of perigee, radians
-   *            [5] v, true anomaly, radians
+   * @return  Orbital elements as described in constructor, DU and
+   *          radians
    */
   std::array<double, 6> getOrbitalElements() const override
   {
@@ -46,40 +62,36 @@ public:
   }
 
   /**
-   * 
+   * @return  Cartesian state vector, DU and DU/TU
    */
   Eigen::Matrix<double, 6, 1> getCartesian() const override
   {
-    return m_xyz;
+    return m_cart;
   }
 
+  /**
+   * Output orbital elements and state vector to the supplied stream.
+   * Units of kilometers, seconds, and degrees are used.
+   *
+   * @param  stream  The stream to output the scenario setting to
+   */
   void print(std::ostream& stream) const override;
+
+  /*
+   * @return the eccentric anomaly, radians
+   */
+  double getEccentricAnomaly() const;
+
+  /*
+   * @return the mean anomaly, radians
+   */
+  double getMeanAnomaly() const;
 
 private:
   std::array<double, 6> m_oe;
-  Eigen::Matrix<double, 6, 1> m_xyz;
+  Eigen::Matrix<double, 6, 1> m_cart;
 };
 
-
-/**
- * Transforms mean anomaly to true anomaly
- *
- * @param  mean_anomaly  Mean anomaly, radians
- * @param  eccentricity  Orbit eccentricity
- *
- * @return  True anomaly, radians
- */
-//double trueAnomaly(double mean_anomaly, double eccentricity);
-
-/**
- * Transforms true anomaly to mean anomaly
- *
- * @param  true_anomaly  True anomaly, radians
- * @param  eccentricity  Orbit eccentricity
- *
- * @return  Mean anomaly, radians
- */
-//double meanAnomaly(double true_anomaly, double eccentricity);
 
 }
 
