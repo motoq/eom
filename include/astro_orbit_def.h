@@ -91,7 +91,8 @@ public:
   FrameType getReferenceFrameType() const noexcept { return frame; }
 
 private:
-  std::string name;
+  std::string name {""};
+  std::string template_name {""};
   PropagatorConfig propCfg;
   CoordType coord;
   FrameType frame;

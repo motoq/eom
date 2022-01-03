@@ -47,7 +47,7 @@ if (MSVC)
 else()
     # lots of warnings and all warnings as errors
   message(STATUS "Defaulting to gcc compatible warning flags")
-  add_compile_options(-Wall -Wextra -pedantic)
+  add_compile_options(-Wall -Wextra -pedantic -Wno-parentheses)
   #add_compile_options(-Wall -Wextra -pedantic -Werror)
 endif()
 
