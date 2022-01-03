@@ -12,12 +12,16 @@
 #include <phy_const.h>
 
 namespace {
+    // Indexing
   constexpr int ia {0};
   constexpr int ie {1};
   constexpr int ii {2};
   constexpr int io {3};
   constexpr int iw {4};
   constexpr int iv {5};
+    // Convergence
+  constexpr int niter {100};
+  constexpr double eps {1.e-10};
 }
 
 namespace eom {
@@ -142,6 +146,40 @@ double Keplerian::getMeanAnomaly() const
 {
   double ea {this->getEccentricAnomaly()};
   return  ea - m_oe[ie]*std::sin(ea);
+}
+
+
+/*
+ * Based on Vallado's 4th edition, Algorithms 2 KepEqtnE and 6 Anomaly to
+ */
+void Keplerian::setWithMeanAnomaly(double ma)
+{
+  double e {m_oe[ie]};
+    // Initial guess to E set to M modified by e
+  double ea {ma + e};
+  if (ma > utl_const::pi  ||
+      ma > -utl_const::pi && ma < 0.0) {
+    ea = ma - e;
+  }
+
+  
+  int itr {0};
+  double ea0 {ea};
+  while (itr < niter) {
+    ea = ea0 + (ma - ea0 + e*std::sin(ea0))/(1.0 - e*std::cos(ea0));
+    if (std::fabs(ea - ea0) < eps) {
+      break;
+    }
+    ea0 = ea;
+    itr++;
+  }
+
+  double cea {std::cos(ea)};
+  double denom {1.0/(1.0 - e*cea)};
+  double sv {std::sin(ea)*std::sqrt(1.0 - e*e)*denom};
+  double cv {(cea - e)*denom};
+
+  m_oe[iv] = std::atan2(sv, cv);
 }
 
 

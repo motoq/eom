@@ -87,6 +87,14 @@ public:
    */
   double getMeanAnomaly() const;
 
+  /*
+   * Updates the true anomaly given the input mean anomaly.  Only the
+   * true anomaly is modified.
+   *
+   * @param  ma  Mean anomaly, radians
+   */
+  void setWithMeanAnomaly(double ma);
+
 private:
   std::array<double, 6> m_oe;
   Eigen::Matrix<double, 6, 1> m_cart;

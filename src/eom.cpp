@@ -229,6 +229,8 @@ int main(int argc, char* argv[])
     oeCart.print(std::cout);
     auto oe = oeCart.getOrbitalElements();
     auto xyz1 {oeCart.getCartesian()};
+    //oeCart.setWithMeanAnomaly(oeCart.getMeanAnomaly());
+    //oeCart.print(std::cout);
     eom::Keplerian oeKep(oe);
     auto xyz2 = oeKep.getCartesian();
     std::cout << "  \nxyz Delta:\n" << (xyz1 - xyz2).norm();
