@@ -46,7 +46,7 @@ public:
   Keplerian(const std::array<double, 6>& oe);
 
   /**
-   * Initialize with a Cartesian state vector
+   * Initialize with a inertial Cartesian state vector
    *
    * @param  cart  Position and velocity, DU and DU/TU
    */

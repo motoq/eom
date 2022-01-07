@@ -15,7 +15,6 @@
 #include <unordered_map>
 #include <stdexcept>
 
-
 #include <Eigen/Dense>
 
 #include <eom_config.h>
@@ -23,6 +22,7 @@
 #include <eom_command.h>
 #include <eom_command_builder.h>
 #include <astro_orbit_def.h>
+#include <astro_rel_orbit_def.h>
 #include <astro_ephemeris.h>
 #include <astro_ecfeci_sys.h>
 #include <astro_build.h>
@@ -56,17 +56,17 @@ int main(int argc, char* argv[])
 
   //
   // Parse input file and generate the simulation configuration
-  // parameters along with modeling component definitions (that will
-  // be used to create the actual modeling components) and commands to
-  // be applied to those models.
+  // parameters along with modeling component definitions (that will be
+  // used to create the actual modeling components) and commands to be
+  // applied to those models.
   //
-  // Integrity of the application relies on the lists containing
-  // models within the environment to remain unchanged after scenario
+  // Integrity of the application relies on the lists containing models
+  // within the environment to remain unchanged after scenario
   // initialization.  During initialization, pointers to containers will
   // be populated (modified).  The order of objects within these lists
   // should not be changed - they should remain in the order as they are
-  // created as "ephem_nids", "orbit_defs", and "ephemerides" all have a
-  // one to one association.
+  // created as "ephem_nids", "orbit_defs" (+ "rel_orb_def"), and
+  // "ephemerides" all have a one to one association.
   //
 
     // General configuration parameter for the simulation
@@ -78,6 +78,10 @@ int main(int argc, char* argv[])
     // Orbit definitions, used to initialize propagators and/or generate
     // classes with buffered ephemeris
   const auto orbit_defs = std::make_shared<std::vector<eom::OrbitDef>>();
+    // Orbit definitions based on other orbits.  As with orbit_defs,
+    // will be used to initialize propagators and/or generate classes
+    // with buffered ephemeris
+  const auto rel_orbit_defs = std::make_shared<std::vector<eom::RelOrbitDef>>();
     // Ephemeris objects.  Only the pointer is needed during parsing.
     // Objects are created after orbit_defs and ephem_nids are done being
     // generated
@@ -147,15 +151,24 @@ int main(int argc, char* argv[])
               cfg.setOutputRate(tokens);
               input_error = !cfg.isValid();
             } else if (make == "Orbit") {
-              auto id_ndx = orbit_defs->size();
+              auto nid = orbit_defs->size();
               try {
                 orbit_defs->push_back(eom_app::parse_orbit_def(tokens, cfg));
-                (*ephem_nids)[(*orbit_defs)[id_ndx].getOrbitName()] =
-                                                      static_cast<int>(id_ndx);
+                (*ephem_nids)[(*orbit_defs)[nid].getOrbitName()] =
+                                                         static_cast<int>(nid);
                 input_error = false;
               } catch (std::invalid_argument& ia) {
                 std::string xerror = ia.what();
                 other_error = "Invalid Orbit definition: " + xerror;
+              }
+            } else if (make == "RelativeOrbit") {
+              try {
+                rel_orbit_defs->push_back(
+                    eom_app::parse_rel_orbit_def(tokens, cfg));
+                input_error = false;
+              } catch (std::invalid_argument& ia) {
+                std::string xerror = ia.what();
+                other_error = "Invalid Relative Orbit definition: " + xerror;
               }
             } else if (make == "Command") {
               try {
@@ -221,19 +234,65 @@ int main(int argc, char* argv[])
     // If a multithreaded implementation is implemented, be sure the
     // final ephemerides vector has ephemeris ordered according to ephem_nids
   for (const auto& orbit : *orbit_defs) {
-    std::cout << "\nNID " << (*ephem_nids)[orbit.getOrbitName()] <<
+    // throws std::out_of_range if not present when using .at()
+    std::cout << "\nNID " << ephem_nids->at(orbit.getOrbitName()) <<
                  ":  " << orbit.getOrbitName();
     ephemerides->emplace_back(eom::build_orbit(orbit, f2iSys));
     eom::Keplerian oeCart(ephemerides->back()->getStateVector(
                           cfg.getStartTime(), eom::EphemFrame::eci));
     oeCart.print(std::cout);
-    auto oe = oeCart.getOrbitalElements();
-    auto xyz1 {oeCart.getCartesian()};
+    //auto oe = oeCart.getOrbitalElements();
+    //auto xyz1 {oeCart.getCartesian()};
     //oeCart.setWithMeanAnomaly(oeCart.getMeanAnomaly());
     //oeCart.print(std::cout);
-    eom::Keplerian oeKep(oe);
-    auto xyz2 = oeKep.getCartesian();
-    std::cout << "  \nxyz Delta:\n" << (xyz1 - xyz2).norm();
+    //eom::Keplerian oeKep(oe);
+    //auto xyz2 = oeKep.getCartesian();
+    //std::cout << "  \nxyz Delta:\n" << (xyz1 - xyz2).norm();
+  }
+    // Construct relative orbits - append ephemerides and update ephem_nids
+  for (const auto& relOrbit : *rel_orbit_defs) {
+    auto nid = ephemerides->size();
+    auto template_nid = ephem_nids->at(relOrbit.getTemplateOrbitName());
+    eom::OrbitDef templateOrbit = orbit_defs->at(template_nid);
+    std::shared_ptr<eom::Ephemeris> templateEph = ephemerides->at(template_nid);
+    Eigen::Matrix<double, 6,1> xvec {
+        templateEph->getStateVector(templateOrbit.getEpoch(),
+                                    eom::EphemFrame::eci)
+    }; 
+    ephemerides->emplace_back(eom::build_orbit(relOrbit,
+                                               templateOrbit,
+                                               templateEph,
+                                               f2iSys));
+
+
+
+    //std::array<double, 6> x = {xvec(0), xvec(1), xvec(2),
+    //                           xvec(3), xvec(4), xvec(5)};
+    //eom::OrbitDef orbit{relOrbit.getOrbitName(),
+    //                    templateOrbit.getPropagatorConfig(),
+    //                    templateOrbit.getEpoch(), x,
+    //                    eom::CoordType::cartesian, eom::FrameType::gcrf};
+    //ephemerides->emplace_back(eom::build_orbit(orbit, f2iSys));
+
+
+    // Add OrbitDef constructor with template jd0 and eci state at jd0
+    // This constructor deaults to gcrf but takes itrf as an optional
+    // param.  Also, get propConfig.
+    
+      // Copy current rel orbit
+
+    //ephemerides->emplace_back(eom::build_orbit(relOrbit, orbit_defs, f2iSys));
+
+
+    (*ephem_nids)[relOrbit.getOrbitName()] = static_cast<int>(nid);
+    //std::cout << "\nNID " << (*ephem_nids)[relOrbit.getOrbitName()] <<
+    std::cout << "\nNID " << ephem_nids->at(relOrbit.getOrbitName()) <<
+                 ":  " << relOrbit.getOrbitName() <<
+                 "  derived from TNID:  " <<
+                 ephem_nids->at(relOrbit.getTemplateOrbitName());
+    eom::Keplerian oeCart(ephemerides->back()->getStateVector(
+                          cfg.getStartTime(), eom::EphemFrame::eci));
+    oeCart.print(std::cout);
   }
 
 

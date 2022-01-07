@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Kurt Motekew
+ * Copyright 2021, 2022 Kurt Motekew
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,6 +16,7 @@
 #include <cal_julian_date.h>
 #include <cal_duration.h>
 #include <astro_orbit_def.h>
+#include <astro_rel_orbit_def.h>
 
 #include <eom_config.h>
 
@@ -62,6 +63,7 @@ eom::Duration parse_duration(std::deque<std::string>& tokens);
  * @param  Tokens consisting of an orbit name, type, epoch, and state
  *         vector.  This list is modified such that all parsed values
  *         are consumedi (pop_front()).
+ * @param  cfg  Scenario configuration parameters
  *
  * @return  An orbit definition, used in the generation of an orbit
  *          model
@@ -71,6 +73,22 @@ eom::Duration parse_duration(std::deque<std::string>& tokens);
  */
 eom::OrbitDef parse_orbit_def(std::deque<std::string>& tokens,
                               const EomConfig& cfg);
+
+/**
+ * Parses an orbit definition based on another orbit
+ *
+ * @param  Tokens consisting of an orbit name, template orbit,
+ *         type of relative orbit definition, and defining parameters.
+ * @param  cfg  Scenario configuration parameters
+ *
+ * @return  A relative orbit definition, used in the generation of an orbit
+ *          model
+ *
+ * @throws  An invalid_argument exception if parsing fails.  No error is
+ *          thrown if the list of tokens is not empty upon completion.
+ */
+eom::RelOrbitDef parse_rel_orbit_def(std::deque<std::string>& tokens,
+                                     const EomConfig& cfg);
 
 /**
  * Parses an orbit state vector

@@ -24,17 +24,20 @@ set(SOURCES
   src/parse_datetime.cpp
   src/parse_duration.cpp
   src/parse_orbit_def.cpp
+  src/parse_rel_orbit_def.cpp
   src/parse_state_vector.cpp
   src/cal_greg_date.cpp
   src/cal_julian_date.cpp
   src/astro_ecfeci_sys.cpp
+  src/astro_build_orbit.cpp
+  src/astro_build_rel_orbit.cpp
   src/astro_keplerian.cpp
   src/astro_orbit_def.cpp
-  src/astro_build_orbit.cpp
-  src/astro_print_ephemeris.cpp
+  src/astro_rel_orbit_def.cpp
   src/astro_kepler.cpp
   src/astro_oscj2.cpp
   src/astro_vinti.cpp
+  src/astro_print_ephemeris.cpp
 )
 
 add_library(sofalib STATIC IMPORTED)

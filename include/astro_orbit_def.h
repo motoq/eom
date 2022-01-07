@@ -92,7 +92,6 @@ public:
 
 private:
   std::string name {""};
-  std::string template_name {""};
   PropagatorConfig propCfg;
   CoordType coord;
   FrameType frame;

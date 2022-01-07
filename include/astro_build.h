@@ -12,6 +12,7 @@
 #include <memory>
 
 #include <astro_orbit_def.h>
+#include <astro_rel_orbit_def.h>
 #include <astro_ephemeris.h>
 #include <astro_ecfeci_sys.h>
 
@@ -35,6 +36,23 @@ namespace eom {
  */
 std::unique_ptr<Ephemeris>
 build_orbit(const OrbitDef& orbitParams,
+            const std::shared_ptr<const EcfEciSys>& ecfeciSys);
+
+/**
+ * Creates an ephemeris "service" based on a reference orbit and a
+ * relative orbit definition.
+ *
+ * @param  relOrbi    Relative orbit parameters
+ * @param  refOrbit   Reference/template orbit
+ * @param  refEph     Reference orbit ephemeris
+ * @param  ecfeciSys  Ecf/Eci utility service pointer that will be
+ *                    copied into the Ephemeris object.
+ *
+ * @return  Orbit implementation
+ */
+std::unique_ptr<Ephemeris>
+build_orbit(const RelOrbitDef& relOrbit, const OrbitDef& refOrbit,
+            const std::shared_ptr<eom::Ephemeris>& refEph,
             const std::shared_ptr<const EcfEciSys>& ecfeciSys);
 
 }

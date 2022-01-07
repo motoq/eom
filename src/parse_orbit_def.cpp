@@ -9,7 +9,7 @@
 #include <eom_parse.h>
 
 #include <stdexcept>
-#include <memory>
+#include <array>
 #include <string>
 #include <deque>
 

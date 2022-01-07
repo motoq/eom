@@ -19,7 +19,7 @@ Orbit  oscj2_test  OscJ2  GD 2021 11 12 17 00 00.0
 #Command PrintEphemeris kep_test ITRF kepler1_f.e;
 #Command PrintEphemeris vinti_test GCRF vinti6_i.e;
 #Command PrintEphemeris oscj2_test GCRF oscj2_i.e;
-#Command PrintEphemeris vinti_test GCRF vinti6_i.e;
+Command PrintEphemeris vinti_test GCRF vinti6_i.e;
 #Command PrintEphemeris vintij2_test GCRF vintij2_i.e;
 OutputRate Minutes 1;
 #Command PrintEphemeris vinti_test ITRF vinti6_f.e;
