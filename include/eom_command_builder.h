@@ -11,7 +11,6 @@
 
 #include <memory>
 #include <string>
-#include <vector>
 #include <deque>
 #include <unordered_map>
 
@@ -33,23 +32,14 @@ class EomCommandBuilder {
 public:
   /**
    * Initialize with resources needed to build commands.  All input
-   * collections are expected to grow.  Additions to each list can be
-   * made, but the order of objects must not be altered after being
-   * added to any list, with the exception of ephem_nids, which maps
-   * orbit names to NIDS.  Orbit and other definitions must be
-   * be present before a command can be processed making use of such
-   * models and resources.
+   * collections are expected to grow.
    *
-   * @param  ephem_nids         List of currently existing orbit Numeric IDs.
-   *                            Each ID represents the indext into the
-   *                            Ephemeris vector and any other resource
-   *                            lists generated during EOM initialization.
-   * @param  ephem_list         List of Ephemeris definitions      
+   * @param  ephemerides  Ephemeris source list
    */
-  EomCommandBuilder(const std::shared_ptr<
-                          std::unordered_map<std::string, int>>& ephem_nids,
-                    const std::shared_ptr<std::vector<
-                          std::shared_ptr<eom::Ephemeris>>>& ephem_list);
+  EomCommandBuilder(
+    const std::shared_ptr<
+        std::unordered_map<std::string,
+                           std::shared_ptr<eom::Ephemeris>>>& ephemerides);
 
   /**
    * Builds a command given tokens, stored resources, and the simulation
@@ -63,11 +53,8 @@ public:
                                            const EomConfig& cfg);
 
 private:
-    // NIDS maps orbit names to ephemerides indexing
-  std::shared_ptr<std::unordered_map<std::string, int>> eph_nids;
-    // Order may not be changed without updating eph_nids.  Containers may
-    // grow due to actions external to this class.  
-  std::shared_ptr<std::vector<std::shared_ptr<eom::Ephemeris>>> ephemerides;
+  std::shared_ptr<std::unordered_map<std::string,
+                  std::shared_ptr<eom::Ephemeris>>> m_ephemerides;
 };
 
 

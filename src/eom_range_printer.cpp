@@ -12,7 +12,6 @@
 #include <fstream>
 #include <memory>
 #include <string>
-#include <vector>
 #include <deque>
 #include <stdexcept>
 
@@ -32,11 +31,12 @@ namespace eom_app {
 
 
 EomRangePrinter::EomRangePrinter(
-       std::deque<std::string>& tokens, const EomConfig& cfg,
-       const std::shared_ptr<std::unordered_map<std::string, int>>& ephem_ndxs,
-       const std::shared_ptr<std::vector<std::shared_ptr<eom::Ephemeris>>>&
-                                                                  ephem_list)
+    std::deque<std::string>& tokens, const EomConfig& cfg,
+    const std::shared_ptr<std::unordered_map<std::string,
+                          std::shared_ptr<eom::Ephemeris>>>& ephemerides)
 {
+  m_ephemerides = ephemerides;
+
     // Read orbit name, output frame, and output filename
   using namespace std::string_literals;
   if (tokens.size() != 3) {
@@ -59,25 +59,19 @@ EomRangePrinter::EomRangePrinter(
   distanceUnitsLbl = cfg.getIoDistansUnits();
   to_distance_units = cfg.getIoPerDu();
   to_time_units = cfg.getIoPerTu();
-  eph_map = ephem_ndxs;
-  ephemerides = ephem_list;
 }
 
 
 /*
- * Set endxs values using orbit_names from initialization
+ * Set ephemeris pointers using orbit_names from initialization
  */
 void EomRangePrinter::validate()
 {
   using namespace std::string_literals;
   for (int ii=0; ii<2; ++ii) {
     try {
-      endxs[ii] = eph_map->at(orbit_names[ii]);
+      eph[ii] = m_ephemerides->at(orbit_names[ii]);
     } catch (std::out_of_range& oor) {
-      for (auto const& pair : *eph_map) {
-        std::cout << '\n';
-        std::cout << "{" << pair.first << ": " << pair.second << "}\n";
-      }
       throw CmdValidateException("EomRangePrinter::validate:"s +
                                  " Invalid orbit name in PrintRange: "s +
                                  orbit_names[ii]);
@@ -118,9 +112,9 @@ void EomRangePrinter::execute() const
       eom::JulianDate jdNow {jdStart +
                              phy_const::day_per_tu*(dtnow/to_time_units)};
       Eigen::Matrix<double, 6, 1> pv1 =
-        (*ephemerides)[endxs[0]]->getStateVector(jdNow, eom::EphemFrame::eci);
+          eph[0]->getStateVector(jdNow, eom::EphemFrame::eci);
       Eigen::Matrix<double, 6, 1> pv2 =
-        (*ephemerides)[endxs[1]]->getStateVector(jdNow, eom::EphemFrame::eci);
+          eph[1]->getStateVector(jdNow, eom::EphemFrame::eci);
       Eigen::Matrix<double, 3, 1> r1 {pv1.block<3,1>(0,0)};
       Eigen::Matrix<double, 3, 1> r2 {pv2.block<3,1>(0,0)};
       Eigen::Matrix<double, 3, 1> dr = r1 - r2;

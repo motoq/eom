@@ -10,7 +10,6 @@
 
 #include <memory>
 #include <string>
-#include <vector>
 #include <deque>
 #include <stdexcept>
 
@@ -25,11 +24,12 @@ namespace eom_app {
 
 
 EomEphemPrinter::EomEphemPrinter(std::deque<std::string>& tokens,
-       const eom::JulianDate& jdEphStart, const eom::JulianDate& jdEphStop,
-       const std::shared_ptr<std::unordered_map<std::string, int>>& ephem_ndxs,
-       const std::shared_ptr<std::vector<std::shared_ptr<eom::Ephemeris>>>&
-                                                                  ephem_list)
+    const eom::JulianDate& jdEphStart, const eom::JulianDate& jdEphStop,
+    const std::shared_ptr<std::unordered_map<std::string,
+                          std::shared_ptr<eom::Ephemeris>>>& ephemerides)
 {
+  m_ephemerides = ephemerides;
+
     // Read orbit name, output frame, and output filename
   using namespace std::string_literals;
   if (tokens.size() != 3) {
@@ -55,15 +55,13 @@ EomEphemPrinter::EomEphemPrinter(std::deque<std::string>& tokens,
   tokens.pop_front();
   jdStart = jdEphStart;
   jdStop = jdEphStop;
-  eph_map = ephem_ndxs;
-  ephemerides = ephem_list;
 }
 
 void EomEphemPrinter::validate()
 {
   using namespace std::string_literals;
   try {
-    endx = eph_map->at(orbit_name);
+    eph = m_ephemerides->at(orbit_name);
   } catch (std::out_of_range& oor) {
     throw CmdValidateException("EomEphemPrinter::EomEphemPrinter:"s +
                                " Invalid orbit name in PrintEphemeris: "s +
@@ -76,8 +74,7 @@ void EomEphemPrinter::validate()
 void EomEphemPrinter::execute() const
 {
   eom::print_ephemeris(file_name, jdStart, jdStop,
-                       {60.0, phy_const::tu_per_sec},
-                       frame, (*ephemerides)[endx]);
+                       {60.0, phy_const::tu_per_sec}, frame, eph);
 }
 
 }

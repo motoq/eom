@@ -11,7 +11,6 @@
 
 #include <memory>
 #include <string>
-#include <vector>
 #include <deque>
 
 #include <cal_julian_date.h>
@@ -39,8 +38,7 @@ public:
    *                       used.
    * @param  jdEphStart    Time of first ephemeris output
    * @param  jdEphStop     Time of final ephemeris output
-   * @param  ephem_ndxs    Locates orbit index given the orbit name
-   * @param  ephem_list    Ordered list of ephemeris sources
+   * @param  ephemerides   Ordered list of ephemeris sources
    *
    * @throw  invalid_argument if exactly 3 tokens are not present, or an
    *         error is encountered (such as the input orbit name is not a
@@ -49,9 +47,8 @@ public:
    */
   EomEphemPrinter(std::deque<std::string>& tokens,
       const eom::JulianDate& jdEphStart, const eom::JulianDate& jdEphStop,
-      const std::shared_ptr<std::unordered_map<std::string, int>>& ephem_ndxs,
-      const std::shared_ptr<std::vector<std::shared_ptr<eom::Ephemeris>>>&
-                                                                    ephem_list);
+      const std::shared_ptr<std::unordered_map<std::string,
+                            std::shared_ptr<eom::Ephemeris>>>& ephemerides);
 
 
   /**
@@ -73,8 +70,9 @@ private:
   std::string file_name;
   eom::JulianDate jdStart;
   eom::JulianDate jdStop;
-  std::shared_ptr<std::unordered_map<std::string, int>> eph_map;
-  std::shared_ptr<std::vector<std::shared_ptr<eom::Ephemeris>>> ephemerides;
+  std::shared_ptr<eom::Ephemeris> eph;
+  std::shared_ptr<std::unordered_map<std::string,
+                  std::shared_ptr<eom::Ephemeris>>> m_ephemerides;
 };
 
 

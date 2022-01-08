@@ -10,7 +10,6 @@
 
 #include <memory>
 #include <string>
-#include <vector>
 #include <deque>
 #include <unordered_map>
 #include <stdexcept>
@@ -25,12 +24,10 @@
 namespace eom_app {
 
 EomCommandBuilder::EomCommandBuilder(
-  const std::shared_ptr<std::unordered_map<std::string, int>>& ephem_nids,
-  const std::shared_ptr<std::vector<
-                        std::shared_ptr<eom::Ephemeris>>>& ephem_list)
+    const std::shared_ptr<std::unordered_map<std::string,
+                          std::shared_ptr<eom::Ephemeris>>>& ephemerides)
 {
-  eph_nids = ephem_nids;
-  ephemerides = ephem_list;
+  m_ephemerides = ephemerides;
 }
 
 
@@ -45,13 +42,13 @@ EomCommandBuilder::buildCommand(std::deque<std::string>& tokens,
   tokens.pop_front();
   if (command_str == "PrintRange") {
     std::unique_ptr<EomCommand> command =
-        std::make_unique<EomRangePrinter>(tokens, cfg, eph_nids, ephemerides);
+        std::make_unique<EomRangePrinter>(tokens, cfg, m_ephemerides);
     return command;
   } else if (command_str == "PrintEphemeris") {
     std::unique_ptr<EomCommand> command =
         std::make_unique<EomEphemPrinter>(tokens,
                                           cfg.getStartTime(), cfg.getStopTime(),
-                                          eph_nids, ephemerides);
+                                          m_ephemerides);
     return command;
   } else {
     throw std::invalid_argument("Invalid command type: " + command_str);

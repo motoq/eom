@@ -11,7 +11,6 @@
 
 #include <memory>
 #include <string>
-#include <vector>
 #include <deque>
 #include <array>
 
@@ -42,8 +41,7 @@ public:
    *                       used.
    * @param  jdEphStart    Time of first range output
    * @param  jdEphStop     Time of final range output
-   * @param  ephem_ndxs    Locates orbit index given the orbit name
-   * @param  ephem_list    Ordered list of ephemeris sources
+   * @param  ephemerides   List of ephemeris sources
    *
    * @throw  invalid_argument if exactly 3 tokens are not present, or an
    *         error is encountered (such as the input orbit name is not a
@@ -51,9 +49,8 @@ public:
    *         selected.
    */
   EomRangePrinter(std::deque<std::string>& tokens, const EomConfig& cfg,
-      const std::shared_ptr<std::unordered_map<std::string, int>>& ephem_ndxs,
-      const std::shared_ptr<std::vector<std::shared_ptr<eom::Ephemeris>>>&
-                                                                    ephem_list);
+      const std::shared_ptr<std::unordered_map<std::string,
+                            std::shared_ptr<eom::Ephemeris>>>& ephemerides);
 
   /**
    * Checks that listed ephemeris sources are valid.
@@ -69,7 +66,6 @@ public:
 
 private:
   std::array<std::string, 2> orbit_names;
-  std::array<double, 2> endxs;              // Index into ephemeris sources
   eom::EphemFrame frame;
   std::string func_name;
   std::string file_name;
@@ -80,8 +76,9 @@ private:
   std::string distanceUnitsLbl;
   double to_time_units;
   double to_distance_units;
-  std::shared_ptr<std::unordered_map<std::string, int>> eph_map;
-  std::shared_ptr<std::vector<std::shared_ptr<eom::Ephemeris>>> ephemerides;
+  std::array<std::shared_ptr<eom::Ephemeris>, 2> eph;
+  std::shared_ptr<std::unordered_map<std::string,
+                  std::shared_ptr<eom::Ephemeris>>> m_ephemerides;
 };
 
 
