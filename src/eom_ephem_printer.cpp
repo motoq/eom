@@ -19,6 +19,7 @@
 #include <astro_ephemeris.h>
 #include <astro_print.h>
 
+#include <eom_command.h>
 
 namespace eom_app {
 
@@ -37,15 +38,8 @@ EomEphemPrinter::EomEphemPrinter(std::deque<std::string>& tokens,
                                 " vs. input "s +
                                 std::to_string(tokens.size()));
   }
-  auto orbit_name = tokens[0];
+  orbit_name = tokens[0];
   tokens.pop_front();
-  try {
-    endx = ephem_ndxs->at(orbit_name);
-  } catch (std::out_of_range& oor) {
-    throw std::invalid_argument("EomEphemPrinter::EomEphemPrinter:"s +
-                                " Invalid orbit name in PrintEphemeris: "s +
-                                orbit_name);
-  }
   auto frame_name = tokens[0];
   tokens.pop_front();
   if (frame_name == "GCRF") {
@@ -61,7 +55,20 @@ EomEphemPrinter::EomEphemPrinter(std::deque<std::string>& tokens,
   tokens.pop_front();
   jdStart = jdEphStart;
   jdStop = jdEphStop;
+  eph_map = ephem_ndxs;
   ephemerides = ephem_list;
+}
+
+void EomEphemPrinter::validate()
+{
+  using namespace std::string_literals;
+  try {
+    endx = eph_map->at(orbit_name);
+  } catch (std::out_of_range& oor) {
+    throw CmdValidateException("EomEphemPrinter::EomEphemPrinter:"s +
+                               " Invalid orbit name in PrintEphemeris: "s +
+                               orbit_name);
+  }
 }
 
 // Add functionality to determine proper output rate given orbit type

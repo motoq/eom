@@ -56,7 +56,14 @@ public:
                                                                     ephem_list);
 
   /**
-   * Writes .e format ephemeris to the previously specified file.
+   * Checks that listed ephemeris sources are valid.
+   *
+   * @throw  CmdValidateException if validation fails
+   */
+  void validate() override;
+
+  /**
+   * Writes .m function plotting the range between two ephemeris sources
    */
   void execute() const override;
 
@@ -73,6 +80,7 @@ private:
   std::string distanceUnitsLbl;
   double to_time_units;
   double to_distance_units;
+  std::shared_ptr<std::unordered_map<std::string, int>> eph_map;
   std::shared_ptr<std::vector<std::shared_ptr<eom::Ephemeris>>> ephemerides;
 };
 

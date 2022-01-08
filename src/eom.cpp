@@ -204,6 +204,7 @@ int main(int argc, char* argv[])
     std::cout << "\n        (Probably left out a ';')\n\n";
   }
   if (input_error) {
+    std::cout << "\nExiting on input error that can't be specified\n";
     return 0;
   }
 
@@ -238,18 +239,17 @@ int main(int argc, char* argv[])
     std::cout << "\nNID " << ephem_nids->at(orbit.getOrbitName()) <<
                  ":  " << orbit.getOrbitName();
     ephemerides->emplace_back(eom::build_orbit(orbit, f2iSys));
-    eom::Keplerian oeCart(ephemerides->back()->getStateVector(
-                          cfg.getStartTime(), eom::EphemFrame::eci));
+    std::shared_ptr<eom::Ephemeris> eph =
+        ephemerides->at(ephem_nids->at(orbit.getOrbitName()));
+    eom::Keplerian oeCart(eph->getStateVector(cfg.getStartTime(),
+                                              eom::EphemFrame::eci));
     oeCart.print(std::cout);
-    //auto oe = oeCart.getOrbitalElements();
-    //auto xyz1 {oeCart.getCartesian()};
-    //oeCart.setWithMeanAnomaly(oeCart.getMeanAnomaly());
-    //oeCart.print(std::cout);
-    //eom::Keplerian oeKep(oe);
-    //auto xyz2 = oeKep.getCartesian();
-    //std::cout << "  \nxyz Delta:\n" << (xyz1 - xyz2).norm();
   }
+
     // Construct relative orbits - append ephemerides and update ephem_nids
+    // Relative orbit definitions are based on primary orbit
+    // definitions, not other relative orbit definitions (only
+    // orbit_defs, not other rel_orbit_defs)
   for (const auto& relOrbit : *rel_orbit_defs) {
     auto nid = ephemerides->size();
     auto template_nid = ephem_nids->at(relOrbit.getTemplateOrbitName());
@@ -263,43 +263,32 @@ int main(int argc, char* argv[])
                                                templateOrbit,
                                                templateEph,
                                                f2iSys));
-
-
-
-    //std::array<double, 6> x = {xvec(0), xvec(1), xvec(2),
-    //                           xvec(3), xvec(4), xvec(5)};
-    //eom::OrbitDef orbit{relOrbit.getOrbitName(),
-    //                    templateOrbit.getPropagatorConfig(),
-    //                    templateOrbit.getEpoch(), x,
-    //                    eom::CoordType::cartesian, eom::FrameType::gcrf};
-    //ephemerides->emplace_back(eom::build_orbit(orbit, f2iSys));
-
-
-    // Add OrbitDef constructor with template jd0 and eci state at jd0
-    // This constructor deaults to gcrf but takes itrf as an optional
-    // param.  Also, get propConfig.
-    
-      // Copy current rel orbit
-
-    //ephemerides->emplace_back(eom::build_orbit(relOrbit, orbit_defs, f2iSys));
-
-
     (*ephem_nids)[relOrbit.getOrbitName()] = static_cast<int>(nid);
-    //std::cout << "\nNID " << (*ephem_nids)[relOrbit.getOrbitName()] <<
     std::cout << "\nNID " << ephem_nids->at(relOrbit.getOrbitName()) <<
                  ":  " << relOrbit.getOrbitName() <<
                  "  derived from TNID:  " <<
                  ephem_nids->at(relOrbit.getTemplateOrbitName());
-    eom::Keplerian oeCart(ephemerides->back()->getStateVector(
-                          cfg.getStartTime(), eom::EphemFrame::eci));
+    std::shared_ptr<eom::Ephemeris> relEph =
+        ephemerides->at(ephem_nids->at(relOrbit.getTemplateOrbitName()));
+    eom::Keplerian oeCart(relEph->getStateVector(cfg.getStartTime(),
+                                                 eom::EphemFrame::eci));
     oeCart.print(std::cout);
   }
 
 
   //
   // Model and command lists completed - no further modifications
-  // Execute commands
+  // Validate (exit on failure) & Execute Commands
   //
+
+  for (auto& cmd : commands) {
+    try {
+      cmd->validate();
+    } catch (eom_app::CmdValidateException& cve) {
+      std::cout << "\nError Validating Command: " << cve.what() << '\n';
+      return 0;
+    }
+  }
 
   for (auto& cmd : commands) {
     cmd->execute();

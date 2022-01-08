@@ -24,6 +24,7 @@
 #include <astro_ephemeris.h>
 #include <astro_print.h>
 
+#include <eom_command.h>
 #include <eom_config.h>
 #include <eom_parse.h>
 
@@ -47,13 +48,6 @@ EomRangePrinter::EomRangePrinter(
   for (int ii=0; ii<2; ++ii) {
     orbit_names[ii] = tokens[0];
     tokens.pop_front();
-    try {
-      endxs[ii] = ephem_ndxs->at(orbit_names[ii]);
-    } catch (std::out_of_range& oor) {
-      throw std::invalid_argument("EomRangePrinter::EomRangePrinter:"s +
-                                  " Invalid orbit name in PrintRange: "s +
-                                    orbit_names[ii]);
-    }
   }
   func_name = tokens[0];
   tokens.pop_front();
@@ -65,7 +59,30 @@ EomRangePrinter::EomRangePrinter(
   distanceUnitsLbl = cfg.getIoDistansUnits();
   to_distance_units = cfg.getIoPerDu();
   to_time_units = cfg.getIoPerTu();
+  eph_map = ephem_ndxs;
   ephemerides = ephem_list;
+}
+
+
+/*
+ * Set endxs values using orbit_names from initialization
+ */
+void EomRangePrinter::validate()
+{
+  using namespace std::string_literals;
+  for (int ii=0; ii<2; ++ii) {
+    try {
+      endxs[ii] = eph_map->at(orbit_names[ii]);
+    } catch (std::out_of_range& oor) {
+      for (auto const& pair : *eph_map) {
+        std::cout << '\n';
+        std::cout << "{" << pair.first << ": " << pair.second << "}\n";
+      }
+      throw CmdValidateException("EomRangePrinter::validate:"s +
+                                 " Invalid orbit name in PrintRange: "s +
+                                 orbit_names[ii]);
+    }
+  }
 }
 
 void EomRangePrinter::execute() const

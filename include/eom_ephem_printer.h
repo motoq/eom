@@ -53,6 +53,14 @@ public:
       const std::shared_ptr<std::vector<std::shared_ptr<eom::Ephemeris>>>&
                                                                     ephem_list);
 
+
+  /**
+   * Checks that input ephemeris source is valid
+   *
+   * @throw  CmdValidateException if validation fails
+   */
+  void validate() override;
+
   /**
    * Writes .e format ephemeris to the previously specified file.
    */
@@ -61,9 +69,11 @@ public:
 private:
   int endx;                                 // Index into ephemerides
   eom::EphemFrame frame;
+  std::string orbit_name;
   std::string file_name;
   eom::JulianDate jdStart;
   eom::JulianDate jdStop;
+  std::shared_ptr<std::unordered_map<std::string, int>> eph_map;
   std::shared_ptr<std::vector<std::shared_ptr<eom::Ephemeris>>> ephemerides;
 };
 
