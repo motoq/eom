@@ -18,7 +18,6 @@
 #include <eom_config.h>
 #include <eom_command.h>
 
-#include <astro_orbit_def.h>
 #include <astro_ephemeris.h>
 
 namespace eom_app {
@@ -45,14 +44,10 @@ public:
    *                            Each ID represents the indext into the
    *                            Ephemeris vector and any other resource
    *                            lists generated during EOM initialization.
-   * @param  orbit_definitions  List of orbit definitions that will be
-   *                            used to generate ephemeris providers.
    * @param  ephem_list         List of Ephemeris definitions      
    */
   EomCommandBuilder(const std::shared_ptr<
                           std::unordered_map<std::string, int>>& ephem_nids,
-                    const std::shared_ptr<
-                          std::vector<eom::OrbitDef>>& orbit_definitions,
                     const std::shared_ptr<std::vector<
                           std::shared_ptr<eom::Ephemeris>>>& ephem_list);
 
@@ -68,11 +63,10 @@ public:
                                            const EomConfig& cfg);
 
 private:
-    // NIDS maps orbit names to orbit_def and ephemerides indexing
+    // NIDS maps orbit names to ephemerides indexing
   std::shared_ptr<std::unordered_map<std::string, int>> eph_nids;
     // Order may not be changed without updating eph_nids.  Containers may
     // grow due to actions external to this class.  
-  std::shared_ptr<std::vector<eom::OrbitDef>> orbit_defs;
   std::shared_ptr<std::vector<std::shared_ptr<eom::Ephemeris>>> ephemerides;
 };
 

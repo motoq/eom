@@ -89,7 +89,7 @@ int main(int argc, char* argv[])
                std::make_shared<std::vector<std::shared_ptr<eom::Ephemeris>>>();
     // A bucket of resources allowing for parsing and building of
     // commands to be applied to models during the simulation
-  eom_app::EomCommandBuilder cmdBuilder(ephem_nids, orbit_defs, ephemerides);
+  eom_app::EomCommandBuilder cmdBuilder(ephem_nids, ephemerides);
     // The commands populated by cmdBuilder
   std::vector<std::shared_ptr<eom_app::EomCommand>> commands;
     // Read each line and pass to parser while tracking line number

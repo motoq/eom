@@ -20,19 +20,16 @@
 #include <eom_ephem_printer.h>
 #include <eom_range_printer.h>
 
-#include <astro_orbit_def.h>
 #include <astro_ephemeris.h>
 
 namespace eom_app {
 
 EomCommandBuilder::EomCommandBuilder(
   const std::shared_ptr<std::unordered_map<std::string, int>>& ephem_nids,
-  const std::shared_ptr<std::vector<eom::OrbitDef>>& orbit_definitions,
   const std::shared_ptr<std::vector<
                         std::shared_ptr<eom::Ephemeris>>>& ephem_list)
 {
   eph_nids = ephem_nids;
-  orbit_defs = orbit_definitions;
   ephemerides = ephem_list;
 }
 
