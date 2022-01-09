@@ -234,9 +234,10 @@ int main(int argc, char* argv[])
     // orbit_defs, not other rel_orbit_defs).
   for (const auto& relOrbit : rel_orbit_defs) {
       // Find reference orbit
+    bool found {false};
     for (const auto& templateOrbit : orbit_defs) {
-      bool found {false};
       if (templateOrbit.getOrbitName() == relOrbit.getTemplateOrbitName()) {
+        found = true;
         std::shared_ptr<eom::Ephemeris> templateEph =
                              ephemerides->at(templateOrbit.getOrbitName());
         Eigen::Matrix<double, 6,1> xvec {
@@ -253,14 +254,13 @@ int main(int argc, char* argv[])
         eom::Keplerian oeCart(eph->getStateVector(cfg.getStartTime(),
                                                   eom::EphemFrame::eci));
         oeCart.print(std::cout);
-        found = true;
         break;
       }
-      if (!found) {
-        std::cout << "\nInvalid relative orbit name: " <<
-                     relOrbit.getTemplateOrbitName() << '\n';
-        return 0;
-      }
+    }
+    if (!found) {
+      std::cout << "\nInvalid relative orbit name: " <<
+                   relOrbit.getTemplateOrbitName() << '\n';
+      return 0;
     }
   }
 

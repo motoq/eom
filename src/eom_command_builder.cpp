@@ -18,6 +18,7 @@
 #include <eom_command.h>
 #include <eom_ephem_printer.h>
 #include <eom_range_printer.h>
+#include <eom_rtc_printer.h>
 
 #include <astro_ephemeris.h>
 
@@ -40,15 +41,19 @@ EomCommandBuilder::buildCommand(std::deque<std::string>& tokens,
   }
   auto command_str = tokens[0];
   tokens.pop_front();
-  if (command_str == "PrintRange") {
-    std::unique_ptr<EomCommand> command =
-        std::make_unique<EomRangePrinter>(tokens, cfg, m_ephemerides);
-    return command;
-  } else if (command_str == "PrintEphemeris") {
+  if (command_str == "PrintEphemeris") {
     std::unique_ptr<EomCommand> command =
         std::make_unique<EomEphemPrinter>(tokens,
                                           cfg.getStartTime(), cfg.getStopTime(),
                                           m_ephemerides);
+    return command;
+  } else if (command_str == "PrintRange") {
+    std::unique_ptr<EomCommand> command =
+        std::make_unique<EomRangePrinter>(tokens, cfg, m_ephemerides);
+    return command;
+  } else if (command_str == "PrintRTC") {
+    std::unique_ptr<EomCommand> command =
+        std::make_unique<EomRtcPrinter>(tokens, cfg, m_ephemerides);
     return command;
   } else {
     throw std::invalid_argument("Invalid command type: " + command_str);

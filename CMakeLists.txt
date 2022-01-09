@@ -21,6 +21,7 @@ set(SOURCES
   src/eom_command_builder.cpp
   src/eom_ephem_printer.cpp
   src/eom_range_printer.cpp
+  src/eom_rtc_printer.cpp
   src/parse_datetime.cpp
   src/parse_duration.cpp
   src/parse_orbit_def.cpp
