@@ -66,11 +66,20 @@ build_orbit(const OrbitDef& orbitParams,
 }
 
 
+// Relative orbit definition
 std::unique_ptr<Ephemeris>
 build_orbit(const RelOrbitDef& relOrbit, const OrbitDef& refOrbit,
             const std::shared_ptr<eom::Ephemeris>& refEph,
             const std::shared_ptr<const EcfEciSys>& ecfeciSys)
 {
+    // Only a single relative orbit definition in RelCoordType exists so
+    // no decisions to make.
+    // Algorithm for computing orbital elements given radial,
+    // transverse, cross-track, and transverse offset distances derived
+    // based on "Spacecraft Relative Orbit Geometry Description Through
+    // Orbit Element Differences" by Hanspeter Schaub.  This method of
+    // defining a bounding box and offset automatically guarantees the
+    // energy matching constraint.
   //if (relOrbit.getRelCoordType == rtct)
   Keplerian refOe(refEph->getStateVector(refOrbit.getEpoch(),
                                          eom::EphemFrame::eci));

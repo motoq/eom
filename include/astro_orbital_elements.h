@@ -42,7 +42,7 @@ public:
   /**
    * @return  Orbit angular momentum, DU^2/TU
    */
-  //virtual double getAngularMomentum() const override = 0;
+  virtual double getAngularMomentum() const = 0;
 
   /**
    * Output orbital elements and state vector to the supplied stream.

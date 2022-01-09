@@ -72,8 +72,7 @@ public:
   /**
    * @return  Orbit angular momentum, DU^2/TU
    */
-  //double getAngularMomentum() const override
-  double getAngularMomentum() const
+  double getAngularMomentum() const override
   {
     return hmag;
   }
