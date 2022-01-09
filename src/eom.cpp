@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Kurt Motekew
+ * Copyright 2021, 2022 Kurt Motekew
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -60,26 +60,19 @@ int main(int argc, char* argv[])
   // used to create the actual modeling components) and commands to be
   // applied to those models.
   //
-  // Integrity of the application relies on "ephem_nids" and
-  // "ephemerides" staying in sync.
-  //
 
     // General configuration parameter for the simulation
   eom_app::EomConfig cfg;
-    // Orbit Numeric ID is also the location of the orbit in the
-    // ephemeris vector given the orbit/platform name
-  const auto ephem_nids =
-               std::make_shared<std::unordered_map<std::string, int>>();
     // Orbit definitions, used to initialize propagators and/or generate
     // classes with buffered ephemeris
-  const auto orbit_defs = std::make_shared<std::vector<eom::OrbitDef>>();
+  std::vector<eom::OrbitDef> orbit_defs;
     // Orbit definitions based on other orbits.  As with orbit_defs,
     // will be used to initialize propagators and/or generate classes
     // with buffered ephemeris
-  const auto rel_orbit_defs = std::make_shared<std::vector<eom::RelOrbitDef>>();
+  std::vector<eom::RelOrbitDef> rel_orbit_defs;
     // Ephemeris objects.  Only the pointer is needed during parsing so
-    // the source can be added to objects requiring ephemerides.
-    // Objects are created after orbit_defs and ephem_nids are done being
+    // the source can be added to objects requiring ephemerides.  Ephemeris
+    // objects are created after orbit_defs and rel_orbit_defs are
     // generated.
   const auto ephemerides =
       std::make_shared<std::unordered_map<std::string,
@@ -149,7 +142,7 @@ int main(int argc, char* argv[])
               input_error = !cfg.isValid();
             } else if (make == "Orbit") {
               try {
-                orbit_defs->push_back(eom_app::parse_orbit_def(tokens, cfg));
+                orbit_defs.push_back(eom_app::parse_orbit_def(tokens, cfg));
                 input_error = false;
               } catch (std::invalid_argument& ia) {
                 std::string xerror = ia.what();
@@ -157,8 +150,8 @@ int main(int argc, char* argv[])
               }
             } else if (make == "RelativeOrbit") {
               try {
-                rel_orbit_defs->push_back(
-                    eom_app::parse_rel_orbit_def(tokens, cfg));
+                rel_orbit_defs.push_back(eom_app::parse_rel_orbit_def(tokens,
+                                                                      cfg));
                 input_error = false;
               } catch (std::invalid_argument& ia) {
                 std::string xerror = ia.what();
@@ -212,7 +205,7 @@ int main(int argc, char* argv[])
     // based on the input scenario time and orbit epoch times.
   eom::JulianDate minJd = cfg.getStartTime();
   eom::JulianDate maxJd = cfg.getStopTime();
-  for (const auto& orbit : *orbit_defs) {
+  for (const auto& orbit : orbit_defs) {
     if (orbit.getEpoch() < minJd) {
       minJd = orbit.getEpoch();
     }
@@ -226,7 +219,7 @@ int main(int argc, char* argv[])
   auto f2iSys = std::make_shared<eom::EcfEciSys>(minJd, maxJd,
                                                  cfg.getEcfEciRate());
     // Ephemeris class is immutable.
-  for (const auto& orbit : *orbit_defs) {
+  for (const auto& orbit : orbit_defs) {
     std::cout << "\n  " << orbit.getOrbitName();
     (*ephemerides)[orbit.getOrbitName()] = eom::build_orbit(orbit, f2iSys);
     std::shared_ptr<eom::Ephemeris> eph = ephemerides->at(orbit.getOrbitName());
@@ -235,12 +228,14 @@ int main(int argc, char* argv[])
     oeCart.print(std::cout);
   }
 
-    // Construct relative orbits - append ephemerides and update ephem_nids
+    // Construct relative orbits - append ephemerides.
     // Relative orbit definitions are based on primary orbit
     // definitions, not other relative orbit definitions (only
-    // orbit_defs, not other rel_orbit_defs)
-  for (const auto& relOrbit : *rel_orbit_defs) {
-    for (const auto& templateOrbit : *orbit_defs) {
+    // orbit_defs, not other rel_orbit_defs).
+  for (const auto& relOrbit : rel_orbit_defs) {
+      // Find reference orbit
+    for (const auto& templateOrbit : orbit_defs) {
+      bool found {false};
       if (templateOrbit.getOrbitName() == relOrbit.getTemplateOrbitName()) {
         std::shared_ptr<eom::Ephemeris> templateEph =
                              ephemerides->at(templateOrbit.getOrbitName());
@@ -251,14 +246,20 @@ int main(int argc, char* argv[])
         (*ephemerides)[relOrbit.getOrbitName()] =
              eom::build_orbit(relOrbit, templateOrbit, templateEph, f2iSys);
         std::cout << "\n  " << relOrbit.getOrbitName() <<
-                     "  derived from TNID:  " <<
+                     "  derived from:  " <<
                      relOrbit.getTemplateOrbitName();
         std::shared_ptr<eom::Ephemeris> eph =
                              ephemerides->at(relOrbit.getOrbitName());
         eom::Keplerian oeCart(eph->getStateVector(cfg.getStartTime(),
                                                   eom::EphemFrame::eci));
         oeCart.print(std::cout);
+        found = true;
         break;
+      }
+      if (!found) {
+        std::cout << "\nInvalid relative orbit name: " <<
+                     relOrbit.getTemplateOrbitName() << '\n';
+        return 0;
       }
     }
   }
