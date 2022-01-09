@@ -70,6 +70,15 @@ public:
   }
 
   /**
+   * @return  Orbit angular momentum, DU^2/TU
+   */
+  //double getAngularMomentum() const override
+  double getAngularMomentum() const
+  {
+    return hmag;
+  }
+
+  /**
    * Output orbital elements and state vector to the supplied stream.
    * Units of kilometers, seconds, and degrees are used.
    *
@@ -96,6 +105,9 @@ public:
   void setWithMeanAnomaly(double ma);
 
 private:
+  void set(const std::array<double, 6>& oe);
+
+  double hmag {0.0};
   std::array<double, 6> m_oe;
   Eigen::Matrix<double, 6, 1> m_cart;
 };

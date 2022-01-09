@@ -30,7 +30,6 @@ set(SOURCES
   src/cal_julian_date.cpp
   src/astro_ecfeci_sys.cpp
   src/astro_build_orbit.cpp
-  src/astro_build_rel_orbit.cpp
   src/astro_keplerian.cpp
   src/astro_orbit_def.cpp
   src/astro_rel_orbit_def.cpp

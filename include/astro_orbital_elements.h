@@ -31,13 +31,18 @@ public:
    * @return  Orbital elements, various systems of units depending on
    *          the theory, but typically DU and radians.
    */
-  virtual std::array<double, 6> getOrbitalElements() const=0;
+  virtual std::array<double, 6> getOrbitalElements() const = 0;
 
   /**
    * @return  Equivalent Cartesian position and velocity state vector,
    *          DU and DU/TU
    */
-  virtual Eigen::Matrix<double, 6, 1> getCartesian() const=0;
+  virtual Eigen::Matrix<double, 6, 1> getCartesian() const = 0;
+
+  /**
+   * @return  Orbit angular momentum, DU^2/TU
+   */
+  //virtual double getAngularMomentum() const override = 0;
 
   /**
    * Output orbital elements and state vector to the supplied stream.
@@ -45,7 +50,7 @@ public:
    *
    * @param  stream  The stream to output the scenario setting to
    */
-  virtual void print(std::ostream& stream) const=0;
+  virtual void print(std::ostream& stream) const = 0;
 };
 
 

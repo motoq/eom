@@ -1,5 +1,6 @@
 #include <astro_keplerian.h>
 
+#include <stdexcept>
 #include <ostream>
 #include <iomanip>
 #include <cmath>
@@ -8,6 +9,7 @@
 #include <Eigen/Dense>
 #include <Eigen/Geometry>
 
+#include <utl_nonconvergence_exception.h>
 #include <utl_const.h>
 #include <phy_const.h>
 
@@ -31,6 +33,12 @@ namespace eom {
  */
 Keplerian::Keplerian(const std::array<double, 6>& oe)
 {
+  this->set(oe);
+}
+
+
+void Keplerian::set(const std::array<double, 6>& oe)
+{
   m_oe = oe;
 
   double a {oe[0]};
@@ -45,6 +53,8 @@ Keplerian::Keplerian(const std::array<double, 6>& oe)
   double sv {std::sin(v)};
   double ecv {e*cv};
   double suop {std::sqrt(phy_const::gm/semip)};
+
+  hmag = std::sqrt(phy_const::gm*semip);
 
   Eigen::Matrix<double, 3, 1> r_pqw;
   r_pqw(0,0) = semip*cv/(1.0 + ecv);
@@ -82,7 +92,7 @@ Keplerian::Keplerian(const Eigen::Matrix<double, 6, 1>& cart)
 
   double rmag {rvec.norm()};
   double vmag {vvec.norm()};
-  double hmag {hvec.norm()};
+  hmag = hvec.norm();
   double nmag {nvec.norm()};
   double v2 {vmag*vmag};
   double rdotv {rvec.dot(vvec)};
@@ -154,7 +164,9 @@ double Keplerian::getMeanAnomaly() const
  */
 void Keplerian::setWithMeanAnomaly(double ma)
 {
-  double e {m_oe[ie]};
+  std::array<double, 6> oe = m_oe;
+
+  double e {oe[ie]};
     // Initial guess to E set to M modified by e
   double ea {ma + e};
   if (ma > utl_const::pi  ||
@@ -173,13 +185,18 @@ void Keplerian::setWithMeanAnomaly(double ma)
     ea0 = ea;
     itr++;
   }
+  if (itr == niter) {
+    throw NonconvergenceException("Keplerian::setWithMeanAnomaly");
+  }
+                                 
 
   double cea {std::cos(ea)};
   double denom {1.0/(1.0 - e*cea)};
   double sv {std::sin(ea)*std::sqrt(1.0 - e*e)*denom};
   double cv {(cea - e)*denom};
 
-  m_oe[iv] = std::atan2(sv, cv);
+  oe[iv] = std::atan2(sv, cv);
+  this->set(oe);
 }
 
 

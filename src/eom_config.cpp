@@ -105,6 +105,7 @@ void EomConfig::setEcfEciRate(std::deque<std::string>& tokens)
 
 void EomConfig::setIoPerDu(std::deque<std::string>& tokens)
 {
+  using namespace std::string_literals;
   valid = false;
   if (tokens.size() != 1) {
     error_string = "Invalid number of parameters EomConfig::setIoPerDu";
@@ -116,15 +117,15 @@ void EomConfig::setIoPerDu(std::deque<std::string>& tokens)
     io_per_du = utl_units::per_du.at(units_distance);
     valid = true;
   } catch (std::out_of_range& oor) {
-    throw std::invalid_argument("EomConfig::setIoPerDu");
-    //throw std::invalid_argument("EomConfig::setIoPerDu:"s +
-    //                            " Invalid units type: "s + units_distance);
+    throw std::invalid_argument("EomConfig::setIoPerDu:"s +
+                                " Invalid units type: "s + units_distance);
   }
 }
 
 
 void EomConfig::setIoPerTu(std::deque<std::string>& tokens)
 {
+  using namespace std::string_literals;
   valid = false;
   if (tokens.size() != 1) {
     error_string = "Invalid number of parameters EomConfig::setIoPerTu";
@@ -136,9 +137,8 @@ void EomConfig::setIoPerTu(std::deque<std::string>& tokens)
     io_per_tu = utl_units::per_tu.at(units_time);
     valid = true;
   } catch (std::out_of_range& oor) {
-    throw std::invalid_argument("EomConfig::setIoPerTu");
-    //throw std::invalid_argument("EomConfig::setIoPerTu:"s +
-    //                            " Invalid units type: "s + units_time);
+    throw std::invalid_argument("EomConfig::setIoPerTu:"s +
+                                " Invalid units type: "s + units_time);
   }
 }
 
