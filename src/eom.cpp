@@ -32,6 +32,8 @@
 #include <phy_const.h>
 #include <astro_keplerian.h>
 
+#include <astro_ground_point.h>
+
 /**
  * Equations of Motion:  An application focused on astrodynamics related
  * problems.  This program parses an input file building models and
@@ -282,6 +284,34 @@ int main(int argc, char* argv[])
   for (auto& cmd : commands) {
     cmd->execute();
   }
+
+
+  //Eigen::Matrix<double, 3, 1> pos {6524.834, 6862.875, 6448.296};
+  Eigen::Matrix<double, 3, 1> pos {-5552.0, -2563.0, 3258.0};
+  pos *= phy_const::du_per_km;
+  eom::GroundPoint pt {pos};
+  std::cout << "\nFukushima Iterative Method";
+  std::cout << '\n' << utl_const::deg_per_rad*pt.getLatitude();
+  std::cout << "    " << utl_const::deg_per_rad*pt.getLongitude();
+  std::cout << "    " << phy_const::km_per_du*pt.getAltitude();
+  std::cout << '\n' << pt.getItr();
+  std::cout << "\nIterative Method";
+  eom::GroundPoint ptbk {pos, false};
+  std::cout << '\n' << utl_const::deg_per_rad*ptbk.getLatitude();
+  std::cout << "    " << utl_const::deg_per_rad*ptbk.getLongitude();
+  std::cout << "    " << phy_const::km_per_du*ptbk.getAltitude();
+  std::cout << '\n' << ptbk.getItr();
+
+  eom::GroundPoint pt2(pt.getLatitude(),
+                       pt.getLongitude(),
+                       pt.getAltitude());
+  eom::GroundPoint ptbk2(ptbk.getLatitude(),
+                         ptbk.getLongitude(),
+                         ptbk.getAltitude());
+  std::cout << "\nFukushima Iterative Error: " <<
+    phy_const::m_per_du*(pos - pt2.getCartesian()).norm();
+  std::cout << "\nIterative Error: " <<
+    phy_const::m_per_du*(pos - ptbk2.getCartesian()).norm();
 
   std::cout << "\n\n";
 

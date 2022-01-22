@@ -17,11 +17,10 @@
 
 #include <Eigen/Dense>
 
-#include <cal_const.h>
 #include <phy_const.h>
 #include <cal_julian_date.h>
 #include <astro_ephemeris.h>
-#include <astro_print.h>
+#include <astro_attitude.h>
 
 #include <eom_command.h>
 #include <eom_config.h>
@@ -119,16 +118,7 @@ void EomRtcPrinter::execute() const
       Eigen::Matrix<double, 3, 1> v1 {pv1.block<3,1>(3,0)};
       Eigen::Matrix<double, 3, 1> r2 {pv2.block<3,1>(0,0)};
       Eigen::Matrix<double, 3, 1> dr = r1 - r2;
-      Eigen::Matrix<double, 3, 1> rhat {r1};
-      Eigen::Matrix<double, 3, 1> chat {rhat.cross(v1)};
-      Eigen::Matrix<double, 3, 1> that {chat.cross(rhat)};
-      rhat.normalize();
-      that.normalize();
-      chat.normalize();
-      Eigen::Matrix<double, 3, 3> i2rtcDcm;
-      i2rtcDcm.row(0) = rhat;
-      i2rtcDcm.row(1) = that;
-      i2rtcDcm.row(2) = chat;
+      Eigen::Matrix<double, 3, 3> i2rtcDcm {eom::AttitudeRtc<double>(r1, v1)};
       dr = i2rtcDcm*dr;
       for (int jj=0; jj<3; ++jj) {
         fout << " " << to_distance_units*dr(jj);

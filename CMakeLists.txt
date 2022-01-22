@@ -29,8 +29,9 @@ set(SOURCES
   src/parse_state_vector.cpp
   src/cal_greg_date.cpp
   src/cal_julian_date.cpp
-  src/astro_ecfeci_sys.cpp
   src/astro_build_orbit.cpp
+  src/astro_ecfeci_sys.cpp
+  src/astro_ground_point.cpp
   src/astro_keplerian.cpp
   src/astro_orbit_def.cpp
   src/astro_rel_orbit_def.cpp

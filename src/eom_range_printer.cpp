@@ -17,11 +17,9 @@
 
 #include <Eigen/Dense>
 
-#include <cal_const.h>
 #include <phy_const.h>
 #include <cal_julian_date.h>
 #include <astro_ephemeris.h>
-#include <astro_print.h>
 
 #include <eom_command.h>
 #include <eom_config.h>
