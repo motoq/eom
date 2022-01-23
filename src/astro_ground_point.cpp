@@ -88,17 +88,21 @@ GroundPoint::GroundPoint(const Eigen::Matrix<double, 3, 1>& xyz, bool fukushima)
       double t {1.0};
       if (tm <= 0.0) {
         t = (p - c + zp)/(p - c + 2*zp);
+        finit = FukInit::case1;
       } else if (tm >= 1.0) {
         t = p/(zp + c);
+        finit = FukInit::case2;
       } else {
         // 0 < tm < 1 is the equatorial region - evaluate quartic
         double fm {tm*(tm*tm*(p*tm + u) + v) - p};
         if (fm >= 0.0) {
           // tm >= 1 starting point
           t = p/(zp + c);
+          finit = FukInit::case3a;
         } else {
           // tm <= 0 starting point
           t = (p - c + zp)/(p - c + 2*zp);
+          finit = FukInit::case3b;
         }
       }
         // Newton's method

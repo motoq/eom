@@ -16,6 +16,18 @@
 namespace eom {
 
 /**
+ * Indicates which Starter method is employed by the Fukushima Cartesian
+ * to geodetic algorithm.
+ */
+enum class FukInit {
+  none,                                ///< Fukushima lat to cart not used
+  case1,                               ///< Most common, 99%
+  case2,                               ///< Close to geocenter
+  case3a,                              ///< Near equatorial a
+  case3b                               ///< Near equatorial b
+};
+
+/**
  * An earth fixed point in Cartesian or geodetic coordinates.
  * Performs conversions between systems and supplies other useful
  * info.
@@ -83,6 +95,12 @@ public:
   {
     return itr;
   }
+  
+  /*
+   * @return  Returns the Starter used by the Fukushima algorithm.  If
+   *          non used, FukInit::none is returned;
+   */
+  FukInit getFukInit() { return finit; }
 
 private:
   double m_lat;
@@ -91,6 +109,7 @@ private:
   Eigen::Matrix<double, 3, 1> m_xyz;
 
   int itr {0};
+  FukInit finit {FukInit::none};
 };
 
 
