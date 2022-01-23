@@ -19,12 +19,12 @@ namespace eom {
  * Indicates which Starter method is employed by the Fukushima Cartesian
  * to geodetic algorithm.
  */
-enum class FukInit {
-  none,                                ///< Fukushima lat to cart not used
-  case1,                               ///< Most common, 99%
-  case2,                               ///< Close to geocenter
-  case3a,                              ///< Near equatorial a
-  case3b                               ///< Near equatorial b
+enum class FukStarter {
+  none,                      ///< Fukushima lat to cart not used
+  case1,                     ///< Most common, 99%
+  case2,                     ///< Close to geocenter
+  case3a,                    ///< Near equatorial a
+  case3b                     ///< Near equatorial b
 };
 
 /**
@@ -51,7 +51,7 @@ public:
    *
    * @param  xyz  Cartesian earth fixed coordinates, DU
    */
-  GroundPoint(const Eigen::Matrix<double, 3, 1>& xyz, bool fukushima = true);
+  GroundPoint(const Eigen::Matrix<double, 3, 1>& xyz);
 
   /**
    * @return  Geodetic latitude, radians
@@ -84,12 +84,11 @@ public:
 
     /**
      * @return  Number of iterations required to solve for geodetic
-     *          latitude when initialized with Cartesian coordinates and
-     *          an iterative method was used to obtain the solution.   A
-     *          value of zero means the object was either initialized
-     *          with a Cartesian vector, or a noniterative method was
-     *          used.  A negative value indicates an iteritive method
-     *          failed to converge.
+     *          latitude when initialized with Cartesian coordinates.
+     *          A value of zero means the object was initialized
+     *          with a geodetic coordinates.  A negative value indicates
+     *          iteration failed to failed to converge ("should never
+     *          happen").
      */
   int getItr() const noexcept
   {
@@ -98,9 +97,9 @@ public:
   
   /*
    * @return  Returns the Starter used by the Fukushima algorithm.  If
-   *          non used, FukInit::none is returned;
+   *          non used (geodetic coord init), FukStarter::none is returned;
    */
-  FukInit getFukInit() { return finit; }
+  FukStarter getFukStarter() { return fstarter; }
 
 private:
   double m_lat;
@@ -109,7 +108,7 @@ private:
   Eigen::Matrix<double, 3, 1> m_xyz;
 
   int itr {0};
-  FukInit finit {FukInit::none};
+  FukStarter fstarter {FukStarter::none};
 };
 
 
