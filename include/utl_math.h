@@ -25,7 +25,8 @@ namespace utl_math {
  * From stackoverflow.com but I gave up searching how to properly
  * cite...
  */
-template <typename T> int sgn(T val) {
+template <typename T>
+int sgn(T val) {
   return (static_cast<T>(0) < val) - (val < static_cast<T>(0));
 }
 

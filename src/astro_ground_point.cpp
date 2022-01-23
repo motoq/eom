@@ -13,6 +13,7 @@
 #include <Eigen/Dense>
 
 #include <utl_const.h>
+#include <utl_math.h>
 #include <phy_const.h>
 
 namespace {
@@ -74,9 +75,11 @@ GroundPoint::GroundPoint(const Eigen::Matrix<double, 3, 1>& xyz, bool fukushima)
     m_lon = std::atan2(m_xyz(1), m_xyz(0));
       // latitude
     if (fukushima) {
-        // New constexpr terms
+      // Solution done in upper quadrant - positive z
+      auto lat_sgn = utl_math::sgn(rk);
       double p {rd};
-      double zp {ep*rk};
+      double z {std::fabs(rk)};
+      double zp {ep*z};
       double c {phy_const::earth_smaj*phy_const::ecc2};
       double u {2.0*(zp - c)};
       double v {2.0*(zp + c)};
@@ -115,8 +118,8 @@ GroundPoint::GroundPoint(const Eigen::Matrix<double, 3, 1>& xyz, bool fukushima)
       double t2 {t*t};
       double omt2 {1.0 - t2};
       double opt2 {1.0 + t2};
-      m_lat = std::atan2(omt2, 2.0*ep*t);
-      m_alt = (2.0*p*ep*t + m_xyz(2)*omt2 - phy_const::earth_smaj*ep*opt2)/
+      m_lat = lat_sgn*std::atan2(omt2, 2.0*ep*t);
+      m_alt = (2.0*p*ep*t + z*omt2 - phy_const::earth_smaj*ep*opt2)/
               std::sqrt(opt2*opt2 - 4.0*phy_const::ecc2*t2);
     } else {
       double gdlat {std::asin(rk/m_xyz.norm())};

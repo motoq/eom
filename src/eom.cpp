@@ -286,8 +286,8 @@ int main(int argc, char* argv[])
   }
 
 
-  //Eigen::Matrix<double, 3, 1> pos {6524.834, 6862.875, 6448.296};
-  Eigen::Matrix<double, 3, 1> pos {-5552.0, -2563.0, 3258.0};
+  Eigen::Matrix<double, 3, 1> pos {6524.834, 6862.875, 6448.296};
+  //Eigen::Matrix<double, 3, 1> pos {-5552.0, -2563.0, 3258.0};
   pos *= phy_const::du_per_km;
   eom::GroundPoint pt {pos};
   std::cout << "\nFukushima Iterative Method";
