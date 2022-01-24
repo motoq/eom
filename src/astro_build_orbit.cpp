@@ -20,7 +20,6 @@
 #include <astro_keplerian.h>
 #include <astro_kepler.h>
 #include <astro_vinti.h>
-#include <astro_oscj2.h>
 
 #include <astro_build.h>
 
@@ -52,10 +51,6 @@ build_orbit(const OrbitDef& orbitParams,
     std::unique_ptr<Ephemeris> orbit =
          std::make_unique<Vinti>(orbitParams.getEpoch(), xeciVec, ecfeciSys,
                                                     VintiPertModel::J2_ONLY);
-    return orbit;
-  } else if (pCfg.getPropagatorType() == PropagatorType::OscJ2) {
-    std::unique_ptr<Ephemeris> orbit =
-           std::make_unique<OscJ2>(orbitParams.getEpoch(), xeciVec, ecfeciSys);
     return orbit;
   } else {
     std::unique_ptr<Ephemeris> orbit =

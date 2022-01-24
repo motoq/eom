@@ -137,8 +137,8 @@ void eom_test_ground_point()
     lat += dlat;
   }
   std::cout << "\n\nMax Error Over Grid of " << npts << " points" <<
-               "\n  Lat: " << utl_const::deg_per_rad*max_lat_err << " (deg)" <<
-               "   Lon: " << utl_const::deg_per_rad*max_lon_err << " (deg)" <<
+               "\n  Lat: " << utl_const::deg_per_rad*max_lat_err << " deg" <<
+               "   Lon: " << utl_const::deg_per_rad*max_lon_err << " deg" <<
                "   Alt: " << phy_const::m_per_du*max_alt_err << " m";
   std::cout << "\nStarter 1: " << nc1 << "   Starter 2: " << nc2 <<
                "   Starter 3a: " << nc3a << "   Starter 3b: " << nc3b;

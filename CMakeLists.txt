@@ -11,10 +11,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(SOURCES
-  src/suorb_xy2a.c
-  src/suorb_a2xy.c
-  src/suorb_ftom.c
-  src/suorb_oscj2.c
   src/Vinti6.c
   src/eom.cpp
   src/eom_config.cpp
@@ -38,7 +34,6 @@ set(SOURCES
   src/astro_orbit_def.cpp
   src/astro_rel_orbit_def.cpp
   src/astro_kepler.cpp
-  src/astro_oscj2.cpp
   src/astro_vinti.cpp
   src/astro_print_ephemeris.cpp
 )
