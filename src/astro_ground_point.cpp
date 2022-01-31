@@ -13,8 +13,9 @@
 #include <Eigen/Dense>
 
 #include <utl_const.h>
-#include <utl_math.h>
+#include <mth_util.h>
 #include <phy_const.h>
+#include <utl_nonconvergence_exception.h>
 
 namespace {
   constexpr int max_itr {10};
@@ -71,7 +72,7 @@ GroundPoint::GroundPoint(const Eigen::Matrix<double, 3, 1>& xyz)
       // longitude
     m_lon = std::atan2(m_xyz(1), m_xyz(0));
       // latitude -  work solution in upper quadrant (positive z)
-    auto lat_sgn = utl_math::sgn(rk);
+    auto lat_sgn = mth_util::sgn(rk);
     double p {std::sqrt(ri*ri + rj*rj)};
     double z {std::fabs(rk)};
     double zp {ep*z};
@@ -88,14 +89,14 @@ GroundPoint::GroundPoint(const Eigen::Matrix<double, 3, 1>& xyz)
       t = (p - c + zp)/(p - c + 2*zp);
       fstarter = FukStarter::case1;
     } else if (tm >= 1.0) {
-      t = p/(zp + c);
+      t = p/v;
       fstarter = FukStarter::case2;
     } else {
       // 0 < tm < 1 is the equatorial region - evaluate quartic
       double fm {tm*(tm*tm*(p*tm + u) + v) - p};
       if (fm >= 0.0) {
         // tm >= 1 starting point
-        t = p/(zp + c);
+        t = p/v;
         fstarter = FukStarter::case3a;
       } else {
         // tm <= 0 starting point - this method sometimes gets used
@@ -115,6 +116,9 @@ GroundPoint::GroundPoint(const Eigen::Matrix<double, 3, 1>& xyz)
         itr = ii + 1;
         break;
       }
+    }
+    if (itr < 0) {
+      throw NonconvergenceException("GroundPoint geodetic latitude");
     }
       // Quartic zero t - now solve for geodetic latitude and altitude
     double t2 {t*t};

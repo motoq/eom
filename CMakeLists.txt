@@ -19,6 +19,7 @@ set(SOURCES
   src/eom_range_printer.cpp
   src/eom_rtc_printer.cpp
   src/eom_test.cpp
+  src/eom_test_earth_xt.cpp
   src/eom_test_ground_point.cpp
   src/parse_datetime.cpp
   src/parse_duration.cpp
@@ -28,6 +29,8 @@ set(SOURCES
   src/cal_greg_date.cpp
   src/cal_julian_date.cpp
   src/astro_build_orbit.cpp
+  src/astro_earth_surf.cpp
+  src/astro_earth_xt.cpp
   src/astro_ecfeci_sys.cpp
   src/astro_ground_point.cpp
   src/astro_keplerian.cpp

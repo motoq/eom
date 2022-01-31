@@ -50,6 +50,9 @@ public:
    * Initialize with Cartesian earth fixed vector
    *
    * @param  xyz  Cartesian earth fixed coordinates, DU
+   *
+   * @throws  NonconvergenceException If somehow determination of
+   *                                  geodetic latitude fails.
    */
   GroundPoint(const Eigen::Matrix<double, 3, 1>& xyz);
 
@@ -77,19 +80,22 @@ public:
     return m_alt;
   }
 
-    /**
-     * @return  Cartesian earth fixed vector, DU
-     */
-  Eigen::Matrix<double, 3, 1> getCartesian() { return m_xyz; };
+  /**
+   * @return  Cartesian earth fixed vector, DU
+   */
+  Eigen::Matrix<double, 3, 1> getCartesian()
+  {
+    return m_xyz;
+  }
 
-    /**
-     * @return  Number of iterations required to solve for geodetic
-     *          latitude when initialized with Cartesian coordinates.
-     *          A value of zero means the object was initialized
-     *          with a geodetic coordinates.  A negative value indicates
-     *          iteration failed to failed to converge ("should never
-     *          happen").
-     */
+  /**
+   * @return  Number of iterations required to solve for geodetic
+   *          latitude when initialized with Cartesian coordinates.
+   *          A value of zero means the object was initialized
+   *          with a geodetic coordinates.  A negative value indicates
+   *          iteration failed to failed to converge ("should never
+   *          happen").
+   */
   int getItr() const noexcept
   {
     return itr;
@@ -99,7 +105,10 @@ public:
    * @return  Returns the Starter used by the Fukushima algorithm.  If
    *          non used (geodetic coord init), FukStarter::none is returned;
    */
-  FukStarter getFukStarter() { return fstarter; }
+  FukStarter getFukStarter()
+  {
+    return fstarter;
+  }
 
 private:
   double m_lat;

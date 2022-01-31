@@ -21,7 +21,9 @@ void eom_test(std::deque<std::string>& tokens)
   }
   auto test_str = tokens[0];
   tokens.pop_front();
-  if (test_str == "GroundPoint") {
+  if (test_str == "EarthX") {
+    eom_test_earth_x();
+  } else if (test_str == "GroundPoint") {
     eom_test_ground_point();
   } else {
     throw std::invalid_argument("Invalid test type: " + test_str);

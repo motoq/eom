@@ -6,19 +6,19 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef UTL_MATH_H
-#define UTL_MATH_H
+#ifndef MTH_UTIL_H
+#define MTH_UTIL_H
 
 /**
  * Mathematical helper (template) functions
  */
-namespace utl_math {
+namespace mth_util {
 
 /*
  * The "sign" function - determines if the input value is positive,
  * negative, or zero.
  *
- * @tparam  Type supporting '<' and '>' operators
+ * @tparam  T  Type supporting '<' and '>' operators
  *
  * @return  +T(1), -T(1), T(0), depending on the sign of T
  *

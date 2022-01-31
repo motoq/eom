@@ -32,6 +32,11 @@ namespace eom_app {
 void eom_test(std::deque<std::string>& tokens);
 
 /**
+ * Runs validity tests for the eom::EarthX
+ */
+void eom_test_earth_x();
+
+/**
  * Runs validity tests for the eom::GroundPoint type.
  */
 void eom_test_ground_point();
