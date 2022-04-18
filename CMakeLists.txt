@@ -23,6 +23,7 @@ set(SOURCES
   src/eom_test_ground_point.cpp
   src/parse_datetime.cpp
   src/parse_duration.cpp
+  src/parse_ground_point.cpp
   src/parse_orbit_def.cpp
   src/parse_rel_orbit_def.cpp
   src/parse_state_vector.cpp

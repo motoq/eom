@@ -17,6 +17,7 @@
 #include <cal_duration.h>
 #include <astro_orbit_def.h>
 #include <astro_rel_orbit_def.h>
+#include <astro_ground_point.h>
 
 #include <eom_config.h>
 
@@ -95,6 +96,7 @@ eom::RelOrbitDef parse_rel_orbit_def(std::deque<std::string>& tokens,
  *
  * @param  tokens  Tokens consisting of coordinat system time, reference frame,
  *                 and 6 components of the state vector.
+ * @param  cfg     Scenario configuration parameters
  *
  * @return  Orbit state vector.
  *
@@ -103,6 +105,20 @@ eom::RelOrbitDef parse_rel_orbit_def(std::deque<std::string>& tokens,
  */
 std::array<double, 6> parse_state_vector(std::deque<std::string>& tokens,
                                          const EomConfig& cfg);
+
+/**
+ * Parses a ground point definition
+ *
+ * @param  tokens  Tokens defining coordinate type and coordinates
+ * @param  cfg     Scenario configuration parameters
+ *
+ * @return  Ground point
+ *
+ * @throws  An invalid_argument exception if parsing fails.  No error is
+ *          thrown if the list of tokens is not empty upon completion.
+ */
+eom::GroundPoint parse_ground_point(std::deque<std::string>& tokens,
+                                    const EomConfig& cfg);
 
 
 }

@@ -71,6 +71,8 @@ int main(int argc, char* argv[])
     // will be used to initialize propagators and/or generate classes
     // with buffered ephemeris
   std::vector<eom::RelOrbitDef> rel_orbit_defs;
+    // Earth fixed points
+  std::vector<eom::GroundPoint> ground_points;
     // Ephemeris objects.  Only the pointer is needed during parsing so
     // the source can be added to objects requiring ephemerides.  Ephemeris
     // objects are created after orbit_defs and rel_orbit_defs are
@@ -157,6 +159,15 @@ int main(int argc, char* argv[])
               } catch (std::invalid_argument& ia) {
                 std::string xerror = ia.what();
                 other_error = "Invalid Relative Orbit definition: " + xerror;
+              }
+            } else if (make == "GroundPoint") {
+              try {
+                ground_points.push_back(eom_app::parse_ground_point(tokens,
+                                                                    cfg));
+                input_error = false;
+              } catch (std::invalid_argument& ia) {
+                std::string xerror = ia.what();
+                other_error = "Invalid Ground Point definition: " + xerror;
               }
             } else if (make == "Command") {
               try {

@@ -12,8 +12,6 @@
 #include <string>
 #include <deque>
 
-#include <phy_const.h>
-
 #include <eom_config.h>
 
 namespace eom_app {

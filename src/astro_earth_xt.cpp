@@ -14,8 +14,8 @@
 
 #include <phy_const.h>
 #include <mth_unit_circle.h>
-#include <astro_earth_surf.h>
 #include <utl_no_solution_exception.h>
+#include <astro_earth_surf.h>
 
 namespace {
   constexpr double ainv {1.0/phy_const::earth_smaj};
