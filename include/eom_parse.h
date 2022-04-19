@@ -12,6 +12,7 @@
 #include <array>
 #include <string>
 #include <deque>
+#include <utility>
 
 #include <cal_julian_date.h>
 #include <cal_duration.h>
@@ -117,8 +118,8 @@ std::array<double, 6> parse_state_vector(std::deque<std::string>& tokens,
  * @throws  An invalid_argument exception if parsing fails.  No error is
  *          thrown if the list of tokens is not empty upon completion.
  */
-eom::GroundPoint parse_ground_point(std::deque<std::string>& tokens,
-                                    const EomConfig& cfg);
+std::pair<std::string, eom::GroundPoint>
+parse_ground_point(std::deque<std::string>& tokens, const EomConfig& cfg);
 
 
 }

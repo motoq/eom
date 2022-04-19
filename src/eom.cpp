@@ -71,8 +71,6 @@ int main(int argc, char* argv[])
     // will be used to initialize propagators and/or generate classes
     // with buffered ephemeris
   std::vector<eom::RelOrbitDef> rel_orbit_defs;
-    // Earth fixed points
-  std::vector<eom::GroundPoint> ground_points;
     // Ephemeris objects.  Only the pointer is needed during parsing so
     // the source can be added to objects requiring ephemerides.  Ephemeris
     // objects are created after orbit_defs and rel_orbit_defs are
@@ -80,6 +78,8 @@ int main(int argc, char* argv[])
   const auto ephemerides =
       std::make_shared<std::unordered_map<std::string,
                                           std::shared_ptr<eom::Ephemeris>>>();
+    // Earth fixed points
+  std::unordered_map<std::string, eom::GroundPoint> ground_points;
     // A bucket of resources allowing for parsing and building of
     // commands to be applied to models during the simulation
   eom_app::EomCommandBuilder cmdBuilder(ephemerides);
@@ -162,8 +162,7 @@ int main(int argc, char* argv[])
               }
             } else if (make == "GroundPoint") {
               try {
-                ground_points.push_back(eom_app::parse_ground_point(tokens,
-                                                                    cfg));
+                ground_points.insert(eom_app::parse_ground_point(tokens, cfg));
                 input_error = false;
               } catch (std::invalid_argument& ia) {
                 std::string xerror = ia.what();
@@ -282,6 +281,11 @@ int main(int argc, char* argv[])
                    relOrbit.getTemplateOrbitName() << '\n';
       return 0;
     }
+  }
+
+  for (auto& nm_gp : ground_points) {
+    std::cout << '\n' << nm_gp.first;
+    std::cout << '\n' << nm_gp.second.getLatitude();
   }
 
 

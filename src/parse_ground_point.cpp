@@ -11,6 +11,7 @@
 #include <array>
 #include <string>
 #include <deque>
+#include <utility>
 
 #include <utl_const.h>
 #include <astro_ground_point.h>
@@ -19,8 +20,8 @@
 
 namespace eom_app {
 
-eom::GroundPoint parse_ground_point(std::deque<std::string>& tokens,
-                                    const EomConfig& cfg)
+std::pair<std::string, eom::GroundPoint>
+parse_ground_point(std::deque<std::string>& tokens, const EomConfig& cfg)
 {
   using namespace std::string_literals;
     // Need at least the name, coord type, and coordinates
@@ -43,7 +44,7 @@ eom::GroundPoint parse_ground_point(std::deque<std::string>& tokens,
       double alt {du_per_io*std::stod(tokens[0])};
       tokens.pop_front();
       eom::GroundPoint gp(lat, lon, alt);
-      return gp;
+      return std::make_pair(name, gp);
     } catch(std::invalid_argument& ia) {
       throw std::invalid_argument("eom_app::parse_ground_point"s +
                                   "  invalid parameter type"s);
