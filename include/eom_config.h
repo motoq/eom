@@ -15,6 +15,7 @@
 
 #include <cal_julian_date.h>
 #include <cal_duration.h>
+#include <utl_printable.h>
 
 namespace eom_app {
 
@@ -26,7 +27,7 @@ namespace eom_app {
  * @author  Kurt Motekew
  * @date    20210922
  */
-class EomConfig {
+class EomConfig : public eom::Printable {
 public:
   /**
    * Initialize with default values.  The default settings are valid,
@@ -135,7 +136,7 @@ public:
    *
    * @param  stream  The stream to output the scenario setting to
    */
-  void print(std::ostream& stream) const;
+  void print(std::ostream& stream) const override;
 
 private:
   std::string units_distance {"DU"};

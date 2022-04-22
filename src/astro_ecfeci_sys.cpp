@@ -275,7 +275,7 @@ EcfEciSys::teme2ecf(const JulianDate& utc,
 }
 
 
-void EcfEciSys::print(std::ostream& out)
+void EcfEciSys::print(std::ostream& out) const
 {
   for (auto& f2i : f2iData) {
     JulianDate jd;

@@ -17,6 +17,7 @@
 
 #include <cal_julian_date.h>
 #include <cal_duration.h>
+#include <utl_printable.h>
 
 namespace eom {
 
@@ -50,7 +51,7 @@ struct ecf_eci {
  * @author  Kurt Motekew
  * @date    20211020
  */
-class EcfEciSys {
+class EcfEciSys : public Printable {
 public:
   /**
    * This constructor creates an ECF to ECI conversion utility that
@@ -169,7 +170,7 @@ public:
    *
    * @out  Output stream
    */
-  void print(std::ostream& out);
+  void print(std::ostream& out) const override;
 
 private:
   JulianDate jdStart;

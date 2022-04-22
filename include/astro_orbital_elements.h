@@ -14,6 +14,8 @@
 
 #include <Eigen/Dense>
 
+#include <utl_printable.h>
+
 namespace eom {
 
 /**
@@ -23,7 +25,7 @@ namespace eom {
  * @author  Kurt Motekew
  * @date    2022/01/01
  */
-class OrbitalElements {
+class OrbitalElements : public Printable {
 public:
   virtual ~OrbitalElements() {}
 
@@ -44,13 +46,6 @@ public:
    */
   virtual double getAngularMomentum() const = 0;
 
-  /**
-   * Output orbital elements and state vector to the supplied stream.
-   * Units of kilometers, seconds, and degrees are used.
-   *
-   * @param  stream  The stream to output the scenario setting to
-   */
-  virtual void print(std::ostream& stream) const = 0;
 };
 
 
