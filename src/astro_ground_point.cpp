@@ -8,6 +8,8 @@
 
 #include <astro_ground_point.h>
 
+#include <ostream>
+#include <iomanip>
 #include <cmath>
 
 #include <Eigen/Dense>
@@ -128,6 +130,16 @@ GroundPoint::GroundPoint(const Eigen::Matrix<double, 3, 1>& xyz)
     m_alt = (2.0*p*ep*t + z*omt2 - phy_const::earth_smaj*ep*opt2)/
             std::sqrt(opt2*opt2 - 4.0*phy_const::ecc2*t2);
   }
+}
+
+
+void GroundPoint::print(std::ostream& stream) const
+{
+  stream << std::fixed;
+  stream << std::setprecision(3);
+  stream << "\n  lat: " << utl_const::deg_per_rad*m_lat << " deg";
+  stream << "  lon: " << utl_const::deg_per_rad*m_lon << " deg";
+  stream << "  alt: " << phy_const::m_per_du*m_alt << " m";
 }
 
 

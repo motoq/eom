@@ -283,9 +283,10 @@ int main(int argc, char* argv[])
     }
   }
 
+    // Print ground points
   for (auto& nm_gp : ground_points) {
-    std::cout << '\n' << nm_gp.first;
-    std::cout << '\n' << nm_gp.second.getLatitude();
+    std::cout << "\n  " << nm_gp.first;
+    nm_gp.second.print(std::cout);
   }
 
 

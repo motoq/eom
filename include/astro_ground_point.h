@@ -13,6 +13,8 @@
 
 #include <Eigen/Dense>
 
+#include <utl_printable.h>
+
 namespace eom {
 
 /**
@@ -35,7 +37,7 @@ enum class FukStarter {
  * @author  Kurt Motekew
  * @date    2022/01/22
  */
-class GroundPoint {
+class GroundPoint : public Printable {
 public:
   /**
    * Initialize with geodetic coordinates
@@ -109,6 +111,13 @@ public:
   {
     return fstarter;
   }
+
+  /**
+   * Output ground point definition to the supplied stream
+   *
+   * @param  stream  Output stream
+   */
+  void print(std::ostream& stream) const override;
 
 private:
   double m_lat;
