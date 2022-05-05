@@ -13,7 +13,6 @@
 #include <deque>
 #include <utility>
 
-#include <utl_const.h>
 #include <astro_ground_point.h>
 
 #include <eom_config.h>
@@ -34,12 +33,13 @@ parse_ground_point(std::deque<std::string>& tokens, const EomConfig& cfg)
   auto coord_type = tokens[0];
   tokens.pop_front();
 
+  double rad_per_io {1.0/cfg.getIoPerRad()};
   double du_per_io {1.0/cfg.getIoPerDu()};
   if (coord_type == "LLA") {
     try {
-      double lat {utl_const::rad_per_deg*std::stod(tokens[0])};
+      double lat {rad_per_io*std::stod(tokens[0])};
       tokens.pop_front();
-      double lon {utl_const::rad_per_deg*std::stod(tokens[0])};
+      double lon {rad_per_io*std::stod(tokens[0])};
       tokens.pop_front();
       double alt {du_per_io*std::stod(tokens[0])};
       tokens.pop_front();

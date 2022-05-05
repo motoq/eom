@@ -103,6 +103,26 @@ void EomConfig::setEcfEciRate(std::deque<std::string>& tokens)
 }
 
 
+void EomConfig::setIoPerRad(std::deque<std::string>& tokens)
+{
+  using namespace std::string_literals;
+  valid = false;
+  if (tokens.size() != 1) {
+    error_string = "Invalid number of parameters EomConfig::setIoPerRad";
+    return;
+  }
+  units_angle = tokens[0];
+  tokens.pop_front();
+  try {
+    io_per_rad = utl_units::per_rad.at(units_angle);
+    valid = true;
+  } catch (std::out_of_range& oor) {
+    throw std::invalid_argument("EomConfig::setIoPerRad:"s +
+                                " Invalid units type: "s + units_angle);
+  }
+}
+
+
 void EomConfig::setIoPerDu(std::deque<std::string>& tokens)
 {
   using namespace std::string_literals;

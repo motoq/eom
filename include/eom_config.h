@@ -76,6 +76,23 @@ public:
 
   /**
    * @param  tokens  Label used to determine and set the conversion
+   *                 factor from input/output units to internal angle
+   *                 units of radians.
+   */
+  void setIoPerRad(std::deque<std::string>& tokens);
+
+  /**
+   * @return  Get input/output units per radians.
+   */
+  double getIoPerRad() const noexcept { return io_per_rad; }
+
+  /**
+   * @return  Label describing output and expected input distance units
+   */
+  std::string getIoAngleUnits() const noexcept { return units_angle; }
+
+  /**
+   * @param  tokens  Label used to determine and set the conversion
    *                 factor from input/output units to internal distance
    *                 units.
    */
@@ -139,8 +156,10 @@ public:
   void print(std::ostream& stream) const override;
 
 private:
+  std::string units_angle {"Radians"};
   std::string units_distance {"DU"};
   std::string units_time {"TU"};
+  double io_per_rad {1.0};
   double io_per_du {1.0};
   double io_per_tu {1.0};
   bool valid {true};

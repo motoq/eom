@@ -134,6 +134,9 @@ int main(int argc, char* argv[])
             } else if (make == "end") {
               input_error = false;
               ifs.seekg(0, std::ios::end);
+            } else if (make == "AngleUnits") {
+              cfg.setIoPerRad(tokens);
+              input_error = !cfg.isValid();
             } else if (make == "DistanceUnits") {
               cfg.setIoPerDu(tokens);
               input_error = !cfg.isValid();

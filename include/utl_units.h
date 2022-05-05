@@ -11,6 +11,7 @@
 
 #include <unordered_map>
 
+#include <utl_const.h>
 #include <phy_const.h>
 
 /**
@@ -23,6 +24,11 @@
  */
 namespace utl_units {
 
+const std::unordered_map<std::string, double> per_rad = {
+  {"Radians", 1.0},
+  {"Degrees", utl_const::deg_per_rad}
+};
+
 const std::unordered_map<std::string, double> per_tu = {
   {"TU", 1.0},
   {"Seconds", phy_const::sec_per_tu},
@@ -34,6 +40,17 @@ const std::unordered_map<std::string, double> per_du = {
   {"Meters",     phy_const::m_per_du},
   {"Kilometers", phy_const::km_per_du}
 };
+
+
+/**
+ * @param  deg  angle, in degrees
+ *
+ * @return  Angle in radians
+ */
+constexpr double operator"" _deg(long double degrees) noexcept
+{
+  return utl_const::rad_per_deg*degrees;
+}
 
 /**
  * @param  kilometers  Distance, in kilometers
