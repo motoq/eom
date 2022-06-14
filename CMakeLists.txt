@@ -27,6 +27,7 @@ set(SOURCES
   src/parse_orbit_def.cpp
   src/parse_rel_orbit_def.cpp
   src/parse_state_vector.cpp
+  src/mth_permutation.cpp
   src/cal_greg_date.cpp
   src/cal_julian_date.cpp
   src/astro_build_orbit.cpp

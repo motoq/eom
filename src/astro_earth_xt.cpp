@@ -49,6 +49,8 @@ EarthXt::EarthXt(HorizonMode mode, double alt)
 }
 
 
+// Based on A Fine Way to Kiss the Hyperellipsoid
+// Kurt A. Motekew, May 30, 2022
 void EarthXt::setEarthXt(const Eigen::Matrix<double, 3, 1>& pos,
                          const Eigen::Matrix<double, 3, 1>& pnt)
 {

@@ -41,8 +41,8 @@ namespace mth_unit_circle {
  * @author  Kurt Motekew  2022/01/27
  */
 template <typename T>
-Eigen::Matrix<T, 2, 1> intersect(Eigen::Matrix<T, 2, 1>& pos,
-                                 Eigen::Matrix<T, 2, 1>& pnt)
+Eigen::Matrix<T, 2, 1> intersect(const Eigen::Matrix<T, 2, 1>& pos,
+                                 const Eigen::Matrix<T, 2, 1>& pnt)
 {
   Eigen::Matrix<T, 2, 1> pnt_hat {pnt.normalized()};
 
@@ -82,8 +82,8 @@ Eigen::Matrix<T, 2, 1> intersect(Eigen::Matrix<T, 2, 1>& pos,
  * @author  Kurt Motekew  2022/01/29
  */
 template <typename T>
-Eigen::Matrix<T, 2, 1> tangent(Eigen::Matrix<T, 2, 1>& pos,
-                               Eigen::Matrix<T, 2, 1>& pnt)
+Eigen::Matrix<T, 2, 1> tangent(const Eigen::Matrix<T, 2, 1>& pos,
+                               const Eigen::Matrix<T, 2, 1>& pnt)
 {
   T r2 {pos.squaredNorm()};
   T rmag {std::sqrt(r2)};

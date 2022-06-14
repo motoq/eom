@@ -12,8 +12,6 @@
 
 #include <Eigen/Dense>
 
-//#include <utl_const.h>
-//#include <mth_util.h>
 #include <phy_const.h>
 #include <utl_no_solution_exception.h>
 
@@ -31,10 +29,11 @@ EarthSurf::EarthSurf(HorizonMode mode, double alt)
 }
 
 
+// Based on "Pointing Vector to Oblate Spheroid",
+// Kurt A. Motekew, July 24, 2014
 void EarthSurf::setEarthSurf(const Eigen::Matrix<double, 3, 1>& pos,
                              const Eigen::Matrix<double, 3, 1>& pnt)
 {
-
   Eigen::Matrix<double, 3, 1> uhat = pnt.normalized();
   
   double alpha {(uhat[0]*uhat[0] + uhat[1]*uhat[1])/a2 + uhat[2]*uhat[2]/b2};
