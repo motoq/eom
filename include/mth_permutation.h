@@ -6,33 +6,42 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef MTH_PERMUTATION
-#define MTH_PERMUTATION
+#ifndef MTH_PERMUTATION_H
+#define MTH_PERMUTATION_H
 
-#include <vector>
+#include <cstddef>
+#include <array>
+#include <algorithm>
+
+#include <mth_util.h>
 
 namespace eom {
 
 /**
  * Computes permutations for the set {1, 2,..., n} and indicates even vs. odd.
  *
+ * @tparam  DIM  Dimension:  permutations for the set {1, 2,..., DIM} are
+ *               computed.
+ *
  * @author  Kurt Motekew
- * @date    2022/06/10
+ * @date    2022/06/18
  */
+template <unsigned int DIM>
 class Permutation {
 public:
   /**
    * Initialize with desired permutation dimension (number of elements
    * in each permutation)
    *
-   * @param  n  Permutation dimension, e.g., the set {1, 2,..., n}
+   * @tparam  DIM  Dimension:  permutations for the set {1, 2,..., DIM} are
+   *               computed.
    */
-  Permutation(int dim);
+  Permutation();
 
   /**
    * @return  The number of elements in each permutation
    */
-  int getDimension() const noexcept { return n; }
+  int getDimension() const noexcept { return DIM; }
 
   /**
    * @return  The number of permutations, n!
@@ -64,10 +73,46 @@ public:
   int operator()(unsigned int ii, unsigned int jj) const { return e[ii][jj]; }
 
 private:
-  int n {0};
-  std::vector<int> s;
-  std::vector<std::vector<int>> e;
+    // Indicates even vs odd permutation in e matrix
+  std::array<int, mth_util::factorial(DIM)> s;
+    // Permutation matrix
+  std::array<std::array<int, DIM>, mth_util::factorial(DIM)> e;
 };
+
+
+template <unsigned int DIM>
+Permutation<DIM>::Permutation()
+{
+    // create the set {1, 2,..., n}
+  std::array<int, DIM> elements;
+  for (unsigned int ii=1; ii<=DIM; ++ii) {
+    elements[ii-1] = ii;
+  }
+
+    // Populate e with all permutations of elements
+  unsigned int iprm {0};
+  do {
+      // Determine even (+1) vs. odd (-1) for this permutation
+      // by seeing how many swaps are needed to sort
+    std::array<int, DIM> p = elements;
+    int n {DIM};
+    int swaps {0};
+    for (int elm=1; elm<=n; ++elm) {
+      if (elm != p[elm-1]) {
+        for (int ii=elm; ii<n; ++ii) {
+          if (elm == p[ii]) {
+            p[ii] = p[elm-1];
+            swaps++;
+            break;
+          }
+        }
+      }
+    }
+    s[iprm] = (swaps%2 == 0) ? 1 : -1;
+      // Store current permutation, starting with initial 1:n
+    e[iprm++] = elements;
+  } while (std::next_permutation(elements.begin(), elements.end()));
+}
 
 
 }

@@ -31,6 +31,17 @@ int sgn(T val) {
 }
 
 
+/**
+ * @param  Input for which to compute the factorial
+ *
+ * @return  n!
+ */
+constexpr int factorial(int n) noexcept
+{
+  return (n>1) ? n*factorial(n-1) : 1;
+}
+
+
 }
 
 #endif
