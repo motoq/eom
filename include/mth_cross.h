@@ -25,8 +25,8 @@ namespace eom {
  * error in that the dot product grows in size.  For 2D, the dot product
  * will be zero.  For 3D it will be on par with the standard cross
  * product formula.  For 6D _unit_ vectors, the error is on the order of
- * 1e-14 and grows to by about a factor of 10 for each additional
- * dimension (e.g., 1e-11 for 9D) for type double.
+ * 1e-16 and grows to by about a factor of 10 for each additional
+ * dimension.
 
  *
  * @tparam  T  Vector component data type
@@ -38,7 +38,7 @@ namespace eom {
  */
 
 template <typename T, unsigned int N>
-Eigen::Matrix<T, N, 1> cross(const Eigen::Matrix<double, N, N-1U>& uMat)
+Eigen::Matrix<T, N, 1> cross(const Eigen::Matrix<T, N, N-1U>& uMat)
 {
     // Initialize cross product for accumulation
   Eigen::Matrix<T, N, 1> vVec = Eigen::Matrix<T, N, 1>::Zero();

@@ -7,12 +7,28 @@
  */
 
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
 
 #include <Eigen/Dense>
 
 #include <mth_cross.h>
 
 #include <eom_test.h>
+
+namespace {
+
+template <typename T, unsigned int N>
+T sumdot(Eigen::Matrix<T, N, N-1U>& mat, Eigen::Matrix<T, N, 1>& vec)
+{
+  T uv {0};
+  for (unsigned int ii=0; ii<N-1U; ++ii) {
+    uv += vec.transpose()*(mat.template block<N,1U>(0,ii));
+  }
+  return uv;
+}
+
+}
 
 static void print_3cross(const Eigen::Matrix<double, 3, 2>&,
                          const Eigen::Matrix<double, 3, 1>&);
@@ -42,6 +58,56 @@ void eom_test_cross()
   v = eom::cross<double,3>(uMat);
   std::cout << '\n';
   print_3cross(uMat, v);
+
+  std::srand((unsigned int) std::time(0));
+
+  Eigen::Matrix<double, 2, 1> u2x1 = Eigen::Matrix<double, 2, 1>::Random();
+  Eigen::Matrix<double, 2, 1> v2 = eom::cross<double,2>(u2x1);
+  std::cout << "\n  Random 2Dd SumDot: " << sumdot<double, 2>(u2x1, v2);
+
+  Eigen::Matrix<float, 2, 1> u2x1f = Eigen::Matrix<float, 2, 1>::Random();
+  Eigen::Matrix<float, 2, 1> v2f = eom::cross<float,2>(u2x1f);
+  std::cout << "\n  Random 2Df SumDot: " << sumdot<float, 2>(u2x1f, v2f);
+
+  Eigen::Matrix<double, 3, 2> u3x2 = Eigen::Matrix<double, 3, 2>::Random();
+  Eigen::Matrix<double, 3, 1> v3 = eom::cross<double,3>(u3x2);
+  std::cout << "\n  Random 3Dd SumDot: " << sumdot<double, 3>(u3x2, v3);
+
+  Eigen::Matrix<float, 3, 2> u3x2f = Eigen::Matrix<float, 3, 2>::Random();
+  Eigen::Matrix<float, 3, 1> v3f = eom::cross<float,3>(u3x2f);
+  std::cout << "\n  Random 3Df SumDot: " << sumdot<float, 3>(u3x2f, v3f);
+
+  Eigen::Matrix<double, 4, 3> u4x3 = Eigen::Matrix<double, 4, 3>::Random();
+  Eigen::Matrix<double, 4, 1> v4 = eom::cross<double,4>(u4x3);
+  std::cout << "\n  Random 4Dd SumDot: " << sumdot<double, 4>(u4x3, v4);
+
+  Eigen::Matrix<float, 4, 3> u4x3f = Eigen::Matrix<float, 4, 3>::Random();
+  Eigen::Matrix<float, 4, 1> v4f = eom::cross<float,4>(u4x3f);
+  std::cout << "\n  Random 4Df SumDot: " << sumdot<float, 4>(u4x3f, v4f);
+
+  Eigen::Matrix<double, 5, 4> u5x4 = Eigen::Matrix<double, 5, 4>::Random();
+  Eigen::Matrix<double, 5, 1> v5 = eom::cross<double,5>(u5x4);
+  std::cout << "\n  Random 5Dd SumDot: " << sumdot<double, 5>(u5x4, v5);
+
+  Eigen::Matrix<float, 5, 4> u5x4f = Eigen::Matrix<float, 5, 4>::Random();
+  Eigen::Matrix<float, 5, 1> v5f = eom::cross<float,5>(u5x4f);
+  std::cout << "\n  Random 5Df SumDot: " << sumdot<float, 5>(u5x4f, v5f);
+
+  Eigen::Matrix<double, 6, 5> u6x5 = Eigen::Matrix<double, 6, 5>::Random();
+  Eigen::Matrix<double, 6, 1> v6 = eom::cross<double,6>(u6x5);
+  std::cout << "\n  Random 6Dd SumDot: " << sumdot<double, 6>(u6x5, v6);
+
+  Eigen::Matrix<float, 6, 5> u6x5f = Eigen::Matrix<float, 6, 5>::Random();
+  Eigen::Matrix<float, 6, 1> v6f = eom::cross<float,6>(u6x5f);
+  std::cout << "\n  Random 6Df SumDot: " << sumdot<float, 6>(u6x5f, v6f);
+
+  Eigen::Matrix<double, 8, 7> u8x7 = Eigen::Matrix<double, 8, 7>::Random();
+  Eigen::Matrix<double, 8, 1> v8 = eom::cross<double,8>(u8x7);
+  std::cout << "\n  Random 8Dd SumDot: " << sumdot<double, 8>(u8x7, v8);
+
+  Eigen::Matrix<float, 8, 7> u8x7f = Eigen::Matrix<float, 8, 7>::Random();
+  Eigen::Matrix<float, 8, 1> v8f = eom::cross<float,8>(u8x7f);
+  std::cout << "\n  Random 8Df SumDot: " << sumdot<float, 8>(u8x7f, v8f);
 
   std::cout << "\n  === End Test:  N-Dimensional Cross Product ===\n\n";
 
