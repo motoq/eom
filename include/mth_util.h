@@ -36,7 +36,7 @@ int sgn(T val) {
  *
  * @return  n!
  */
-constexpr int factorial(int n) noexcept
+constexpr int factorial(int n)
 {
   return (n>1) ? n*factorial(n-1) : 1;
 }
