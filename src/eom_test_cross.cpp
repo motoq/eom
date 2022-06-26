@@ -72,6 +72,28 @@ void eom_test_cross()
   std::cout << '\n';
   print_3cross(uMat, v);
 
+  Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> ux = 
+      Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>::Zero(3,2);
+  ux(2,0) = 1.0;
+  ux(0,1) = 1.0;
+  Eigen::Matrix<double, Eigen::Dynamic, 1> vx = eom::cross_product(ux);
+  std::cout << '\n';
+  print_3cross(ux, vx);
+
+  ux = Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>::Zero(3,2);
+  ux(0,0) = 1.0;
+  ux(2,1) = 1.0;
+  vx = eom::cross_product(ux);
+  std::cout << '\n';
+  print_3cross(ux, vx);
+
+  ux = Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>::Zero(3,2);
+  ux(0,0) = 1.0;
+  ux(1,1) = 1.0;
+  vx = eom::cross_product(ux);
+  std::cout << '\n';
+  print_3cross(ux, vx);
+
   std::cout << '\n';
   std::srand((unsigned int) std::time(0));
 
@@ -134,9 +156,8 @@ void eom_test_cross()
   Eigen::Matrix<float, 6, 5> u6x5f = Eigen::Matrix<float, 6, 5>::Random();
   Eigen::Matrix<double, 9, 8> u9x8 = Eigen::Matrix<double, 9, 8>::Random();
 
-  Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> ux = u6x5;
-  Eigen::Matrix<double, Eigen::Dynamic, 1> vx =
-                                           eom::cross_product<double>(ux);
+  ux = u6x5;
+  vx = eom::cross_product<double>(ux);
   std::cout << "\n  Random 6Dd SumDot: " << sumdot<double>(ux, vx);
 
   Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic> uxf = u6x5f;
