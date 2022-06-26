@@ -9,6 +9,10 @@
 #ifndef MTH_CROSS_PRODUCT_H
 #define MTH_CROSS_PRODUCT_H
 
+#include <vector>
+#include <algorithm>
+#include <stdexcept>
+
 #include <Eigen/Dense>
 
 #include <mth_permutation.h>
@@ -101,6 +105,83 @@ CrossProduct<T,N>::operator()(const Eigen::Matrix<T, N, N-1U>& uMat)
 
   return vVec;
 }
+
+
+/**
+ * A function computing the cross product, making use of dynamic memory
+ * allocation allowing for runtime size determination.  Permutations are
+ * computed as each vector component is accumulated, removing the factorial
+ * limitation of the CrossProduct class and removing the large compile
+ * time arrays due to the Permutation object.  The compromise is the
+ * computational expense of dynamic memory allocation, and sorting each
+ * permutaton to determine even vs. odd for each call to this function.
+ *
+ * Class CrossProduct and Permutation algorithms have been combined -
+ * reference each for further documentation.
+ *
+ * @tparam  T  Vector component data type
+ *
+ * @param  uMat  Nx(N-1), N >=2, matrix of N-Dimensional column vectors
+ *
+ * @return  Nx1 vector orthogonal to each column of uMat
+ *
+ * @throws  std::invalid_argument exception if the dimensions are not
+ *          Nx(N-1).
+ *
+ * @author  Kurt Motekew
+ * @date    2022/06/23
+ */
+template <typename T>
+Eigen::Matrix<T, Eigen::Dynamic, 1>
+cross_product(const Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>& uMat)
+{
+  auto rows = uMat.rows();
+  if (uMat.cols() != rows - 1) {
+    throw std::invalid_argument("eom::cross Nx(N-1) input matrix expected");
+  }
+
+    // Initialize cross product for accumulation
+  Eigen::Matrix<T,Eigen::Dynamic,1> vVec =
+      Eigen::Matrix<T, Eigen::Dynamic, 1>::Zero(rows, 1);
+
+  const int n = static_cast<int>(rows);
+    // Nothing to do for 1D...
+  if (n < 2) {
+    return vVec;
+  }
+    // create the set {1, 2,..., n}
+  std::vector<int> elements;
+  for (int ii=1; ii<=n; ++ii) {
+    elements.push_back(ii);
+  }
+  
+    // Accumulate cross product elements over permutations
+  do {
+      // Determine even or odd permutation first
+    std::vector<int> p = elements;
+    int swaps {0};
+    for (int elm=1; elm<=n; ++elm) {
+      if (elm != p[elm-1]) {
+        for (int ii=elm; ii<n; ++ii) {
+          if (elm == p[ii]) {
+            p[ii] = p[elm-1];
+            swaps++;
+            break;
+          }
+        }
+      }
+    }
+    int s {(swaps%2 == 0) ? 1 : -1};
+    T c {static_cast<T>(1)};
+    for (int jj=1; jj<n; ++jj) {
+      c *= uMat(elements[jj]-1, jj-1);
+    }
+    vVec(elements[0]-1) += s*c;
+  } while (std::next_permutation(elements.begin(), elements.end()));
+
+  return vVec;
+}
+
 
 }
 

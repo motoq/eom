@@ -28,6 +28,18 @@ T sumdot(Eigen::Matrix<T, N, N-1U>& mat, Eigen::Matrix<T, N, 1>& vec)
   return uv;
 }
 
+template <typename T>
+T sumdot(Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>& mat,
+         Eigen::Matrix<T, Eigen::Dynamic, 1>& vec)
+{
+  T uv {0};
+  for (unsigned int ii=0; ii<(mat.rows()-1); ++ii) {
+    Eigen::Matrix<T, Eigen::Dynamic, 1> mcol = mat.block(0,ii,mat.rows(),1);
+    uv += vec.dot(mcol);
+  }
+  return uv;
+}
+
 }
 
 static void print_3cross(const Eigen::Matrix<double, 3, 2>&,
@@ -99,7 +111,6 @@ void eom_test_cross()
   Eigen::Matrix<float, 5, 1> v5f = eom::cross<float,5>(u5x4f);
   std::cout << "\n  Random 5Df SumDot: " << sumdot<float, 5>(u5x4f, v5f);
 
-*/
   eom::CrossProduct<double, 6> x6d;
   Eigen::Matrix<double, 6, 5> u6x5 = Eigen::Matrix<double, 6, 5>::Random();
   Eigen::Matrix<double, 6, 1> v6 = x6d(u6x5);
@@ -110,7 +121,6 @@ void eom_test_cross()
   Eigen::Matrix<float, 6, 1> v6f = x6f(u6x5f);
   std::cout << "\n  Random 6Df SumDot: " << sumdot<float, 6>(u6x5f, v6f);
 
-/*
   Eigen::Matrix<double, 8, 7> u8x7 = Eigen::Matrix<double, 8, 7>::Random();
   Eigen::Matrix<double, 8, 1> v8 = eom::cross<double,8>(u8x7);
   std::cout << "\n  Random 8Dd SumDot: " << sumdot<double, 8>(u8x7, v8);
@@ -119,6 +129,24 @@ void eom_test_cross()
   Eigen::Matrix<float, 8, 1> v8f = eom::cross<float,8>(u8x7f);
   std::cout << "\n  Random 8Df SumDot: " << sumdot<float, 8>(u8x7f, v8f);
 */
+
+  Eigen::Matrix<double, 6, 5> u6x5 = Eigen::Matrix<double, 6, 5>::Random();
+  Eigen::Matrix<float, 6, 5> u6x5f = Eigen::Matrix<float, 6, 5>::Random();
+  Eigen::Matrix<double, 9, 8> u9x8 = Eigen::Matrix<double, 9, 8>::Random();
+
+  Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> ux = u6x5;
+  Eigen::Matrix<double, Eigen::Dynamic, 1> vx =
+                                           eom::cross_product<double>(ux);
+  std::cout << "\n  Random 6Dd SumDot: " << sumdot<double>(ux, vx);
+
+  Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic> uxf = u6x5f;
+  Eigen::Matrix<float, Eigen::Dynamic, 1> vxf =
+                                          eom::cross_product<float>(uxf);
+  std::cout << "\n  Random 6Df SumDot: " << sumdot<float>(uxf, vxf);
+
+  ux = u9x8;
+  vx = eom::cross_product<double>(ux);
+  std::cout << "\n  Random 9Dd SumDot: " << sumdot<double>(ux, vx);
 
   std::cout << "\n  === End Test:  N-Dimensional Cross Product ===\n\n";
 
