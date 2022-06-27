@@ -18,6 +18,7 @@
 
 namespace {
 
+// Summs the dot product of vec with each column of mat
 template <typename T, unsigned int N>
 T sumdot(Eigen::Matrix<T, N, N-1U>& mat, Eigen::Matrix<T, N, 1>& vec)
 {
@@ -28,6 +29,8 @@ T sumdot(Eigen::Matrix<T, N, N-1U>& mat, Eigen::Matrix<T, N, 1>& vec)
   return uv;
 }
 
+
+// Summs the dot product of vec with each column of mat
 template <typename T>
 T sumdot(Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>& mat,
          Eigen::Matrix<T, Eigen::Dynamic, 1>& vec)
@@ -40,10 +43,22 @@ T sumdot(Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>& mat,
   return uv;
 }
 
+
+// Prints the matrix u and vector v as [u v]
+template <typename T, unsigned int N>
+static void print_cross(const Eigen::Matrix<double, N, N-1>& u,
+                        const Eigen::Matrix<double, N, 1>& v)
+{
+  for (unsigned int ii=0; ii<N; ++ii) {
+    std::cout << "\n";
+    for (unsigned int jj=0; jj<N-1; ++jj) {
+      std::cout << "  " << u(ii,jj);
+    }
+    std::cout <<  "  " << v(ii);
+  }
 }
 
-static void print_3cross(const Eigen::Matrix<double, 3, 2>&,
-                         const Eigen::Matrix<double, 3, 1>&);
+}
 
 namespace eom_app {
 
@@ -52,25 +67,24 @@ void eom_test_cross()
 
   std::cout << "\n\n  === Test:  N-Dimensional Cross Product ===";
 
-
   eom::CrossProduct<double, 3> x3d;
   Eigen::Matrix<double, 3, 2> uMat = Eigen::Matrix<double, 3, 2>::Zero();
   uMat(2,0) = 1.0;
   uMat(0,1) = 1.0;
   Eigen::Matrix<double, 3, 1> v = x3d(uMat);
-  print_3cross(uMat, v);
+  print_cross<double, 3>(uMat, v);
   uMat = Eigen::Matrix<double, 3, 2>::Zero();
   uMat(0,0) = 1.0;
   uMat(2,1) = 1.0;
   v = x3d(uMat);
   std::cout << '\n';
-  print_3cross(uMat, v);
+  print_cross<double, 3>(uMat, v);
   uMat = Eigen::Matrix<double, 3, 2>::Zero();
   uMat(0,0) = 1.0;
   uMat(1,1) = 1.0;
   v = x3d(uMat);
   std::cout << '\n';
-  print_3cross(uMat, v);
+  print_cross<double, 3>(uMat, v);
 
   Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> ux = 
       Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>::Zero(3,2);
@@ -78,21 +92,44 @@ void eom_test_cross()
   ux(0,1) = 1.0;
   Eigen::Matrix<double, Eigen::Dynamic, 1> vx = eom::cross_product(ux);
   std::cout << '\n';
-  print_3cross(ux, vx);
+  print_cross<double, 3>(ux, vx);
 
   ux = Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>::Zero(3,2);
   ux(0,0) = 1.0;
   ux(2,1) = 1.0;
   vx = eom::cross_product(ux);
   std::cout << '\n';
-  print_3cross(ux, vx);
+  print_cross<double, 3>(ux, vx);
 
   ux = Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>::Zero(3,2);
   ux(0,0) = 1.0;
   ux(1,1) = 1.0;
   vx = eom::cross_product(ux);
   std::cout << '\n';
-  print_3cross(ux, vx);
+  print_cross<double, 3>(ux, vx);
+
+  ux = Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>::Zero(4,3);
+  ux(0,0) = 1.0;
+  ux(1,1) = 1.0;
+  ux(2,2) = 1.0;
+  vx = eom::cross_product(ux);
+  std::cout << '\n';
+  print_cross<double, 4>(ux, vx);
+
+  ux = Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>::Zero(5,4);
+  ux(0,0) = 1.0;
+  ux(1,1) = 1.0;
+  ux(2,2) = 1.0;
+  ux(3,3) = 1.0;
+  vx = eom::cross_product(ux);
+  std::cout << '\n';
+  print_cross<double, 5>(ux, vx);
+
+  ux = Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>::Zero(2,1);
+  ux(0,0) = 1.0;
+  vx = eom::cross_product(ux);
+  std::cout << '\n';
+  print_cross<double, 2>(ux, vx);
 
   std::cout << '\n';
   std::srand((unsigned int) std::time(0));
@@ -176,11 +213,3 @@ void eom_test_cross()
 
 }
 
-
-static void print_3cross(const Eigen::Matrix<double, 3, 2>& u,
-                         const Eigen::Matrix<double, 3, 1>& v)
-{
-  for (int ii=0; ii<3; ++ii) {
-    std::cout << "\n  " << u(ii,0) << " " << u(ii,1) << " " <<  v(ii);
-  }
-}
