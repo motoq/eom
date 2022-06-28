@@ -12,7 +12,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(SOURCES
   src/Vinti6.c
-  src/eom.cpp
   src/eom_config.cpp
   src/eom_command_builder.cpp
   src/eom_ephem_printer.cpp
@@ -47,6 +46,8 @@ add_library(sofalib STATIC IMPORTED)
 set_property(TARGET sofalib
              PROPERTY IMPORTED_LOCATION "/home/conan/lib/libsofa_c.a")
 
+add_library(eomlib SHARED ${SOURCES})
+
 if (MSVC)
     # warning level 4 and all warnings as errors
   add_compile_options(/W4 /WX)
@@ -58,11 +59,20 @@ else()
 endif()
 
 # include all components
-add_executable(${PROJECT_NAME} ${SOURCES})
+add_executable(${PROJECT_NAME} src/eom.cpp)
 target_include_directories(${PROJECT_NAME}
   PUBLIC /home/conan/include
   PRIVATE ${PROJECT_SOURCE_DIR}/include
 )
+target_include_directories(eomlib
+  PUBLIC /usr/include/eigen3
+  PUBLIC /home/conan/include
+  PUBLIC ${PROJECT_SOURCE_DIR}/include
+)
+target_link_libraries(eomlib
+  PUBLIC Eigen3::Eigen
+  PUBLIC sofalib)
 target_link_libraries(${PROJECT_NAME}
   PUBLIC Eigen3::Eigen
-  PRIVATE sofalib)
+  PUBLIC sofalib
+  PUBLIC eomlib)
