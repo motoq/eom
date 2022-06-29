@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.17)
 
-project (eom)
+project (eomx)
 
 set(CMAKE_BUILD_TYPE Debug)
 
@@ -46,7 +46,7 @@ add_library(sofalib STATIC IMPORTED)
 set_property(TARGET sofalib
              PROPERTY IMPORTED_LOCATION "/home/conan/lib/libsofa_c.a")
 
-add_library(eomlib SHARED ${SOURCES})
+add_library(eom STATIC ${SOURCES})
 
 if (MSVC)
     # warning level 4 and all warnings as errors
@@ -59,20 +59,20 @@ else()
 endif()
 
 # include all components
-add_executable(${PROJECT_NAME} src/eom.cpp)
+add_executable(${PROJECT_NAME} src/eomx.cpp)
 target_include_directories(${PROJECT_NAME}
-  PUBLIC /home/conan/include
+  PUBLIC ~/include
   PRIVATE ${PROJECT_SOURCE_DIR}/include
 )
-target_include_directories(eomlib
+target_include_directories(eom
   PUBLIC /usr/include/eigen3
-  PUBLIC /home/conan/include
+  PUBLIC ~/include
   PUBLIC ${PROJECT_SOURCE_DIR}/include
 )
-target_link_libraries(eomlib
+target_link_libraries(eom
   PUBLIC Eigen3::Eigen
   PUBLIC sofalib)
 target_link_libraries(${PROJECT_NAME}
   PUBLIC Eigen3::Eigen
   PUBLIC sofalib
-  PUBLIC eomlib)
+  PUBLIC eom)
