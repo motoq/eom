@@ -22,11 +22,8 @@
 static void test_xyz(Eigen::Matrix<double, 3, 1>&);
 static std::string fuk_start_str(eom::FukStarter);
 
-namespace eom_app {
-
-void eom_test_ground_point()
+int main()
 {
-
   std::cout << "\n\n  === Test:  GroundPoint ===";
 
     // Unit tests - init with Cartesian.  Two pairs with symmetry over
@@ -147,8 +144,6 @@ void eom_test_ground_point()
 
 
   std::cout << "\n  === End Test:  GroundPoint ===\n\n";
-}
-
 
 }
 

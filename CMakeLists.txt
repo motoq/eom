@@ -20,7 +20,6 @@ set(SOURCES
   src/eom_test.cpp
   src/eom_test_cross.cpp
   src/eom_test_earth_xt.cpp
-  src/eom_test_ground_point.cpp
   src/parse_datetime.cpp
   src/parse_duration.cpp
   src/parse_ground_point.cpp
@@ -44,7 +43,7 @@ set(SOURCES
 
 add_library(sofalib STATIC IMPORTED)
 set_property(TARGET sofalib
-             PROPERTY IMPORTED_LOCATION "/home/conan/lib/libsofa_c.a")
+             PROPERTY IMPORTED_LOCATION "/home/library/libsofa_c.a")
 
 add_library(eom STATIC ${SOURCES})
 
@@ -61,18 +60,18 @@ endif()
 # include all components
 add_executable(${PROJECT_NAME} src/eomx.cpp)
 target_include_directories(${PROJECT_NAME}
-  PUBLIC ~/include
+  PRIVATE ~/include
   PRIVATE ${PROJECT_SOURCE_DIR}/include
 )
 target_include_directories(eom
-  PUBLIC /usr/include/eigen3
-  PUBLIC ~/include
-  PUBLIC ${PROJECT_SOURCE_DIR}/include
+  PRIVATE /usr/include/eigen3
+  PRIVATE ~/include
+  PRIVATE ${PROJECT_SOURCE_DIR}/include
 )
 target_link_libraries(eom
-  PUBLIC Eigen3::Eigen
-  PUBLIC sofalib)
+  PRIVATE Eigen3::Eigen
+  PRIVATE sofalib)
 target_link_libraries(${PROJECT_NAME}
-  PUBLIC Eigen3::Eigen
-  PUBLIC sofalib
-  PUBLIC eom)
+  PRIVATE Eigen3::Eigen
+  PRIVATE sofalib
+  PRIVATE eom)

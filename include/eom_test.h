@@ -41,11 +41,6 @@ void eom_test_cross();
  */
 void eom_test_earth_x();
 
-/**
- * Runs validity tests for the eom::GroundPoint type.
- */
-void eom_test_ground_point();
-
 
 }
 
