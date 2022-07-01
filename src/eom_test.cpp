@@ -23,8 +23,6 @@ void eom_test(std::deque<std::string>& tokens)
   tokens.pop_front();
   if (test_str == "EarthX") {
     eom_test_earth_x();
-  } else if (test_str == "Cross") {
-    eom_test_cross();
   } else {
     throw std::invalid_argument("Invalid test type: " + test_str);
   }

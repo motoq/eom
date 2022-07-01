@@ -1,8 +1,8 @@
 CC = g++
 CPPFLAGS = -g -Wall -I../../include \
-                    -I../../../../../include/ \
                     -I/usr/include/eigen3
-LFLAGS = -L../../../../../lib -L../../build -leom
+LFLAGS = -L../../build -leom
+#                    -I../../../../../include/ \
 #LFLAGS = -L../../../../../lib -L../../build -lsofa_c -leom
 
 OBJECTS := $(patsubst %.cpp,%.o,$(wildcard *.cpp))

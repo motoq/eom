@@ -18,7 +18,6 @@ set(SOURCES
   src/eom_range_printer.cpp
   src/eom_rtc_printer.cpp
   src/eom_test.cpp
-  src/eom_test_cross.cpp
   src/eom_test_earth_xt.cpp
   src/parse_datetime.cpp
   src/parse_duration.cpp

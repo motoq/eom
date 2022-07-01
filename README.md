@@ -20,7 +20,7 @@ applications.
 Current functionality includes the Vinti 2-body Kepler1 and J2/J3 Vinti6
 orbit propagators.  The modern IAU GCRF and ITRF reference frames are
 supported.  Parsing of IERS EOP data still needs to be implemented,
-however the The IAU 2000A and IAU 2006 precession-nutation theories are
+however the the IAU 2000A and IAU 2006 precession-nutation theories are
 fully functional along with internal support for a true equator, mean
 equinox (GMST 1980) ECI reference frame to support legacy general
 perturbations propagators (such as the Vinti, traditional secular J2,
@@ -56,6 +56,8 @@ C++ was chosen for development because:
 1. It plays well with legacy C and FORTRAN libraries
 2. A number of mature and fast C++ math libraries are available
 3. Code designed to run on hardware can be tested
+4. Modern C++ is a really great language, despite all the baggage (a
+   C++17 compatible compiler is required)
 
 The Mozilla Public License 2.0 (MPL2) was chosen because it protects the
 open source nature of this code while still allowing it to be used with

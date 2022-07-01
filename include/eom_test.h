@@ -31,10 +31,6 @@ namespace eom_app {
  */
 void eom_test(std::deque<std::string>& tokens);
 
-/**
- * Test N-Dimensional cross product
- */
-void eom_test_cross();
 
 /**
  * Runs validity tests for the eom::EarthX
