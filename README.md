@@ -1,12 +1,15 @@
-#eom
+eom
+===
 
-##Equations of Motion
+Equations of Motion
+-------------------
 
 The Equations of Motion project provides an application with built in
 astrodynamics related functionality along with a library to aid in the
 creation of custom tools.
 
-###eomx
+eomx
+----
 
 The **eomx** application is being designed to focus on orbit
 propagation, orbit determination, relative orbital dynamics, and
