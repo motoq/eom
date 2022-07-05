@@ -15,15 +15,18 @@
 #include <unordered_map>
 #include <stdexcept>
 
+#include <cal_const.h>
 #include <cal_julian_date.h>
 
+namespace {
+  constexpr double nsec {1.0e-9*cal_const::day_per_sec};
+}
 
 namespace eom {
 
 EopSys::EopSys(std::string fname,
          const JulianDate& startTime, const JulianDate& stopTime)
 {
-
     // Pad by an extra day for interpolation options
   mjd_first = static_cast<unsigned int>(startTime.getMjd() - 1.0);
   mjd_last = static_cast<unsigned int>(stopTime.getMjd() + 1.0);
@@ -61,14 +64,12 @@ EopSys::EopSys(std::string fname,
     dx_ndx = col_labels.at("dX");
     dy_ndx = col_labels.at("dY");
   } catch (const std::out_of_range& oor) {
-    ifs.close();
-    throw std::out_of_range("EopSys::EopSys Bad EOP file headers");
+    throw std::runtime_error("EopSys::EopSys Bad EOP file headers");
   }
 
     // Force assumption of MJD being first to speed locating proper
     // in IERS EOP file (not necessary given map, but speeds things up).
   if (mjd_ndx != 0) {
-    ifs.close();
     throw std::runtime_error("EopSys::EopSys MJD expected to be first column");
   }
 
@@ -119,14 +120,46 @@ EopSys::EopSys(std::string fname,
   }
 
   if (!found_start) {
-    ifs.close();
     throw std::runtime_error("EopSys::EopSys Can't find start MJD ");
   } else if (!done) {
-    ifs.close();
     throw std::runtime_error("EopSys::EopSys Can't find end MJD ");
   }
 
-  ifs.close();
+}
+
+
+eop_record EopSys::getEop(const JulianDate& jd) const
+{
+    // No EOP data loaded
+  if (eopData.size() == 0) {
+    eop_record eop;
+    return eop;
+  }
+
+  auto mjd = jd.getMjd();
+  auto days = mjd - mjd_first;
+
+  if (days < -nsec) {
+   throw std::out_of_range("EopSys::getEop: " + std::to_string(mjd) +
+                           " < " + std::to_string(mjd_first));
+  }
+  if (mjd_last - mjd < -nsec) {
+   throw std::out_of_range("EopSys::getEop: " + std::to_string(mjd) +
+                           " > " + std::to_string(mjd_last));
+  }
+
+  long ndx1 = static_cast<long>(days);
+  if (days - ndx1 < nsec) {
+    return eopData[ndx1]; 
+  }
+
+  //long ndx2 = ndx1 + 1L;
+    // compute slope for each over 1 day
+  //auto dmjd = mjd - eopData[ndx1].mjd;
+  //auto dxp_dmjd = eopData[ndx2].xp - eopData[ndx1].xp;
+
+  return eopData[ndx1]; 
+
 }
 
 

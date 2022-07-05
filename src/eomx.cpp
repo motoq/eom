@@ -237,7 +237,6 @@ int main(int argc, char* argv[])
     }
   }
 
-  //eom::EopSys eopData("finals2000A_20220701.scsv", minJd, maxJd);
     // Ecf to Eci transformation service - immutable - pass as
     //   const std::shared_ptr<const EcfEciSys>&
   auto f2iSys = std::make_shared<eom::EcfEciSys>(minJd, maxJd,

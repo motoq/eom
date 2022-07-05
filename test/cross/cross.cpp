@@ -14,9 +14,6 @@
 
 #include <mth_cross_product.h>
 
-#include <eom_test.h>
-
-
 // Summs the dot product of vec with each column of mat
 template <typename T, unsigned int N>
 T sumdot(Eigen::Matrix<T, N, N-1U>& mat, Eigen::Matrix<T, N, 1>& vec)

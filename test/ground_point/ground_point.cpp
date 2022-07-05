@@ -17,8 +17,6 @@
 #include <phy_const.h>
 #include <astro_ground_point.h>
 
-#include <eom_test.h>
-
 static void test_xyz(Eigen::Matrix<double, 3, 1>&);
 static std::string fuk_start_str(eom::FukStarter);
 

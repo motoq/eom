@@ -57,6 +57,12 @@ public:
   EopSys(std::string fname,
          const JulianDate& startTime, const JulianDate& stopTime);
 
+  /**
+   * @return  EOP for the requested time.  Daily published values are
+   *          interpolated.  Continuity is guaranteed.
+   */
+  eop_record getEop(const JulianDate& jd) const;
+
 private:
   unsigned long mjd_first {0UL};
   unsigned long mjd_last {0UL};
