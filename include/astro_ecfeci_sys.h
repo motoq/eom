@@ -33,7 +33,7 @@ struct raw_eop {
 };
 */
 
-  // The transformation directoin is ECF to ECI
+  // The transformation direction is ECF to ECI
 /**
  * ECF to ECI transformations
  */

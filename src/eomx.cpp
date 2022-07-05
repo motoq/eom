@@ -25,6 +25,7 @@
 #include <astro_orbit_def.h>
 #include <astro_rel_orbit_def.h>
 #include <astro_ephemeris.h>
+#include <astro_eop_sys.h>
 #include <astro_ecfeci_sys.h>
 #include <astro_build.h>
 #include <astro_print.h>
@@ -236,6 +237,7 @@ int main(int argc, char* argv[])
     }
   }
 
+  //eom::EopSys eopData("finals2000A_20220701.scsv", minJd, maxJd);
     // Ecf to Eci transformation service - immutable - pass as
     //   const std::shared_ptr<const EcfEciSys>&
   auto f2iSys = std::make_shared<eom::EcfEciSys>(minJd, maxJd,

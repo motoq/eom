@@ -31,6 +31,7 @@ set(SOURCES
   src/astro_earth_surf.cpp
   src/astro_earth_xt.cpp
   src/astro_ecfeci_sys.cpp
+  src/astro_eop_sys.cpp
   src/astro_ground_point.cpp
   src/astro_keplerian.cpp
   src/astro_orbit_def.cpp
