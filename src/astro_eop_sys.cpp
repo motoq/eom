@@ -15,6 +15,8 @@
 #include <unordered_map>
 #include <stdexcept>
 
+#include <Eigen/Dense>
+
 #include <cal_const.h>
 #include <cal_julian_date.h>
 
@@ -116,6 +118,7 @@ EopSys::EopSys(std::string fname,
       } catch(std::invalid_argument const& ex) {
         ;
       }
+      eopData.push_back(eop);
     }
   }
 
@@ -152,14 +155,36 @@ eop_record EopSys::getEop(const JulianDate& jd) const
   if (days - ndx1 < nsec) {
     return eopData[ndx1]; 
   }
+  long ndx2 = ndx1 + 1L;
 
-  //long ndx2 = ndx1 + 1L;
-    // compute slope for each over 1 day
-  //auto dmjd = mjd - eopData[ndx1].mjd;
-  //auto dxp_dmjd = eopData[ndx2].xp - eopData[ndx1].xp;
+  double dt = static_cast<double>(mjd - eopData[ndx1].mjd);
+    // Starting value
+  Eigen::Matrix<double, 6, 1> p0;                          // EIGENUPDATE
+  p0(0) = eopData[ndx1].xp;
+  p0(1) = eopData[ndx1].yp;
+  p0(2) = eopData[ndx1].ut1mutc;
+  p0(3) = eopData[ndx1].lod;
+  p0(4) = eopData[ndx1].dx;
+  p0(5) = eopData[ndx1].dy;
+    // Slope
+  Eigen::Matrix<double, 6, 1> dpdt;
+  dpdt(0) = eopData[ndx2].xp      - eopData[ndx1].xp;
+  dpdt(1) = eopData[ndx2].yp      - eopData[ndx1].yp;
+  dpdt(2) = eopData[ndx2].ut1mutc - eopData[ndx1].ut1mutc;
+  dpdt(3) = eopData[ndx2].lod     - eopData[ndx1].lod;
+  dpdt(4) = eopData[ndx2].dx      - eopData[ndx1].dx;
+  dpdt(5) = eopData[ndx2].dy      - eopData[ndx1].dy;
+  Eigen::Matrix<double, 6, 1> p = p0 + dt*dpdt;
+  eop_record eop;
+  eop.mjd     = mjd;
+  eop.xp      = p(0);
+  eop.yp      = p(1);
+  eop.ut1mutc = p(2);
+  eop.lod     = p(3);
+  eop.dx      = p(4);
+  eop.dy      = p(5);
 
-  return eopData[ndx1]; 
-
+  return eop;
 }
 
 
