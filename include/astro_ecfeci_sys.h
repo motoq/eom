@@ -11,27 +11,17 @@
 
 #include <vector>
 #include <ostream>
+#include <memory>
 
 #include <Eigen/Dense>
 #include <Eigen/Geometry>
 
 #include <cal_julian_date.h>
 #include <cal_duration.h>
+#include <astro_eop_sys.h>
 #include <utl_printable.h>
 
 namespace eom {
-
-/* Enable after adding parsing of IERS EOP
-struct raw_eop {
-  long mjd {0L};
-  double xp {0.0};
-  double yp {0.0};
-  double ut1mutc {0.0};
-  double lod {0.0};
-  double dx {0.0};
-  double dy {0.0};
-};
-*/
 
   // The transformation direction is ECF to ECI
 /**
@@ -39,8 +29,8 @@ struct raw_eop {
  */
 struct ecf_eci {
   double mjd2000 {0.0};      ///< Modified Julian Date w.r.t. 2000, days
-  double ut1mutc {0.0};      ///< UT1-UTC, seconds
-  double lod {0.0};          ///< Length of day, seconds (for TIRF to CIRF)
+  double ut1mutc {0.0};      ///< UT1-UTC, TU
+  double lod {0.0};          ///< Length of day, TU (for TIRF to CIRF)
   Eigen::Quaterniond pm;     ///< Polar motion; ITRF to TIRF
   Eigen::Quaterniond bpn;    ///< Frame bias, precession, nutation; CIRF to GCRF
 };
@@ -69,11 +59,16 @@ public:
    * @param  dt           Rate at which to generate ECF to ECI data
    *                      If zero, one set of data is generated at the
    *                      center of the timeframe.
+   * @param  eopSys       EOP data source - if nullptr, then all eop
+   *                      values are set to zero.
    * @param  interpolate  If true, ECF to ECI data will be interpolated.
    *                      Defaults to true.
    */
-  EcfEciSys(const JulianDate& startTime, const JulianDate& stopTime,
-            const Duration& dt, bool interpolate = true);
+  EcfEciSys(const JulianDate& startTime,
+            const JulianDate& stopTime,
+            const Duration& dt,
+            const std::shared_ptr<eom::EopSys>& eopSys,
+            bool interpolate = true);
 
   /**
    * Returns an ecf_eci struucture.  Primarily intended for internal use

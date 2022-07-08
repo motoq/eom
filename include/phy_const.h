@@ -88,13 +88,13 @@ namespace phy_const {
    * no additional computational burden since it will be evaluated at
    * compile time.
    *
-   * @param  lod  Length of day, seconds
+   * @param  lod  Length of day, TU
    *
    * @return  Earth angular velocity, radians/TU
    */
   constexpr double earth_angular_velocity(double lod)
   {
-    return 7.292115146706979e-5*sec_per_tu*(1.0 - lod/cal_const::sec_per_day);
+    return 7.292115146706979e-5*sec_per_tu*(1.0 - lod/tu_per_day);
   }
 }
 

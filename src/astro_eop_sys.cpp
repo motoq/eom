@@ -176,7 +176,8 @@ eop_record EopSys::getEop(const JulianDate& jd) const
   dpdt(5) = eopData[ndx2].dy      - eopData[ndx1].dy;
   Eigen::Matrix<double, 6, 1> p = p0 + dt*dpdt;
   eop_record eop;
-  eop.mjd     = mjd;
+  eop.mjd     = static_cast<long>(mjd);
+  eop.mjdf    = static_cast<float>(mjd - eop.mjd);
   eop.xp      = p(0);
   eop.yp      = p(1);
   eop.ut1mutc = p(2);

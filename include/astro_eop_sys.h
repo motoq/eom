@@ -16,15 +16,16 @@
 
 namespace eom {
 
-// Raw daily IERS EOP data
+// Raw daily IERS EOP data - left in published units
 struct eop_record {
-  long mjd {0L};
-  double xp {0.0};
+  long mjd {0L};             ///< Modified Julian Date
+  float mjdf {0};            ///< Fractional day - zero unless interpolated
+  double xp {0.0};           ///< Polar motion, arcseconds (")
   double yp {0.0};
-  double ut1mutc {0.0};
-  double lod {0.0};
-  double dx {0.0};
-  double dy {0.0};
+  double ut1mutc {0.0};      ///< UT1-UTC, seconds
+  double lod {0.0};          ///< Length of day, milliseconds
+  double dx {0.0};           ///<  Corrections to pole location,
+  double dy {0.0};           ///<  miliiarcseconds (MAS)
 };
 
 /**

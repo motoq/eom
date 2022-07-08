@@ -10,17 +10,20 @@
 
 #include <ostream>
 #include <stdexcept>
+#include <memory>
 
 #include <Eigen/Dense>
 #include <Eigen/Geometry>
 
 #include <sofa.h>
 
+#include <utl_const.h>
 #include <phy_const.h>
 #include <cal_julian_date.h>
 #include <cal_greg_date.h>
 #include <cal_duration.h>
 #include <cal_leap_seconds.h>
+#include <astro_eop_sys.h>
 
 /*
  * Local utility for converting a C double[3][3] to an Eigen Matrix3d.
@@ -48,8 +51,11 @@ namespace {
 
 namespace eom {
 
-EcfEciSys::EcfEciSys(const JulianDate& startTime, const JulianDate& stopTime,
-                     const Duration& dt, bool interpolate) :
+EcfEciSys::EcfEciSys(const JulianDate& startTime,
+                     const JulianDate& stopTime,
+                     const Duration& dt,
+                     const std::shared_ptr<eom::EopSys>& eopSys,
+                     bool interpolate) :
                      jdStart {startTime}, jdStop {stopTime},
                      rate_days {dt.getDays()}, interpolate_bpnpm {interpolate}
 {
@@ -67,9 +73,6 @@ EcfEciSys::EcfEciSys(const JulianDate& startTime, const JulianDate& stopTime,
     jdStop  +=  rate_days;
   }
 
-    // Replace with EOP data source when parsing implemented
-  double xp {0.0};
-  double yp {0.0};
     // Variables used for intermediate calculations within loop.
   double x;                       // Celestial Intermediate Pole x coordinate
   double y;                       // Celestial Intermediate Pole y coordinate
@@ -86,23 +89,36 @@ EcfEciSys::EcfEciSys(const JulianDate& startTime, const JulianDate& stopTime,
     jd += rate_days/2.0;
   }
   while (jd <= jdStop) {
+    ecf_eci f2i;
+    f2i.mjd2000 = jd.getMjd2000();
+    eop_record eop;
     auto jdTT = ls.utc2tt(jd);
       // Pole locations for BPN
     iauXys06a(jdTT.getJdHigh(), jdTT.getJdLow(), &x, &y, &s);
+      // Get EOP data is available
+    if (eopSys != nullptr) {
+      eop = eopSys->getEop(jd);
+      f2i.ut1mutc = phy_const::tu_per_sec*eop.ut1mutc;
+      f2i.lod = phy_const::tu_per_sec*0.001*eop.lod;       // TU per msec
+      x += utl_const::rad_per_mas*eop.dx;
+      y += utl_const::rad_per_mas*eop.dy;
+    }
       // Transpose of BPN, to BPN
     iauC2ixys(x, y, s, cirf2gcrf); 
     iauTr(cirf2gcrf, cirf2gcrf);
       // CIO locator used for polar motion transformation
     double sp {iauSp00(jdTT.getJdHigh(), jdTT.getJdLow())};
       // Polar motion, ECF to ECI after transpose
-    iauPom00(xp, yp, sp, itrf2tirf);
+    iauPom00(utl_const::rad_per_arcsec*eop.xp,
+             utl_const::rad_per_arcsec*eop.yp, sp, itrf2tirf);
     iauTr(itrf2tirf, itrf2tirf);
       // Convert to final form and insert
     Eigen::Matrix3d mbpn = from3x3(cirf2gcrf);
     Eigen::Matrix3d mpm = from3x3(itrf2tirf);
     Eigen::Quaterniond qbpn(mbpn);
     Eigen::Quaterniond qpm(mpm);
-    ecf_eci f2i {jd.getMjd2000(), 0.0, 0.0, qpm, qbpn};
+    f2i.pm = qpm;
+    f2i.bpn = qbpn;
     f2iData.push_back(f2i);
 
     jd += rate_days;
@@ -149,7 +165,7 @@ EcfEciSys::ecf2eci(const JulianDate& utc,
                    const Eigen::Matrix<double, 3, 1>& posf) const
 {
   ecf_eci f2i {this->getEcfEciData(utc)};
-  auto ut1 {utc + phy_const::tu_per_sec*f2i.ut1mutc};
+  auto ut1 {utc + phy_const::day_per_tu*f2i.ut1mutc};
   double era {iauEra00(ut1.getJdHigh(), ut1.getJdLow())};
   Eigen::Quaterniond qera{Eigen::AngleAxisd(era, Eigen::Vector3d::UnitZ())};
   Eigen::Matrix<double, 3, 1> posi = f2i.bpn*qera*f2i.pm*posf;
@@ -163,7 +179,7 @@ EcfEciSys::ecf2eci(const JulianDate& utc,
                    const Eigen::Matrix<double, 3, 1>& velf) const
 {
   ecf_eci f2i {this->getEcfEciData(utc)};
-  auto ut1 {utc + phy_const::tu_per_sec*f2i.ut1mutc};
+  auto ut1 {utc + phy_const::day_per_tu*f2i.ut1mutc};
   double era {iauEra00(ut1.getJdHigh(), ut1.getJdLow())};
   Eigen::Quaterniond qera{Eigen::AngleAxisd(era, Eigen::Vector3d::UnitZ())};
   Eigen::Matrix<double, 3, 1> pos_tirf = f2i.pm*posf;
@@ -188,7 +204,7 @@ EcfEciSys::eci2ecf(const JulianDate& utc,
                   const Eigen::Matrix<double, 3, 1>& posi) const
 {
   ecf_eci f2i {this->getEcfEciData(utc)};
-  auto ut1 {utc + phy_const::tu_per_sec*f2i.ut1mutc};
+  auto ut1 {utc + phy_const::day_per_tu*f2i.ut1mutc};
   double era {iauEra00(ut1.getJdHigh(), ut1.getJdLow())};
   Eigen::Quaterniond qera{Eigen::AngleAxisd(-era, Eigen::Vector3d::UnitZ())};
   Eigen::Matrix<double, 3, 1> posf =
@@ -204,7 +220,7 @@ EcfEciSys::eci2ecf(const JulianDate& utc,
                    const Eigen::Matrix<double, 3, 1>& veli) const
 {
   ecf_eci f2i {this->getEcfEciData(utc)};
-  auto ut1 {utc + phy_const::tu_per_sec*f2i.ut1mutc};
+  auto ut1 {utc + phy_const::day_per_tu*f2i.ut1mutc};
   double era {iauEra00(ut1.getJdHigh(), ut1.getJdLow())};
   Eigen::Quaterniond qera{Eigen::AngleAxisd(-era, Eigen::Vector3d::UnitZ())};
   Eigen::Quaterniond qera_bpnt {qera*f2i.bpn.conjugate()};
@@ -231,7 +247,7 @@ EcfEciSys::ecf2teme(const JulianDate& utc,
                     const Eigen::Matrix<double, 3, 1>& velf) const
 {
   ecf_eci f2i {this->getEcfEciData(utc)};
-  auto ut1 {utc + phy_const::tu_per_sec*f2i.ut1mutc};
+  auto ut1 {utc + phy_const::day_per_tu*f2i.ut1mutc};
   double gmst {iauGmst82(ut1.getJdHigh(), ut1.getJdLow())};
   Eigen::Quaterniond qgmst{Eigen::AngleAxisd(gmst, Eigen::Vector3d::UnitZ())};
   Eigen::Matrix<double, 3, 1> pos_tirf = f2i.pm*posf;
@@ -255,7 +271,7 @@ EcfEciSys::teme2ecf(const JulianDate& utc,
                     const Eigen::Matrix<double, 3, 1>& veli) const
 {
   ecf_eci f2i {this->getEcfEciData(utc)};
-  auto ut1 {utc + phy_const::tu_per_sec*f2i.ut1mutc};
+  auto ut1 {utc + phy_const::day_per_tu*f2i.ut1mutc};
   double gmst {iauGmst82(ut1.getJdHigh(), ut1.getJdLow())};
   Eigen::Quaterniond qgmst{Eigen::AngleAxisd(-gmst, Eigen::Vector3d::UnitZ())};
   Eigen::Matrix<double, 3, 1> pos_tirf = qgmst*posi;

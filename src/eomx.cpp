@@ -44,8 +44,10 @@
 int main(int argc, char* argv[])
 {
     // Check for filename
-  if (argc != 2) {
-    std::cerr << "\nProper use is:  " << argv[0] << " <input_file_name>\n";
+  if (argc < 2  ||  argc > 3) {
+    std::cerr << "\nProper use is:  " << argv[0] << " <input_file_name> or";
+    std::cerr << "\n                " << argv[0] << " <input_file_name> " <<
+                                                    "<eop__file_name>\n";
     return 0;
   }
     // Try to open for input
@@ -239,8 +241,14 @@ int main(int argc, char* argv[])
 
     // Ecf to Eci transformation service - immutable - pass as
     //   const std::shared_ptr<const EcfEciSys>&
-  auto f2iSys = std::make_shared<eom::EcfEciSys>(minJd, maxJd,
-                                                 cfg.getEcfEciRate());
+  std::shared_ptr<eom::EopSys> eopSys = nullptr;
+  if (argc > 2) {
+   eopSys = std::make_shared<eom::EopSys>(argv[2], minJd, maxJd);
+  }
+  auto f2iSys = std::make_shared<eom::EcfEciSys>(minJd,
+                                                 maxJd,
+                                                 cfg.getEcfEciRate(),
+                                                 eopSys);
     // Ephemeris class is immutable.
   for (const auto& orbit : orbit_defs) {
     std::cout << "\n  " << orbit.getOrbitName();
