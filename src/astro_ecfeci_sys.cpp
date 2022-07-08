@@ -150,9 +150,11 @@ ecf_eci EcfEciSys::getEcfEciData(const JulianDate& utc) const
     double dt {dt_days/rate_days};
     unsigned long int ndx2 {ndx1 + 1UL};
     const ecf_eci& f2i2 = f2iData[ndx2];
+    double ut1mutc {f2i1.ut1mutc + dt*(f2i2.ut1mutc - f2i1.ut1mutc)};
+    double lod {f2i1.lod + dt*(f2i2.lod - f2i1.lod)};
     Eigen::Quaterniond bpn {f2i1.bpn.slerp(dt, f2i2.bpn)};
     Eigen::Quaterniond pm {f2i1.pm.slerp(dt, f2i2.pm)};
-    ecf_eci f2i {mjd2000, f2i1.ut1mutc, f2i1.lod, pm, bpn};
+    ecf_eci f2i {mjd2000, ut1mutc, lod, pm, bpn};
     return f2i;
   } else {
     return f2i1;
