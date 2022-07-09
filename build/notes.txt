@@ -1,0 +1,13 @@
+
+cmake ..
+make
+make eom
+make eomx
+
+
+Options for dynamic library version of SOFA
+
+CCOMPC = gcc
+CFLAGF = -c -pedantic -Wall -O -fPIC
+CFLAGX = -pedantic -Wall -O -fPIC
+
