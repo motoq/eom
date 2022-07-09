@@ -22,6 +22,7 @@
 #include <astro_vinti.h>
 #ifdef GENPL
 #include <astro_oscj2.h>
+#include <astro_secj2.h>
 #endif
 
 #include <astro_build.h>
@@ -56,6 +57,10 @@ build_orbit(const OrbitDef& orbitParams,
                                                     VintiPertModel::J2_ONLY);
     return orbit;
 #ifdef GENPL
+  } else if (pCfg.getPropagatorType() == PropagatorType::SecJ2) {
+    std::unique_ptr<Ephemeris> orbit =
+           std::make_unique<SecJ2>(orbitParams.getEpoch(), xeciVec, ecfeciSys);
+    return orbit;
   } else if (pCfg.getPropagatorType() == PropagatorType::OscJ2) {
     std::unique_ptr<Ephemeris> orbit =
            std::make_unique<OscJ2>(orbitParams.getEpoch(), xeciVec, ecfeciSys);

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.17)
 
 project (eomx)
 
-#set(USE_GENPL TRUE)
+set(USE_GENPL TRUE)
 if (${USE_GENPL})
   add_definitions(-DGENPL)
 endif()

@@ -57,6 +57,13 @@ eom::OrbitDef parse_orbit_def(std::deque<std::string>& tokens,
                          eom::CoordType::cartesian, eom::FrameType::gcrf};
     return orbit;
 #ifdef GENPL
+  } else if (model == "SecJ2"  &&  tokens.size() > 0 ) {
+    eom::PropagatorConfig propCfg {eom::PropagatorType::SecJ2};
+    eom::JulianDate epoch = parse_datetime(tokens);
+    std::array<double, 6> xeci = parse_state_vector(tokens, cfg);
+    eom::OrbitDef orbit {name, propCfg, epoch, xeci,
+                         eom::CoordType::cartesian, eom::FrameType::gcrf};
+    return orbit;
   } else if (model == "OscJ2"  &&  tokens.size() > 0 ) {
     eom::PropagatorConfig propCfg {eom::PropagatorType::OscJ2};
     eom::JulianDate epoch = parse_datetime(tokens);

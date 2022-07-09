@@ -16,6 +16,7 @@ namespace eom {
  */
 enum class PropagatorType {
 #ifdef GENPL
+  SecJ2,
   OscJ2,
 #endif
   Kepler1,                        ///< Gim J. Der version
