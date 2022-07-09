@@ -18,17 +18,16 @@ based modeling language.  The library allows rapid development of custom
 applications.
 
 Current functionality includes the Vinti 2-body Kepler1 and J2/J3 Vinti6
-orbit propagators.  The modern IAU GCRF and ITRF reference frames are
-supported.  Parsing of IERS EOP data still needs to be implemented,
-however the the IAU 2000A and IAU 2006 precession-nutation theories are
-fully functional along with internal support for a true equator, mean
-equinox (GMST 1980) ECI reference frame to support legacy general
-perturbations propagators (such as the Vinti, traditional secular J2,
-and SGP based propagators).  Propagated ephemeris can be saved in STK
-compatible **.e** file formats.  Other outputs are written as Matlab
-(Octave compatible) functions.  When run, these **.m** files will plot
-the data with appropriate formatting while optionally returning the
-handle to the figure along with the raw data.
+orbit propagators.  The IAU 2000A and IAU 2006 precession-nutation
+theories are supported, including parsing of IERS EOP data.  In addition
+to the GCRF and ITRF reference frames, internal support for the TEME
+(true equator, mean equinox, GMST 1980) ECI reference frame is included
+for use with legacy general perturbations propagators (such as the
+Vinti, traditional secular J2, and SGP based propagators).  Propagated
+ephemeris can be saved in STK compatible **.e** file formats.  Other
+outputs are written as Matlab (Octave compatible) functions.  When run,
+these **.m** files will plot the data with appropriate formatting while
+optionally returning the handle to the figure along with the raw data.
 
 **eom** utilizes two mature libraries upon which built-in models will
 rely and external libraries may leverage.  The first is the

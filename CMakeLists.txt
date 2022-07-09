@@ -1,8 +1,19 @@
 cmake_minimum_required(VERSION 3.17)
 
+# "make" creates both the libeom library and eomx applications.
+# "make eom" creates just libeom
+# "make eomx" creates just eomx
+
 project (eomx)
 
-set(USE_GENPL TRUE)
+# Defining USE_GENPL is an example of tightly coupling an external
+# library with eom.  Uncommenting the line "set(USE_GENPL TRUE)"
+# defines GENPL within the code at compile time activating optional
+# code dependent on external libraries.  Replace GENPL with whatever
+# is appropriate, otherwise, leave the following "set" line commented
+# out:
+#set(USE_GENPL TRUE)
+
 if (${USE_GENPL})
   add_definitions(-DGENPL)
 endif()
@@ -50,12 +61,10 @@ add_library(sofalib STATIC IMPORTED)
 set_property(TARGET sofalib
              PROPERTY IMPORTED_LOCATION "/home/library/libsofa_c.a")
 
-## GEN
 if (${USE_GENPL})
   include(cmake_genpl.txt)
 endif()
 
-## GEN
 if (${USE_GENPL})
   add_library(genlib STATIC IMPORTED)
   set_property(TARGET genlib 
@@ -78,7 +87,6 @@ else()
   #add_compile_options(-Wall -Wextra -pedantic -Werror)
 endif()
 
-# include all components
 add_executable(${PROJECT_NAME} src/eomx.cpp)
 if (${USE_GENPL})
   target_include_directories(${PROJECT_NAME}
