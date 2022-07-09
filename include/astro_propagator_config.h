@@ -15,6 +15,9 @@ namespace eom {
  * Supported propagators
  */
 enum class PropagatorType {
+#ifdef GENPL
+  OscJ2,
+#endif
   Kepler1,                        ///< Gim J. Der version
   Vinti6,                         ///< Gim J. Der version
   VintiJ2                         ///< Gim J. Der version with J3 = 0

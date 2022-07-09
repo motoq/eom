@@ -2,6 +2,11 @@ cmake_minimum_required(VERSION 3.17)
 
 project (eomx)
 
+#set(USE_GENPL TRUE)
+if (${USE_GENPL})
+  add_definitions(-DGENPL)
+endif()
+
 set(CMAKE_BUILD_TYPE Debug)
 
 find_package (Eigen3 3.3 REQUIRED NO_MODULE)
@@ -45,7 +50,23 @@ add_library(sofalib STATIC IMPORTED)
 set_property(TARGET sofalib
              PROPERTY IMPORTED_LOCATION "/home/library/libsofa_c.a")
 
-add_library(eom STATIC ${SOURCES})
+## GEN
+if (${USE_GENPL})
+  include(cmake_genpl.txt)
+endif()
+
+## GEN
+if (${USE_GENPL})
+  add_library(genlib STATIC IMPORTED)
+  set_property(TARGET genlib 
+               PROPERTY IMPORTED_LOCATION ${PATH_GENLIB})
+endif()
+
+if (${USE_GENPL})
+  add_library(eom STATIC ${SOURCES} ${SOURCES_GEN})
+else()
+  add_library(eom STATIC ${SOURCES})
+endif()
 
 if (MSVC)
     # warning level 4 and all warnings as errors
@@ -59,19 +80,42 @@ endif()
 
 # include all components
 add_executable(${PROJECT_NAME} src/eomx.cpp)
-target_include_directories(${PROJECT_NAME}
-  PRIVATE ~/include
-  PRIVATE ${PROJECT_SOURCE_DIR}/include
-)
-target_include_directories(eom
-  PRIVATE /usr/include/eigen3
-  PRIVATE ~/include
-  PRIVATE ${PROJECT_SOURCE_DIR}/include
-)
-target_link_libraries(eom
-  PRIVATE Eigen3::Eigen
-  PRIVATE sofalib)
-target_link_libraries(${PROJECT_NAME}
-  PRIVATE Eigen3::Eigen
-  PRIVATE sofalib
-  PRIVATE eom)
+if (${USE_GENPL})
+  target_include_directories(${PROJECT_NAME}
+    PRIVATE ~/include
+    PRIVATE ${INCLUDE_GEN}
+    PRIVATE ${PROJECT_SOURCE_DIR}/include
+  )
+  target_include_directories(eom
+    PRIVATE /usr/include/eigen3
+    PRIVATE ~/include
+    PRIVATE ${INCLUDE_GEN}
+    PRIVATE ${PROJECT_SOURCE_DIR}/include
+  )
+  target_link_libraries(eom
+    PRIVATE Eigen3::Eigen
+    PRIVATE genlib
+    PRIVATE sofalib)
+  target_link_libraries(${PROJECT_NAME}
+    PRIVATE Eigen3::Eigen
+    PRIVATE sofalib
+    PRIVATE genlib
+    PRIVATE eom)
+else()
+  target_include_directories(${PROJECT_NAME}
+    PRIVATE ~/include
+    PRIVATE ${PROJECT_SOURCE_DIR}/include
+  )
+  target_include_directories(eom
+    PRIVATE /usr/include/eigen3
+    PRIVATE ~/include
+    PRIVATE ${PROJECT_SOURCE_DIR}/include
+  )
+  target_link_libraries(eom
+    PRIVATE Eigen3::Eigen
+    PRIVATE sofalib)
+  target_link_libraries(${PROJECT_NAME}
+    PRIVATE Eigen3::Eigen
+    PRIVATE sofalib
+    PRIVATE eom)
+endif()
