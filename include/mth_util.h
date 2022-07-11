@@ -32,13 +32,36 @@ int sgn(T val) {
 
 
 /**
- * @param  Input for which to compute the factorial
+ * Computes n!
+ *
+ * @tparam  T  Type supporting basic arithmetic and comparisons
+ *
+ * @param  n  Input for which to compute the factorial
  *
  * @return  n!
  */
-constexpr int factorial(int n)
+template <typename T>
+constexpr T factorial(T n)
 {
-  return (n>1) ? n*factorial(n-1) : 1;
+  return (n>static_cast<T>(1)) ?  n*factorial(n-static_cast<T>(1)) :
+                                  static_cast<T>(1);
+}
+
+
+/**
+ * Computes n!/d!
+ *
+ * @tparam  T  Type supporting basic arithmetic and comparisons
+ *
+ * @param  n  Input for which to compute the factorial in the numerator
+ * @param  d  Input for which to compute the factorial in the denominator
+ *
+ * @return  n!/d!
+ */
+template <typename T>
+constexpr T factorial(T n, T d)
+{
+  return (n>d) ? n*factorial(n-static_cast<T>(1), d) : static_cast<T>(1);
 }
 
 

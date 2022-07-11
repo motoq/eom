@@ -28,7 +28,7 @@ void print_ephemeris(std::string file_name,
                      const Duration& dtout, EphemFrame frame,
                      const std::shared_ptr<const Ephemeris>& orbit)
 {
-  std::ofstream fout(file_name.c_str());
+  std::ofstream fout(file_name);
   if (fout.is_open()) {
     double seconds {cal_const::sec_per_day*(jdStop - jdStart)};
     double dtsec   {phy_const::sec_per_tu*dtout.getTu()};

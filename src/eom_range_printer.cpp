@@ -79,7 +79,7 @@ void EomRangePrinter::validate()
 
 void EomRangePrinter::execute() const
 {
-  std::ofstream fout(file_name.c_str());
+  std::ofstream fout(file_name);
 
   if (fout.is_open()) {
     double tot_time {to_time_units*phy_const::tu_per_day*(jdStop - jdStart)};

@@ -14,7 +14,6 @@
 
 #include <Eigen/Dense>
 
-#include <phy_const.h>
 #include <cal_julian_date.h>
 #include <astro_ephemeris.h>
 #include <astro_ecfeci_sys.h>
