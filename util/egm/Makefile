@@ -1,6 +1,5 @@
 CC = g++
 CPPFLAGS = -g -Wall -I../../include
-LFLAGS = -L../../build -leom
 
 OBJECTS := $(patsubst %.cpp,%.o,$(wildcard *.cpp))
 

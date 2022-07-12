@@ -100,7 +100,7 @@ int main(int argc, char* argv[])
   double snm;
   std::string input_line;
   std::vector<egm_rec> egm_data;
-    // Read required number of values and unormalize
+    // Read required number of values and unormalize.
   while (std::getline(fin, input_line)) {
     std::replace(input_line.begin(), input_line.end(), 'D', 'e');
     std::stringstream ss(input_line);
@@ -108,14 +108,18 @@ int main(int argc, char* argv[])
       std::cerr << "Error parsing: " << input_line;
       return 0;
     }
-    if (degree > max_degree  ||  order > max_order) {
+      // Use degree to mark end of file parsing
+    if (degree > max_degree) {
       break;
     }
-    auto norm_fact = astro_math::kaula_norm(static_cast<double>(degree),
-                                            static_cast<double>(order));
-    cnm /= norm_fact;
-    snm /= norm_fact;
-    egm_data.emplace_back(degree, order, cnm, snm);
+      // Only include if order is also within desired range
+    if (order <= max_order) {
+      auto norm_fact = astro_math::kaula_norm(static_cast<double>(degree),
+                                              static_cast<double>(order));
+      cnm /= norm_fact;
+      snm /= norm_fact;
+      egm_data.emplace_back(degree, order, cnm, snm);
+    }
   }
   fin.close();
 

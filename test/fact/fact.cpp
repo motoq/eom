@@ -9,6 +9,10 @@ void print_fact(T n, T d)
 
   using namespace mth_util;
   std::cout << '\n' << "factorial(" << n << ")    = " << factorial(n);
+  std::cout << "\n---";
+  std::cout << '\n' << "factorial(" << n << "/"  << d <<
+                                            ")  = " << factorial(n)/
+                                                         factorial(d);
   std::cout << '\n' << "factorial(" << n << ", " << d <<
                                             ") = " << factorial(n, d);
 }
