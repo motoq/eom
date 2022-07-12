@@ -41,12 +41,11 @@ struct egm_rec {
     // Sorting operator
   bool operator<(const egm_rec& rec) const
   {
-      // Sort by zonals first
-    if (order == 0  &&  rec.order == 0) {
+    if (order ==  rec.order) {
       return degree < rec.degree;
+    } else {
+      return order < rec.order  ; 
     }
-
-    return order < rec.order  ; 
   }
 };
 

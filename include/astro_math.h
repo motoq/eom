@@ -32,11 +32,8 @@ namespace astro_math {
 template <typename T>
 constexpr double kaula_norm(T n, T m)
 {
-  //return std::sqrt(mth_util::factorial(n + m, n - m)/
-  //                 ((m == 0) ? 1.0 : 2.0)*(2.0*n + 1.0));
-  return std::sqrt(mth_util::factorial(n + m)/(mth_util::factorial(n-m)*
-                                               ((m == 0) ? 1.0 : 2.0)*
-                                               (2.0*n + 1.0))
+  return std::sqrt(mth_util::factorial(n + m, n-m)/(((m == 0) ? 1.0 : 2.0)*
+                                                    (2.0*n + 1.0))
                   );
 }
 
