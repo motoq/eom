@@ -27,7 +27,12 @@ namespace eom {
  */
 class OrbitalElements : public Printable {
 public:
-  virtual ~OrbitalElements() {}
+  virtual ~OrbitalElements() = default;
+  OrbitalElements() = default;
+  OrbitalElements(const OrbitalElements&) = delete;
+  OrbitalElements& operator=(const OrbitalElements&) = delete;
+  OrbitalElements(OrbitalElements&&) = delete;
+  OrbitalElements& operator=(OrbitalElements&&) = delete;
 
   /**
    * @return  Orbital elements, various systems of units depending on
