@@ -133,7 +133,9 @@ int main(int argc, char* argv[])
       return 0;
     }
       // Degree index
-    fout << "constexpr int nc {" << egm_data.size() << "};";
+    fout << "constexpr int degree {" << max_degree << "};";
+    fout << "\nconstexpr int order {" << max_order << "};";
+    fout << "\nconstexpr int nc {" << egm_data.size() << "};";
     fout << "\nconstexpr std::array<int, nc> xn = \n  {";
     for (const auto& rec : egm_data) {
       fout << '\n';
@@ -156,7 +158,7 @@ int main(int argc, char* argv[])
     fout << "\n  };";
     fout.precision(15);
     fout << std::scientific;
-    fout << "\nconstexpr std::array<int, nc> cnm = \n  {";
+    fout << "\nconstexpr std::array<double, nc> cnm = \n  {";
     for (const auto& rec : egm_data) {
       fout << '\n';
       fout.width(25);
@@ -166,7 +168,7 @@ int main(int argc, char* argv[])
     fout.seekp(-1, std::ios_base::cur);
       // Sine terms
     fout << "\n  };";
-    fout << "\nconstexpr std::array<int, nc> snm = \n  {";
+    fout << "\nconstexpr std::array<double, nc> snm = \n  {";
     for (const auto& rec : egm_data) {
       fout << '\n';
       fout.width(25);

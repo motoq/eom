@@ -31,7 +31,12 @@ enum class EphemFrame {
  */
 class Ephemeris {
 public:
-  virtual ~Ephemeris() {}
+  virtual ~Ephemeris() = default;
+  Ephemeris() = default;
+  Ephemeris(const Ephemeris&) = delete;
+  Ephemeris& operator=(const Ephemeris&) = delete;
+  Ephemeris(Ephemeris&&) = delete;
+  Ephemeris& operator=(Ephemeris&&) = delete;
 
   /**
    * @param  jd     UTC time for which to return a state vector

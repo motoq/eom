@@ -26,6 +26,12 @@ namespace eom {
  */
 class OscJ2 : public Ephemeris {
 public:
+  ~OscJ2() = default;
+  OscJ2(const OscJ2&) = default;
+  OscJ2& operator=(const OscJ2&) = default;
+  OscJ2(OscJ2&&) = default;
+  OscJ2& operator=(OscJ2&&) = default;
+
   /**
    * Initialize OscJ2
    *
