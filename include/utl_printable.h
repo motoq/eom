@@ -21,7 +21,12 @@ namespace eom {
  */
 class Printable {
 public:
-  virtual ~Printable() {}
+  virtual ~Printable() = default;
+  Printable() = default;
+  Printable(const Printable&) = default;              // vs. delete
+  Printable& operator=(const Printable&) = delete;
+  Printable(Printable&&) = delete;
+  Printable& operator=(Printable&&) = delete;
 
   /**
    * Print contents to input stream

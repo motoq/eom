@@ -43,6 +43,12 @@ struct ecf_eci {
  */
 class EcfEciSys : public Printable {
 public:
+  ~EcfEciSys() = default;
+  EcfEciSys(const EcfEciSys&) = default;
+  EcfEciSys& operator=(const EcfEciSys&) = default;
+  EcfEciSys(EcfEciSys&&) = default;
+  EcfEciSys& operator=(EcfEciSys&&) = default;
+
   /**
    * This constructor creates an ECF to ECI conversion utility that
    * makes use of a list of generated precession and nutation data.  It

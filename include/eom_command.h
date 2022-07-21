@@ -32,7 +32,12 @@ public:
  */
 class EomCommand {
 public:
-  virtual ~EomCommand() {}
+  virtual ~EomCommand() = default;
+  EomCommand() = default;
+  EomCommand(const EomCommand&) = delete;
+  EomCommand& operator=(const EomCommand&) = delete;
+  EomCommand(EomCommand&&) = delete;
+  EomCommand& operator=(EomCommand&&) = delete;
 
   /**
    * Perform final validation of command before potentially

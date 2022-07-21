@@ -29,6 +29,12 @@ namespace eom_app {
  */
 class EomConfig : public eom::Printable {
 public:
+  ~EomConfig() = default;
+  EomConfig(const EomConfig&) = default;
+  EomConfig& operator=(const EomConfig&) = default;
+  EomConfig(EomConfig&&) = default;
+  EomConfig& operator=(EomConfig&&) = default;
+
   /**
    * Initialize with default values.  The default settings are valid,
    * but not very useful.

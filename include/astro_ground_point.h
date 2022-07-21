@@ -39,6 +39,12 @@ enum class FukStarter {
  */
 class GroundPoint : public Printable {
 public:
+  ~GroundPoint() = default;
+  GroundPoint(const GroundPoint&) = default;
+  GroundPoint& operator=(const GroundPoint&) = default;
+  GroundPoint(GroundPoint&&) = default;
+  GroundPoint& operator=(GroundPoint&&) = default;
+
   /**
    * Initialize with geodetic coordinates
    *

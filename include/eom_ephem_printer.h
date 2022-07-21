@@ -29,6 +29,12 @@ namespace eom_app {
  */
 class EomEphemPrinter : public EomCommand {
 public:
+  ~EomEphemPrinter() = default;
+  EomEphemPrinter(const EomEphemPrinter&) = default;
+  EomEphemPrinter& operator=(const EomEphemPrinter&) = default;
+  EomEphemPrinter(EomEphemPrinter&&) = default;
+  EomEphemPrinter& operator=(EomEphemPrinter&&) = default;
+
   /**
    * Converts string tokens into an ephemeris print command.
    *

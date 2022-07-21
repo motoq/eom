@@ -31,6 +31,12 @@ namespace eom_app {
  */
 class EomRangePrinter : public EomCommand {
 public:
+  ~EomRangePrinter() = default;
+  EomRangePrinter(const EomRangePrinter&) = default;
+  EomRangePrinter& operator=(const EomRangePrinter&) = default;
+  EomRangePrinter(EomRangePrinter&&) = default;
+  EomRangePrinter& operator=(EomRangePrinter&&) = default;
+
   /**
    * Converts string tokens into a command computing the range between
    * two ephemeris sources as a function of time.
