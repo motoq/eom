@@ -25,7 +25,7 @@ namespace mth_util {
  * From stackoverflow.com but I gave up searching how to properly
  * cite...
  */
-template <typename T>
+template<typename T>
 int sgn(T val) {
   return (static_cast<T>(0) < val) - (val < static_cast<T>(0));
 }
@@ -40,7 +40,7 @@ int sgn(T val) {
  *
  * @return  n!
  */
-template <typename T>
+template<typename T>
 constexpr T factorial(T n)
 {
   return (n>static_cast<T>(1)) ?  n*factorial(n-static_cast<T>(1)) :
@@ -58,7 +58,7 @@ constexpr T factorial(T n)
  *
  * @return  n!/d!
  */
-template <typename T>
+template<typename T>
 constexpr T factorial(T n, T d)
 {
   return (n>d) ? n*factorial(n-static_cast<T>(1), d) : static_cast<T>(1);

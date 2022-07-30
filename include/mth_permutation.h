@@ -26,7 +26,7 @@ namespace eom {
  * @author  Kurt Motekew
  * @date    2022/06/18
  */
-template <unsigned int DIM>
+template<unsigned int DIM>
 class Permutation {
 public:
   /**
@@ -80,7 +80,7 @@ private:
 };
 
 
-template <unsigned int DIM>
+template<unsigned int DIM>
 Permutation<DIM>::Permutation()
 {
     // create the set {1, 2,..., n}

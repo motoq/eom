@@ -46,7 +46,7 @@ namespace eom {
  * @author  Kurt Motekew
  * @date    2022/06/22
  */
-template <typename T, unsigned int N>
+template<typename T, unsigned int N>
 class CrossProduct {
 public:
   /**
@@ -79,7 +79,7 @@ private:
 };
   
   // Implementation of the cross product
-template <typename T, unsigned int N>
+template<typename T, unsigned int N>
 Eigen::Matrix<T, N, 1>
 CrossProduct<T,N>::operator()(const Eigen::Matrix<T, N, N-1U>& uMat)
 {
@@ -131,7 +131,7 @@ CrossProduct<T,N>::operator()(const Eigen::Matrix<T, N, N-1U>& uMat)
  * @author  Kurt Motekew
  * @date    2022/06/23
  */
-template <typename T>
+template<typename T>
 Eigen::Matrix<T, Eigen::Dynamic, 1>
 cross_product(const Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>& uMat)
 {
