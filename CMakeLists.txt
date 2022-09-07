@@ -23,7 +23,7 @@ set(CMAKE_BUILD_TYPE Debug)
 
 find_package (Eigen3 3.3 REQUIRED NO_MODULE)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -45,6 +45,7 @@ set(SOURCES
   src/cal_greg_date.cpp
   src/cal_julian_date.cpp
   src/astro_build_orbit.cpp
+  src/astro_deq.cpp
   src/astro_earth_surf.cpp
   src/astro_earth_xt.cpp
   src/astro_ecfeci_sys.cpp
