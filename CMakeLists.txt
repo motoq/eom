@@ -54,6 +54,7 @@ set(SOURCES
   src/astro_keplerian.cpp
   src/astro_orbit_def.cpp
   src/astro_rel_orbit_def.cpp
+  src/astro_rk4.cpp
   src/astro_kepler.cpp
   src/astro_vinti.cpp
   src/astro_print_ephemeris.cpp

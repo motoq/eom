@@ -9,7 +9,6 @@
 #ifndef ASTRO_DEQ_H
 #define ASTRO_DEQ_H
 
-#include <array>
 #include <memory>
 
 #include <Eigen/Dense>
@@ -33,9 +32,10 @@ public:
   Deq& operator=(Deq&&) = default;
 
   /**
-   * Initialize with force model.
+   * Initialize with gravity model and earth transformation service.
    *
-   * @param  Gravity model to take possesion of
+   * @param  grav    Gravity model to take possesion of
+   * @param  ecfeci  ECF/ECI conversion resource
    */
   Deq(std::unique_ptr<Gravity> grav,
       const std::shared_ptr<const EcfEciSys>& ecfeci);

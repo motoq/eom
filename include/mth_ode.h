@@ -17,13 +17,14 @@ namespace eom {
  * Interface defining a system of 1st order ordinary differential
  * equations.
  *
- * @tparam  T  Time type
- * @tparam  F  Data type of state vector
+ * @tparam  T    Time type
+ * @tparam  F    Data type of state vector
+ * @tparam  DIM  State vector dimension
  *
  * @author  Kurt Motekew
  * @date    2022/07/27
  */
-template <typename T, typename F, unsigned int DIM>
+template <typename T, typename F, int DIM>
 class Ode {
 public:
   virtual ~Ode() = default;
