@@ -8,9 +8,9 @@
 
 #include <eom_parse.h>
 
-#include <stdexcept>
 #include <string>
 #include <deque>
+#include <stdexcept>
 
 #include <cal_greg_date.h>
 #include <cal_julian_date.h>

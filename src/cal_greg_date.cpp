@@ -8,8 +8,8 @@
 
 #include <cal_greg_date.h>
 
-#include <stdexcept>
 #include <string>
+#include <stdexcept>
 
 // Internal constants
 namespace {

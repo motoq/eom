@@ -12,6 +12,7 @@
 #include <string>
 #include <deque>
 #include <utility>
+#include <stdexcept>
 
 #include <astro_ground_point.h>
 

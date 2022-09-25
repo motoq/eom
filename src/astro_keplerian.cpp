@@ -1,10 +1,10 @@
 #include <astro_keplerian.h>
 
-#include <stdexcept>
 #include <ostream>
 #include <iomanip>
 #include <cmath>
 #include <array>
+#include <stdexcept>
 
 #include <Eigen/Dense>
 #include <Eigen/Geometry>

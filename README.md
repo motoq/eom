@@ -1,8 +1,8 @@
 eom
 ===
 
-Equations of Motion
--------------------
+Equations of Motion for Astrodynamics
+-------------------------------------
 
 The Equations of Motion project provides an application with built in
 astrodynamics related functionality along with a library to aid in the
@@ -33,7 +33,7 @@ optionally returning the handle to the figure along with the raw data.
 rely and external libraries may leverage.  The first is the
 International Astronomical Union Standards of Fundamental Astronomy (IAU
 SOFA) C library <http://www.iausofa.org/>.  Installation of SOFA-Issue
-2015-02-09 or newer is required to build VMSAT.  The second library is
+2015-02-09 or newer is required to build **eom**.  The second library is
 the Eigen 3 C++ template library for linear algebra
 <http://eigen.tuxfamily.org>.  In the future, Kitware’s VTK OpenGL
 library will be used for direct plotting of graphics.
@@ -56,7 +56,7 @@ C++ was chosen for development because:
 2. A number of mature and fast C++ math libraries are available
 3. Code designed to run on hardware can be tested
 4. Modern C++ is a really great language, despite all the baggage (a
-   C++17 compatible compiler is required)
+   C++20 compatible compiler is required)
 
 The Mozilla Public License 2.0 (MPL2) was chosen because it protects the
 open source nature of this code while still allowing it to be used with

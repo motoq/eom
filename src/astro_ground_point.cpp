@@ -11,6 +11,7 @@
 #include <ostream>
 #include <iomanip>
 #include <cmath>
+#include <stdexcept>
 
 #include <Eigen/Dense>
 

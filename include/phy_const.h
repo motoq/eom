@@ -30,8 +30,12 @@ namespace phy_const {
   constexpr double km_per_er {6378.1370};
   /** Ellipsoid flattening, WGS 84 */
   constexpr double flat {1.0/298.257223563};
-  constexpr double j2 {1.08262668355e-3};
-  constexpr double j3 {-2.5327e-6};
+  /** EGM96 Zonals */
+  constexpr double j2 {1.082626173852223e-03};
+  constexpr double j3 {-2.532410518567722e-06};
+  constexpr double j4 {-1.619897599916973e-06};
+  constexpr double j5 {-2.277535907308362e-07};
+  constexpr double j6 {5.406665762838132e-07};
   /** Gravitational parameter, EGM96/EGM2008, TN 36 TT compatible, km^3/s^2 */
   constexpr double gm_km3_sec2 {398600.4415};
   /** Gravitational scaling radius, EGM96/EGM2008, TN 36 TT compatible, km */

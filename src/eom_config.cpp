@@ -8,10 +8,10 @@
 
 #include <eom_config.h>
 
-#include <stdexcept>
 #include <ostream>
 #include <string>
 #include <deque>
+#include <stdexcept>
 
 #include <phy_const.h>
 #include <utl_units.h>

@@ -9,8 +9,8 @@
 #include <astro_ecfeci_sys.h>
 
 #include <ostream>
-#include <stdexcept>
 #include <memory>
+#include <stdexcept>
 
 #include <Eigen/Dense>
 #include <Eigen/Geometry>

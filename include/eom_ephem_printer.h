@@ -46,10 +46,10 @@ public:
    * @param  jdEphStop     Time of final ephemeris output
    * @param  ephemerides   Ordered list of ephemeris sources
    *
-   * @throw  invalid_argument if exactly 3 tokens are not present, or an
-   *         error is encountered (such as the input orbit name is not a
-   *         valid orbit, or an invalid output reference frame is not
-   *         selected.
+   * @throws  invalid_argument if exactly 3 tokens are not present, or an
+   *          error is encountered (such as the input orbit name is not a
+   *          valid orbit, or an invalid output reference frame is not
+   *          selected.
    */
   EomEphemPrinter(std::deque<std::string>& tokens,
       const eom::JulianDate& jdEphStart, const eom::JulianDate& jdEphStop,
@@ -60,7 +60,7 @@ public:
   /**
    * Checks that input ephemeris source is valid
    *
-   * @throw  CmdValidateException if validation fails
+   * @throws  CmdValidateException if validation fails
    */
   void validate() override;
 

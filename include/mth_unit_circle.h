@@ -10,6 +10,7 @@
 #define MTH_UNIT_CIRCLE_H
 
 #include <cmath>
+#include <stdexcept>
 
 #include <Eigen/Dense>
 
@@ -35,8 +36,8 @@ namespace mth_unit_circle {
  *
  * @return   Location of intersection on the circle
  *
- * @throw  NoSolutionException When the pointing vector does not
- *                             intersect the circle.
+ * @throws  NoSolutionException When the pointing vector does not
+ *                              intersect the circle.
  *
  * @author  Kurt Motekew  2022/01/27
  */

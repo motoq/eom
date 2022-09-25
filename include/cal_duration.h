@@ -25,7 +25,7 @@ namespace eom {
 class Duration {
 public:
   /**
-   * Default zero duration
+   * Default to 1 TU
    */
   Duration() : tu {1.0}, days {phy_const::day_per_tu}
   {

@@ -8,9 +8,9 @@
 
 #include <eom_parse.h>
 
-#include <stdexcept>
 #include <string>
 #include <deque>
+#include <stdexcept>
 
 #include <utl_units.h>
 #include <cal_duration.h>
