@@ -29,7 +29,8 @@ namespace {
 namespace eom {
 
 /*
- * Based on Vallado's 4th edition, Algorithm 10: COE2RV
+ * Based on Vallado's "Fundamentals of Astrodynamics and Applications",
+ * 4th edition, Algorithm 10: COE2RV
  */
 Keplerian::Keplerian(const std::array<double, 6>& oe)
 {
@@ -77,7 +78,8 @@ void Keplerian::set(const std::array<double, 6>& oe)
 
 
 /*
- * Based on Vallado's 4th edition, Algorithm 9: RV2COE
+ * Based on Vallado's "Fundamentals of Astrodynamics and Applications",
+ * 4th edition, Algorithm 9: RV2COE
  */
 Keplerian::Keplerian(const Eigen::Matrix<double, 6, 1>& cart)
 {
@@ -138,7 +140,8 @@ Keplerian::Keplerian(const Eigen::Matrix<double, 6, 1>& cart)
 
 
 /*
- * Based on Vallado's 4th edition, Algorithm 5: RV2COE
+ * Based on Vallado's "Fundamentals of Astrodynamics and Applications",
+ * 4th edition, Algorithm 5: RV2COE
  */
 double Keplerian::getEccentricAnomaly() const
 {
@@ -160,7 +163,8 @@ double Keplerian::getMeanAnomaly() const
 
 
 /*
- * Based on Vallado's 4th edition, Algorithms 2 KepEqtnE and 6 Anomaly to
+ * Based on Vallado's "Fundamentals of Astrodynamics and Applications",
+ * 4th edition, Algorithms 2 KepEqtnE and 6 Anomaly to
  */
 void Keplerian::setWithMeanAnomaly(double ma)
 {

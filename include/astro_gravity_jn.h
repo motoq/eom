@@ -16,7 +16,7 @@
 namespace eom {
 
 /**
- * Simple zonal harmonic gravity model including up to J3.
+ * Simple zonal harmonic gravity model including up to J4.
  *
  * This gravity model is thread safe.
  *
@@ -34,10 +34,9 @@ public:
   /**
    * Initialize with desired degree.
    *
-   * @param  degree  Desired degree of model.  A maximum of J6 is
-   *                 allowed.
+   * @param  degree  Desired degree of model, up to J4.
    *
-   * @throws  runtime_error if degree exceeds allowed dimensions.
+   * @throws  runtime_error if degree exceeds limits
    */
   GravityJn(int degree);
 

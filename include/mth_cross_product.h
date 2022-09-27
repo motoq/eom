@@ -10,6 +10,7 @@
 #define MTH_CROSS_PRODUCT_H
 
 #include <vector>
+#include <string>
 #include <algorithm>
 #include <stdexcept>
 
@@ -137,7 +138,9 @@ cross_product(const Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>& uMat)
 {
   auto rows = uMat.rows();
   if (uMat.cols() != rows - 1) {
-    throw std::invalid_argument("eom::cross Nx(N-1) input matrix expected");
+    throw std::invalid_argument("eom::cross_product incompatible dim: " +
+                                std::to_string(uMat.cols()) + "x" +
+                                std::to_string(rows) + " vs. Nx(Nx1)");
   }
 
     // Initialize cross product for accumulation

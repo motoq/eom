@@ -104,18 +104,18 @@ EopSys::EopSys(std::string fname,
         eop.xp = std::stod(eop_tokens[xp_ndx]);
         eop.yp = std::stod(eop_tokens[yp_ndx]);
         eop.ut1mutc = std::stod(eop_tokens[ut1mutc_ndx]);
-      } catch(std::invalid_argument const& ex) {
+      } catch(const std::invalid_argument& ex) {
         ;
       }
       try {
         eop.lod = std::stod(eop_tokens[lod_ndx]);
-      } catch(std::invalid_argument const& ex) {
+      } catch(const std::invalid_argument& ex) {
         ;
       }
       try {
         eop.dx = std::stod(eop_tokens[dx_ndx]);
         eop.dy = std::stod(eop_tokens[dy_ndx]);
-      } catch(std::invalid_argument const& ex) {
+      } catch(const std::invalid_argument& ex) {
         ;
       }
       eopData.push_back(eop);
