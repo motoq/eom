@@ -37,7 +37,7 @@ EomCommandBuilder::buildCommand(std::deque<std::string>& tokens,
                                 const EomConfig& cfg)
 {
   if (tokens.size() < 1) {
-    throw std::invalid_argument("EomCommandBuilder::buildCommand: No tokens");
+    throw std::invalid_argument("EomCommandBuilder::buildCommand No tokens");
   }
   auto command_str = tokens[0];
   tokens.pop_front();
@@ -56,7 +56,8 @@ EomCommandBuilder::buildCommand(std::deque<std::string>& tokens,
         std::make_unique<EomRtcPrinter>(tokens, cfg, m_ephemerides);
     return command;
   } else {
-    throw std::invalid_argument("Invalid command type: " + command_str);
+    throw std::invalid_argument(
+        "EomCommandBuilder::buildCommand Invalid command type: " + command_str);
   }
 }
 
