@@ -45,7 +45,7 @@ eom::RelOrbitDef parse_rel_orbit_def(std::deque<std::string>& tokens,
         dx[ii] = du_per_io*std::stod(tokens[0]);
         tokens.pop_front();
       }
-    } catch(std::invalid_argument& ia) {
+    } catch (const std::invalid_argument& ia) {
       throw std::invalid_argument("eom_app::parse_rel_orbit_def"s +
                                   "  invalid relative orbit parameter type"s);
     }

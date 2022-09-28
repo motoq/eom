@@ -34,7 +34,7 @@ eom::Duration parse_duration(std::deque<std::string>& tokens)
   try {
     dur = std::stod(tokens[0]);
     tokens.pop_front();
-  } catch(std::invalid_argument& ia) {
+  } catch (const std::invalid_argument& ia) {
     throw std::invalid_argument("eom_app::parse_duration(): Invalid Duration");
   }
   if (model == "Days") {

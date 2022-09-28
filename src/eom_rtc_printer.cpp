@@ -70,7 +70,7 @@ void EomRtcPrinter::validate()
   for (int ii=0; ii<2; ++ii) {
     try {
       eph[ii] = m_ephemerides->at(orbit_names[ii]);
-    } catch (std::out_of_range& oor) {
+    } catch (const std::out_of_range& oor) {
       throw CmdValidateException("EomRtcPrinter::validate:"s +
                                  " Invalid orbit name in PrintRange: "s +
                                  orbit_names[ii]);

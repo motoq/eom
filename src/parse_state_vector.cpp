@@ -43,7 +43,7 @@ std::array<double, 6> parse_state_vector(std::deque<std::string>& tokens,
           xeci[ii] *= io_per_tu;
         }
       }
-    } catch(std::invalid_argument& ia) {
+    } catch (const std::invalid_argument& ia) {
       throw std::invalid_argument("eom_app::parse_state_vector"s +
                                   "  invalid parameter type"s);
     }

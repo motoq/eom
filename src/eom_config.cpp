@@ -39,7 +39,7 @@ void EomConfig::setStartTime(std::deque<std::string>& tokens)
     jdStop = jdStart;
     valid = true;
     epoch_set = true;
-  } catch(std::invalid_argument& ia) {
+  } catch (const std::invalid_argument& ia) {
     error_string = ia.what();
     return;
   }
@@ -57,7 +57,7 @@ void EomConfig::setDuration(std::deque<std::string>& tokens)
     auto dur = parse_duration(tokens);
     jdStop = jdStart + dur;
     valid = true;
-  } catch(std::invalid_argument& ia) {
+  } catch (const std::invalid_argument& ia) {
     error_string = ia.what();
     error_string += "  EomConfig::setDuration";
   }
@@ -78,7 +78,7 @@ void EomConfig::setLeapSeconds(std::deque<std::string>& tokens)
     ls.setTai_Utc(seconds);
     valid = true;
     leapsec_set = true;
-  } catch(std::invalid_argument& ia) {
+  } catch (const std::invalid_argument& ia) {
     error_string = ia.what();
     error_string += " EomConfig::setLeapSeconds";
   }
@@ -96,7 +96,7 @@ void EomConfig::setEcfEciRate(std::deque<std::string>& tokens)
     dtEcfEci = parse_duration(tokens);
     valid = true;
     f2i_rate_set = true;
-  } catch(std::invalid_argument& ia) {
+  } catch (const std::invalid_argument& ia) {
     error_string = ia.what();
     error_string += "  EomConfig::setEcfEciRate";
   }
@@ -116,7 +116,7 @@ void EomConfig::setIoPerRad(std::deque<std::string>& tokens)
   try {
     io_per_rad = utl_units::per_rad.at(units_angle);
     valid = true;
-  } catch (std::out_of_range& oor) {
+  } catch (const std::out_of_range& oor) {
     throw std::invalid_argument("EomConfig::setIoPerRad:"s +
                                 " Invalid units type: "s + units_angle);
   }
@@ -136,7 +136,7 @@ void EomConfig::setIoPerDu(std::deque<std::string>& tokens)
   try {
     io_per_du = utl_units::per_du.at(units_distance);
     valid = true;
-  } catch (std::out_of_range& oor) {
+  } catch (const std::out_of_range& oor) {
     throw std::invalid_argument("EomConfig::setIoPerDu:"s +
                                 " Invalid units type: "s + units_distance);
   }
@@ -156,7 +156,7 @@ void EomConfig::setIoPerTu(std::deque<std::string>& tokens)
   try {
     io_per_tu = utl_units::per_tu.at(units_time);
     valid = true;
-  } catch (std::out_of_range& oor) {
+  } catch (const std::out_of_range& oor) {
     throw std::invalid_argument("EomConfig::setIoPerTu:"s +
                                 " Invalid units type: "s + units_time);
   }
@@ -173,7 +173,7 @@ void EomConfig::setOutputRate(std::deque<std::string>& tokens)
   try {
     dtOut = parse_duration(tokens);
     valid = true;
-  } catch(std::invalid_argument& ia) {
+  } catch (const std::invalid_argument& ia) {
     error_string = ia.what();
     error_string += "  EomConfig::setOutputRate";
   }

@@ -46,7 +46,7 @@ parse_ground_point(std::deque<std::string>& tokens, const EomConfig& cfg)
       tokens.pop_front();
       eom::GroundPoint gp(lat, lon, alt);
       return std::make_pair(name, gp);
-    } catch(std::invalid_argument& ia) {
+    } catch (const std::invalid_argument& ia) {
       throw std::invalid_argument("eom_app::parse_ground_point"s +
                                   "  invalid parameter type"s);
     }

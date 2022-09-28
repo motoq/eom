@@ -48,7 +48,7 @@ eom::JulianDate parse_datetime(std::deque<std::string>& tokens)
         tokens.pop_front();
         eom::JulianDate jd(gd, hours, minutes, seconds);
         return jd;
-      } catch(std::invalid_argument& ia) {
+      } catch (const std::invalid_argument& ia) {
         throw std::invalid_argument("eom_app::parse_datetime:"s +
                                     "  error parsing GD values"s);
       }

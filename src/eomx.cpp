@@ -153,7 +153,7 @@ int main(int argc, char* argv[])
               try {
                 orbit_defs.push_back(eom_app::parse_orbit_def(tokens, cfg));
                 input_error = false;
-              } catch (std::invalid_argument& ia) {
+              } catch (const std::invalid_argument& ia) {
                 std::string xerror = ia.what();
                 other_error = "Invalid Orbit definition: " + xerror;
               }
@@ -162,7 +162,7 @@ int main(int argc, char* argv[])
                 rel_orbit_defs.push_back(eom_app::parse_rel_orbit_def(tokens,
                                                                       cfg));
                 input_error = false;
-              } catch (std::invalid_argument& ia) {
+              } catch (const std::invalid_argument& ia) {
                 std::string xerror = ia.what();
                 other_error = "Invalid Relative Orbit definition: " + xerror;
               }
@@ -170,7 +170,7 @@ int main(int argc, char* argv[])
               try {
                 ground_points.insert(eom_app::parse_ground_point(tokens, cfg));
                 input_error = false;
-              } catch (std::invalid_argument& ia) {
+              } catch (const std::invalid_argument& ia) {
                 std::string xerror = ia.what();
                 other_error = "Invalid Ground Point definition: " + xerror;
               }
@@ -178,7 +178,7 @@ int main(int argc, char* argv[])
               try {
                 commands.push_back(cmdBuilder.buildCommand(tokens, cfg));
                 input_error = false;
-              } catch (std::invalid_argument& ia) {
+              } catch (const std::invalid_argument& ia) {
                 std::string xerror = ia.what();
                 other_error = "Invalid Command definition: " + xerror;
               }
@@ -186,7 +186,7 @@ int main(int argc, char* argv[])
               try {
                 eom_app::eom_test(tokens);
                 input_error = false;
-              } catch (std::invalid_argument& ia) {
+              } catch (const std::invalid_argument& ia) {
                 std::string xerror = ia.what();
                 other_error = "Invalid Test type: " + xerror;
               }
@@ -310,7 +310,7 @@ int main(int argc, char* argv[])
   for (auto& cmd : commands) {
     try {
       cmd->validate();
-    } catch (eom_app::CmdValidateException& cve) {
+    } catch (const eom_app::CmdValidateException& cve) {
       std::cout << "\nError Validating Command: " << cve.what() << '\n';
       return 0;
     }

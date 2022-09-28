@@ -81,7 +81,7 @@ void EarthXt::setEarthXt(const Eigen::Matrix<double, 3, 1>& pos,
     try {
       xy = mth_unit_circle::intersect(r, p);
       earth_x = true;
-    } catch(NoSolutionException& nsl) {
+    } catch (const NoSolutionException& nsl) {
       earth_x = false;
       if (m_mode == HorizonMode::horizon_miss) {
         xy = mth_unit_circle::tangent(r, p);

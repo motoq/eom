@@ -62,7 +62,7 @@ void EomEphemPrinter::validate()
   using namespace std::string_literals;
   try {
     eph = m_ephemerides->at(orbit_name);
-  } catch (std::out_of_range& oor) {
+  } catch (const std::out_of_range& oor) {
     throw CmdValidateException("EomEphemPrinter::EomEphemPrinter:"s +
                                " Invalid orbit name in PrintEphemeris: "s +
                                orbit_name);
