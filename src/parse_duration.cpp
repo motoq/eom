@@ -24,8 +24,9 @@ eom::Duration parse_duration(std::deque<std::string>& tokens)
 
     // Only single value duration types at this time
   if (tokens.size() < 2) {
-    throw std::invalid_argument("eom_app::parse_duration():"s +
-                                "  Invalid number of tokens"s);
+    throw std::invalid_argument("eom_app::parse_duration() "s +
+                                "Invalid number of tokens: "s +
+                                std::to_string(tokens.size()));
   }
 
   auto model = tokens[0];
@@ -35,7 +36,7 @@ eom::Duration parse_duration(std::deque<std::string>& tokens)
     dur = std::stod(tokens[0]);
     tokens.pop_front();
   } catch (const std::invalid_argument& ia) {
-    throw std::invalid_argument("eom_app::parse_duration(): Invalid Duration");
+    throw std::invalid_argument("eom_app::parse_duration()  Invalid Duration");
   }
   if (model == "Days") {
     return {dur, 1.0_day};
@@ -44,8 +45,8 @@ eom::Duration parse_duration(std::deque<std::string>& tokens)
   } else if (model == "Seconds") {
     return {dur, 1.0_sec};
   } else {
-    throw std::invalid_argument("eom_app::parse_duration():"s +
-                                "  Invalid Duration Units Type"s);
+    throw std::invalid_argument("eom_app::parse_duration() "s +
+                                "Invalid Duration Units Type "s + model);
   }
 }
 

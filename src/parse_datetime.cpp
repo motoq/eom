@@ -49,16 +49,17 @@ eom::JulianDate parse_datetime(std::deque<std::string>& tokens)
         eom::JulianDate jd(gd, hours, minutes, seconds);
         return jd;
       } catch (const std::invalid_argument& ia) {
-        throw std::invalid_argument("eom_app::parse_datetime:"s +
-                                    "  error parsing GD values"s);
+        throw std::invalid_argument("eom_app::parse_datetime "s +
+                                    "error parsing GD values"s);
       }
     } else {
-      throw std::invalid_argument("eom_app::parse_datetime:"s +
-                                  "  GD type requires 6 arguments"s);
+      throw std::invalid_argument("eom_app::parse_datetime "s +
+                                  "GD type requires 6 arguments vs. "s +
+                                   std::to_string(tokens.size()));
     }
   }
-  throw std::invalid_argument("eom_app::parse_datetime:"s + 
-                              "  Invalid type: "s + model);
+  throw std::invalid_argument("eom_app::parse_datetime "s + 
+                              "Invalid type: "s + model);
 }
 
 

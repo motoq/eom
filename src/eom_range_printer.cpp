@@ -38,9 +38,9 @@ EomRangePrinter::EomRangePrinter(
     // Read orbit name, output frame, and output filename
   using namespace std::string_literals;
   if (tokens.size() != 3) {
-    throw std::invalid_argument("EomRangePrinter::EomRangePrinter:"s +
-                                " PrintRange requires 3 arguments"s +
-                                " vs. input "s +
+    throw std::invalid_argument("EomRangePrinter::EomRangePrinter "s +
+                                "PrintRange requires 3 arguments "s +
+                                "vs. input "s +
                                 std::to_string(tokens.size()));
   }
   for (int ii=0; ii<2; ++ii) {
@@ -70,8 +70,8 @@ void EomRangePrinter::validate()
     try {
       eph[ii] = m_ephemerides->at(orbit_names[ii]);
     } catch (const std::out_of_range& oor) {
-      throw CmdValidateException("EomRangePrinter::validate:"s +
-                                 " Invalid orbit name in PrintRange: "s +
+      throw CmdValidateException("EomRangePrinter::validate "s +
+                                 "Invalid orbit name in PrintRange: "s +
                                  orbit_names[ii]);
     }
   }

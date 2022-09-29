@@ -26,8 +26,9 @@ parse_ground_point(std::deque<std::string>& tokens, const EomConfig& cfg)
   using namespace std::string_literals;
     // Need at least the name, coord type, and coordinates
   if (tokens.size() < 5) {
-    throw std::invalid_argument("eom_app::parse_ground_point"s +
-                                "  5 tokens required"s);
+    throw std::invalid_argument("eom_app::parse_ground_point() "s +
+                                "5 tokens required vs. "s +
+                                std::to_string(tokens.size()));
   }
   auto name = tokens[0];
   tokens.pop_front();
@@ -47,13 +48,13 @@ parse_ground_point(std::deque<std::string>& tokens, const EomConfig& cfg)
       eom::GroundPoint gp(lat, lon, alt);
       return std::make_pair(name, gp);
     } catch (const std::invalid_argument& ia) {
-      throw std::invalid_argument("eom_app::parse_ground_point"s +
-                                  "  invalid parameter type"s);
+      throw std::invalid_argument("eom_app::parse_ground_point() "s +
+                                  "invalid LLA parameter type"s);
     }
   }
 
-  throw std::invalid_argument("eom_app::parse_ground_point"s +
-                              "  Invalid coordinate type - "s + coord_type);
+  throw std::invalid_argument("eom_app::parse_ground_point() "s +
+                              "Invalid coordinate type - "s + coord_type);
 
 }
 
