@@ -37,7 +37,7 @@ EomCommandBuilder::buildCommand(std::deque<std::string>& tokens,
                                 const EomConfig& cfg)
 {
   if (tokens.size() < 1) {
-    throw std::invalid_argument("EomCommandBuilder::buildCommand No tokens");
+    throw std::invalid_argument("EomCommandBuilder::buildCommand() No tokens");
   }
   auto command_str = tokens[0];
   tokens.pop_front();

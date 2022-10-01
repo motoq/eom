@@ -190,7 +190,7 @@ void Keplerian::setWithMeanAnomaly(double ma)
     itr++;
   }
   if (itr == niter) {
-    throw NonconvergenceException("Keplerian::setWithMeanAnomaly");
+    throw NonconvergenceException("Keplerian::setWithMeanAnomaly()");
   }
                                  
 

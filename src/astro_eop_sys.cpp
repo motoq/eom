@@ -36,7 +36,7 @@ EopSys::EopSys(std::string fname,
     // Open IERS EOP file
   std::ifstream ifs(fname);
   if (!ifs.is_open()) {
-    throw std::runtime_error("EopSys::EopSys Can't open " + fname);
+    throw std::runtime_error("EopSys::EopSys() Can't open " + fname);
   }
    // Collect column labels
   std::unordered_map<std::string, unsigned int> col_labels;
@@ -66,7 +66,7 @@ EopSys::EopSys(std::string fname,
     dx_ndx = col_labels.at("dX");
     dy_ndx = col_labels.at("dY");
   } catch (const std::out_of_range& oor) {
-    throw std::runtime_error("EopSys::EopSys Bad EOP file headers");
+    throw std::runtime_error("EopSys::EopSys() Bad EOP file headers");
   }
 
     // Force assumption of MJD being first to speed locating proper
@@ -123,9 +123,9 @@ EopSys::EopSys(std::string fname,
   }
 
   if (!found_start) {
-    throw std::runtime_error("EopSys::EopSys Can't find start MJD ");
+    throw std::runtime_error("EopSys::EopSys() Can't find start MJD ");
   } else if (!done) {
-    throw std::runtime_error("EopSys::EopSys Can't find end MJD ");
+    throw std::runtime_error("EopSys::EopSys() Can't find end MJD ");
   }
 
 }
@@ -143,11 +143,11 @@ eop_record EopSys::getEop(const JulianDate& jd) const
   auto days = mjd - mjd_first;
 
   if (days < -nsec) {
-   throw std::out_of_range("EopSys::getEop: " + std::to_string(mjd) +
+   throw std::out_of_range("EopSys::getEop() " + std::to_string(mjd) +
                            " < " + std::to_string(mjd_first));
   }
   if (mjd_last - mjd < -nsec) {
-   throw std::out_of_range("EopSys::getEop: " + std::to_string(mjd) +
+   throw std::out_of_range("EopSys::getEop() " + std::to_string(mjd) +
                            " > " + std::to_string(mjd_last));
   }
 

@@ -39,7 +39,7 @@ EomRtcPrinter::EomRtcPrinter(
     // Read orbit name, output frame, and output filename
   using namespace std::string_literals;
   if (tokens.size() != 3) {
-    throw std::invalid_argument("EomRtcPrinter::EomRtcPrinter "s +
+    throw std::invalid_argument("EomRtcPrinter::EomRtcPrinter() "s +
                                 "PrintRtc requires 3 arguments "s +
                                 "vs. input "s +
                                 std::to_string(tokens.size()));
@@ -71,7 +71,7 @@ void EomRtcPrinter::validate()
     try {
       eph[ii] = m_ephemerides->at(orbit_names[ii]);
     } catch (const std::out_of_range& oor) {
-      throw CmdValidateException("EomRtcPrinter::validate "s +
+      throw CmdValidateException("EomRtcPrinter::validate() "s +
                                  "Invalid orbit name in PrintRange: "s +
                                  orbit_names[ii]);
     }

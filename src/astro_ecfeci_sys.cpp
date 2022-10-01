@@ -133,7 +133,7 @@ ecf_eci EcfEciSys::getEcfEciData(const JulianDate& utc) const
     // Check for valid date
   double days {utc - jdStart};
   if (days < 0.0  ||  jdStop - utc < 0.0) {
-    throw std::out_of_range ("EcfEciSys::getEcfEciData Time out of range");
+    throw std::out_of_range ("EcfEciSys::getEcfEciData() Time out of range");
   }
 
     // Always need first index

@@ -122,7 +122,7 @@ GroundPoint::GroundPoint(const Eigen::Matrix<double, 3, 1>& xyz)
     }
     if (itr < 0) {
       throw NonconvergenceException(
-          "GroundPoint::GroundPoint geodetic latitude convergence");
+          "GroundPoint::GroundPoint() geodetic latitude convergence");
     }
       // Quartic zero t - now solve for geodetic latitude and altitude
     double t2 {t*t};

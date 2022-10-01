@@ -25,8 +25,9 @@ eom::RelOrbitDef parse_rel_orbit_def(std::deque<std::string>& tokens,
   using namespace std::string_literals;
     // Need at least the name, template name, and type of definition
   if (tokens.size() < 3) {
-     throw std::invalid_argument("eom_app::parse_rel_orbit_def:"s +
-                 "  Invalid number of tokens to parse_rel_orbit"s);
+     throw std::invalid_argument("eom_app::parse_rel_orbit_def() "s +
+         "Invalid number of tokens to parse_rel_orbit: "s +
+         std::to_string(tokens.size()));
   }
   auto name = tokens[0];
   tokens.pop_front();
@@ -46,15 +47,15 @@ eom::RelOrbitDef parse_rel_orbit_def(std::deque<std::string>& tokens,
         tokens.pop_front();
       }
     } catch (const std::invalid_argument& ia) {
-      throw std::invalid_argument("eom_app::parse_rel_orbit_def"s +
-                                  "  invalid relative orbit parameter type"s);
+      throw std::invalid_argument("eom_app::parse_rel_orbit_def() "s +
+                                  "invalid relative orbit parameter type"s);
     }
     eom::RelOrbitDef orbit {name, template_name, dx, eom::RelCoordType::rtct};
     return orbit;
   }
 
-  throw std::invalid_argument("eom_app::parse_rel_orbit_def:"s +
-                              "  Invalid relative orbit type type: "s + frame);
+  throw std::invalid_argument("eom_app::parse_rel_orbit_def() "s +
+                              "Invalid relative orbit type type: "s + frame);
 }
 
 }

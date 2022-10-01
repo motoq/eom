@@ -23,8 +23,9 @@ std::array<double, 6> parse_state_vector(std::deque<std::string>& tokens,
   using namespace std::string_literals;
     // Need at least the name and type of orbit
   if (tokens.size() < 8) {
-    throw std::invalid_argument("eom_app::parse_state_vector"s +
-                                "  8 tokens required"s);
+    throw std::invalid_argument("eom_app::parse_state_vector() "s +
+                                "8 tokens required vs. "s +
+                                std::to_string(tokens.size()));
   }
   auto coord_type = tokens[0];
   tokens.pop_front();
@@ -44,14 +45,14 @@ std::array<double, 6> parse_state_vector(std::deque<std::string>& tokens,
         }
       }
     } catch (const std::invalid_argument& ia) {
-      throw std::invalid_argument("eom_app::parse_state_vector"s +
-                                  "  invalid parameter type"s);
+      throw std::invalid_argument("eom_app::parse_state_vector() "s +
+                                  "invalid parameter type"s);
     }
     return xeci;
   }
 
-  throw std::invalid_argument("eom_app::parse_state_vector"s +
-                              "  Invalid frame or system - "s +
+  throw std::invalid_argument("eom_app::parse_state_vector() "s +
+                              "Invalid frame or system: "s +
                               coord_type + coord_sys);
 }
 

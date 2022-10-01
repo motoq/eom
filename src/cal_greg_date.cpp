@@ -51,10 +51,10 @@ void GregDate::set(int year, int month, int day)
 
     // Check year and month ranges
   if (year < gregyear  ||  year > maxyear) {
-    throw std::invalid_argument("GregDate::set Invalid Year: " +
+    throw std::invalid_argument("GregDate::set() Invalid Year: " +
                                 std::to_string(year));
   } else if (month < jan  ||  month > dec) {
-    throw std::invalid_argument("GregDate::set Invalid Month: " +
+    throw std::invalid_argument("GregDate::set() Invalid Month: " +
                                 std::to_string(month));
   } else {
     int offset = 0;
@@ -64,7 +64,7 @@ void GregDate::set(int year, int month, int day)
 
     int dim = nDaysInMonth[month] + offset;
     if (day < 1  ||  day > dim) {
-      throw std::invalid_argument("GregDate::set Invalid Day: " +
+      throw std::invalid_argument("GregDate::set() Invalid Day: " +
                                   std::to_string(day));
     }
   }

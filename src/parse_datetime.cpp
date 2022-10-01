@@ -23,8 +23,8 @@ eom::JulianDate parse_datetime(std::deque<std::string>& tokens)
     // Need at least the type of date/time format and the value(s)
   if (tokens.size() < 2) {
     throw std::invalid_argument(
-                 "eom_app::parse_datetime:"s +
-                 "  Invalid number of arguments to parse_date_time"s);
+                 "eom_app::parse_datetime() "s +
+                 "Invalid number of arguments to parse_date_time"s);
   }
   auto model = tokens[0];
   tokens.pop_front();
@@ -49,7 +49,7 @@ eom::JulianDate parse_datetime(std::deque<std::string>& tokens)
         eom::JulianDate jd(gd, hours, minutes, seconds);
         return jd;
       } catch (const std::invalid_argument& ia) {
-        throw std::invalid_argument("eom_app::parse_datetime "s +
+        throw std::invalid_argument("eom_app::parse_datetime() "s +
                                     "error parsing GD values"s);
       }
     } else {
@@ -58,7 +58,7 @@ eom::JulianDate parse_datetime(std::deque<std::string>& tokens)
                                    std::to_string(tokens.size()));
     }
   }
-  throw std::invalid_argument("eom_app::parse_datetime "s + 
+  throw std::invalid_argument("eom_app::parse_datetime() "s + 
                               "Invalid type: "s + model);
 }
 

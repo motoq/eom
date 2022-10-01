@@ -27,7 +27,7 @@ GravityJn::GravityJn(int degree) : nterm {degree}
 {
 
   if (degree > max_deg) {
-    throw std::invalid_argument("GravityJn::GravityJn Unsupported Degree: " +
+    throw std::invalid_argument("GravityJn::GravityJn() Unsupported Degree: " +
                                 std::to_string(degree));
   }
 }

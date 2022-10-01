@@ -117,7 +117,7 @@ void EomConfig::setIoPerRad(std::deque<std::string>& tokens)
     io_per_rad = utl_units::per_rad.at(units_angle);
     valid = true;
   } catch (const std::out_of_range& oor) {
-    throw std::invalid_argument("EomConfig::setIoPerRad "s +
+    throw std::invalid_argument("EomConfig::setIoPerRad() "s +
                                 "Invalid units type: "s + units_angle);
   }
 }
@@ -137,7 +137,7 @@ void EomConfig::setIoPerDu(std::deque<std::string>& tokens)
     io_per_du = utl_units::per_du.at(units_distance);
     valid = true;
   } catch (const std::out_of_range& oor) {
-    throw std::invalid_argument("EomConfig::setIoPerDu "s +
+    throw std::invalid_argument("EomConfig::setIoPerDu() "s +
                                 "Invalid units type: "s + units_distance);
   }
 }
@@ -157,7 +157,7 @@ void EomConfig::setIoPerTu(std::deque<std::string>& tokens)
     io_per_tu = utl_units::per_tu.at(units_time);
     valid = true;
   } catch (const std::out_of_range& oor) {
-    throw std::invalid_argument("EomConfig::setIoPerTu "s +
+    throw std::invalid_argument("EomConfig::setIoPerTu() "s +
                                 "Invalid units type: "s + units_time);
   }
 }

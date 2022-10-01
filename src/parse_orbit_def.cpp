@@ -27,8 +27,9 @@ eom::OrbitDef parse_orbit_def(std::deque<std::string>& tokens,
   using namespace std::string_literals;
     // Need at least the name and type of orbit
   if (tokens.size() < 2) {
-     throw std::invalid_argument("eom_app::parse_orbit_def:"s +
-                                 "  Invalid number of tokens to parse_orbit"s);
+     throw std::invalid_argument("eom_app::parse_orbit_def() "s +
+                                 "Invalid number of tokens to parse_orbit: "s +
+                                 std::to_string(tokens.size()));
   }
   auto name = tokens[0];
   tokens.pop_front();
@@ -74,8 +75,8 @@ eom::OrbitDef parse_orbit_def(std::deque<std::string>& tokens,
 #endif
   }
 
-  throw std::invalid_argument("eom_app::parse_orbit_def:"s +
-                              "  Invalid parse_orbit type: "s + model);
+  throw std::invalid_argument("eom_app::parse_orbit_def() "s +
+                              "Invalid parse_orbit type: "s + model);
 }
 
 }

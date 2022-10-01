@@ -33,7 +33,7 @@ EomEphemPrinter::EomEphemPrinter(std::deque<std::string>& tokens,
     // Read orbit name, output frame, and output filename
   using namespace std::string_literals;
   if (tokens.size() != 3) {
-    throw std::invalid_argument("EomEphemPrinter::EomEphemPrinter "s +
+    throw std::invalid_argument("EomEphemPrinter::EomEphemPrinter() "s +
                                 "PrintEphemeris requires 3 arguments "s +
                                 "vs. input "s +
                                 std::to_string(tokens.size()));
@@ -47,7 +47,7 @@ EomEphemPrinter::EomEphemPrinter(std::deque<std::string>& tokens,
   } else if (frame_name == "ITRF") {
     frame = eom::EphemFrame::ecf;
   } else {
-    throw std::invalid_argument("EomEphemPrinter::EomEphemPrinter "s +
+    throw std::invalid_argument("EomEphemPrinter::EomEphemPrinter() "s +
                                 "Invalid frame type in PrintEphemeris: "s +
                                 frame_name);
   }
@@ -63,7 +63,7 @@ void EomEphemPrinter::validate()
   try {
     eph = m_ephemerides->at(orbit_name);
   } catch (const std::out_of_range& oor) {
-    throw CmdValidateException("EomEphemPrinter::validate "s +
+    throw CmdValidateException("EomEphemPrinter::validate() "s +
                                "Invalid orbit name in PrintEphemeris: "s +
                                orbit_name);
   }
