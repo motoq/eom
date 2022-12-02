@@ -271,10 +271,6 @@ int main(int argc, char* argv[])
         found = true;
         std::shared_ptr<eom::Ephemeris> templateEph =
                              ephemerides->at(templateOrbit.getOrbitName());
-        Eigen::Matrix<double, 6,1> xvec {
-            templateEph->getStateVector(templateOrbit.getEpoch(),
-                                        eom::EphemFrame::eci)
-        }; 
         (*ephemerides)[relOrbit.getOrbitName()] =
              eom::build_orbit(relOrbit, templateOrbit, templateEph, f2iSys);
         std::cout << "\n  " << relOrbit.getOrbitName() <<

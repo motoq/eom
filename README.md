@@ -56,7 +56,7 @@ C++ was chosen for development because:
 2. A number of mature and fast C++ math libraries are available
 3. Code designed to run on hardware can be tested
 4. Modern C++ is a really great language, despite all the baggage (a
-   C++20 compatible compiler is required)
+   C++17 compatible compiler is required)
 
 The Mozilla Public License 2.0 (MPL2) was chosen because it protects the
 open source nature of this code while still allowing it to be used with
