@@ -9,6 +9,8 @@
 #ifndef ASTRO_EPHEMERIS_H
 #define ASTRO_EPHEMERIS_H
 
+#include <string>
+
 #include <Eigen/Dense>
 
 #include <cal_julian_date.h>
@@ -37,6 +39,11 @@ public:
   Ephemeris& operator=(const Ephemeris&) = delete;
   Ephemeris(Ephemeris&&) = delete;
   Ephemeris& operator=(Ephemeris&&) = delete;
+
+  /**
+   * @return  Unique ephemeris identifier
+   */
+  virtual std::string getName() const = 0;
 
   /**
    * @param  jd     UTC time for which to return a state vector

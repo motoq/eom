@@ -45,30 +45,48 @@ build_orbit(const OrbitDef& orbitParams,
   PropagatorConfig pCfg = orbitParams.getPropagatorConfig();
   if (pCfg.getPropagatorType() == PropagatorType::Kepler1) {
     std::unique_ptr<Ephemeris> orbit =
-           std::make_unique<Kepler>(orbitParams.getEpoch(), xeciVec, ecfeciSys);
+           std::make_unique<Kepler>(orbitParams.getOrbitName(),
+                                    orbitParams.getEpoch(),
+                                    xeciVec,
+                                    ecfeciSys);
     return orbit;
   } else if (pCfg.getPropagatorType() == PropagatorType::Vinti6) {
     std::unique_ptr<Ephemeris> orbit =
-           std::make_unique<Vinti>(orbitParams.getEpoch(), xeciVec, ecfeciSys);
+           std::make_unique<Vinti>(orbitParams.getOrbitName(),
+                                   orbitParams.getEpoch(),
+                                   xeciVec,
+                                   ecfeciSys);
     return orbit;
   } else if (pCfg.getPropagatorType() == PropagatorType::VintiJ2) {
     std::unique_ptr<Ephemeris> orbit =
-         std::make_unique<Vinti>(orbitParams.getEpoch(), xeciVec, ecfeciSys,
-                                                    VintiPertModel::J2_ONLY);
+         std::make_unique<Vinti>(orbitParams.getOrbitName(),
+                                 orbitParams.getEpoch(),
+                                 xeciVec,
+                                 ecfeciSys,
+                                 VintiPertModel::J2_ONLY);
     return orbit;
 #ifdef GENPL
   } else if (pCfg.getPropagatorType() == PropagatorType::SecJ2) {
     std::unique_ptr<Ephemeris> orbit =
-           std::make_unique<SecJ2>(orbitParams.getEpoch(), xeciVec, ecfeciSys);
+           std::make_unique<SecJ2>(orbitParams.getOrbitName(),
+                                   orbitParams.getEpoch(),
+                                   xeciVec,
+                                   ecfeciSys);
     return orbit;
   } else if (pCfg.getPropagatorType() == PropagatorType::OscJ2) {
     std::unique_ptr<Ephemeris> orbit =
-           std::make_unique<OscJ2>(orbitParams.getEpoch(), xeciVec, ecfeciSys);
+           std::make_unique<OscJ2>(orbitParams.getOrbitName(),
+                                   orbitParams.getEpoch(),
+                                   xeciVec,
+                                   ecfeciSys);
     return orbit;
 #endif
   } else {
     std::unique_ptr<Ephemeris> orbit =
-           std::make_unique<Kepler>(orbitParams.getEpoch(), xeciVec, ecfeciSys);
+           std::make_unique<Kepler>(orbitParams.getOrbitName(),
+                                    orbitParams.getEpoch(),
+                                    xeciVec,
+                                    ecfeciSys);
     return orbit;
   }
 

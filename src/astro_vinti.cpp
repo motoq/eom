@@ -8,6 +8,7 @@
 
 #include <astro_vinti.h>
 
+#include <string>
 #include <array>
 #include <memory>
 
@@ -24,7 +25,8 @@
 namespace eom {
 
 
-Vinti::Vinti(const JulianDate& epoch,
+Vinti::Vinti(const std::string& orbit_name,
+             const JulianDate& epoch,
              const Eigen::Matrix<double, 6, 1>& xeci,
              const std::shared_ptr<const EcfEciSys>& ecfeciSys,
              VintiPertModel pertModel)
@@ -32,6 +34,7 @@ Vinti::Vinti(const JulianDate& epoch,
   if (pertModel == VintiPertModel::J2_ONLY) {
     planet[3] = 0.0;
   }
+  name = orbit_name;
   jd0 = epoch;
   ecfeci = ecfeciSys;
     // A true equator ECI frame is required for propagation

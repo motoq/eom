@@ -8,6 +8,7 @@
 
 #include <astro_kepler.h>
 
+#include <string>
 #include <array>
 #include <memory>
 
@@ -24,10 +25,12 @@
 namespace eom {
 
 
-Kepler::Kepler(const JulianDate& epoch,
+Kepler::Kepler(const std::string& orbit_name,
+               const JulianDate& epoch,
                const Eigen::Matrix<double, 6, 1>& xeci,
                const std::shared_ptr<const EcfEciSys>& ecfeciSys)
 {
+  name = orbit_name;
   jd0 = epoch;
   ecfeci = ecfeciSys;
   x0[0] = phy_const::km_per_du*xeci(0,0);

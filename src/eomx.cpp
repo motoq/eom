@@ -13,6 +13,7 @@
 #include <vector>
 #include <deque>
 #include <unordered_map>
+#include <execution>
 #include <stdexcept>
 
 #include <Eigen/Dense>
@@ -249,11 +250,21 @@ int main(int argc, char* argv[])
                                                  maxJd,
                                                  cfg.getEcfEciRate(),
                                                  eopSys);
+    // Allocaate vector of pointer to ephemerides
+  std::vector<std::unique_ptr<eom::Ephemeris>> ephvec(orbit_defs.size());
+  std::transform(std::execution::par,
+                 orbit_defs.begin(), orbit_defs.end(), ephvec.begin(),
+                 [f2iSys](const auto& orbit) {
+                   return eom::build_orbit(orbit, f2iSys);
+                 }
+  );
+
     // Ephemeris class is immutable.
-  for (const auto& orbit : orbit_defs) {
-    std::cout << "\n  " << orbit.getOrbitName();
-    (*ephemerides)[orbit.getOrbitName()] = eom::build_orbit(orbit, f2iSys);
-    std::shared_ptr<eom::Ephemeris> eph = ephemerides->at(orbit.getOrbitName());
+  for (unsigned int ii=0; ii<ephvec.size(); ++ii) {
+    auto name = ephvec[ii]->getName();
+    std::cout << "\n  " << name;
+    (*ephemerides)[name] = std::move(ephvec[ii]);
+    std::shared_ptr<eom::Ephemeris> eph = ephemerides->at(name);
     eom::Keplerian oeCart(eph->getStateVector(cfg.getStartTime(),
                                               eom::EphemFrame::eci));
     oeCart.print(std::cout);

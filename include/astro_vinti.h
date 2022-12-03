@@ -9,6 +9,7 @@
 #ifndef ASTRO_VINTI_H
 #define ASTRO_VINTI_H
 
+#include <string>
 #include <array>
 #include <memory>
 
@@ -50,6 +51,7 @@ public:
   /**
    * Initialize Vinti6
    *
+   * @param  orbit_name      Name (string identifieer) associated with orbit
    * @param  epoch           Orbit state vector epoch, UTC
    * @param  xeci            Cartesian GCRF state vector, DU and DU/TU
    * @param  ecfeciSys       ECF/ECI conversion resource
@@ -57,10 +59,19 @@ public:
    *                         approximation should be included in the
    *                         gravity model.
    */
-  Vinti(const JulianDate& epoch,
+  Vinti(const std::string& orbit_name,
+        const JulianDate& epoch,
         const Eigen::Matrix<double, 6, 1>& xeci,
         const std::shared_ptr<const EcfEciSys>& ecfeciSys,
         VintiPertModel pertModel = VintiPertModel::J2_J3);
+
+  /**
+   * @return  Unique ephemeris identifier
+   */
+  std::string getName() const override
+  {
+    return name;
+  }
 
   /**
    * Compute state vector given a time
@@ -75,6 +86,7 @@ public:
                                              EphemFrame frame) const override;
 
 private:
+  std::string name {""};
   std::shared_ptr<const EcfEciSys> ecfeci {nullptr};
   std::array<double, 4> planet = {phy_const::km_per_du,
                                   phy_const::gm_km3_sec2,
