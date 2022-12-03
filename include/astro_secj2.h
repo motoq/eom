@@ -57,6 +57,14 @@ public:
   }
 
   /**
+   * @return  Orbit epoch
+   */
+  JulianDate getEpoch() const override
+  {
+    return jd0;
+  }
+
+  /**
    * Compute state vector given a time
    *
    * @param  jd     Time of desired state vector, UTC

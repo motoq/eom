@@ -46,6 +46,11 @@ public:
   virtual std::string getName() const = 0;
 
   /**
+   * @return  Orbit epoch
+   */
+  virtual JulianDate getEpoch() const = 0;
+
+  /**
    * @param  jd     UTC time for which to return a state vector
    * @param  frame  Reference frame of returned state vector
    *

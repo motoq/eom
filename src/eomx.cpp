@@ -258,16 +258,10 @@ int main(int argc, char* argv[])
                    return eom::build_orbit(orbit, f2iSys);
                  }
   );
-
-    // Ephemeris class is immutable.
+    // Move to ephemeris map
   for (unsigned int ii=0; ii<ephvec.size(); ++ii) {
     auto name = ephvec[ii]->getName();
-    std::cout << "\n  " << name;
     (*ephemerides)[name] = std::move(ephvec[ii]);
-    std::shared_ptr<eom::Ephemeris> eph = ephemerides->at(name);
-    eom::Keplerian oeCart(eph->getStateVector(cfg.getStartTime(),
-                                              eom::EphemFrame::eci));
-    oeCart.print(std::cout);
   }
 
     // Construct relative orbits - append ephemerides.
@@ -287,11 +281,6 @@ int main(int argc, char* argv[])
         std::cout << "\n  " << relOrbit.getOrbitName() <<
                      "  derived from:  " <<
                      relOrbit.getTemplateOrbitName();
-        std::shared_ptr<eom::Ephemeris> eph =
-                             ephemerides->at(relOrbit.getOrbitName());
-        eom::Keplerian oeCart(eph->getStateVector(cfg.getStartTime(),
-                                                  eom::EphemFrame::eci));
-        oeCart.print(std::cout);
         break;
       }
     }
@@ -300,6 +289,14 @@ int main(int argc, char* argv[])
                    relOrbit.getTemplateOrbitName() << '\n';
       return 0;
     }
+  }
+
+  for (const auto& [name, eph] : *ephemerides) {
+    std::cout << "\n  " << name;
+    std::cout << "\n  " << eph->getEpoch().to_str();
+    eom::Keplerian oeCart(eph->getStateVector(eph->getEpoch(),
+                                              eom::EphemFrame::eci));
+    oeCart.print(std::cout);
   }
 
     // Print ground points
