@@ -108,7 +108,7 @@ build_orbit(const RelOrbitDef& relOrbit, const OrbitDef& refOrbit,
     // defining a bounding box and offset automatically guarantees the
     // energy matching constraint.
   //if (relOrbit.getRelCoordType == rtct)
-  Keplerian refOe(refEph->getStateVector(refOrbit.getEpoch(),
+  Keplerian refOe(refEph->getStateVector(refEph->getEpoch(),
                                          eom::EphemFrame::eci));
   std::array<double, 6> oe = refOe.getOrbitalElements();
     // Update OE with distance offsets
@@ -131,7 +131,7 @@ build_orbit(const RelOrbitDef& relOrbit, const OrbitDef& refOrbit,
                                 xvec(3), xvec(4), xvec(5)};
   OrbitDef newOrbit(relOrbit.getOrbitName(),
                     refOrbit.getPropagatorConfig(),
-                    refOrbit.getEpoch(),
+                    refEph->getEpoch(),
                     xarr,
                     eom::CoordType::cartesian, eom::FrameType::gcrf);
   return build_orbit(newOrbit, ecfeciSys);

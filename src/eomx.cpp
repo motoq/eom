@@ -26,6 +26,7 @@
 #include <astro_orbit_def.h>
 #include <astro_rel_orbit_def.h>
 #include <astro_ephemeris.h>
+#include <astro_null_ephemeris.h>
 #include <astro_eop_sys.h>
 #include <astro_ecfeci_sys.h>
 #include <astro_build.h>
@@ -251,6 +252,7 @@ int main(int argc, char* argv[])
                                                  cfg.getEcfEciRate(),
                                                  eopSys);
     // Allocaate vector of pointer to ephemerides
+  {//--
   std::vector<std::unique_ptr<eom::Ephemeris>> ephvec(orbit_defs.size());
   std::transform(std::execution::par,
                  orbit_defs.begin(), orbit_defs.end(), ephvec.begin(),
@@ -263,34 +265,48 @@ int main(int argc, char* argv[])
     auto name = ephvec[ii]->getName();
     (*ephemerides)[name] = std::move(ephvec[ii]);
   }
+  }//--
 
     // Construct relative orbits - append ephemerides.
     // Relative orbit definitions are based on primary orbit
     // definitions, not other relative orbit definitions (only
     // orbit_defs, not other rel_orbit_defs).
-  for (const auto& relOrbit : rel_orbit_defs) {
-      // Find reference orbit
-    bool found {false};
-    for (const auto& templateOrbit : orbit_defs) {
-      if (templateOrbit.getOrbitName() == relOrbit.getTemplateOrbitName()) {
-        found = true;
-        std::shared_ptr<eom::Ephemeris> templateEph =
-                             ephemerides->at(templateOrbit.getOrbitName());
-        (*ephemerides)[relOrbit.getOrbitName()] =
-             eom::build_orbit(relOrbit, templateOrbit, templateEph, f2iSys);
-        std::cout << "\n  " << relOrbit.getOrbitName() <<
-                     "  derived from:  " <<
-                     relOrbit.getTemplateOrbitName();
-        break;
+  {//--
+  std::vector<std::unique_ptr<eom::Ephemeris>> ephvec(rel_orbit_defs.size());
+  std::transform(std::execution::par,
+                 rel_orbit_defs.begin(), rel_orbit_defs.end(), ephvec.begin(),
+                 [f2iSys, ephemerides, &orbit_defs](const auto& relOrbit) {
+        // Find reference orbit
+      for (const auto& templateOrbit : orbit_defs) {
+        if (templateOrbit.getOrbitName() == relOrbit.getTemplateOrbitName()) {
+          std::shared_ptr<eom::Ephemeris> templateEph =
+                               ephemerides->at(templateOrbit.getOrbitName());
+          return eom::build_orbit(relOrbit, templateOrbit, templateEph, f2iSys);
+        }
       }
+      std::unique_ptr<eom::Ephemeris> nullEph =
+                                      std::make_unique<eom::NullEphemeris>();
+      return nullEph;
     }
-    if (!found) {
-      std::cout << "\nInvalid relative orbit name: " <<
-                   relOrbit.getTemplateOrbitName() << '\n';
+  );
+    // Move to ephemeris map
+  for (unsigned int ii=0; ii<ephvec.size(); ++ii) {
+    auto name = ephvec[ii]->getName();
+    if (name.length() == 0) {
+      std::cout << "\nBad Relative Orbit Name - Exiting\n";
       return 0;
     }
+    (*ephemerides)[name] = std::move(ephvec[ii]);
   }
+  }//--
 
+        //std::cout << "\n  " << relOrbit.getOrbitName() <<
+        //             "  derived from:  " <<
+        //             relOrbit.getTemplateOrbitName();
+      //std::cout << "\nInvalid relative orbit name: " <<
+      //             relOrbit.getTemplateOrbitName() << '\n';
+
+    // Print orbits
   for (const auto& [name, eph] : *ephemerides) {
     std::cout << "\n  " << name;
     std::cout << "\n  " << eph->getEpoch().to_str();
