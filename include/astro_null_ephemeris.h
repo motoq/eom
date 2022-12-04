@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Kurt Motekew
+ * Copyright 2022 Kurt Motekew
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,7 +20,7 @@
 namespace eom {
 
 /**
- * Bad Orbit
+ * Null Ephemeris object
  */
 class NullEphemeris : public Ephemeris {
 public:
@@ -32,7 +32,7 @@ public:
   NullEphemeris& operator=(NullEphemeris&&) = default;       // move assignment
 
   /**
-   * @return  Unique ephemeris identifier
+   * @return  Empty string
    */
   std::string getName() const override
   {
@@ -40,7 +40,7 @@ public:
   }
 
   /**
-   * @return  Orbit epoch
+   * @return  Default Julian Date
    */
   JulianDate getEpoch() const override
   {
@@ -48,13 +48,12 @@ public:
   }
 
   /**
-   * Compute state vector given a time
+   * Center of the earth
    *
-   * @param  jd     Time of desired state vector, UTC
-   * @param  frame  Desired output reference frame
+   * @param  jd     Not used
+   * @param  frame  Not used
    *
-   * @return  Cartesian state vector at requested time in the requested
-   *          reference frame, DU and DU/TU
+   * @return  Zero vector
    */
   Eigen::Matrix<double, 6, 1> getStateVector(const JulianDate&,
                                              EphemFrame) const override
