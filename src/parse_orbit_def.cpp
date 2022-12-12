@@ -36,22 +36,28 @@ eom::OrbitDef parse_orbit_def(std::deque<std::string>& tokens,
   auto model = tokens[0];
   tokens.pop_front();
 
-  if (model == "Kepler1"  &&  tokens.size() > 0 ) {
-    eom::PropagatorConfig propCfg {eom::PropagatorType::Kepler1};
+  if (model == "Sp"  &&  tokens.size() > 0 ) {
+    eom::PropagatorConfig propCfg {eom::PropagatorType::sp};
+    eom::JulianDate epoch = parse_datetime(tokens);
+    std::array<double, 6> xeci = parse_state_vector(tokens, cfg);
+    eom::OrbitDef orbit {name, propCfg, epoch, xeci,
+                         eom::CoordType::cartesian, eom::FrameType::gcrf};
+  } else if (model == "Kepler1"  &&  tokens.size() > 0 ) {
+    eom::PropagatorConfig propCfg {eom::PropagatorType::kepler1};
     eom::JulianDate epoch = parse_datetime(tokens);
     std::array<double, 6> xeci = parse_state_vector(tokens, cfg);
     eom::OrbitDef orbit {name, propCfg, epoch, xeci,
                          eom::CoordType::cartesian, eom::FrameType::gcrf};
     return orbit;
   } else if (model == "Vinti6"  &&  tokens.size() > 0 ) {
-    eom::PropagatorConfig propCfg {eom::PropagatorType::Vinti6};
+    eom::PropagatorConfig propCfg {eom::PropagatorType::vinti6};
     eom::JulianDate epoch = parse_datetime(tokens);
     std::array<double, 6> xeci = parse_state_vector(tokens, cfg);
     eom::OrbitDef orbit {name, propCfg, epoch, xeci,
                          eom::CoordType::cartesian, eom::FrameType::gcrf};
     return orbit;
   } else if (model == "VintiJ2"  &&  tokens.size() > 0 ) {
-    eom::PropagatorConfig propCfg {eom::PropagatorType::VintiJ2};
+    eom::PropagatorConfig propCfg {eom::PropagatorType::vinti_j2};
     eom::JulianDate epoch = parse_datetime(tokens);
     std::array<double, 6> xeci = parse_state_vector(tokens, cfg);
     eom::OrbitDef orbit {name, propCfg, epoch, xeci,
@@ -59,14 +65,14 @@ eom::OrbitDef parse_orbit_def(std::deque<std::string>& tokens,
     return orbit;
 #ifdef GENPL
   } else if (model == "SecJ2"  &&  tokens.size() > 0 ) {
-    eom::PropagatorConfig propCfg {eom::PropagatorType::SecJ2};
+    eom::PropagatorConfig propCfg {eom::PropagatorType::sec_j2};
     eom::JulianDate epoch = parse_datetime(tokens);
     std::array<double, 6> xeci = parse_state_vector(tokens, cfg);
     eom::OrbitDef orbit {name, propCfg, epoch, xeci,
                          eom::CoordType::cartesian, eom::FrameType::gcrf};
     return orbit;
   } else if (model == "OscJ2"  &&  tokens.size() > 0 ) {
-    eom::PropagatorConfig propCfg {eom::PropagatorType::OscJ2};
+    eom::PropagatorConfig propCfg {eom::PropagatorType::osc_j2};
     eom::JulianDate epoch = parse_datetime(tokens);
     std::array<double, 6> xeci = parse_state_vector(tokens, cfg);
     eom::OrbitDef orbit {name, propCfg, epoch, xeci,

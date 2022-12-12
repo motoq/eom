@@ -9,19 +9,22 @@
 #ifndef ASTRO_PROPAGATOR_CONFIG_H
 #define ASTRO_PROPAGATOR_CONFIG_H
 
+#include <cal_julian_date.h>
+
 namespace eom {
 
 /**
- * Supported propagators
+ * Propagator options
  */
 enum class PropagatorType {
 #ifdef GENPL
-  SecJ2,
-  OscJ2,
+  sec_j2,
+  osc_j2,
 #endif
-  Kepler1,                        ///< Gim J. Der version
-  Vinti6,                         ///< Gim J. Der version
-  VintiJ2                         ///< Gim J. Der version with J3 = 0
+  kepler1,                        ///< Gim J. Der version
+  vinti6,                         ///< Gim J. Der version
+  vinti_j2,                       ///< Gim J. Der version with J3 = 0
+  sp                              ///< Special Pert with more config options
 };
 
 
@@ -31,9 +34,9 @@ enum class PropagatorType {
 class PropagatorConfig {
 public:
   /**
-   * Initilize with the Kepler1 version of the two-body propagator
+   * Initilize with default propagator
    */
-  PropagatorConfig() : prop {PropagatorType::Kepler1}
+  PropagatorConfig()
   {
   }
 
@@ -42,17 +45,49 @@ public:
    * perturbation propagators should use this version.  Special
    * perturbation propagators will be initialized with default values.
    */
-  PropagatorConfig(PropagatorType prop_type) : prop {prop_type}
+  PropagatorConfig(PropagatorType prop_type) : m_prop_type {prop_type}
   {
   }
 
   /*
    * @return  The propagator type
    */
-  PropagatorType getPropagatorType() const noexcept { return prop; }
+  PropagatorType getPropagatorType() const noexcept { return m_prop_type; }
+
+  /**
+   * Set time span over which ephemeris should be valid - typically
+   * only applies to SP based ephemeris, indicating integration limits.
+   *
+   * @param  jdStart  Start time, UTC
+   * @param  jdStop   Stop time, UTC
+   */
+  void setStartStopTime(const JulianDate& jdStart,
+                        const JulianDate& jdStop);
+
+  /**
+   * @return  Required ephemeris start time when generated via SP
+   *          methods, UTC
+   */
+  JulianDate getStartTime() const noexcept
+  {
+    return m_jdStart;
+  }
+
+  /**
+   * @return  Required ephemeris stop time when generated via SP
+   *          methods, UTC
+   */
+  JulianDate getStopTime() const noexcept
+  {
+    return m_jdStop;
+  }
 
 private:
-  PropagatorType prop;
+    // Required for all propagators
+  PropagatorType m_prop_type {PropagatorType::kepler1};
+    // Typically required only for SP methods to set integration limits
+  JulianDate m_jdStart;
+  JulianDate m_jdStop;
 };
 
 

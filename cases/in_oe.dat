@@ -1,0 +1,19 @@
+
+# Test Scenario
+
+SimStart GD 2021 11 12 17 00 00.0;     # Gregorian date, UTC
+SimDuration Days 1;
+LeapSeconds 37;
+EcfEciRate Minutes 240;
+DistanceUnits  Kilometers;             # Sticky distance and time settings
+TimeUnits Seconds;                     # For inputs without unit specifications
+Orbit  kep_test  Kepler1  GD 2021 11 12 17 00 00.0
+       CART  GCRF  -5552.0  -2563.0  3258.0   2.149  -7.539  -2.186;
+DistanceUnits  DU;
+TimeUnits TU;
+Orbit  t1  Kepler1  GD 2021 11 12 17 00 00.0
+       CART  GCRF      0.05     0.7     0.4  -1.2     0.02    0.3;
+Orbit  t2  Kepler1  GD 2021 11 12 17 00 00.0
+       CART  GCRF     -0.1      0.7     0.8  -0.7    -0.6     0.6;
+#      CART  GCRF      0.05     0.7     0.4  -1.2     0.02    0.3;
+end;

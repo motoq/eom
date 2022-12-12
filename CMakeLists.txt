@@ -52,13 +52,15 @@ set(SOURCES
   src/astro_eop_sys.cpp
   src/astro_gravity_jn.cpp
   src/astro_ground_point.cpp
+  src/astro_kepler.cpp
   src/astro_keplerian.cpp
   src/astro_orbit_def.cpp
+  src/astro_print_ephemeris.cpp
+  src/astro_propagator_config.cpp
   src/astro_rel_orbit_def.cpp
   src/astro_rk4.cpp
-  src/astro_kepler.cpp
+  src/astro_sp_ephemeris.cpp
   src/astro_vinti.cpp
-  src/astro_print_ephemeris.cpp
 )
 
 add_library(sofalib STATIC IMPORTED)
