@@ -10,6 +10,7 @@
 #define ASTRO_SP_EPHEMERIS_H
 
 #include <string>
+#include <memory>
 
 #include <Eigen/Dense>
 
@@ -17,7 +18,6 @@
 #include <astro_ephemeris.h>
 #include <astro_ecfeci_sys.h>
 #include <astro_propagator_config.h>
-
 
 namespace eom {
 
@@ -74,7 +74,6 @@ private:
   JulianDate m_jdStop;
   Eigen::Matrix<double, 6, 1> nullState;
   std::shared_ptr<const EcfEciSys> m_ecfeciSys {nullptr};
-
 };
 
 
