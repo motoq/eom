@@ -22,6 +22,13 @@ constexpr double pi   {3.141592653589793238462643383279502884};
 constexpr double pio2 {pi/2.0};
 constexpr double tpi  {2.0*pi};
 
+constexpr double sec_per_day {86400.0};
+constexpr double day_per_sec {1.0/sec_per_day};
+constexpr double min_per_day {1440.0};
+constexpr double day_per_min {1.0/min_per_day};
+constexpr double hr_per_day {24.0};
+constexpr double day_per_hr {1/hr_per_day};
+
 constexpr double rad_per_deg {pi/180.0};
 constexpr double deg_per_rad {180.0/pi};
 constexpr double arcsec_per_rad {180.0*3600.0/pi};         //! Per Radian

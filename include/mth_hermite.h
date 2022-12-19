@@ -17,9 +17,11 @@
 namespace eom {
 
 /**
- * Performs Hermite interpolation using two n-dimensional points (nodes)
+ * Performs Hermite interpolation using two n-dimensional posts (nodes)
  * and the 1st and second derivatives (e.g., position, velocity,
- * acceleration vectors).
+ * acceleration vectors).  The result is continuous interpolation
+ * through the first two derivatives between adjacent Hermite
+ * interpolators.
  *
  * Reference:  James E. Bernier, "Ephemeris Interpolation, Analytic
  *             Propagation Approach", JEBSys Associates, 20, November
@@ -33,13 +35,15 @@ namespace eom {
  * @author  Kurt Motekew
  * @date    2022/12/12
  */
-template<typename T, unsigned int N>
+template<typename T, int N>
 class Hermite {
 public:
   /**
-   * Initialize.
+   * Initialize with two sets of position, velocity, and acceleration
+   * vectors, and the time between them.  Acceleration must be included
+   * - it can't just be set to zero if not present.
    *
-   * @param  dt    Spacing between nodes - e.g., time from x0 to x
+   * @param  dt    Spacing between nodes - e.g., time from p0 to p1
    * @param  p0    Initial state - e.g., position, DU
    * @param  v0    1st derivative of initial state, DU/TU  - e.g., velocity
    * @param  a0    2nd derivative of initial state, DU/TU^2 - e.g., acceleration
@@ -56,7 +60,22 @@ public:
           const Eigen::Matrix<T, N, 1>& a1);
 
   /**
-   * @return  Nx1 vector orthogonal to each column of uMat
+   * @return  Maximum allowable time, measured from zero, that may be
+   *          used with this interpolator
+   */
+  T getMaxDt()
+  {
+    return m_dt_max;
+  }
+
+  /**
+   * Compute the interpolated position and velocity
+   *
+   * @param  dt  Time from zero to the dt used for initialization.  If
+   *             less than zero, or greater than getMaxDt(), then an
+   *             exception will be thrown.
+   *
+   * @return  Return the interpolated position and velocity
    */
   std::pair<Eigen::Matrix<T, N, 1>, Eigen::Matrix<T, N, 1>> getXdX(T dt);
 
@@ -71,7 +90,7 @@ private:
 };
 
 
-template<typename T, unsigned int N>
+template<typename T, int N>
 Hermite<T,N>::Hermite(T dt,
                       const Eigen::Matrix<T, N, 1>& p0,
                       const Eigen::Matrix<T, N, 1>& v0,
@@ -104,14 +123,13 @@ Hermite<T,N>::Hermite(T dt,
   Eigen::Matrix<T, N, 1> cacc =       invdt*(a1 - a0);
 
     // Computed polynomial coefficients
-  Eigen::Matrix<T, N, 1> m_l0 = t060*(t002*cpos - t003*cvel + cacc)*invdt*invdt;
-  Eigen::Matrix<T, N, 1> m_k0 = t004*(cacc - cpos)*invdt -
-                                t007*m_l0*dt/t015;
-  Eigen::Matrix<T, N, 1> m_j0 = cacc - t0p5*dt*(m_k0 + m_l0*dt/t003);
+  m_l0 = t060*(t002*cpos - t003*cvel + cacc)*invdt*invdt;
+  m_k0 = t004*(cacc - cpos)*invdt - t007*m_l0*dt/t015;
+  m_j0 = cacc - t0p5*dt*(m_k0 + m_l0*dt/t003);
 }
   
 
-template<typename T, unsigned int N>
+template<typename T, int N>
 std::pair<Eigen::Matrix<T, N, 1>, Eigen::Matrix<T, N, 1>>
 Hermite<T,N>::getXdX(T dt)
 {

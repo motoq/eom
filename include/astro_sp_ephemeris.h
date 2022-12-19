@@ -10,16 +10,37 @@
 #define ASTRO_SP_EPHEMERIS_H
 
 #include <string>
+#include <vector>
 #include <memory>
+#include <utility>
 
 #include <Eigen/Dense>
 
 #include <cal_julian_date.h>
+#include <mth_hermite.h>
 #include <astro_ephemeris.h>
 #include <astro_ecfeci_sys.h>
 #include <astro_propagator_config.h>
 
 namespace eom {
+
+struct eph_record {
+  JulianDate t;
+  Eigen::Matrix<double, 3, 1> p;
+  Eigen::Matrix<double, 3, 1> v;
+  Eigen::Matrix<double, 3, 1> a;
+
+  eph_record(const JulianDate jd,
+             const Eigen::Matrix<double, 3, 1>& x,
+             const Eigen::Matrix<double, 3, 1>& dx,
+             const Eigen::Matrix<double, 3, 1>& ddx) : t(jd),
+                                                       p(x),
+                                                       v(dx),
+                                                       a(ddx)
+  {
+  }
+};
+
 
 /**
  * SP Ephemeris
@@ -74,6 +95,9 @@ private:
   JulianDate m_jdStop;
   Eigen::Matrix<double, 6, 1> nullState;
   std::shared_ptr<const EcfEciSys> m_ecfeciSys {nullptr};
+
+  std::vector<std::pair<JulianDate, JulianDate>> m_eph_times;
+  std::vector<Hermite<double, 3>> m_eph;
 };
 
 

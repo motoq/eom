@@ -27,7 +27,7 @@ namespace eom {
  * @author  Kurt Motekew
  * @date    2022/09/11
  */
-class Rk4 : public OdeSolver<JulianDate, double, 6> {
+class Rk4 : public OdeSolver<JulianDate, double, 3> {
 public:
   ~Rk4() = default;
   Rk4(const Rk4&) = default;
@@ -48,14 +48,18 @@ public:
    *
    * @param utc  Time associated with state vector
    * @param x0   State vector
-   * @param xdt  Output: State vector propagated the returned time
+   * @param a0   Output: Force model acceleration vector at input time
+   * @param x    Output: State vector propagated to the returned time
+   * @param a    Output: Force model acceleration vector at returned time
    
    * @return   Time associated with propagated state.  For this
    *           propagator, it will always be utc + dt.
    */
   JulianDate step(const JulianDate& utc,
                   const Eigen::Matrix<double, 6, 1>& x0,
-                        Eigen::Matrix<double, 6, 1>& xdt) override;
+                        Eigen::Matrix<double, 3, 1>& a0,
+                        Eigen::Matrix<double, 6, 1>& x,
+                        Eigen::Matrix<double, 3, 1>& a) override;
 
 private:
   Duration m_dt;

@@ -28,7 +28,9 @@ Rk4::Rk4(std::unique_ptr<Ode<JulianDate, double, 6>> deq, const Duration& dt)
 
 JulianDate Rk4::step(const JulianDate& utc,
                      const Eigen::Matrix<double, 6, 1>& x0,
-                           Eigen::Matrix<double, 6, 1>& xdt)
+                           Eigen::Matrix<double, 3, 1>& a0,
+                           Eigen::Matrix<double, 6, 1>& x,
+                           Eigen::Matrix<double, 3, 1>& a)
 {
   auto dt = m_dt.getDays();
 
@@ -39,6 +41,7 @@ JulianDate Rk4::step(const JulianDate& utc,
     // first
   auto jdNow = utc;
   m_deq->getXDot(jdNow, x0, xd);
+  a0 = xd.block<3, 1>(3, 0);
   for (int ii=0; ii<6; ++ii) {
     xa(ii) = dt*xd(ii);
     xx(ii) = 0.5*xa(ii) + x0(ii);
@@ -61,8 +64,9 @@ JulianDate Rk4::step(const JulianDate& utc,
     // forth
   jdNow = utc + dt;
   m_deq->getXDot(jdNow, xx, xd);
+  a = xd.block<3, 1>(3, 0);
   for (int ii=0; ii<6; ++ii) {
-    xdt(ii) = x0(ii) + (xa(ii) + dt*xd(ii))/6.0;
+    x(ii) = x0(ii) + (xa(ii) + dt*xd(ii))/6.0;
   }
 
   return jdNow;
