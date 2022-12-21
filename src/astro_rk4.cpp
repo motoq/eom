@@ -32,7 +32,8 @@ JulianDate Rk4::step(const JulianDate& utc,
                            Eigen::Matrix<double, 6, 1>& x,
                            Eigen::Matrix<double, 3, 1>& a)
 {
-  auto dt = m_dt.getDays();
+  auto dt = m_dt.getTu();
+  auto dt_days = m_dt.getDays();
 
   Eigen::Matrix<double, 6, 1> xd;
   Eigen::Matrix<double, 6, 1> xx;
@@ -47,7 +48,7 @@ JulianDate Rk4::step(const JulianDate& utc,
     xx(ii) = 0.5*xa(ii) + x0(ii);
   }
     // second
-  jdNow += 0.5*dt;
+  jdNow += 0.5*dt_days;
   m_deq->getXDot(jdNow, xx, xd);
   for (int ii=0; ii<6; ++ii) {
     auto q = dt*xd(ii);
@@ -62,7 +63,7 @@ JulianDate Rk4::step(const JulianDate& utc,
     xa(ii) += q + q;
   }
     // forth
-  jdNow = utc + dt;
+  jdNow = utc + dt_days;
   m_deq->getXDot(jdNow, xx, xd);
   a = xd.block<3, 1>(3, 0);
   for (int ii=0; ii<6; ++ii) {

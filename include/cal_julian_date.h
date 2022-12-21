@@ -173,7 +173,7 @@ public:
    *
    * @return  true if this JD is less than the other, jd1 < jd2.
    */
-  bool operator<(const JulianDate& jd)
+  bool operator<(const JulianDate& jd) const noexcept
   {
     return jdHi - jd.jdHi + (jdLo - jd.jdLo) < 0.0;
   }
@@ -183,7 +183,7 @@ public:
    *
    * @return  true if this JD is less than or equal to the other, jd1 <= jd2.
    */
-  bool operator<=(const JulianDate& jd)
+  bool operator<=(const JulianDate& jd) const noexcept
   {
     return jdHi - jd.jdHi + (jdLo - jd.jdLo) <= 0.0;
   }

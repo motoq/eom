@@ -9,7 +9,6 @@
 #ifndef MTH_HERMITE_H
 #define MTH_HERMITE_H
 
-#include <utility>
 #include <stdexcept>
 
 #include <Eigen/Dense>
@@ -40,8 +39,7 @@ class Hermite {
 public:
   /**
    * Initialize with two sets of position, velocity, and acceleration
-   * vectors, and the time between them.  Acceleration must be included
-   * - it can't just be set to zero if not present.
+   * vectors, and the time between them.  Acceleration must be included.
    *
    * @param  dt    Spacing between nodes - e.g., time from p0 to p1
    * @param  p0    Initial state - e.g., position, DU
@@ -69,15 +67,27 @@ public:
   }
 
   /**
-   * Compute the interpolated position and velocity
+   * Return interpolated position
    *
    * @param  dt  Time from zero to the dt used for initialization.  If
    *             less than zero, or greater than getMaxDt(), then an
    *             exception will be thrown.
    *
-   * @return  Return the interpolated position and velocity
+   * @return  The interpolated position
    */
-  std::pair<Eigen::Matrix<T, N, 1>, Eigen::Matrix<T, N, 1>> getXdX(T dt);
+  Eigen::Matrix<T, N, 1> getX(T dt) const;
+
+
+  /**
+   * Return interpolated velocity
+   *
+   * @param  dt  Time from zero to the dt used for initialization.  If
+   *             less than zero, or greater than getMaxDt(), then an
+   *             exception will be thrown.
+   *
+   * @return  The interpolated velocity
+   */
+  Eigen::Matrix<T, N, 1> getdX(T dt) const;
 
 private:
   T m_dt_max {};
@@ -99,6 +109,7 @@ Hermite<T,N>::Hermite(T dt,
                       const Eigen::Matrix<T, N, 1>& v1,
                       const Eigen::Matrix<T, N, 1>& a1)
 {
+    // Cast constants to proper type
   T t0p5 {static_cast<T>(0.5)};
   T t002 {static_cast<T>(2)};
   T t003 {static_cast<T>(3)};
@@ -130,11 +141,10 @@ Hermite<T,N>::Hermite(T dt,
   
 
 template<typename T, int N>
-std::pair<Eigen::Matrix<T, N, 1>, Eigen::Matrix<T, N, 1>>
-Hermite<T,N>::getXdX(T dt)
+Eigen::Matrix<T, N, 1> Hermite<T,N>::getX(T dt) const
 {
   if (dt < 0  ||  dt > m_dt_max) {
-    throw std::invalid_argument("Hermite<T,N>::getXdX(T dt) - bad dt");
+    throw std::invalid_argument("Hermite<T,N>::getX(T dt) - bad dt");
   }
 
   T tf2 {static_cast<T>(1.0)/(static_cast<T>(2.0))};
@@ -142,16 +152,29 @@ Hermite<T,N>::getXdX(T dt)
   T tf4 {static_cast<T>(1.0)/(static_cast<T>(4.0))};
   T tf5 {static_cast<T>(1.0)/(static_cast<T>(5.0))};
 
-  Eigen::Matrix<T, N, 1> x = m_p0  +     dt*(m_v0 +
-                                     tf2*dt*(m_a0 +
-                                     tf3*dt*(m_j0 +
-                                     tf4*dt*(m_k0 +
-                                     tf5*dt*(m_l0)))));
-  Eigen::Matrix<T, N, 1> dx = m_v0 +     dt*(m_a0 +
-                                     tf2*dt*(m_j0 +
-                                     tf3*dt*(m_k0 +
-                                     tf4*dt*(m_l0))));
-  return std::make_pair(x, dx);
+  return m_p0 +     dt*(m_v0 +
+                tf2*dt*(m_a0 +
+                tf3*dt*(m_j0 +
+                tf4*dt*(m_k0 +
+                tf5*dt*(m_l0)))));
+}
+  
+
+template<typename T, int N>
+Eigen::Matrix<T, N, 1> Hermite<T,N>::getdX(T dt) const
+{
+  if (dt < 0  ||  dt > m_dt_max) {
+    throw std::invalid_argument("Hermite<T,N>::getdX(T dt) - bad dt");
+  }
+
+  T tf2 {static_cast<T>(1.0)/(static_cast<T>(2.0))};
+  T tf3 {static_cast<T>(1.0)/(static_cast<T>(3.0))};
+  T tf4 {static_cast<T>(1.0)/(static_cast<T>(4.0))};
+
+  return m_v0 +     dt*(m_a0 +
+                tf2*dt*(m_j0 +
+                tf3*dt*(m_k0 +
+                tf4*dt*(m_l0))));
 }
 
 

@@ -30,7 +30,7 @@ struct eph_record {
   Eigen::Matrix<double, 3, 1> v;
   Eigen::Matrix<double, 3, 1> a;
 
-  eph_record(const JulianDate jd,
+  eph_record(const JulianDate& jd,
              const Eigen::Matrix<double, 3, 1>& x,
              const Eigen::Matrix<double, 3, 1>& dx,
              const Eigen::Matrix<double, 3, 1>& ddx) : t(jd),
@@ -41,6 +41,19 @@ struct eph_record {
   }
 };
 
+struct interp_record {
+  JulianDate jd1;
+  JulianDate jd2;
+  Hermite<double, 3> hItp;
+
+  interp_record(const JulianDate& jdStart,
+                const JulianDate& jdEnd,
+                const Hermite<double, 3>& hInterp) : jd1(jdStart),
+                                                     jd2(jdEnd),
+                                                     hItp(hInterp)
+  {
+  }
+};
 
 /**
  * SP Ephemeris
@@ -64,40 +77,39 @@ public:
    */
   std::string getName() const override
   {
-    return "";
+    return m_name;
   }
 
   /**
-   * @return  Default Julian Date
+   * @return  Get initializing state vector time
    */
   JulianDate getEpoch() const override
   {
-    return m_jdStart;
+    return m_jdEpoch;
   }
 
   /**
-   * Center of the earth
+   * Interpolate state vector from stored ephemeris for given time
    *
-   * @param  jd     Not used
-   * @param  frame  Not used
+   * @param  jd     Time of desired state vector, UTC
+   * @param  frame  Desired output reference frame
    *
-   * @return  Zero vector
+   * @return  Cartesian state vector at requested time in the requested
+   *          reference frame, DU and DU/TU
    */
   Eigen::Matrix<double, 6, 1> getStateVector(const JulianDate&,
-                                             EphemFrame) const override
-  {
-    return nullState;
-  }
+                                             EphemFrame frame) const override;
 
 private:
   std::string m_name {""};
+  JulianDate m_jdEpoch;
   JulianDate m_jdStart;
   JulianDate m_jdStop;
   Eigen::Matrix<double, 6, 1> nullState;
   std::shared_ptr<const EcfEciSys> m_ecfeciSys {nullptr};
 
-  std::vector<std::pair<JulianDate, JulianDate>> m_eph_times;
-  std::vector<Hermite<double, 3>> m_eph;
+  double m_dt_factor {};
+  std::vector<interp_record> m_eph_interpolators;
 };
 
 
