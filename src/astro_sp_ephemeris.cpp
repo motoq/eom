@@ -52,7 +52,7 @@ SpEphemeris::SpEphemeris(const std::string& name,
 
     // SP propagator
   std::unique_ptr<OdeSolver<JulianDate, double, 3>> sp {nullptr};
-  Duration dt(0.25, phy_const::tu_per_min);
+  Duration dt(0.3, phy_const::tu_per_min);
   {
     std::unique_ptr<Gravity> forceModel {nullptr};
     forceModel = std::make_unique<GravityJn>(2);
