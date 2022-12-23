@@ -108,7 +108,6 @@ private:
   Eigen::Matrix<double, 6, 1> nullState;
   std::shared_ptr<const EcfEciSys> m_ecfeciSys {nullptr};
 
-  double m_dt_factor {};
   std::vector<interp_record> m_eph_interpolators;
 };
 

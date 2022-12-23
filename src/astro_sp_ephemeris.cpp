@@ -52,7 +52,7 @@ SpEphemeris::SpEphemeris(const std::string& name,
 
     // SP propagator
   std::unique_ptr<OdeSolver<JulianDate, double, 3>> sp {nullptr};
-  Duration dt(1.0, phy_const::tu_per_min);
+  Duration dt(0.25, phy_const::tu_per_min);
   {
     std::unique_ptr<Gravity> forceModel {nullptr};
     forceModel = std::make_unique<GravityJn>(2);
@@ -60,9 +60,7 @@ SpEphemeris::SpEphemeris(const std::string& name,
     sp = std::make_unique<Rk4>(std::move(deq), dt);
   }
 
-
-  double dt_days {dt.getDays()};
-  JulianDate jdStop = propCfg.getStopTime() + 2.0*dt_days;
+  JulianDate jdStop = propCfg.getStopTime() + 2.0*dt.getDays();
   JulianDate jdNow = epoch;
 
     // Forward ephemeris
@@ -80,11 +78,11 @@ SpEphemeris::SpEphemeris(const std::string& name,
     x0 = x1;
   }
 
-  m_dt_factor = dt_days;
   for (unsigned int ii=1U; ii<fwd_eph.size(); ++ii) {
     eph_record& r1 = fwd_eph[ii-1U];
     eph_record& r2 = fwd_eph[ii];
-    Hermite<double, 3> hItp(1.0, r1.p, r1.v, r1.a, r2.p, r2.v, r2.a);
+    double dt_tu {phy_const::tu_per_day*(r2.t - r1.t)};
+    Hermite<double, 3> hItp(dt_tu, r1.p, r1.v, r1.a, r2.p, r2.v, r2.a);
     m_eph_interpolators.emplace_back(r1.t, r2.t, hItp);
   }
   
@@ -97,9 +95,9 @@ Eigen::Matrix<double, 6, 1> SpEphemeris::getStateVector(const JulianDate& jd,
   bool found {false};
   for (const auto& interp_record : m_eph_interpolators) {
     if (interp_record.jd1 <= jd  &&  jd <= interp_record.jd2) {
-      double dt {m_dt_factor*(jd - interp_record.jd1)};
-      xeci.block<3,1>(0,0) = interp_record.hItp.getX(dt);
-      xeci.block<3,1>(3,0) = interp_record.hItp.getdX(dt);
+      double dt_tu {phy_const::tu_per_day*(jd - interp_record.jd1)};
+      xeci.block<3,1>(0,0) = interp_record.hItp.getX(dt_tu);
+      xeci.block<3,1>(3,0) = interp_record.hItp.getdX(dt_tu);
       found = true;
       break;
     }

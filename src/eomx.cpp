@@ -271,7 +271,7 @@ int main(int argc, char* argv[])
   {//==>
     // Generate orbit definitions in parallel 
   std::vector<std::unique_ptr<eom::Ephemeris>> ephvec(orbit_defs.size());
-  std::transform(std::execution::par,
+  std::transform(std::execution::seq,
                  orbit_defs.begin(), orbit_defs.end(), ephvec.begin(),
                  [f2iSys](const auto& orbit) {
                    return eom::build_orbit(orbit, f2iSys);
