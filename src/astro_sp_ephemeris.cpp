@@ -96,8 +96,8 @@ Eigen::Matrix<double, 6, 1> SpEphemeris::getStateVector(const JulianDate& jd,
   for (const auto& interp_record : m_eph_interpolators) {
     if (interp_record.jd1 <= jd  &&  jd <= interp_record.jd2) {
       double dt_tu {phy_const::tu_per_day*(jd - interp_record.jd1)};
-      xeci.block<3,1>(0,0) = interp_record.hItp.getX(dt_tu);
-      xeci.block<3,1>(3,0) = interp_record.hItp.getdX(dt_tu);
+      xeci.block<3,1>(0,0) = interp_record.hItp.getPosition(dt_tu);
+      xeci.block<3,1>(3,0) = interp_record.hItp.getVelocity(dt_tu);
       found = true;
       break;
     }
