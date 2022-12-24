@@ -17,7 +17,7 @@
 #include <Eigen/Dense>
 
 #include <cal_julian_date.h>
-#include <mth_hermite.h>
+#include <mth_hermite2.h>
 #include <astro_ephemeris.h>
 #include <astro_ecfeci_sys.h>
 #include <astro_propagator_config.h>
@@ -44,13 +44,13 @@ struct eph_record {
 struct interp_record {
   JulianDate jd1;
   JulianDate jd2;
-  Hermite<double, 3> hItp;
+  Hermite2<double, 3> hItp;
 
   interp_record(const JulianDate& jdStart,
                 const JulianDate& jdEnd,
-                const Hermite<double, 3>& hInterp) : jd1(jdStart),
-                                                     jd2(jdEnd),
-                                                     hItp(hInterp)
+                const Hermite2<double, 3>& hInterp) : jd1(jdStart),
+                                                      jd2(jdEnd),
+                                                      hItp(hInterp)
   {
   }
 };

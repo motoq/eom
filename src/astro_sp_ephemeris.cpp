@@ -23,7 +23,7 @@
 
 #include <utl_const.h>
 #include <phy_const.h>
-#include <mth_hermite.h>
+#include <mth_hermite2.h>
 #include <astro_gravity.h>
 #include <astro_gravity_jn.h>
 #include <astro_deq.h>
@@ -82,7 +82,7 @@ SpEphemeris::SpEphemeris(const std::string& name,
     eph_record& r1 = fwd_eph[ii-1U];
     eph_record& r2 = fwd_eph[ii];
     double dt_tu {phy_const::tu_per_day*(r2.t - r1.t)};
-    Hermite<double, 3> hItp(dt_tu, r1.p, r1.v, r1.a, r2.p, r2.v, r2.a);
+    Hermite2<double, 3> hItp(dt_tu, r1.p, r1.v, r1.a, r2.p, r2.v, r2.a);
     m_eph_interpolators.emplace_back(r1.t, r2.t, hItp);
   }
   
