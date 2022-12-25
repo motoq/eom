@@ -112,6 +112,7 @@ static void parse_gravity_model(std::deque<std::string>& grav_toks,
     grav_toks.pop_front();
     if (grav_toks.size() == 2  &&  grav_toks[0] == "Jn") {
       grav_toks.pop_front();
+      pCfg.setGravityModel(eom::GravityModel::jn);
       try {
         int degree {std::stoi(grav_toks[0])};
         if (degree >= 0  &&  degree <= eom::GravityJn::getMaxDegree()) {
@@ -121,6 +122,22 @@ static void parse_gravity_model(std::deque<std::string>& grav_toks,
       } catch (const std::invalid_argument& ia) {
         ;
       }
+#ifdef GENPL
+    } else if (grav_toks.size() == 3  &&  grav_toks[0] == "Gravt") {
+      grav_toks.pop_front();
+      pCfg.setGravityModel(eom::GravityModel::gravt);
+      try {
+        int degree {std::stoi(grav_toks[0])};
+        grav_toks.pop_front();
+        int order {std::stoi(grav_toks[0])};
+        if (degree >= 0  &&  order >= 0  &&  order <= degree) {
+          grav_toks.pop_front();
+          pCfg.setDegreeOrder(degree, order);
+        }
+      } catch (const std::invalid_argument& ia) {
+        ;
+      }
+#endif
     }
   }
 }

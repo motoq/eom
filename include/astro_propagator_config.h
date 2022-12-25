@@ -93,6 +93,19 @@ public:
   }
 
   /**
+   * @param  Set the gravity model to use
+   */
+  void setGravityModel(GravityModel gravity_model);
+
+  /**
+   * @return  Gravity model to use
+   */
+  GravityModel getGravityModel() const noexcept
+  {
+    return  m_gravity_model;
+  }
+
+  /**
    * Order <= Degree
    *
    * @param  Degree of gravitational coefficients to consider
@@ -122,7 +135,9 @@ private:
     // Typically required only for SP methods to set integration limits
   JulianDate m_jdStart;
   JulianDate m_jdStop;
-    //
+    // Gravity model
+  GravityModel m_gravity_model {GravityModel::jn};
+
   int m_degree {0};
   int m_order {0};
 };
