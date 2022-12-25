@@ -41,6 +41,15 @@ public:
   GravityJn(int degree);
 
   /**
+   * @return  The maximum allowable degree for this zonal-only
+   * gravity model
+   */
+  static constexpr int getMaxDegree() noexcept
+  {
+    return 4;
+  }
+
+  /**
    * Compute gravitational acceleration given an ECEF position vector.
    * Note the output acceleration is the time derivative w.r.t. an
    * inertial reference frame while the components are in an earth

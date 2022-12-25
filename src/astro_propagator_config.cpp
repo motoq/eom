@@ -20,4 +20,11 @@ void PropagatorConfig::setStartStopTime(const JulianDate& jdStart,
 }
 
 
+void PropagatorConfig::setDegreeOrder(int degree, int order)
+{
+  m_degree = degree;
+  m_order = order;
+}
+
+
 }

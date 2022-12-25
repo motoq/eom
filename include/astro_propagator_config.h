@@ -27,6 +27,16 @@ enum class PropagatorType {
   sp                              ///< Special Pert with more config options
 };
 
+/**
+ * Gravity model options
+ */
+enum class GravityModel {
+#ifdef GENPL
+  gravt,
+#endif
+  jn                              ///< Simple zonal-only gravity model
+};
+
 
 /**
  * Contains propagator configuration parameters
@@ -82,12 +92,39 @@ public:
     return m_jdStop;
   }
 
+  /**
+   * Order <= Degree
+   *
+   * @param  Degree of gravitational coefficients to consider
+   * @param  Order of gravitational coefficients to consider
+   */
+  void setDegreeOrder(int degree, int order);
+
+  /**
+   * @return  Degree of gravity model
+   */
+  int getDegree() const noexcept
+  {
+    return m_degree;
+  }
+
+  /**
+   * @return  Order of gravity model
+   */
+  int getOrder() const noexcept
+  {
+    return m_order;
+  }
+
 private:
     // Required for all propagators
   PropagatorType m_prop_type {PropagatorType::kepler1};
     // Typically required only for SP methods to set integration limits
   JulianDate m_jdStart;
   JulianDate m_jdStop;
+    //
+  int m_degree {0};
+  int m_order {0};
 };
 
 

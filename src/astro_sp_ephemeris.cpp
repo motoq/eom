@@ -55,7 +55,7 @@ SpEphemeris::SpEphemeris(const std::string& name,
   Duration dt(0.3, phy_const::tu_per_min);
   {
     std::unique_ptr<Gravity> forceModel {nullptr};
-    forceModel = std::make_unique<GravityJn>(2);
+    forceModel = std::make_unique<GravityJn>(propCfg.getDegree());
     auto deq = std::make_unique<Deq>(std::move(forceModel), ecfeciSys);
     sp = std::make_unique<Rk4>(std::move(deq), dt);
   }

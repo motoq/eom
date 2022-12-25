@@ -16,21 +16,17 @@
 
 #include <phy_const.h>
 
-namespace {
-  constexpr int max_deg {4};
-}
-
 namespace eom
 {
 
 GravityJn::GravityJn(int degree) : nterm {degree}
 {
-
-  if (degree > max_deg) {
+  if (degree > GravityJn::getMaxDegree()) {
     throw std::invalid_argument("GravityJn::GravityJn() Unsupported Degree: " +
                                 std::to_string(degree));
   }
 }
+
 
 /*
  * Based on Vallado's "Fundamentals of Astrodynamics and Applications",

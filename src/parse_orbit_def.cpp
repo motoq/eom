@@ -16,8 +16,12 @@
 #include <cal_julian_date.h>
 #include <astro_propagator_config.h>
 #include <astro_orbit_def.h>
+#include <astro_gravity_jn.h>
 
 #include <eom_config.h>
+
+static void parse_gravity_model(std::deque<std::string>&,
+                                eom::PropagatorConfig&);
 
 namespace eom_app {
 
@@ -41,6 +45,13 @@ eom::OrbitDef parse_orbit_def(std::deque<std::string>& tokens,
     propCfg.setStartStopTime(cfg.getStartTime(), cfg.getStopTime());
     eom::JulianDate epoch = parse_datetime(tokens);
     std::array<double, 6> xeci = parse_state_vector(tokens, cfg);
+      // Loop through enough times to support finding all
+      // supported options - currently gravity model and 
+      // integrator options.
+    unsigned int sp_options {2};
+    for (unsigned int ii=0; ii<sp_options; ++ii) {
+      parse_gravity_model(tokens, propCfg);
+    }
     eom::OrbitDef orbit {name, propCfg, epoch, xeci,
                          eom::CoordType::cartesian, eom::FrameType::gcrf};
     return orbit;
@@ -89,3 +100,27 @@ eom::OrbitDef parse_orbit_def(std::deque<std::string>& tokens,
 
 }
 
+// Incomplete parsing due to failing expectations for a particular
+// gravity model will lead to failure to clear all tokens by the end of
+// the parsing loop above
+static void parse_gravity_model(std::deque<std::string>& grav_toks,
+                                eom::PropagatorConfig& pCfg)
+{
+    // Minimum size is currently 3:  "GravityModel Jn 2"
+    // Maximum size is currently 4:  "GravityMode  XX 12 12"
+  if (grav_toks.size() > 2  &&  grav_toks[0] == "GravityModel") {
+    grav_toks.pop_front();
+    if (grav_toks.size() == 2  &&  grav_toks[0] == "Jn") {
+      grav_toks.pop_front();
+      try {
+        int degree {std::stoi(grav_toks[0])};
+        if (degree >= 0  &&  degree <= eom::GravityJn::getMaxDegree()) {
+          grav_toks.pop_front();
+          pCfg.setDegreeOrder(degree, 0);
+        }
+      } catch (const std::invalid_argument& ia) {
+        ;
+      }
+    }
+  }
+}
