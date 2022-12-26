@@ -13,11 +13,18 @@
 #include <Eigen/Dense>
 
 #include <phy_const.h>
+#include <cal_julian_date.h>
+#include <cal_duration.h>
 #include <astro_propagator_config.h>
 #include <astro_orbit_def.h>
-#include <astro_ephemeris.h>
 #include <astro_ecfeci_sys.h>
+#include <astro_deq.h>
+#include <mth_ode_solver.h>
+#include <astro_rk4.h>
+#include <astro_gravity.h>
+#include <astro_gravity_jn.h>
 #include <astro_keplerian.h>
+#include <astro_ephemeris.h>
 #include <astro_sp_ephemeris.h>
 #include <astro_kepler.h>
 #include <astro_vinti.h>
@@ -45,12 +52,22 @@ build_orbit(const OrbitDef& orbitParams,
 
   PropagatorConfig pCfg = orbitParams.getPropagatorConfig();
   if (pCfg.getPropagatorType() == PropagatorType::sp) {
+    std::unique_ptr<OdeSolver<JulianDate, double, 3>> sp {nullptr};
+    {
+      std::unique_ptr<Gravity> forceModel {nullptr};
+      forceModel = std::make_unique<GravityJn>(pCfg.getDegree());
+      auto deq = std::make_unique<Deq>(std::move(forceModel), ecfeciSys);
+      Duration dt(0.3, phy_const::tu_per_min);
+      sp = std::make_unique<Rk4>(std::move(deq), dt);
+    }
     std::unique_ptr<Ephemeris> orbit =
         std::make_unique<SpEphemeris>(orbitParams.getOrbitName(),
                                       orbitParams.getEpoch(),
                                       xeciVec,
+                                      pCfg.getStartTime(),
+                                      pCfg.getStopTime(),
                                       ecfeciSys,
-                                      pCfg);
+                                      std::move(sp));
     return orbit;
   } else if (pCfg.getPropagatorType() == PropagatorType::kepler1) {
     std::unique_ptr<Ephemeris> orbit =

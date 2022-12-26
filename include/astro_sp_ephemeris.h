@@ -20,7 +20,7 @@
 #include <mth_hermite2.h>
 #include <astro_ephemeris.h>
 #include <astro_ecfeci_sys.h>
-#include <astro_propagator_config.h>
+#include <mth_ode_solver.h>
 
 namespace eom {
 
@@ -69,8 +69,10 @@ public:
   SpEphemeris(const std::string& name,
               const JulianDate& epoch,
               const Eigen::Matrix<double, 6, 1>& xeci,
+              const JulianDate& jdStart,
+              const JulianDate& jdStop,
               const std::shared_ptr<const EcfEciSys>& ecfeciSys,
-              const PropagatorConfig& propCfg);
+              std::unique_ptr<OdeSolver<JulianDate, double, 3>> sp);
 
   /**
    * @return  Empty string

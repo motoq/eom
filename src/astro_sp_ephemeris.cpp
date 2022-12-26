@@ -24,11 +24,7 @@
 #include <utl_const.h>
 #include <phy_const.h>
 #include <mth_hermite2.h>
-#include <astro_gravity.h>
-#include <astro_gravity_jn.h>
-#include <astro_deq.h>
 #include <mth_ode_solver.h>
-#include <astro_rk4.h>
 
 namespace eom {
 
@@ -40,27 +36,23 @@ namespace eom {
 SpEphemeris::SpEphemeris(const std::string& name,
                          const JulianDate& epoch,
                          const Eigen::Matrix<double, 6, 1>& xeci,
+                         const JulianDate& jdStart,
+                         const JulianDate& jdStop,
                          const std::shared_ptr<const EcfEciSys>& ecfeciSys,
-                         const PropagatorConfig& propCfg)
+                         std::unique_ptr<OdeSolver<JulianDate, double, 3>> sp)
 {
   m_name = name;
   m_jdEpoch = epoch;
-  m_jdStart = propCfg.getStartTime();
-  m_jdStop = propCfg.getStopTime();
+  m_jdStart = jdStart;
+  m_jdStop = jdStop;
   nullState = xeci;
   m_ecfeciSys = ecfeciSys;
 
     // SP propagator
-  std::unique_ptr<OdeSolver<JulianDate, double, 3>> sp {nullptr};
-  Duration dt(0.3, phy_const::tu_per_min);
-  {
-    std::unique_ptr<Gravity> forceModel {nullptr};
-    forceModel = std::make_unique<GravityJn>(propCfg.getDegree());
-    auto deq = std::make_unique<Deq>(std::move(forceModel), ecfeciSys);
-    sp = std::make_unique<Rk4>(std::move(deq), dt);
-  }
+  std::unique_ptr<OdeSolver<JulianDate, double, 3>> c_sp = std::move(sp);
 
-  JulianDate jdStop = propCfg.getStopTime() + 2.0*dt.getDays();
+    // Pad stop time
+  JulianDate jdEndProp {m_jdStop + utl_const::day_per_min};
   JulianDate jdNow = epoch;
 
     // Forward ephemeris
@@ -70,10 +62,10 @@ SpEphemeris::SpEphemeris(const std::string& name,
   Eigen::Matrix<double, 6, 1> x1;
   Eigen::Matrix<double, 3, 1> a1;
     // Need acceleration vector for first time
-  sp->step(jdNow, x0, a0, x1, a1);
+  c_sp->step(jdNow, x0, a0, x1, a1);
   fwd_eph.emplace_back(jdNow, x0.block<3, 1>(0, 0), x0.block<3, 1>(3, 0), a0);
-  while (jdNow < jdStop) {
-    jdNow = sp->step(jdNow, x0, a0, x1, a1);
+  while (jdNow < jdEndProp) {
+    jdNow = c_sp->step(jdNow, x0, a0, x1, a1);
     fwd_eph.emplace_back(jdNow, x1.block<3, 1>(0, 0), x1.block<3, 1>(3, 0), a1);
     x0 = x1;
   }
