@@ -87,16 +87,14 @@ JulianDate Rk4::step()
     xx(ii) = x0(ii) + q;
     xa(ii) += q + q;
   }
-    // forth
-  jdNow = m_jd + dt_days;
-  m_deq->getXdot(jdNow, xx, xd);
+    // forth - update member variables vs. locals
+  m_jd += dt_days;
+  m_deq->getXdot(m_jd, xx, m_dx);
   for (int ii=0; ii<6; ++ii) {
-    m_x(ii) = x0(ii) + (xa(ii) + dt*xd(ii))/6.0;
+    m_x(ii) = x0(ii) + (xa(ii) + dt*m_dx(ii))/6.0;
   }
-  m_dx = xd;
-  m_jd = jdNow;
 
-  return jdNow;
+  return m_jd;
 }
 
 
