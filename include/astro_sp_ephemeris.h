@@ -80,8 +80,6 @@ public:
    * ephemeris from jdStart to jdStop.
    *
    * @param  name       Unique ephemeris identifier
-   * @param  epoch      Time associated with initializing state vector
-   * @param  xeci       ECI state vector to be propagated
    * @param  jdStart    Start time for which ephemeris should be created
    * @param  jdStop     End time for which ephemeris should be created
    * @param  ecfeciSys  ECF/ECI conversion resource
@@ -90,12 +88,10 @@ public:
    *                    ownership.
    */
   SpEphemeris(const std::string& name,
-              const JulianDate& epoch,
-              const Eigen::Matrix<double, 6, 1>& xeci,
               const JulianDate& jdStart,
               const JulianDate& jdStop,
               const std::shared_ptr<const EcfEciSys>& ecfeciSys,
-              std::unique_ptr<OdeSolver<JulianDate, double, 3>> sp);
+              std::unique_ptr<OdeSolver<JulianDate, double, 6>> sp);
 
   /**
    * @return  Unique ephemeris identifier

@@ -30,40 +30,39 @@ namespace eom {
  * boundary/edge resolution
  */
 SpEphemeris::SpEphemeris(const std::string& name,
-                         const JulianDate& epoch,
-                         const Eigen::Matrix<double, 6, 1>& xeci,
                          const JulianDate& jdStart,
                          const JulianDate& jdStop,
                          const std::shared_ptr<const EcfEciSys>& ecfeciSys,
-                         std::unique_ptr<OdeSolver<JulianDate, double, 3>> sp)
+                         std::unique_ptr<OdeSolver<JulianDate, double, 6>> sp)
 {
   m_name = name;
-  m_jdEpoch = epoch;
   m_jdStart = jdStart;
   m_jdStop = jdStop;
-  nullState = xeci;
   m_ecfeciSys = ecfeciSys;
 
     // SP propagator
-  std::unique_ptr<OdeSolver<JulianDate, double, 3>> c_sp = std::move(sp);
+  std::unique_ptr<OdeSolver<JulianDate, double, 6>> c_sp = std::move(sp);
+  m_jdEpoch = c_sp->getT();
+  nullState = c_sp->getX();
 
     // Pad stop time
   JulianDate jdEndProp {m_jdStop + utl_const::day_per_min};
-  JulianDate jdNow = epoch;
+  JulianDate jdNow = c_sp->getT();
 
     // Forward ephemeris
   std::vector<eph_record> fwd_eph;
-  Eigen::Matrix<double, 6, 1> x0 = xeci;
-  Eigen::Matrix<double, 3, 1> a0;
-  Eigen::Matrix<double, 6, 1> x1;
-  Eigen::Matrix<double, 3, 1> a1;
-    // Need acceleration vector for first time
-  c_sp->step(jdNow, x0, a0, x1, a1);
-  fwd_eph.emplace_back(jdNow, x0.block<3, 1>(0, 0), x0.block<3, 1>(3, 0), a0);
+  Eigen::Matrix<double, 6, 1> c_x = c_sp->getX();
+  Eigen::Matrix<double, 6, 1> c_dx = c_sp->getXdot();
+  fwd_eph.emplace_back(jdNow, c_x.block<3, 1>(0, 0),
+                              c_x.block<3, 1>(3, 0),
+                              c_dx.block<3, 1>(3, 0));
   while (jdNow < jdEndProp) {
-    jdNow = c_sp->step(jdNow, x0, a0, x1, a1);
-    fwd_eph.emplace_back(jdNow, x1.block<3, 1>(0, 0), x1.block<3, 1>(3, 0), a1);
-    x0 = x1;
+    jdNow = c_sp->step();
+    c_x = c_sp->getX();
+    c_dx = c_sp->getXdot();
+    fwd_eph.emplace_back(jdNow, c_x.block<3, 1>(0, 0),
+                                c_x.block<3, 1>(3, 0),
+                                c_dx.block<3, 1>(3, 0));
   }
 
     // Generate and store Hermite interpolation objects

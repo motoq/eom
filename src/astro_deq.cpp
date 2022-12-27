@@ -26,7 +26,7 @@ Deq::Deq(std::unique_ptr<Gravity> grav,
 }
 
 
-void Deq::getXDot(const JulianDate& utc,
+void Deq::getXdot(const JulianDate& utc,
                   const Eigen::Matrix<double, 6, 1>& x,
                         Eigen::Matrix<double, 6, 1>& xd)
 {

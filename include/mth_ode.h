@@ -42,7 +42,7 @@ public:
    * @param  x   State vector at time t
    * @param  xd  Output: Time derivative of state vector at time t
    */
-  virtual void getXDot(const T& t, const Eigen::Matrix<F, DIM, 1>& x,
+  virtual void getXdot(const T& t, const Eigen::Matrix<F, DIM, 1>& x,
                                          Eigen::Matrix<F, DIM, 1>& xd) = 0;
 };
 

@@ -19,56 +19,82 @@
 namespace eom {
 
 
-Rk4::Rk4(std::unique_ptr<Ode<JulianDate, double, 6>> deq, const Duration& dt)
+Rk4::Rk4(std::unique_ptr<Ode<JulianDate, double, 6>> deq,
+         const Duration& dt,
+         const JulianDate& jd,
+         const Eigen::Matrix<double, 6, 1>& x)
 {
   m_deq = std::move(deq);
   m_dt = dt;
+  m_jd = jd;
+  m_x = x;
+
+  m_deq->getXdot(m_jd, m_x, m_dx);
 }
 
 
-JulianDate Rk4::step(const JulianDate& utc,
-                     const Eigen::Matrix<double, 6, 1>& x0,
-                           Eigen::Matrix<double, 3, 1>& a0,
-                           Eigen::Matrix<double, 6, 1>& x,
-                           Eigen::Matrix<double, 3, 1>& a)
+JulianDate Rk4::getT() const noexcept
+{
+  return m_jd;
+}
+
+
+Eigen::Matrix<double, 6, 1> Rk4::getX() const noexcept
+{
+  return m_x;
+}
+
+
+Eigen::Matrix<double, 6, 1> Rk4::getXdot() const noexcept
+{
+  return m_dx;
+}
+
+
+/*
+ * RK4 algorithm adapted from "Aircraft Control and Simulation" by
+ * Brian L. Stevens and Frank L. Lewis, 1st ed.
+ */
+JulianDate Rk4::step()
 {
   auto dt = m_dt.getTu();
   auto dt_days = m_dt.getDays();
 
+  Eigen::Matrix<double, 6, 1> x0 = m_x;
   Eigen::Matrix<double, 6, 1> xd;
   Eigen::Matrix<double, 6, 1> xx;
   Eigen::Matrix<double, 6, 1> xa;
 
     // first
-  auto jdNow = utc;
-  m_deq->getXDot(jdNow, x0, xd);
-  a0 = xd.block<3, 1>(3, 0);
+  auto jdNow = m_jd;
+  m_deq->getXdot(jdNow, x0, xd);
   for (int ii=0; ii<6; ++ii) {
     xa(ii) = dt*xd(ii);
     xx(ii) = 0.5*xa(ii) + x0(ii);
   }
     // second
   jdNow += 0.5*dt_days;
-  m_deq->getXDot(jdNow, xx, xd);
+  m_deq->getXdot(jdNow, xx, xd);
   for (int ii=0; ii<6; ++ii) {
     auto q = dt*xd(ii);
     xx(ii) =  x0(ii) + 0.5*q;
     xa(ii) += q + q;
   }
     // third
-  m_deq->getXDot(jdNow, xx, xd);
+  m_deq->getXdot(jdNow, xx, xd);
   for (int ii=0; ii<6; ++ii) {
     auto q = dt*xd(ii);
     xx(ii) = x0(ii) + q;
     xa(ii) += q + q;
   }
     // forth
-  jdNow = utc + dt_days;
-  m_deq->getXDot(jdNow, xx, xd);
-  a = xd.block<3, 1>(3, 0);
+  jdNow = m_jd + dt_days;
+  m_deq->getXdot(jdNow, xx, xd);
   for (int ii=0; ii<6; ++ii) {
-    x(ii) = x0(ii) + (xa(ii) + dt*xd(ii))/6.0;
+    m_x(ii) = x0(ii) + (xa(ii) + dt*xd(ii))/6.0;
   }
+  m_dx = xd;
+  m_jd = jdNow;
 
   return jdNow;
 }

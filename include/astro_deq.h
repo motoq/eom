@@ -47,7 +47,7 @@ public:
    * @param  x    ECI State vector
    * @param  xd   Output: Time derivative of state vector
    */
-  void getXDot(const JulianDate& utc,
+  void getXdot(const JulianDate& utc,
                const Eigen::Matrix<double, 6, 1>& x,
                      Eigen::Matrix<double, 6, 1>& xd) override;
 

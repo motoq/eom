@@ -27,7 +27,7 @@ namespace eom {
  * @author  Kurt Motekew
  * @date    2022/09/11
  */
-class Rk4 : public OdeSolver<JulianDate, double, 3> {
+class Rk4 : public OdeSolver<JulianDate, double, 6> {
 public:
   ~Rk4() = default;
   Rk4(const Rk4&) = default;
@@ -36,34 +36,47 @@ public:
   Rk4& operator=(Rk4&&) = default;
 
   /**
-   * Initialize with equations of motion to integrate.
+   * Initialize with equations of motion, fixed step size,
+   * and initial state of the system to be integrated.
    *
    * @param  deq  Equations of motion
    * @param  dt   Integration step size
+   * @param  jd   State vector epoch
+   * @param  x    Initial conditions - state vector at epoch
    */
-  Rk4(std::unique_ptr<Ode<JulianDate, double, 6>> deq, const Duration& dt);
+  Rk4(std::unique_ptr<Ode<JulianDate, double, 6>> deq,
+      const Duration& dt,
+      const JulianDate& jd,
+      const Eigen::Matrix<double, 6, 1>& x);
+
+  /**
+   * Time associated with current state vector and derivative
+   */
+  JulianDate getT() const noexcept override;
+
+  /**
+   * Current state vector
+   */
+  Eigen::Matrix<double, 6, 1> getX() const noexcept override;
+
+  /**
+   * Time derivative of current state vector
+   */
+  Eigen::Matrix<double, 6, 1> getXdot() const noexcept override;
 
  /**
    * Propagate forward by system integration step size.
    *
-   * @param utc  Time associated with state vector
-   * @param x0   State vector
-   * @param a0   Output: Force model acceleration vector at input time
-   * @param x    Output: State vector propagated to the returned time
-   * @param a    Output: Force model acceleration vector at returned time
-   
-   * @return   Time associated with propagated state.  For this
-   *           propagator, it will always be utc + dt.
+   * @return   Time associated with propagated state.
    */
-  JulianDate step(const JulianDate& utc,
-                  const Eigen::Matrix<double, 6, 1>& x0,
-                        Eigen::Matrix<double, 3, 1>& a0,
-                        Eigen::Matrix<double, 6, 1>& x,
-                        Eigen::Matrix<double, 3, 1>& a) override;
+  JulianDate step() override;
 
 private:
-  Duration m_dt;
   std::unique_ptr<Ode<JulianDate, double, 6>> m_deq {nullptr};
+  Duration m_dt;
+  JulianDate m_jd;
+  Eigen::Matrix<double, 6, 1> m_x;
+  Eigen::Matrix<double, 6, 1> m_dx;
 };
 
 

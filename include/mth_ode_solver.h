@@ -19,8 +19,7 @@ namespace eom {
  *
  * @tparam  T    Time type
  * @tparam  F    Data type of state vector
- * @tparam  DIM  Dimension of system - 1/2 state vector size
- *               (e.g., 3 dimensional position has 6 element state vector)
+ * @tparam  DIM  Dimension of system
  *
  * @author  Kurt Motekew
  * @date    2022/09/10
@@ -36,27 +35,29 @@ public:
   OdeSolver& operator=(OdeSolver&&) = delete;
 
   /**
-   * Interface for a method of numeric integration to update the state
-   * of the system of first order differential equations from x0 at
-   * time t0 to x at the time returned.  The acceleration vectors at the
-   * input and output times, as computed by the force model, are also
-   * returned.
-   *
-   * @param t0  Time associated with state vector
-   * @param x0  State vector at time t0 (e.g., postion velocity)
-   * @param a0  Output: Force model acceleration vector at input
-   * @param x   Output: State vector propagated to the returned time
-   * @param a   Output: Force model acceleration vector at returned time
-   
-   * @return   Time associated with propagated state.  The difference
-   *           between t0 and this time will depend on integrator
-   *           settings.
+   * @return  Time of system in current state
    */
-  virtual T step(const T& t0,
-                 const Eigen::Matrix<F, 2*DIM, 1>& x0,
-                       Eigen::Matrix<F,   DIM, 1>& a0,
-                       Eigen::Matrix<F, 2*DIM, 1>& x,
-                       Eigen::Matrix<F,   DIM, 1>& a) = 0;
+  virtual T getT() const noexcept = 0;
+
+  /**
+   * @return  Current state vector of the system
+   */
+  virtual Eigen::Matrix<F, DIM, 1> getX() const noexcept = 0;
+ 
+  /**
+   * @return  First derivative of current state vector of the system
+   */
+  virtual Eigen::Matrix<F, DIM, 1> getXdot() const noexcept = 0;
+
+  /**
+   * Interface for a method of numeric integration to update the state
+   * of the system of first order differential equations from the
+   * current state to the propagated state.
+   *
+   * @return   Time associated with updated state vector.
+   */
+  virtual T step() = 0;
+
 };
 
 

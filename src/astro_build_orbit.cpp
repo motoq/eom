@@ -68,14 +68,15 @@ build_orbit(const OrbitDef& orbitParams,
     }
     auto deq = std::make_unique<Deq>(std::move(forceModel), ecfeciSys);
       // Integrator
-    std::unique_ptr<OdeSolver<JulianDate, double, 3>> sp {nullptr};
+    std::unique_ptr<OdeSolver<JulianDate, double, 6>> sp {nullptr};
     Duration dt(0.3, phy_const::tu_per_min);
-    sp = std::make_unique<Rk4>(std::move(deq), dt);
+    sp = std::make_unique<Rk4>(std::move(deq),
+                               dt,
+                               orbitParams.getEpoch(),
+                               xeciVec);
       // Ready to generate ephemeris
     std::unique_ptr<Ephemeris> orbit =
         std::make_unique<SpEphemeris>(orbitParams.getOrbitName(),
-                                      orbitParams.getEpoch(),
-                                      xeciVec,
                                       pCfg.getStartTime(),
                                       pCfg.getStopTime(),
                                       ecfeciSys,
