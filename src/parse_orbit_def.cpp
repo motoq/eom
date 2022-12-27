@@ -17,6 +17,7 @@
 #include <astro_propagator_config.h>
 #include <astro_orbit_def.h>
 #include <astro_gravity_jn.h>
+#include <astro_gravt.h>
 
 #include <eom_config.h>
 
@@ -130,7 +131,9 @@ static void parse_gravity_model(std::deque<std::string>& grav_toks,
         int degree {std::stoi(grav_toks[0])};
         grav_toks.pop_front();
         int order {std::stoi(grav_toks[0])};
-        if (degree >= 0  &&  order >= 0  &&  order <= degree) {
+        if (order <= degree  &&
+            degree >= 0  &&  degree <= eom::Gravt::getMaxDegree()  &&
+            order >= 0   &&  order <= eom::Gravt::getMaxOrder()) {
           grav_toks.pop_front();
           pCfg.setDegreeOrder(degree, order);
         }

@@ -12,7 +12,6 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include <utility>
 
 #include <Eigen/Dense>
 
@@ -24,11 +23,14 @@
 
 namespace eom {
 
+/**
+ * Ephemeris records used for generating interpolators
+ */
 struct eph_record {
   JulianDate t;
-  Eigen::Matrix<double, 3, 1> p;
-  Eigen::Matrix<double, 3, 1> v;
-  Eigen::Matrix<double, 3, 1> a;
+  Eigen::Matrix<double, 3, 1> p;            ///< Position
+  Eigen::Matrix<double, 3, 1> v;            ///< Velocity
+  Eigen::Matrix<double, 3, 1> a;            ///< Acceleration
 
   eph_record(const JulianDate& jd,
              const Eigen::Matrix<double, 3, 1>& x,
@@ -41,10 +43,13 @@ struct eph_record {
   }
 };
 
+/**
+ * Interpolation records generated from ephemeris
+ */
 struct interp_record {
-  JulianDate jd1;
-  JulianDate jd2;
-  Hermite2<double, 3> hItp;
+  JulianDate jd1;                           ///< Interpolator start time
+  JulianDate jd2;                           ///< Interpolator stop time
+  Hermite2<double, 3> hItp;                 ///< Interpolator
 
   interp_record(const JulianDate& jdStart,
                 const JulianDate& jdEnd,
@@ -56,7 +61,11 @@ struct interp_record {
 };
 
 /**
- * SP Ephemeris
+ * Generates ephemeris through special perturbations methods and stores
+ * as interpolators for retrieval.  Position, velocity, and acceleration
+ * are used to form Hermite interpolators.
+ *
+ * @author  Kurt Motekew  2022/12/26
  */
 class SpEphemeris : public Ephemeris {
 public:
@@ -66,6 +75,20 @@ public:
   SpEphemeris(SpEphemeris&&) = default;                  // move constructor
   SpEphemeris& operator=(SpEphemeris&&) = default;       // move assignment
 
+  /**
+   * Initialize with orbital state and model/integrator.  Generate
+   * ephemeris from jdStart to jdStop.
+   *
+   * @param  name       Unique ephemeris identifier
+   * @param  epoch      Time associated with initializing state vector
+   * @param  xeci       ECI state vector to be propagated
+   * @param  jdStart    Start time for which ephemeris should be created
+   * @param  jdStop     End time for which ephemeris should be created
+   * @param  ecfeciSys  ECF/ECI conversion resource
+   * @param  sp         Integrator with force model (EOM) used to
+   *                    generate ephemeris.  SpEphemeris takes
+   *                    ownership.
+   */
   SpEphemeris(const std::string& name,
               const JulianDate& epoch,
               const Eigen::Matrix<double, 6, 1>& xeci,
@@ -75,7 +98,7 @@ public:
               std::unique_ptr<OdeSolver<JulianDate, double, 3>> sp);
 
   /**
-   * @return  Empty string
+   * @return  Unique ephemeris identifier
    */
   std::string getName() const override
   {

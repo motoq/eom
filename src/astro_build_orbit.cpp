@@ -29,6 +29,7 @@
 #include <astro_kepler.h>
 #include <astro_vinti.h>
 #ifdef GENPL
+#include <astro_gravt.h>
 #include <astro_oscj2.h>
 #include <astro_secj2.h>
 #endif
@@ -49,17 +50,28 @@ build_orbit(const OrbitDef& orbitParams,
   for (int ii=0; ii<6; ++ii) {
     xeciVec(ii) = xeci_array[ii];
   }
-
+    // Build orbit definition based on propagator configuration
+    // Default options are two-body systems if PropagatorConfig
+    // values fall out if sync with options checked here.
   PropagatorConfig pCfg = orbitParams.getPropagatorConfig();
   if (pCfg.getPropagatorType() == PropagatorType::sp) {
-    std::unique_ptr<OdeSolver<JulianDate, double, 3>> sp {nullptr};
-    {
-      std::unique_ptr<Gravity> forceModel {nullptr};
+      // Force model must always include central body
+    std::unique_ptr<Gravity> forceModel {nullptr};
+    if (pCfg.getGravityModel() == GravityModel::jn) {
       forceModel = std::make_unique<GravityJn>(pCfg.getDegree());
-      auto deq = std::make_unique<Deq>(std::move(forceModel), ecfeciSys);
-      Duration dt(0.3, phy_const::tu_per_min);
-      sp = std::make_unique<Rk4>(std::move(deq), dt);
+#ifdef GENPL
+    } else if (pCfg.getGravityModel() == GravityModel::gravt) {
+      forceModel = std::make_unique<Gravt>(pCfg.getDegree(), pCfg.getOrder());
+#endif
+    } else {
+      forceModel = std::make_unique<GravityJn>(0);
     }
+    auto deq = std::make_unique<Deq>(std::move(forceModel), ecfeciSys);
+      // Integrator
+    std::unique_ptr<OdeSolver<JulianDate, double, 3>> sp {nullptr};
+    Duration dt(0.3, phy_const::tu_per_min);
+    sp = std::make_unique<Rk4>(std::move(deq), dt);
+      // Ready to generate ephemeris
     std::unique_ptr<Ephemeris> orbit =
         std::make_unique<SpEphemeris>(orbitParams.getOrbitName(),
                                       orbitParams.getEpoch(),

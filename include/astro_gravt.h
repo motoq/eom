@@ -15,6 +15,7 @@
 #include <Eigen/Dense>
 
 #include <astro_gravity.h>
+#include <astro_egm_coeff.h>
 
 namespace eom {
 
@@ -43,6 +44,24 @@ public:
    *          or exceed allowed dimensions.
    */
   Gravt(int degree, int order);
+
+  /**
+   * @return  The maximum degree of spherical harmonic coefficients
+   *          supported by this gravity model.
+   */
+  static constexpr int getMaxDegree() noexcept
+  {
+    return egm_coeff::degree;
+  }
+
+  /**
+   * @return  The maximum order of spherical harmonic coefficients
+   *          supported by this gravity model.
+   */
+  static constexpr int getMaxOrder() noexcept
+  {
+    return egm_coeff::order;
+  }
 
   /**
    * Compute gravitational acceleration given an ECEF position vector.

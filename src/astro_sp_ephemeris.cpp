@@ -14,24 +14,20 @@
 #include <vector>
 #include <memory>
 
-#include <algorithm>
-
-#include <cal_duration.h>
-#include <cal_julian_date.h>
-#include <astro_ephemeris.h>
-#include <astro_propagator_config.h>
-
 #include <utl_const.h>
 #include <phy_const.h>
+#include <cal_duration.h>
+#include <cal_julian_date.h>
 #include <mth_hermite2.h>
 #include <mth_ode_solver.h>
+#include <astro_ephemeris.h>
 
 namespace eom {
 
 /*
- * Work in progress - testing implementation of the tools needed for SP
- * methods (ODE, integrator, gravity model, interpolation) before
- * setting up factory like process using PropagatorConfig settings.
+ * Work in progress...
+ * Need to add interpolator finder, exceptions for out of range,
+ * boundary/edge resolution
  */
 SpEphemeris::SpEphemeris(const std::string& name,
                          const JulianDate& epoch,
@@ -70,6 +66,7 @@ SpEphemeris::SpEphemeris(const std::string& name,
     x0 = x1;
   }
 
+    // Generate and store Hermite interpolation objects
   for (unsigned int ii=1U; ii<fwd_eph.size(); ++ii) {
     eph_record& r1 = fwd_eph[ii-1U];
     eph_record& r2 = fwd_eph[ii];
@@ -77,12 +74,12 @@ SpEphemeris::SpEphemeris(const std::string& name,
     Hermite2<double, 3> hItp(dt_tu, r1.p, r1.v, r1.a, r2.p, r2.v, r2.a);
     m_eph_interpolators.emplace_back(r1.t, r2.t, hItp);
   }
-  
 }
 
 Eigen::Matrix<double, 6, 1> SpEphemeris::getStateVector(const JulianDate& jd,
                                                         EphemFrame frame) const
 {
+    // Simple retrieval for now
   Eigen::Matrix<double, 6, 1> xeci = nullState;
   bool found {false};
   for (const auto& interp_record : m_eph_interpolators) {
