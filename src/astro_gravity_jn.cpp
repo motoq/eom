@@ -15,6 +15,7 @@
 #include <Eigen/Dense>
 
 #include <phy_const.h>
+#include <mth_ode.h>
 
 namespace eom
 {
@@ -36,7 +37,7 @@ GravityJn::GravityJn(int degree) : nterm {degree}
  */
 Eigen::Matrix<double, 3, 1>
     GravityJn::getAcceleration(const Eigen::Matrix<double, 3, 1>& pos,
-                               EvalMethod)
+                               OdeEvalMethod)
 {
     // Always used
   double ri {pos(0)};

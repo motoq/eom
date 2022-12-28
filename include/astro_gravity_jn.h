@@ -11,6 +11,7 @@
 
 #include <Eigen/Dense>
 
+#include <mth_ode.h>
 #include <astro_gravity.h>
 
 namespace eom {
@@ -68,7 +69,7 @@ public:
    */
   Eigen::Matrix<double, 3, 1>
       getAcceleration(const Eigen::Matrix<double, 3, 1>& pos,
-                      EvalMethod) override;
+                      OdeEvalMethod) override;
 
 private:
   int nterm {0};                  ///< number of terms

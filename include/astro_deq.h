@@ -43,13 +43,19 @@ public:
   /**
    * Return derivative of state vector
    *
-   * @param  utc  time
-   * @param  x    ECI State vector
-   * @param  xd   Output: Time derivative of state vector
+   * @param  utc     time
+   * @param  x       ECI State vector (position and velocity)
+   * @param  method  Predictor/corrector option for integration methods
+   *                 combined with models offering the option for
+   *                 greater efficiency.  Defaults to predictor (full
+   *                 evaluation of EOM).
+   *
+   * @return  Time derivative of state vector (velocity and acceleration)
    */
-  void getXdot(const JulianDate& utc,
-               const Eigen::Matrix<double, 6, 1>& x,
-                     Eigen::Matrix<double, 6, 1>& xd) override;
+  Eigen::Matrix<double, 6, 1> getXdot(const JulianDate& utc,
+                                      const Eigen::Matrix<double, 6, 1>& x,
+                                      OdeEvalMethod method =
+                                          OdeEvalMethod::predictor) override;
 
 private:
   std::shared_ptr<const EcfEciSys> m_ecfeci {nullptr};

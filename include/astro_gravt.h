@@ -14,6 +14,7 @@
 
 #include <Eigen/Dense>
 
+#include <mth_ode.h>
 #include <astro_gravity.h>
 #include <astro_egm_coeff.h>
 
@@ -71,7 +72,9 @@ public:
    * components to the desired ECI reference frame.
    *
    * @param  pos    Cartesian ECEF position vector, DU
-   * @param  entry  Predictor/corrector option
+   * @param  entry  Predictor performs spherical harmonic evaluation.
+   *                Corrector uses cached values and updates the
+   *                central body term only
    *
    * @return  Cartesian acceleration, earth fixed coordinates
    *          with derivatives w.r.t. the inertial reference frame,
@@ -79,10 +82,10 @@ public:
    */
   Eigen::Matrix<double, 3, 1>
       getAcceleration(const Eigen::Matrix<double, 3, 1>& pos,
-                      EvalMethod entry) override;
+                      OdeEvalMethod entry) override;
 
 private:
-  Eigen::Matrix<double, 3, 1> gravt(EvalMethod ntry,
+  Eigen::Matrix<double, 3, 1> gravt(OdeEvalMethod ntry,
                                     const std::array<double, 5>& arg,
                                     double *vmat);
 

@@ -13,6 +13,7 @@
 #include <Eigen/Dense>
 
 #include <cal_julian_date.h>
+#include <mth_ode.h>
 #include <astro_gravity.h>
 
 namespace eom {
@@ -26,23 +27,22 @@ Deq::Deq(std::unique_ptr<Gravity> grav,
 }
 
 
-void Deq::getXdot(const JulianDate& utc,
-                  const Eigen::Matrix<double, 6, 1>& x,
-                        Eigen::Matrix<double, 6, 1>& xd)
+Eigen::Matrix<double, 6, 1> Deq::getXdot(const JulianDate& utc,
+                                         const Eigen::Matrix<double, 6, 1>& x,
+                                         OdeEvalMethod method)
 {
-  Eigen::Matrix<double, 3, 1> posi = x.block<3,1>(0,0);
-  Eigen::Matrix<double, 3, 1> veli = x.block<3,1>(3,0);
-
-    // Derivative of position is just the velocity
-  xd.block<3,1>(0,0) = veli;
-  
     // Force model
-  Eigen::Matrix<double, 3, 1> posf = m_ecfeci->eci2ecf(utc, posi);
-  Eigen::Matrix<double, 3, 1> a_i_f =
-      m_grav->getAcceleration(posf, eom::EvalMethod::predictor);
-    // Derivative in inertial, convert components from fixed to inertial
-  Eigen::Matrix<double, 3, 1> a_i_i = m_ecfeci->ecf2eci(utc, a_i_f);
-  xd.block<3,1>(3,0) = a_i_i;
+  Eigen::Matrix<double, 3, 1> posf = m_ecfeci->eci2ecf(utc, x.block<3,1>(0,0));
+  Eigen::Matrix<double, 3, 1> a_i_f = m_grav->getAcceleration(posf, method);
+
+  Eigen::Matrix<double, 6, 1> xd;
+    // Velocity is derivative of position
+  xd.block<3,1>(0,0) = x.block<3,1>(3,0);
+    // Acceleration derivative is w.r.t. ECI, but need to transform
+    // vector components to ECI frame
+  xd.block<3,1>(3,0) = m_ecfeci->ecf2eci(utc, a_i_f);
+
+  return xd;
 }
 
 

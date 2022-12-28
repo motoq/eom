@@ -29,7 +29,7 @@ Rk4::Rk4(std::unique_ptr<Ode<JulianDate, double, 6>> deq,
   m_jd = jd;
   m_x = x;
 
-  m_deq->getXdot(m_jd, m_x, m_dx);
+  m_dx = m_deq->getXdot(m_jd, m_x);
 }
 
 
@@ -67,21 +67,21 @@ JulianDate Rk4::step()
 
     // first
   auto jdNow = m_jd;
-  m_deq->getXdot(jdNow, x0, xd);
+  xd = m_deq->getXdot(jdNow, x0);
   for (int ii=0; ii<6; ++ii) {
     xa(ii) = dt*xd(ii);
     xx(ii) = 0.5*xa(ii) + x0(ii);
   }
     // second
   jdNow += 0.5*dt_days;
-  m_deq->getXdot(jdNow, xx, xd);
+  xd = m_deq->getXdot(jdNow, xx);
   for (int ii=0; ii<6; ++ii) {
     auto q = dt*xd(ii);
     xx(ii) =  x0(ii) + 0.5*q;
     xa(ii) += q + q;
   }
     // third
-  m_deq->getXdot(jdNow, xx, xd);
+  xd = m_deq->getXdot(jdNow, xx);
   for (int ii=0; ii<6; ++ii) {
     auto q = dt*xd(ii);
     xx(ii) = x0(ii) + q;
@@ -89,7 +89,7 @@ JulianDate Rk4::step()
   }
     // forth - update member variables vs. locals
   m_jd += dt_days;
-  m_deq->getXdot(m_jd, xx, m_dx);
+  m_dx = m_deq->getXdot(m_jd, xx);
   for (int ii=0; ii<6; ++ii) {
     m_x(ii) = x0(ii) + (xa(ii) + dt*m_dx(ii))/6.0;
   }

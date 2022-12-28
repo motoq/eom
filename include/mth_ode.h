@@ -14,6 +14,15 @@
 namespace eom {
 
 /**
+ * Indicates evaluation method to use for models offering efficient
+ * means for predictor/corrector integration schemes.
+ */
+enum class OdeEvalMethod {
+  predictor,
+  corrector
+};
+
+/**
  * Interface defining a system of 1st order ordinary differential
  * equations.
  *
@@ -38,12 +47,18 @@ public:
    * This method computes the derivative values based on the model
    * of the system of equations.
    * 
-   * @param  t   time
-   * @param  x   State vector at time t
-   * @param  xd  Output: Time derivative of state vector at time t
+   * @param  t       time
+   * @param  x       State vector at time t
+   * @param  method  Predictor/corrector option for integration methods
+   *                 combined with models offering the option for
+   *                 greater efficiency
+   *
+   * @return  Time derivative of state vector at time t
    */
-  virtual void getXdot(const T& t, const Eigen::Matrix<F, DIM, 1>& x,
-                                         Eigen::Matrix<F, DIM, 1>& xd) = 0;
+  virtual Eigen::Matrix<F, DIM, 1> getXdot(const T& t,
+                                           const Eigen::Matrix<F, DIM, 1>& x,
+                                           OdeEvalMethod method =
+                                               OdeEvalMethod::predictor) = 0;
 };
 
 
