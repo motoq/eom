@@ -35,6 +35,11 @@ as Matlab (Octave compatible) functions.  When run, these **.m** files
 will plot the data with appropriate formatting while optionally
 returning the handle to the figure along with the raw data.
 
+The library is designed with thread safety in mind.  Shared resources
+(ECF/ECI transformation services, ephemerides, etc.) are available as
+immutable objects.  SP based ephemerides are generated taking advantage
+of parallel loop processing available since C++17.
+
 **eom** utilizes two mature libraries upon which built-in models will
 rely and external libraries may leverage.  The first is the
 International Astronomical Union Standards of Fundamental Astronomy (IAU
@@ -42,7 +47,7 @@ SOFA) C library <http://www.iausofa.org/>.  Installation of SOFA-Issue
 2015-02-09 or newer is required to build **eom**.  The second library is
 the Eigen 3 C++ template library for linear algebra
 <http://eigen.tuxfamily.org>.  In the future, Kitware’s VTK OpenGL
-library will be used for direct plotting of graphics.
+library may be used for direct plotting of graphics.
 
 Core concepts behind **eom** are:
 
