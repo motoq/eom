@@ -20,6 +20,12 @@ void PropagatorConfig::setStartStopTime(const JulianDate& jdStart,
 }
 
 
+void PropagatorConfig::setPropagator(Propagator integration_method)
+{
+  m_propagator = integration_method;
+}
+
+
 void PropagatorConfig::setGravityModel(GravityModel gravity_model)
 {
   m_gravity_model = gravity_model;

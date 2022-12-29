@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="17.991644mm"
+   height="20.671192mm"
+   viewBox="0 0 17.991644 20.671192"
+   version="1.1"
+   id="svg3235"
+   sodipodi:docname="eom.svg"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview3237"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="0.74386223"
+     inkscape:cx="382.46329"
+     inkscape:cy="550.50516"
+     inkscape:window-width="1920"
+     inkscape:window-height="1092"
+     inkscape:window-x="0"
+     inkscape:window-y="33"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs3232" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-3.9871231,-3.0036382)">
+    <g
+       id="barcode"
+       style="fill:#000000"
+       transform="matrix(0.264583,0,0,0.264583,3.9871231,3.0036382)">
+      <rect
+         x="0"
+         y="0"
+         id="barcode_bar1"
+         width="2"
+         height="69" />
+      <rect
+         x="3"
+         y="0"
+         id="barcode_bar3"
+         width="1"
+         height="69" />
+      <rect
+         x="6"
+         y="0"
+         id="barcode_bar5"
+         width="1"
+         height="69" />
+      <rect
+         x="11"
+         y="0"
+         id="barcode_bar7"
+         width="1"
+         height="69" />
+      <rect
+         x="15"
+         y="0"
+         id="barcode_bar9"
+         width="2"
+         height="69" />
+      <rect
+         x="18"
+         y="0"
+         id="barcode_bar11"
+         width="1"
+         height="69" />
+      <rect
+         x="22"
+         y="0"
+         id="barcode_bar13"
+         width="1"
+         height="69" />
+      <rect
+         x="26"
+         y="0"
+         id="barcode_bar15"
+         width="3"
+         height="69" />
+      <rect
+         x="30"
+         y="0"
+         id="barcode_bar17"
+         width="2"
+         height="69" />
+      <rect
+         x="33"
+         y="0"
+         id="barcode_bar19"
+         width="1"
+         height="69" />
+      <rect
+         x="35"
+         y="0"
+         id="barcode_bar21"
+         width="3"
+         height="69" />
+      <rect
+         x="39"
+         y="0"
+         id="barcode_bar23"
+         width="2"
+         height="69" />
+      <rect
+         x="44"
+         y="0"
+         id="barcode_bar25"
+         width="2"
+         height="69" />
+      <rect
+         x="48"
+         y="0"
+         id="barcode_bar27"
+         width="1"
+         height="69" />
+      <rect
+         x="53"
+         y="0"
+         id="barcode_bar29"
+         width="1"
+         height="69" />
+      <rect
+         x="55"
+         y="0"
+         id="barcode_bar31"
+         width="2"
+         height="69" />
+      <rect
+         x="60"
+         y="0"
+         id="barcode_bar33"
+         width="3"
+         height="69" />
+      <rect
+         x="64"
+         y="0"
+         id="barcode_bar35"
+         width="1"
+         height="69" />
+      <rect
+         x="66"
+         y="0"
+         id="barcode_bar37"
+         width="2"
+         height="69" />
+      <text
+         x="34"
+         y="78"
+         style="font-size:9px;text-align:center;text-anchor:middle"
+         xml:space="preserve"
+         id="barcode_text">EOM</text>
+    </g>
+  </g>
+</svg>

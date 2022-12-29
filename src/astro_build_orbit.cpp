@@ -71,16 +71,25 @@ build_orbit(const OrbitDef& orbitParams,
     auto deq = std::make_unique<Deq>(std::move(forceModel), ecfeciSys);
       // Integrator
     std::unique_ptr<OdeSolver<JulianDate, double, 6>> sp {nullptr};
-    Duration dt(0.3, phy_const::tu_per_min);
-    /*
-    sp = std::make_unique<Rk4>(std::move(deq),
-                               dt,
-                               orbitParams.getEpoch(),
-                               xeciVec);
-    */
-    sp = std::make_unique<GaussJackson>(std::move(deq),
-                                        orbitParams.getEpoch(),
-                                        xeciVec);
+    if (pCfg.getPropagator() == Propagator::rk4) {
+      Duration dt(0.3, phy_const::tu_per_min);
+      sp = std::make_unique<Rk4>(std::move(deq),
+                                 dt,
+                                 orbitParams.getEpoch(),
+                                 xeciVec);
+#ifdef GENPL
+    } else if (pCfg.getPropagator() == Propagator::gj) {
+      sp = std::make_unique<GaussJackson>(std::move(deq),
+                                          orbitParams.getEpoch(),
+                                          xeciVec);
+#endif
+    } else {
+      Duration dt(0.3, phy_const::tu_per_min);
+      sp = std::make_unique<Rk4>(std::move(deq),
+                                 dt,
+                                 orbitParams.getEpoch(),
+                                 xeciVec);
+    }
       // Ready to generate ephemeris
     std::unique_ptr<Ephemeris> orbit =
         std::make_unique<SpEphemeris>(orbitParams.getOrbitName(),

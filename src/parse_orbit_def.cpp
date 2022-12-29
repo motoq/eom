@@ -23,6 +23,8 @@
 
 #include <eom_config.h>
 
+static void parse_propagator(std::deque<std::string>&,
+                             eom::PropagatorConfig&);
 static void parse_gravity_model(std::deque<std::string>&,
                                 eom::PropagatorConfig&);
 
@@ -43,7 +45,7 @@ eom::OrbitDef parse_orbit_def(std::deque<std::string>& tokens,
   auto model = tokens[0];
   tokens.pop_front();
 
-  if (model == "Sp"  &&  tokens.size() > 0 ) {
+  if (model == "SP"  &&  tokens.size() > 0 ) {
     eom::PropagatorConfig propCfg {eom::PropagatorType::sp};
     propCfg.setStartStopTime(cfg.getStartTime(), cfg.getStopTime());
     eom::JulianDate epoch = parse_datetime(tokens);
@@ -53,6 +55,7 @@ eom::OrbitDef parse_orbit_def(std::deque<std::string>& tokens,
       // integrator options.
     unsigned int sp_options {2};
     for (unsigned int ii=0; ii<sp_options; ++ii) {
+      parse_propagator(tokens, propCfg);
       parse_gravity_model(tokens, propCfg);
     }
     eom::OrbitDef orbit {name, propCfg, epoch, xeci,
@@ -103,9 +106,33 @@ eom::OrbitDef parse_orbit_def(std::deque<std::string>& tokens,
 
 }
 
+
+//
 // Incomplete parsing due to failing expectations for a particular
-// gravity model will lead to failure to clear all tokens by the end of
-// the parsing loop above
+// gravity model or propagator will lead to failure to clear all
+// tokens by the end of the parsing loop above.  This will indicate
+// an invalid option in the input file, or incorrect options
+//
+
+static void parse_propagator(std::deque<std::string>& prop_toks,
+                             eom::PropagatorConfig& pCfg)
+{
+    // "Propagator  Method"
+  if (prop_toks.size() > 1  &&  prop_toks[0] == "Propagator") {
+    prop_toks.pop_front();
+    if (prop_toks[0] == "RK4") {
+      prop_toks.pop_front();
+      pCfg.setPropagator(eom::Propagator::rk4);
+#ifdef GENPL
+    } else if (prop_toks[0] == "GJ") {
+      prop_toks.pop_front();
+      pCfg.setPropagator(eom::Propagator::gj);
+#endif
+    }
+  }
+}
+
+
 static void parse_gravity_model(std::deque<std::string>& grav_toks,
                                 eom::PropagatorConfig& pCfg)
 {
@@ -113,7 +140,7 @@ static void parse_gravity_model(std::deque<std::string>& grav_toks,
     // Maximum size is currently 4:  "GravityMode  XX 12 12"
   if (grav_toks.size() > 2  &&  grav_toks[0] == "GravityModel") {
     grav_toks.pop_front();
-    if (grav_toks.size() == 2  &&  grav_toks[0] == "Jn") {
+    if (grav_toks.size() > 1  &&  grav_toks[0] == "Jn") {
       grav_toks.pop_front();
       pCfg.setGravityModel(eom::GravityModel::jn);
       try {
@@ -126,7 +153,7 @@ static void parse_gravity_model(std::deque<std::string>& grav_toks,
         ;
       }
 #ifdef GENPL
-    } else if (grav_toks.size() == 3  &&  grav_toks[0] == "Gravt") {
+    } else if (grav_toks.size() > 2  &&  grav_toks[0] == "Gravt") {
       grav_toks.pop_front();
       pCfg.setGravityModel(eom::GravityModel::gravt);
       try {

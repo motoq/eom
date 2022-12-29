@@ -1,3 +1,6 @@
+![Alt text](./eom_logo.svg)
+<img src="./eom_logo.svg">
+
 eom
 ===
 

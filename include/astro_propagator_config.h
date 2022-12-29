@@ -28,6 +28,16 @@ enum class PropagatorType {
 };
 
 /**
+ * Numerical integration options 
+ */
+enum class Propagator {
+#ifdef GENPL
+  gj,
+#endif
+  rk4                             ///< Simple zonal-only gravity model
+};
+
+/**
  * Gravity model options
  */
 enum class GravityModel {
@@ -93,6 +103,19 @@ public:
   }
 
   /**
+   * @param  Set the integration method to use
+   */
+  void setPropagator(Propagator integration_method);
+
+  /**
+   * @return  Integration method to use
+   */
+  Propagator getPropagator() const noexcept
+  {
+    return  m_propagator;
+  }
+
+  /**
    * @param  Set the gravity model to use
    */
   void setGravityModel(GravityModel gravity_model);
@@ -135,6 +158,8 @@ private:
     // Typically required only for SP methods to set integration limits
   JulianDate m_jdStart;
   JulianDate m_jdStop;
+    // Integration method
+  Propagator m_propagator {Propagator::rk4};
     // Gravity model
   GravityModel m_gravity_model {GravityModel::jn};
 
