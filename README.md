@@ -1,4 +1,3 @@
-![Alt text](./eom_logo.svg)
 <img src="./eom_logo.svg">
 
 eom
@@ -11,6 +10,8 @@ The Equations of Motion project provides an application with built in
 astrodynamics related functionality along with a library to aid in the
 creation of custom tools.
 
+User Guide:  <https://motoq.github.io/doc/eom.html>
+
 eomx
 ----
 
@@ -21,16 +22,18 @@ based modeling language.  The library allows rapid development of custom
 applications.
 
 Current functionality includes the Vinti 2-body Kepler1 and J2/J3 Vinti6
-orbit propagators.  The IAU 2000A and IAU 2006 precession-nutation
-theories are supported, including parsing of IERS EOP data.  In addition
-to the GCRF and ITRF reference frames, internal support for the TEME
-(true equator, mean equinox, GMST 1980) ECI reference frame is included
-for use with legacy general perturbations propagators (such as the
-Vinti, traditional secular J2, and SGP based propagators).  Propagated
-ephemeris can be saved in STK compatible **.e** file formats.  Other
-outputs are written as Matlab (Octave compatible) functions.  When run,
-these **.m** files will plot the data with appropriate formatting while
-optionally returning the handle to the figure along with the raw data.
+orbit propagators.  An RK4 integrator and simple zonal gravity model are
+also included as initial support to special perturbation (SP) methods.
+The IAU 2000A and IAU 2006 precession-nutation theories are supported,
+including parsing of IERS EOP data.  In addition to the GCRF and ITRF
+reference frames, internal support for the TEME (true equator, mean
+equinox, GMST 1980) ECI reference frame is included for use with legacy
+general perturbations propagators (such as the Vinti, traditional
+secular J2, and SGP based propagators).  Propagated ephemeris can be
+saved in STK compatible **.e** file formats.  Other outputs are written
+as Matlab (Octave compatible) functions.  When run, these **.m** files
+will plot the data with appropriate formatting while optionally
+returning the handle to the figure along with the raw data.
 
 **eom** utilizes two mature libraries upon which built-in models will
 rely and external libraries may leverage.  The first is the
