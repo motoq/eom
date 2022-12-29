@@ -17,7 +17,9 @@
 #include <astro_propagator_config.h>
 #include <astro_orbit_def.h>
 #include <astro_gravity_jn.h>
+#ifdef GENPL
 #include <astro_gravt.h>
+#endif
 
 #include <eom_config.h>
 

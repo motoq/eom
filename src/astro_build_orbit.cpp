@@ -32,6 +32,8 @@
 #include <astro_gravt.h>
 #include <astro_oscj2.h>
 #include <astro_secj2.h>
+#include <astro_gauss_jackson.h>
+#include <astro_gj_lite.h>
 #endif
 
 #include <astro_build.h>
@@ -70,10 +72,15 @@ build_orbit(const OrbitDef& orbitParams,
       // Integrator
     std::unique_ptr<OdeSolver<JulianDate, double, 6>> sp {nullptr};
     Duration dt(0.3, phy_const::tu_per_min);
+    /*
     sp = std::make_unique<Rk4>(std::move(deq),
                                dt,
                                orbitParams.getEpoch(),
                                xeciVec);
+    */
+    sp = std::make_unique<GaussJackson>(std::move(deq),
+                                        orbitParams.getEpoch(),
+                                        xeciVec);
       // Ready to generate ephemeris
     std::unique_ptr<Ephemeris> orbit =
         std::make_unique<SpEphemeris>(orbitParams.getOrbitName(),
