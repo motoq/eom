@@ -70,7 +70,7 @@ private:
   LeapSeconds() {}
 
     // TAI - UTC, seconds
-  double taimutc {0.0};
+  double taimutc {37.0};
 };
 
 

@@ -1,5 +1,8 @@
 
-# Test Scenario
+#
+# Orbital elements and different entry types
+# (placeholder for when something other than CART is added)
+#
 
 SimStart GD 2021 11 12 17 00 00.0;     # Gregorian date, UTC
 SimDuration Days 1;
