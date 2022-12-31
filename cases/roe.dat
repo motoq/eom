@@ -1,22 +1,22 @@
 
-# Test Scenario
+#
+# Relative orbits using two-body and Vinti J3.  Note the orbits are
+# not circular.
+# 2022/12/30
+#
 
-SimStart GD 2021 11 12 17 00 00.0;     # Gregorian date, UTC
-SimDuration Days 1;
+SimStart GD 2021 11 12 17 00 00.0;
+SimDuration Days 2;
 LeapSeconds 37;
 EcfEciRate Minutes 240;
-DistanceUnits  Kilometers;             # Sticky distance and time settings
-TimeUnits Seconds;                     # For inputs without unit specifications
+DistanceUnits  Kilometers;
+TimeUnits Seconds;
 Orbit  chiefk  Kepler1  GD 2021 11 12 17 00 00.0
        CART  GCRF  -5552.0  -2563.0  3258.0   2.149  -7.539  -2.186;
 Orbit  chiefv  Vinti6  GD 2021 11 12 17 00 00.0
        CART  GCRF  -5552.0  -2563.0  3258.0   2.149  -7.539  -2.186;
 RelativeOrbit  deputyk  chiefk  RTCT  5.0  0.0  5.0  0.0;
 RelativeOrbit  deputyv  chiefv  RTCT  5.0  0.0  5.0  0.0;
-OutputRate Minutes 5;
-Command PrintRTC chiefk deputyk rtc_kepler;
-Command PrintRTC chiefv deputyv rtc_vinti;
-#Command PrintRTC chiefv chiefk rtc_vk;
-#Command PrintEphemeris chiefk GCRF chiefk_i.e;
-#Command PrintEphemeris deputyk GCRF deputyk_i.e;
-end;
+OutputRate Minutes 10;
+Command PrintRTC chiefk deputyk roe_rtc_kepler;
+Command PrintRTC chiefv deputyv roe_rtc_vinti;

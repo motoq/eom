@@ -1,0 +1,22 @@
+
+#
+# Gauss-Jackson orbit propagator and Gravt gravity model example
+# (requires GENPL option)
+#
+# 2022/12/30
+#
+
+SimStart GD 2021 11 12 17 00 00.0;
+SimDuration Days 1;
+LeapSeconds 37;
+EcfEciRate Minutes 240;
+
+DistanceUnits  Kilometers;
+TimeUnits Seconds;
+Orbit  gj_40x40  SP  GD 2021 11 12 17 00 00.0
+       CART  GCRF  -5552.0  -2563.0  3258.0   2.149  -7.539  -2.186
+       Propagator GJ
+       GravityModel  Gravt 40 40;
+
+Command PrintEphemeris gj_40x40 GCRF gj_40x40_i.e;
+Command PrintEphemeris gj_40x40 ITRF gj_40x40_f.e;
