@@ -47,14 +47,14 @@ int main(int argc, char* argv[])
     // Check for filename
   if (argc < 2  ||  argc > 3) {
     std::cerr << "\nProper use is:  " << argv[0] << " <input_file_name> or";
-    std::cerr << "\n                " << argv[0] << " <input_file_name> " <<
-                                                    "<eop__file_name>\n";
+    std::cerr << "\n                " << argv[0] << " <input_file_name>" <<
+                                                    " <eop__file_name>\n";
     return 0;
   }
     // Try to open for input
   std::ifstream ifs(argv[1]);
   if (!ifs.is_open()) {
-    std::cerr << "\nError opening " << argv[1] << "\n";
+    std::cerr << "\nError opening " << argv[1] << '\n';
     return 0;
   }
   std::cout << "\nOpened " << argv[1] << '\n';
@@ -204,20 +204,20 @@ int main(int argc, char* argv[])
       }
     }
     if (input_error) {
-      std::cout << "\nError on line: " << line_number;
-      std::cout << '\n' << cfg.getError();
-      std::cout << "\nOther Error: " << other_error;
-      std::cout << '\n';
+      std::cerr << "\n\nError on line: " << line_number;
+      std::cerr << '\n' << cfg.getError();
+      std::cerr << "\nOther Error: " << other_error;
+      std::cerr << '\n';
       break;
     }
   }
   ifs.close();
   if (tokens.size() > 0  &&  !input_error) {
-    std::cout << "\n\n=== Warning: Reached EOF non-empty que ===";
-    std::cout << "\n        (Probably left out a ';')\n\n";
+    std::cerr << "\n\n=== Warning: Reached EOF non-empty que ===";
+    std::cerr << "\n        (Probably left out a ';')\n";
   }
   if (input_error) {
-    std::cout << "\nExiting on input error that can't be specified\n";
+    std::cerr << "\n\nExiting on input error that can't be specified\n";
     return 0;
   }
 
@@ -232,7 +232,7 @@ int main(int argc, char* argv[])
       }
     }
     if (!found) {
-      std::cout << "\nBad Relative Orbit Template Name: " <<
+      std::cerr << "\nBad Relative Orbit Template Name: " <<
                    relOrbit.getTemplateOrbitName() << " - Exiting\n";
       return 0;
     }
@@ -248,12 +248,24 @@ int main(int argc, char* argv[])
     // based on the input scenario time and orbit epoch times.
   eom::JulianDate minJd = cfg.getStartTime();
   eom::JulianDate maxJd = cfg.getStopTime();
+  eom::JulianDate spMinJd = cfg.getStartTime() + phy_const::epsdt_days;
   for (const auto& orbit : orbit_defs) {
     if (orbit.getEpoch() < minJd) {
       minJd = orbit.getEpoch();
     }
     if (maxJd < orbit.getEpoch()) {
       maxJd = orbit.getEpoch();
+    }
+      // Backwards propagation for SP methods not currently supported
+    if (orbit.getPropagatorConfig().getPropagatorType() ==
+                                  eom::PropagatorType::sp) {
+      if (spMinJd < orbit.getEpoch()) {
+        std::cerr << "\n\nError:  SP orbit eopch for " <<
+                      orbit.getOrbitName() <<
+                     " must occur on or before the simulation start time.";
+        std::cerr << "\nExiting\n";
+        return 0;
+      }
     }
   }
 
@@ -346,7 +358,7 @@ int main(int argc, char* argv[])
     try {
       cmd->validate();
     } catch (const eom_app::CmdValidateException& cve) {
-      std::cout << "\nError Validating Command: " << cve.what() << '\n';
+      std::cerr << "\n\nError Validating Command: " << cve.what() << '\n';
       return 0;
     }
   }

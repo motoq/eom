@@ -63,10 +63,12 @@ set(SOURCES
   src/astro_vinti.cpp
 )
 
+# Set path to SOFA library here
 add_library(sofalib STATIC IMPORTED)
 set_property(TARGET sofalib
              PROPERTY IMPORTED_LOCATION "/home/library/libsofa_c.a")
 
+# Optional GENPL library settings
 if (${USE_GENPL})
   include(cmake_genpl.txt)
 endif()
@@ -93,6 +95,7 @@ else()
   #add_compile_options(-Wall -Wextra -pedantic -Werror)
 endif()
 
+# SOFA headers are in "~/include" - update path as needed
 add_executable(${PROJECT_NAME} src/eomx.cpp)
 if (${USE_GENPL})
   target_include_directories(${PROJECT_NAME}

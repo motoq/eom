@@ -6,11 +6,12 @@ eom
 Equations of Motion for Astrodynamics
 -------------------------------------
 
-The Equations of Motion project provides an application with built in
+The Equations of Motion project provides an application with
 astrodynamics related functionality along with a library to aid in the
 creation of custom tools.
 
 User Guide:  <https://motoq.github.io/doc/eom.html>
+
 
 eomx
 ----
@@ -22,8 +23,13 @@ based modeling language.  The library allows rapid development of custom
 applications.
 
 Current functionality includes the Vinti 2-body Kepler1 and J2/J3 Vinti6
-orbit propagators.  An RK4 integrator and simple zonal gravity model are
-also included as initial support to special perturbation (SP) methods.
+general perturbation (GP) orbit propagators.  Special perturbation (SP)
+techniques are supported, currently limited to a simple RK4 integrator
+and zonal gravity model.  Additional GP methods and more sophisticated
+SP methods have been tested within the current architecture.  While not
+included with this codebase, they aid in validation of new functionality
+given their level of maturity.
+
 The IAU 2000A and IAU 2006 precession-nutation theories are supported,
 including parsing of IERS EOP data.  In addition to the GCRF and ITRF
 reference frames, internal support for the TEME (true equator, mean
@@ -40,7 +46,7 @@ The library is designed with thread safety in mind.  Shared resources
 immutable objects.  SP based ephemerides are generated taking advantage
 of parallel loop processing available since C++17.
 
-**eom** utilizes two mature libraries upon which built-in models will
+**eom** utilizes two mature libraries upon which built-in models
 rely and external libraries may leverage.  The first is the
 International Astronomical Union Standards of Fundamental Astronomy (IAU
 SOFA) C library <http://www.iausofa.org/>.  Installation of SOFA-Issue
@@ -73,4 +79,49 @@ The Mozilla Public License 2.0 (MPL2) was chosen because it protects the
 open source nature of this code while still allowing it to be used with
 proprietary and closed source tools:
 <https://www.mozilla.org/en-US/MPL/2.0/>
+
+
+Build Instructions
+------------------
+
+CMake was chosen over the use of a Makefile to support the potential of
+directly generating graphics via Kitware’s VTK OpenGL library.  In
+theory, it should aid in building **eom** under different platforms.  So
+far, **eom** has only been built under Linux systems.  Updates to the
+CMake configuration will be made as deficiencies are discovered.
+
+In addition to CMake, the Eigen C++ math library must be installed.
+CMake is currently configured to rely on automatically locating Eigen.
+If this fails, then CMake must be manually configured to point to the
+location of the Eigen header files.  More information is available at
+the Eigen site <http://eigen.tuxfamily.org>.
+
+The final dependency is the IAU SOFA C library.  On a typical Linux
+distribution, this may be the only external dependency that needs to be
+installed.  Download the latest release from <http://www.iausofa.org/>
+and follow the build instructions.  Next, search for "SOFA" in the
+CMakeLists.txt configuration file.  Update the path to where the include
+and library files were installed when building SOFA.
+
+Once CMake, Eigen, and SOFA are installed, check that the line
+
+*set(USE_GENPL TRUE)*
+
+is commented out in the CMakeLists.txt file.  This line enables an
+external astrodynamics library that is not included with this repository.
+It is often left uncommented (enabled).  The *GENPL* keyword also serves
+as an example within both the build file and source code w.r.t.
+including 3rd party libraries within **eom** and **eomx**.
+
+At this point, the standard CMake build process can be followed.  Change
+to the *build* directory.  Type,
+
+*cmake ..*
+*make*
+
+to build both the **eom** library and the **eomx** application.  To
+build only the library,
+
+*make eom*
+
 

@@ -81,7 +81,8 @@ namespace phy_const {
   constexpr double re {1.0};
 
   /** 1 mm movement at a sea level orbital altitude */
-  constexpr double epsdt {1.0e-6/km_per_du};
+  constexpr double epsdt {1.0e-6*du_per_km};
+  constexpr double epsdt_days {epsdt*phy_const::day_per_tu};
 
   /**
    * Computes the angular velocity of the earth w.r.t. inertial space.
