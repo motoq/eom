@@ -44,13 +44,21 @@ public:
    * Initialize with two sets of position, velocity, and acceleration
    * vectors, and the time between them.  Acceleration must be included.
    *
-   * @param  dt  Spacing between nodes - e.g., time from p0 to p1
-   * @param  p0  Initial state - e.g., position, DU
-   * @param  v0  1st derivative of initial state, DU/TU  - e.g., velocity
-   * @param  a0  2nd derivative of initial state, DU/TU^2 - e.g., acceleration
-   * @param  p1  Final state
-   * @param  v1  1st derivative of final state, DU/TU
-   * @param  a1  2nd derivative of final state, DU/TU^2
+   * @param  dt      Spacing between nodes; e.g., time from p0 to p1
+   * @param  p0      Initial state; e.g., position, DU
+   * @param  v0      1st derivative of initial state, DU/TU; e.g., velocity
+   * @param  a0      2nd derivative of initial state, DU/TU^2;
+   *                 e.g., acceleration
+   * @param  p1      Final state
+   * @param  v1      1st derivative of final state, DU/TU
+   * @param  a1      2nd derivative of final state, DU/TU^2
+   * @param  dt_eps  Optional endpoint tolerance.  When performing
+   *                 interpolation, the input time may preceed 0 or
+   *                 exceed dt by this amount, and still be considered
+   *                 valid.  This is to eliminate throwing unecessary
+   *                 exceptions due to time errors based on roundoff error
+   *                 when subtracting/scaling time values passed to the
+   *                 interpolator.
    */
   Hermite2(T dt,
            const Eigen::Matrix<T, N, 1>& p0,
@@ -58,7 +66,8 @@ public:
            const Eigen::Matrix<T, N, 1>& a0,
            const Eigen::Matrix<T, N, 1>& p1,
            const Eigen::Matrix<T, N, 1>& v1,
-           const Eigen::Matrix<T, N, 1>& a1);
+           const Eigen::Matrix<T, N, 1>& a1,
+           T dt_eps = 0);
 
   /**
    * @return  Maximum allowable time, measured from zero, that may be
@@ -105,6 +114,7 @@ public:
   Eigen::Matrix<T, N, 1> getAcceleration(T dt) const;
 
 private:
+  T m_dt_min {0};
   T m_dt_max {};
   Eigen::Matrix<T, N, 1> m_p0;                   // position
   Eigen::Matrix<T, N, 1> m_v0;                   // velocity
@@ -122,7 +132,8 @@ Hermite2<T,N>::Hermite2(T dt,
                         const Eigen::Matrix<T, N, 1>& a0,
                         const Eigen::Matrix<T, N, 1>& p1,
                         const Eigen::Matrix<T, N, 1>& v1,
-                        const Eigen::Matrix<T, N, 1>& a1) :
+                        const Eigen::Matrix<T, N, 1>& a1,
+                        T dt_eps) :
                         m_dt_max(dt), m_p0(p0), m_v0(v0), m_a0(a0)
 {
     // Cast constants to proper type
@@ -145,13 +156,16 @@ Hermite2<T,N>::Hermite2(T dt,
   m_l0 = t060*(t002*cpos - t003*cvel + cacc)*invdt*invdt;
   m_k0 = t004*(cacc - cpos)*invdt - t007*m_l0*dt/t015;
   m_j0 = cacc - t0p5*dt*(m_k0 + m_l0*dt/t003);
+
+  m_dt_min -= dt_eps;
+  m_dt_max += dt_eps;
 }
   
 
 template<typename T, int N>
 Eigen::Matrix<T, N, 1> Hermite2<T,N>::getPosition(T dt) const
 {
-  if (dt < 0  ||  dt > m_dt_max) {
+  if (dt < m_dt_min  ||  dt > m_dt_max) {
     throw std::invalid_argument("Hermite2<T,N>::getPosition(T dt) - bad dt");
   }
 
@@ -171,7 +185,7 @@ Eigen::Matrix<T, N, 1> Hermite2<T,N>::getPosition(T dt) const
 template<typename T, int N>
 Eigen::Matrix<T, N, 1> Hermite2<T,N>::getVelocity(T dt) const
 {
-  if (dt < 0  ||  dt > m_dt_max) {
+  if (dt < m_dt_min  ||  dt > m_dt_max) {
     throw std::invalid_argument("Hermite2<T,N>::getVelocity(T dt) - bad dt");
   }
 
@@ -189,7 +203,7 @@ Eigen::Matrix<T, N, 1> Hermite2<T,N>::getVelocity(T dt) const
 template<typename T, int N>
 Eigen::Matrix<T, N, 1> Hermite2<T,N>::getAcceleration(T dt) const
 {
-  if (dt < 0  ||  dt > m_dt_max) {
+  if (dt < m_dt_min  ||  dt > m_dt_max) {
     throw std::invalid_argument("Hermite2<T,N>::getAcceleration() - bad dt");
   }
 

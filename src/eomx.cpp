@@ -248,7 +248,6 @@ int main(int argc, char* argv[])
     // based on the input scenario time and orbit epoch times.
   eom::JulianDate minJd = cfg.getStartTime();
   eom::JulianDate maxJd = cfg.getStopTime();
-  eom::JulianDate spMinJd = cfg.getStartTime() + phy_const::epsdt_days;
   for (const auto& orbit : orbit_defs) {
     if (orbit.getEpoch() < minJd) {
       minJd = orbit.getEpoch();
@@ -259,7 +258,7 @@ int main(int argc, char* argv[])
       // Backwards propagation for SP methods not currently supported
     if (orbit.getPropagatorConfig().getPropagatorType() ==
                                   eom::PropagatorType::sp) {
-      if (spMinJd < orbit.getEpoch()) {
+      if (!(orbit.getEpoch() - cfg.getStartTime()  <  phy_const::epsdt_days)) {
         std::cerr << "\n\nError:  SP orbit eopch for " <<
                       orbit.getOrbitName() <<
                      " must occur on or before the simulation start time.";
