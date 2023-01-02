@@ -14,7 +14,6 @@
 
 #include <phy_const.h>
 #include <cal_julian_date.h>
-#include <cal_duration.h>
 #include <astro_propagator_config.h>
 #include <astro_orbit_def.h>
 #include <astro_ecfeci_sys.h>
@@ -72,9 +71,8 @@ build_orbit(const OrbitDef& orbitParams,
       // Integrator
     std::unique_ptr<OdeSolver<JulianDate, double, 6>> sp {nullptr};
     if (pCfg.getPropagator() == Propagator::rk4) {
-      Duration dt(0.3, phy_const::tu_per_min);
       sp = std::make_unique<Rk4>(std::move(deq),
-                                 dt,
+                                 pCfg.getStepSize(),
                                  orbitParams.getEpoch(),
                                  xeciVec);
 #ifdef GENPL
@@ -84,9 +82,8 @@ build_orbit(const OrbitDef& orbitParams,
                                           xeciVec);
 #endif
     } else {
-      Duration dt(0.3, phy_const::tu_per_min);
       sp = std::make_unique<Rk4>(std::move(deq),
-                                 dt,
+                                 pCfg.getStepSize(),
                                  orbitParams.getEpoch(),
                                  xeciVec);
     }

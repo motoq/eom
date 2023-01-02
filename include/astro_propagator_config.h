@@ -10,6 +10,7 @@
 #define ASTRO_PROPAGATOR_CONFIG_H
 
 #include <cal_julian_date.h>
+#include <cal_duration.h>
 
 namespace eom {
 
@@ -116,6 +117,25 @@ public:
   }
 
   /**
+   * @return  Suggessted (starting) integration step size.  Defaults
+   *          to zero if not explicitly set.
+   */
+  void setStepSize(const Duration& dt)
+  {
+    m_dt = dt;
+  }
+
+  /**
+   * @return  Suggested integration step size.  Default value of
+   *          zero typically interpreted as indicator to use
+   *          default or self determined integration step size.
+   */
+  Duration getStepSize() const noexcept
+  {
+    return  m_dt;
+  }
+
+  /**
    * @param  Set the gravity model to use
    */
   void setGravityModel(GravityModel gravity_model);
@@ -158,8 +178,9 @@ private:
     // Typically required only for SP methods to set integration limits
   JulianDate m_jdStart;
   JulianDate m_jdStop;
-    // Integration method
+    // Integration method and step size
   Propagator m_propagator {Propagator::rk4};
+  Duration m_dt;
     // Gravity model
   GravityModel m_gravity_model {GravityModel::jn};
 

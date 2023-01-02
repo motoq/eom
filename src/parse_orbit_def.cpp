@@ -117,8 +117,8 @@ eom::OrbitDef parse_orbit_def(std::deque<std::string>& tokens,
 static void parse_propagator(std::deque<std::string>& prop_toks,
                              eom::PropagatorConfig& pCfg)
 {
-    // "Propagator  Method"
-  if (prop_toks.size() > 1  &&  prop_toks[0] == "Propagator") {
+    // "Propagator  Method Dur dt"
+  if (prop_toks.size() > 3  &&  prop_toks[0] == "Propagator") {
     prop_toks.pop_front();
     if (prop_toks[0] == "RK4") {
       prop_toks.pop_front();
@@ -129,6 +129,7 @@ static void parse_propagator(std::deque<std::string>& prop_toks,
       pCfg.setPropagator(eom::Propagator::gj);
 #endif
     }
+    pCfg.setStepSize(eom_app::parse_duration(prop_toks));
   }
 }
 

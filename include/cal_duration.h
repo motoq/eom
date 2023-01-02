@@ -25,9 +25,9 @@ namespace eom {
 class Duration {
 public:
   /**
-   * Default to 1 TU
+   * Default to 0
    */
-  Duration() : tu {1.0}, days {phy_const::day_per_tu}
+  Duration()
   {
   }
 
@@ -62,8 +62,8 @@ public:
   }
   
 private:
-  double tu;
-  double days;
+  double tu {0.0};
+  double days {0.0};
 };
 
 

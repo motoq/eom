@@ -15,7 +15,7 @@ DistanceUnits  Kilometers;
 TimeUnits Seconds;
 Orbit  gj_40x40  SP  GD 2021 11 12 17 00 00.0
        CART  GCRF  -5552.0  -2563.0  3258.0   2.149  -7.539  -2.186
-       Propagator GJ
+       Propagator GJ  Seconds 0.0
        GravityModel  Gravt 40 40;
 
 Command PrintEphemeris gj_40x40 GCRF gj_40x40_i.e;

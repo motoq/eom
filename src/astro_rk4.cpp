@@ -28,7 +28,12 @@ Rk4::Rk4(std::unique_ptr<Ode<JulianDate, double, 6>> deq,
   m_dt = dt;
   m_jd = jd;
   m_x = x;
-
+    // Default integration step size if not explicitly set
+  if (m_dt.getTu() == 0.0) {
+    Duration dt_default(0.3, phy_const::tu_per_min);
+    m_dt = dt_default;
+  }
+    // Acceleration at jd
   m_dx = m_deq->getXdot(m_jd, m_x);
 }
 
