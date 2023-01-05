@@ -43,7 +43,8 @@ public:
    * @param  jdFrac   Additional days and fraction of a day to add to
    *                  the Julian Date.
    */
-  JulianDate(double jdDays, double jdFrac = 0.0) : jdHi {jdDays}, jdLo {jdFrac}
+  explicit JulianDate(double jdDays, double jdFrac = 0.0) :
+                      jdHi {jdDays}, jdLo {jdFrac}
   {
   }
 

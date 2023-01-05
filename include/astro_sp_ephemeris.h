@@ -16,6 +16,7 @@
 #include <Eigen/Dense>
 
 #include <cal_julian_date.h>
+#include <cal_time_indexer.h>
 #include <mth_hermite2.h>
 #include <astro_ephemeris.h>
 #include <astro_ecfeci_sys.h>
@@ -129,6 +130,7 @@ private:
   Eigen::Matrix<double, 6, 1> nullState;
   std::shared_ptr<const EcfEciSys> m_ecfeciSys {nullptr};
 
+  std::unique_ptr<TimeIndexer> m_ndxr {nullptr};
   std::vector<interp_record> m_eph_interpolators;
 };
 

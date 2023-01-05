@@ -13,11 +13,13 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <utility>
 
 #include <utl_const.h>
 #include <phy_const.h>
 #include <cal_duration.h>
 #include <cal_julian_date.h>
+#include <cal_time_indexer.h>
 #include <mth_hermite2.h>
 #include <mth_ode_solver.h>
 #include <astro_ephemeris.h>
@@ -65,6 +67,7 @@ SpEphemeris::SpEphemeris(const std::string& name,
                                 c_dx.block<3, 1>(3, 0));
   }
 
+  std::vector<std::pair<JulianDate, JulianDate>> times;
     // Generate and store Hermite interpolation objects
   for (unsigned int ii=1U; ii<fwd_eph.size(); ++ii) {
     eph_record& r1 = fwd_eph[ii-1U];
@@ -75,7 +78,9 @@ SpEphemeris::SpEphemeris(const std::string& name,
                              r2.p, r2.v, r2.a,
                              phy_const::epsdt);
     m_eph_interpolators.emplace_back(r1.t, r2.t, hItp);
+    times.emplace_back(r1.t, r2.t);
   }
+  m_ndxr = std::make_unique<TimeIndexer>(times);
 }
 
 Eigen::Matrix<double, 6, 1> SpEphemeris::getStateVector(const JulianDate& jd,
