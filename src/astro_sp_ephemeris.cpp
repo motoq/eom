@@ -88,17 +88,29 @@ Eigen::Matrix<double, 6, 1> SpEphemeris::getStateVector(const JulianDate& jd,
 {
     // Simple retrieval for now
   Eigen::Matrix<double, 6, 1> xeci = nullState;
+/*
   bool found {false};
-  for (const auto& interp_record : m_eph_interpolators) {
-    if (interp_record.jd1 <= jd  &&  jd <= interp_record.jd2) {
-      double dt_tu {phy_const::tu_per_day*(jd - interp_record.jd1)};
-      xeci.block<3,1>(0,0) = interp_record.hItp.getPosition(dt_tu);
-      xeci.block<3,1>(3,0) = interp_record.hItp.getVelocity(dt_tu);
+  for (const auto& irec : m_eph_interpolators) {
+    if (irec.jd1 <= jd  &&  jd <= irec.jd2) {
+      double dt_tu {phy_const::tu_per_day*(jd - irec.jd1)};
+      xeci.block<3,1>(0,0) = irec.hItp.getPosition(dt_tu);
+      xeci.block<3,1>(3,0) = irec.hItp.getVelocity(dt_tu);
       found = true;
       break;
     }
   }
   if (!found) {
+    std::cout << "\n\nError - Didn't Find it\n\n";
+  }
+*/
+
+  unsigned long ndx {m_ndxr->getIndex(jd)};
+  if (ndx >= 0) {
+    const auto& irec = m_eph_interpolators[ndx];
+    double dt_tu {phy_const::tu_per_day*(jd - irec.jd1)};
+    xeci.block<3,1>(0,0) = irec.hItp.getPosition(dt_tu);
+    xeci.block<3,1>(3,0) = irec.hItp.getVelocity(dt_tu);
+  } else {
     std::cout << "\n\nError - Didn't Find it\n\n";
   }
 

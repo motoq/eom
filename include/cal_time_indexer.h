@@ -38,7 +38,7 @@ private:
   double m_dt {};
   double m_dur {};
   unsigned long m_n {};
-  JulianDate jd0;
+  JulianDate m_jd0;
 
   std::vector<std::pair<JulianDate, JulianDate>> m_times;
   std::vector<unsigned long> imap;
