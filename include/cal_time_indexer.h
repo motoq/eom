@@ -29,6 +29,7 @@ public:
    * here and used to form the index mapper.
    *
    * @param
+   * @param  dt_eps  Optional endpoint tolerance.
    */
   TimeIndexer(std::vector<std::pair<JulianDate, JulianDate>> times);
 

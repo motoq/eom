@@ -89,7 +89,10 @@ unsigned long TimeIndexer::getIndex(const JulianDate& jd) const
 
   auto ndx0 = ndx;
   bool found {false};
-  while (ndx > 0  &&  !found) {
+  while (ndx >= 0  &&  !found) {
+    if (m_times[ndx].second < jd) {
+      break;
+    }
     if (m_times[ndx].first <= jd  &&  jd <= m_times[ndx].second) {
       found = true;
     } else {
@@ -109,7 +112,7 @@ unsigned long TimeIndexer::getIndex(const JulianDate& jd) const
   }
 
   if (!found) {
-    ndx = 0;
+    throw std::invalid_argument("TimeIndexer::getIndex() - time");
   }
 
   return ndx;
