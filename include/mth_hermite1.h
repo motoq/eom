@@ -80,6 +80,9 @@ public:
    *             exception will be thrown.
    *
    * @return  The interpolated position
+   *
+   * @throws  invalid_argument if the requested time is out of the
+   *          polynomial range.
    */
   Eigen::Matrix<T, N, 1> getPosition(T dt) const;
 
@@ -92,6 +95,9 @@ public:
    *             exception will be thrown.
    *
    * @return  The interpolated velocity
+   *
+   * @throws  invalid_argument if the requested time is out of the
+   *          polynomial range.
    */
   Eigen::Matrix<T, N, 1> getVelocity(T dt) const;
 
@@ -104,6 +110,9 @@ public:
    *             exception will be thrown.
    *
    * @return  The interpolated acceleration
+   *
+   * @throws  invalid_argument if the requested time is out of the
+   *          polynomial range.
    */
   Eigen::Matrix<T, N, 1> getAcceleration(T dt) const;
 

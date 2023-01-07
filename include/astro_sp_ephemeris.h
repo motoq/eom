@@ -16,11 +16,11 @@
 #include <Eigen/Dense>
 
 #include <cal_julian_date.h>
-#include <cal_time_indexer.h>
 #include <mth_hermite2.h>
 #include <astro_ephemeris.h>
 #include <astro_ecfeci_sys.h>
 #include <mth_ode_solver.h>
+#include <mth_index_mapper.h>
 
 namespace eom {
 
@@ -118,6 +118,8 @@ public:
    *
    * @return  Cartesian state vector at requested time in the requested
    *          reference frame, DU and DU/TU
+   *
+   * @throws  invalid_argument if the requested time is out of range
    */
   Eigen::Matrix<double, 6, 1> getStateVector(const JulianDate&,
                                              EphemFrame frame) const override;
@@ -127,10 +129,9 @@ private:
   JulianDate m_jdEpoch;
   JulianDate m_jdStart;
   JulianDate m_jdStop;
-  Eigen::Matrix<double, 6, 1> nullState;
   std::shared_ptr<const EcfEciSys> m_ecfeciSys {nullptr};
 
-  std::unique_ptr<TimeIndexer> m_ndxr {nullptr};
+  std::unique_ptr<IndexMapper<JulianDate>> m_ndxr {nullptr};
   std::vector<interp_record> m_eph_interpolators;
 };
 

@@ -44,7 +44,6 @@ set(SOURCES
   src/parse_state_vector.cpp
   src/cal_greg_date.cpp
   src/cal_julian_date.cpp
-  src/cal_time_indexer.cpp
   src/astro_build_orbit.cpp
   src/astro_deq.cpp
   src/astro_earth_surf.cpp

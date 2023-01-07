@@ -8,27 +8,26 @@
 
 #include <astro_sp_ephemeris.h>
 
-#include <iostream>
-
 #include <string>
 #include <vector>
 #include <memory>
 #include <utility>
+#include <stdexcept>
 
 #include <utl_const.h>
 #include <phy_const.h>
 #include <cal_duration.h>
 #include <cal_julian_date.h>
-#include <cal_time_indexer.h>
 #include <mth_hermite2.h>
 #include <mth_ode_solver.h>
 #include <astro_ephemeris.h>
+#include <mth_index_mapper.h>
 
 namespace eom {
 
 /*
  * Work in progress...
- * Need to add interpolator finder, exceptions for out of range,
+ * Testing interpolator finder, exceptions for out of range,
  * boundary/edge resolution
  */
 SpEphemeris::SpEphemeris(const std::string& name,
@@ -45,7 +44,6 @@ SpEphemeris::SpEphemeris(const std::string& name,
     // SP propagator
   std::unique_ptr<OdeSolver<JulianDate, double, 6>> c_sp = std::move(sp);
   m_jdEpoch = c_sp->getT();
-  nullState = c_sp->getX();
 
     // Pad stop time
   JulianDate jdEndProp {m_jdStop + utl_const::day_per_min};
@@ -80,33 +78,21 @@ SpEphemeris::SpEphemeris(const std::string& name,
     m_eph_interpolators.emplace_back(r1.t, r2.t, hItp);
     times.emplace_back(r1.t, r2.t);
   }
-  m_ndxr = std::make_unique<TimeIndexer>(times);
+  m_ndxr = std::make_unique<IndexMapper<JulianDate>>(times);
 }
 
 Eigen::Matrix<double, 6, 1> SpEphemeris::getStateVector(const JulianDate& jd,
                                                         EphemFrame frame) const
 {
-    // Simple retrieval for now
-  Eigen::Matrix<double, 6, 1> xeci = nullState;
-/*
-  bool found {false};
-  for (const auto& irec : m_eph_interpolators) {
-    if (irec.jd1 <= jd  &&  jd <= irec.jd2) {
-      double dt_tu {phy_const::tu_per_day*(jd - irec.jd1)};
-      xeci.block<3,1>(0,0) = irec.hItp.getPosition(dt_tu);
-      xeci.block<3,1>(3,0) = irec.hItp.getVelocity(dt_tu);
-      found = true;
-      break;
-    }
+  unsigned long ndx {};
+  try {
+    ndx = m_ndxr->getIndex(jd);
+  } catch (const std::invalid_argument& ia) {
+    throw std::invalid_argument("SpEphemeris::getgetStateVector() - bad time");
   }
-  if (!found) {
-    std::cout << "\n\nError - Didn't Find it\n\n";
-  }
-*/
-
-  unsigned long ndx {m_ndxr->getIndex(jd)};
   const auto& irec = m_eph_interpolators[ndx];
   double dt_tu {phy_const::tu_per_day*(jd - irec.jd1)};
+  Eigen::Matrix<double, 6, 1> xeci;
   xeci.block<3,1>(0,0) = irec.hItp.getPosition(dt_tu);
   xeci.block<3,1>(3,0) = irec.hItp.getVelocity(dt_tu);
 

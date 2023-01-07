@@ -21,11 +21,12 @@
 
 namespace eom {
 
-// Check second > first
-TimeIndexer::TimeIndexer(std::vector<std::pair<JulianDate, JulianDate>> times)
+TimeIndexer::TimeIndexer(std::vector<std::pair<JulianDate, JulianDate>> times,
+                         double dt_eps)
 {
   m_times = std::move(times);
   m_dur = m_times.back().second - m_times.front().first;
+  m_dt_eps = dt_eps;
   
     // Find maximum dt and check second is always > first
   m_dt = m_times.front().second - m_times.front().first;
@@ -87,13 +88,15 @@ unsigned long TimeIndexer::getIndex(const JulianDate& jd) const
     ndx = m_times.size() - 1UL;
   }
 
+  auto jdp = jd + m_dt_eps;
+  auto jdm = jd + -m_dt_eps;
   auto ndx0 = ndx;
   bool found {false};
   while (ndx >= 0  &&  !found) {
-    if (m_times[ndx].second < jd) {
+    if (m_times[ndx].second < jdm) {
       break;
     }
-    if (m_times[ndx].first <= jd  &&  jd <= m_times[ndx].second) {
+    if (m_times[ndx].first <= jdp  &&  jdm <= m_times[ndx].second) {
       found = true;
     } else {
       ndx--;
@@ -103,7 +106,7 @@ unsigned long TimeIndexer::getIndex(const JulianDate& jd) const
   if (!found) {
     ndx = ndx0;
     while (ndx < m_times.size()  &&  !found) {
-      if (m_times[ndx].first <= jd  &&  jd <= m_times[ndx].second) {
+      if (m_times[ndx].first <= jdp  &&  jdm <= m_times[ndx].second) {
         found = true;
       } else {
         ndx++;

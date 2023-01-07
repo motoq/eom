@@ -17,7 +17,8 @@
 namespace eom {
 
 /**
- * Utility
+ * Replaced by IndexMapper - keeping around for now as a reference but
+ * will most likely delete
  *
  * @author  Kurt Motekew
  * @date    2023/01/02
@@ -31,13 +32,15 @@ public:
    * @param
    * @param  dt_eps  Optional endpoint tolerance.
    */
-  TimeIndexer(std::vector<std::pair<JulianDate, JulianDate>> times);
+  TimeIndexer(std::vector<std::pair<JulianDate, JulianDate>> times,
+              double dt_eps = 0.0);
 
   unsigned long getIndex(const JulianDate& jd) const;
 
 private:
   double m_dt {};
   double m_dur {};
+  double m_dt_eps {};
   unsigned long m_n {};
   JulianDate m_jd0;
 
