@@ -50,10 +50,11 @@ void JulianDate::setMjd2000(double mjd2000) noexcept
  */
 JulianDate& JulianDate::operator+=(double days) noexcept
 {
-  double full_days = static_cast<long>(days);
+  //double full_days = static_cast<long>(days);
 
-  jdHi += full_days;
-  jdLo += (days - full_days);
+  //jdHi += full_days;
+  //jdLo += (days - full_days);
+  jdLo += days;
 
   return *this;
 }
@@ -74,10 +75,11 @@ JulianDate JulianDate::operator+(double days) const noexcept
 JulianDate& JulianDate::operator+=(const Duration& dur) noexcept
 {
   double days {dur.getDays()};
-  double full_days = static_cast<long>(days);
+  //double full_days = static_cast<long>(days);
 
-  jdHi += full_days;
-  jdLo += (days - full_days);
+  //jdHi += full_days;
+  //jdLo += (days - full_days);
+  jdLo += days;
 
   return *this;
 }

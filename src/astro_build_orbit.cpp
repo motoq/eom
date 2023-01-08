@@ -43,14 +43,20 @@ std::unique_ptr<Ephemeris>
 build_orbit(const OrbitDef& orbitParams,
             const std::shared_ptr<const EcfEciSys>& ecfeciSys)
 {
-    // Once more than one CoordType and FrameType are added
-    // Convert xeciVec to Cartesian GCRF here
-    // For now, just copy elements into vector
+    // Once more than one CoordType is added, convert
+    // xeciVec to Cartesian here after copying from array
   std::array<double, 6> xeci_array = orbitParams.getInitialState();
   Eigen::Matrix<double, 6, 1> xeciVec;
   for (int ii=0; ii<6; ++ii) {
     xeciVec(ii) = xeci_array[ii];
   }
+    // ITRF to GCRF
+  if (orbitParams.getReferenceFrameType() == FrameType::itrf) {
+    xeciVec = ecfeciSys->ecf2eci(orbitParams.getEpoch(),
+                                 xeciVec.block<3, 1>(0, 0),
+                                 xeciVec.block<3, 1>(3, 0));
+  }
+
     // Build orbit definition based on propagator configuration
     // Default options are two-body systems if PropagatorConfig
     // values fall out if sync with options checked here.

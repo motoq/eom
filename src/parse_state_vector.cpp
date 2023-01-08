@@ -14,46 +14,58 @@
 #include <stdexcept>
 
 #include <eom_config.h>
+#include <astro_orbit_def.h>
 
 namespace eom_app {
 
 std::array<double, 6> parse_state_vector(std::deque<std::string>& tokens,
-                                         const EomConfig& cfg)
+                                         const EomConfig& cfg,
+                                         eom::CoordType& coord_type,
+                                         eom::FrameType& frame_type)
 {
   using namespace std::string_literals;
-    // Need at least the name and type of orbit
+    // coordinate type, frame, and 6 elements/components
   if (tokens.size() < 8) {
     throw std::invalid_argument("eom_app::parse_state_vector() "s +
                                 "8 tokens required vs. "s +
                                 std::to_string(tokens.size()));
   }
-  auto coord_type = tokens[0];
-  tokens.pop_front();
-  auto coord_sys = tokens[0];
-  tokens.pop_front();
+  if (tokens[0] == "CART") {
+    coord_type == eom::CoordType::cartesian;
+    tokens.pop_front();
+  } else {
+    throw std::invalid_argument("eom_app::parse_state_vector() "s +
+                                "Invalid coordinate system type: "s +
+                                tokens[0]);
+  }
+  if (tokens[0] == "GCRF") {
+    frame_type = eom::FrameType::gcrf;
+    tokens.pop_front();
+  } else if (tokens[0] == "ITRF") {
+    frame_type = eom::FrameType::itrf;
+    tokens.pop_front();
+  } else {
+    throw std::invalid_argument("eom_app::parse_state_vector() "s +
+                                "Invalid reference frame type: "s +
+                                tokens[0]);
+  }
 
   double du_per_io {1.0/cfg.getIoPerDu()};
   double io_per_tu {cfg.getIoPerTu()};
-  if (coord_type == "CART"  &&  coord_sys == "GCRF") {
-    std::array<double, 6> xeci;
-    try {
-      for (unsigned int ii=0; ii<6; ++ii) {
-        xeci[ii] = du_per_io*std::stod(tokens[0]);
-        tokens.pop_front();
-        if (ii > 2L) {
-          xeci[ii] *= io_per_tu;
-        }
+  std::array<double, 6> xeci;
+  try {
+    for (unsigned int ii=0; ii<6; ++ii) {
+      xeci[ii] = du_per_io*std::stod(tokens[0]);
+      tokens.pop_front();
+      if (ii > 2L) {
+        xeci[ii] *= io_per_tu;
       }
-    } catch (const std::invalid_argument& ia) {
-      throw std::invalid_argument("eom_app::parse_state_vector() "s +
-                                  "invalid parameter type"s);
     }
-    return xeci;
+  } catch (const std::invalid_argument& ia) {
+    throw std::invalid_argument("eom_app::parse_state_vector() "s +
+                                "invalid parameter type"s);
   }
-
-  throw std::invalid_argument("eom_app::parse_state_vector() "s +
-                              "Invalid frame or system: "s +
-                              coord_type + coord_sys);
+  return xeci;
 }
 
 }

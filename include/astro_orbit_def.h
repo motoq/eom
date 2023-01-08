@@ -29,6 +29,7 @@ enum class CoordType {
  * Supported input reference frames
  */
 enum class FrameType {
+  itrf,                           ///< WGS 84 compatible
   gcrf                            ///< GCRF (IAU 2000A/2006)
 };
 

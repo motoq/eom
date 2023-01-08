@@ -95,9 +95,11 @@ eom::RelOrbitDef parse_rel_orbit_def(std::deque<std::string>& tokens,
 /**
  * Parses an orbit state vector
  *
- * @param  tokens  Tokens consisting of coordinat system time, reference frame,
- *                 and 6 components of the state vector.
- * @param  cfg     Scenario configuration parameters
+ * @param  tokens      Tokens consisting of coordinat system time,
+ *                     reference frame, and 6 components of the state vector.
+ * @param  cfg         Scenario configuration parameters
+ * @param  coord_type  [output] Type of coordinate system
+ * @param  frame_type  [output] Reference frame
  *
  * @return  Orbit state vector.
  *
@@ -105,7 +107,9 @@ eom::RelOrbitDef parse_rel_orbit_def(std::deque<std::string>& tokens,
  *          thrown if the list of tokens is not empty upon completion.
  */
 std::array<double, 6> parse_state_vector(std::deque<std::string>& tokens,
-                                         const EomConfig& cfg);
+                                         const EomConfig& cfg,
+                                         eom::CoordType& coord_type,
+                                         eom::FrameType& frame_type);
 
 /**
  * Parses a ground point definition
