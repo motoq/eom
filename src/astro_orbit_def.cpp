@@ -16,9 +16,12 @@
 
 namespace eom {
 
-OrbitDef::OrbitDef(std::string orbit_name, const PropagatorConfig& propConfig,
-                   const JulianDate& epoch, const std::array<double, 6>& state,
-                                    CoordType coord_type, FrameType frame_type)
+OrbitDef::OrbitDef(const std::string& orbit_name,
+                   const PropagatorConfig& propConfig,
+                   const JulianDate& epoch,
+                   const std::array<double, 6>& state,
+                   CoordType coord_type,
+                   FrameType frame_type)
 {
   name = orbit_name;
   propCfg = propConfig,

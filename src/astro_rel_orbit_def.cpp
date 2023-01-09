@@ -13,8 +13,10 @@
 
 namespace eom {
 
-RelOrbitDef::RelOrbitDef(std::string orbit_name, std::string template_name,
-               const std::array<double, 6>& rel_state, RelCoordType coord_type)
+RelOrbitDef::RelOrbitDef(const std::string& orbit_name, 
+                         const std::string& template_name,
+                         const std::array<double, 6>& rel_state, 
+                         RelCoordType coord_type)
 {
   name = orbit_name;
   ref_name = template_name;

@@ -18,6 +18,7 @@
 #include <cal_duration.h>
 #include <astro_orbit_def.h>
 #include <astro_rel_orbit_def.h>
+#include <astro_ephemeris_file.h>
 #include <astro_ground_point.h>
 
 #include <eom_config.h>
@@ -91,6 +92,20 @@ eom::OrbitDef parse_orbit_def(std::deque<std::string>& tokens,
  */
 eom::RelOrbitDef parse_rel_orbit_def(std::deque<std::string>& tokens,
                                      const EomConfig& cfg);
+
+/**
+ * Parses an ephemeris file definition (not the ephemeris file).
+ *
+ * @param  tokens  Tokens consisting of an orbit name, ephemeris file
+ *                 format, interpolation type, and filename containing
+ *                 the ephemeris.
+ *
+ * @return  An ephemeris file definition.
+ *
+ * @throws  An invalid_argument exception if parsing fails.  No error is
+ *          thrown if the list of tokens is not empty upon completion.
+ */
+eom::EphemerisFile parse_eph_file_def(std::deque<std::string>& tokens);
 
 /**
  * Parses an orbit state vector

@@ -25,6 +25,7 @@
 #include <eom_test.h>
 #include <astro_orbit_def.h>
 #include <astro_rel_orbit_def.h>
+#include <astro_ephemeris_file.h>
 #include <astro_ephemeris.h>
 #include <astro_eop_sys.h>
 #include <astro_ecfeci_sys.h>
@@ -75,6 +76,8 @@ int main(int argc, char* argv[])
     // will be used to initialize propagators and/or generate classes
     // with buffered ephemeris
   std::vector<eom::RelOrbitDef> rel_orbit_defs;
+    // Ephemeris file definitions - not necessarily an orbit
+  std::vector<eom::EphemerisFile> eph_file_defs;
     // Ephemeris objects.  Only the pointer is needed during parsing so
     // the source can be added to objects requiring ephemerides.  Ephemeris
     // objects are created after orbit_defs and rel_orbit_defs are
@@ -166,6 +169,14 @@ int main(int argc, char* argv[])
               } catch (const std::invalid_argument& ia) {
                 std::string xerror = ia.what();
                 other_error = "Invalid Relative Orbit definition: " + xerror;
+              }
+            } else if (make == "EphemerisFile") {
+              try {
+                eph_file_defs.push_back(eom_app::parse_eph_file_def(tokens));
+                input_error = false;
+              } catch (const std::invalid_argument& ia) {
+                std::string xerror = ia.what();
+                other_error = "Invalid Ephemeris File definition: " + xerror;
               }
             } else if (make == "GroundPoint") {
               try {

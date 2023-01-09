@@ -53,8 +53,10 @@ public:
    *                        differences.  Differences are added to the
    *                        template orbit.
    */
-  RelOrbitDef(std::string orbit_name, std::string template_name,
-              const std::array<double, 6>& rel_state, RelCoordType coord_type);
+  RelOrbitDef(const std::string& orbit_name,
+              const std::string& template_name,
+              const std::array<double, 6>& rel_state,
+              RelCoordType coord_type);
 
   /**
    * @return  Name (string identifieer) associated with orbit

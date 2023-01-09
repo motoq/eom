@@ -56,9 +56,12 @@ public:
    * @param  coord_type  State vector coordinate system type
    * @param  frame_type  State vector eference frame
    */
-  OrbitDef(std::string orbit_name, const PropagatorConfig& propConfig,
-           const JulianDate& epoch, const std::array<double, 6>& state,
-                            CoordType coord_type, FrameType frame_type);
+  OrbitDef(const std::string& orbit_name,
+           const PropagatorConfig& propConfig,
+           const JulianDate& epoch,
+           const std::array<double, 6>& state,
+           CoordType coord_type,
+           FrameType frame_type);
 
   /**
    * @return  Name (string identifieer) associated with orbit
