@@ -131,8 +131,9 @@ Hermite1<T,N>::Hermite1(T dt,
                         const Eigen::Matrix<T, N, 1>& p0,
                         const Eigen::Matrix<T, N, 1>& v0,
                         const Eigen::Matrix<T, N, 1>& p1,
-                        const Eigen::Matrix<T, N, 1>& v1) :
-                        m_dt_max(dt), m_p0(p0), m_v0(v0);
+                        const Eigen::Matrix<T, N, 1>& v1,
+                        T dt_eps) :
+                        m_dt_max(dt), m_p0(p0), m_v0(v0)
 {
     // Cast constants to proper type
   constexpr T t0p5 {static_cast<T>(0.5)};

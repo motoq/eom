@@ -225,7 +225,9 @@ int main(int argc, char* argv[])
   ifs.close();
   if (tokens.size() > 0  &&  !input_error) {
     std::cerr << "\n\n=== Warning: Reached EOF non-empty que ===";
-    std::cerr << "\n        (Probably left out a ';')\n";
+    std::cerr << "\n        (Probably left out a ';')";
+    std::cerr << "\n        (Number of Tokens " << tokens.size() << " )";
+    std::cerr << "\n        (Current Token " << tokens[0] << " )\n";
   }
   if (input_error) {
     std::cerr << "\n\nExiting on input error that can't be specified\n";
@@ -289,6 +291,15 @@ int main(int argc, char* argv[])
                                                  maxJd,
                                                  cfg.getEcfEciRate(),
                                                  eopSys);
+
+    // Parse interpolated ephemeris from files and
+    // process sequentially
+  for (const auto& ephFileDef : eph_file_defs) {
+    (*ephemerides)[ephFileDef.getName()] = 
+        eom::build_ephemeris(ephFileDef, cfg.getStartTime(),
+                                         cfg.getStartTime(),
+                                         f2iSys);
+  }
 
   {//==>
     // Generate orbit definitions in parallel 

@@ -14,6 +14,8 @@
 #include <utility>
 #include <stdexcept>
 
+#include <Eigen/Dense>
+
 #include <utl_const.h>
 #include <phy_const.h>
 #include <cal_duration.h>

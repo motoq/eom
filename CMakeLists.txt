@@ -45,6 +45,7 @@ set(SOURCES
   src/parse_state_vector.cpp
   src/cal_greg_date.cpp
   src/cal_julian_date.cpp
+  src/astro_build_ephemeris.cpp
   src/astro_build_orbit.cpp
   src/astro_deq.cpp
   src/astro_earth_surf.cpp
@@ -60,6 +61,7 @@ set(SOURCES
   src/astro_propagator_config.cpp
   src/astro_rel_orbit_def.cpp
   src/astro_rk4.cpp
+  src/astro_sp3_orbit.cpp
   src/astro_sp_ephemeris.cpp
   src/astro_vinti.cpp
 )

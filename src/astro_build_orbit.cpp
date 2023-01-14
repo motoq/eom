@@ -153,7 +153,8 @@ build_orbit(const OrbitDef& orbitParams,
 
 // Relative orbit definition
 std::unique_ptr<Ephemeris>
-build_orbit(const RelOrbitDef& relOrbit, const OrbitDef& refOrbit,
+build_orbit(const RelOrbitDef& relOrbit,
+            const OrbitDef& refOrbit,
             const std::shared_ptr<eom::Ephemeris>& refEph,
             const std::shared_ptr<const EcfEciSys>& ecfeciSys)
 {

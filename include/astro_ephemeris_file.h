@@ -40,6 +40,7 @@ public:
   /**
    * Create ephemeris file definition given a filename.
    *
+   * @param  name        Unique ephemeris identifier
    * @param  eph_file    Name of file with ephemeris
    * @param  eph_format  Ephemeris format
    * @param  eph_interp  Interpolation method to be used
@@ -56,6 +57,11 @@ public:
 
   /*
    * @return  Name (string identifieer) associated with orbit
+   */
+  std::string getName() const noexcept { return m_name; }
+
+  /*
+   * @return  Filename containing ephemeris
    */
   std::string getEphFileName() const noexcept { return m_eph_file; }
 
