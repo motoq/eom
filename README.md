@@ -22,24 +22,24 @@ attitude dynamics.  It is a command line program driven by a simple text
 based modeling language.  The library allows rapid development of custom
 applications.
 
-Current functionality includes the Vinti 2-body Kepler1 and J2/J3 Vinti6
-general perturbation (GP) orbit propagators.  Special perturbation (SP)
-techniques are supported, currently limited to a simple RK4 integrator
-and zonal gravity model.  Additional GP methods and more sophisticated
-SP methods have been tested within the current architecture.  While not
-included with this codebase, they aid in validation of new functionality
-given their level of maturity.
+Current functionality includes orbit propagation via general
+perturbation (GP, "analytic") and special perturbation (SP, numerical
+integration) techniques.  Externally generated SP3 formatted ephemerides
+(CDDIS) can also be ingested.  Ephemerides can be saved in STK
+compatible **.e** file formats.  Other outputs are written as Matlab
+(Octave compatible) functions.  When run, these **.m** files will plot
+the data with appropriate formatting while optionally returning the
+handle to the figure along with the raw data.  For example, the range as
+a function of time between two orbits can be generated and displayed in
+a 2D plot.  Likewise, relative orbits can be output in an RTC
+coordinates for a 3D plot.
 
 The IAU 2000A and IAU 2006 precession-nutation theories are supported,
 including parsing of IERS EOP data.  In addition to the GCRF and ITRF
-reference frames, internal support for the TEME (true equator, mean
-equinox, GMST 1980) ECI reference frame is included for use with legacy
-general perturbations propagators (such as the Vinti, traditional
-secular J2, and SGP based propagators).  Propagated ephemeris can be
-saved in STK compatible **.e** file formats.  Other outputs are written
-as Matlab (Octave compatible) functions.  When run, these **.m** files
-will plot the data with appropriate formatting while optionally
-returning the handle to the figure along with the raw data.
+reference frames, internal support for TEME (true equator, mean equinox,
+GMST 1980) exists.  This ECI reference frame is included for use with
+legacy GP propagators (such as the Vinti, traditional secular J2, and
+SGP based theories).
 
 The library is designed with thread safety in mind.  Shared resources
 (ECF/ECI transformation services, ephemerides, etc.) are available as
@@ -117,6 +117,7 @@ At this point, the standard CMake build process can be followed.  Change
 to the *build* directory.  Type,
 
 *cmake ..*
+
 *make*
 
 to build both the **eom** library and the **eomx** application.  To

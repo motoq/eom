@@ -91,6 +91,7 @@ Sp3Orbit::Sp3Orbit(const std::string& name,
   Eigen::Matrix<double, 3, 1> pos;
   Eigen::Matrix<double, 3, 1> vel;
   std::vector<sp3_rec> sp3_records;
+  std::string sp3_name {""};
   while (std::getline(ifs,input_line)) {
     if (input_line == "EOF") {
       break;
@@ -131,6 +132,13 @@ Sp3Orbit::Sp3Orbit(const std::string& name,
               "Sp3Orbit::Sp3Orbit() Position record expected; file " +
               file_name + " and line " + input_line);
         }
+        if (sp3_name.size() == 0) {
+          sp3_name = input_line.substr(1, 3);
+        } else if (sp3_name != input_line.substr(1, 3)) {
+          throw std::runtime_error(
+              "Sp3Orbit::Sp3Orbit() Inconsistent satellite ID; file " +
+              file_name + " and line " + input_line);
+        }
         try {
           pos(0) = phy_const::du_per_km*std::stod(tokens[1]);
           pos(1) = phy_const::du_per_km*std::stod(tokens[2]);
@@ -146,6 +154,11 @@ Sp3Orbit::Sp3Orbit(const std::string& name,
         if (tokens.size() < 4  ||  input_line[0] != 'V') {
           throw std::runtime_error(
               "Sp3Orbit::Sp3Orbit() Velocity record expected; file " +
+              file_name + " and line " + input_line);
+        }
+        if (sp3_name != input_line.substr(1, 3)) {
+          throw std::runtime_error(
+              "Sp3Orbit::Sp3Orbit() Inconsistent satellite ID; file " +
               file_name + " and line " + input_line);
         }
         try {

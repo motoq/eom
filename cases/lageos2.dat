@@ -1,9 +1,8 @@
 
 #
-# Gauss-Jackson orbit propagator and Gravt gravity model example
-# (requires GENPL option)
+# Loads ephemeris from an SP3 format file.
 #
-# 2022/12/30
+# 2023/01/16
 #
 
 SimStart GD 2021  6 20  0  0  0.00;
@@ -16,10 +15,10 @@ TimeUnits Seconds;
 Orbit  lageos2  SP  GD 2021  6 20  0  0  0.00
        CART  ITRF  3755.000640  -8255.568135  -8261.039865
                    2.7492729000  3.6003699000 -2.4422898000
-                   #GravityModel  Jn 3
-                   #Propagator  RK4 Minutes 0.0;
-                   GravityModel  Gravt 40 40
-                   Propagator  GJ Seconds 0;
+                   GravityModel  Jn 3
+                   Propagator  RK4 Minutes 0.0;
+                   #GravityModel  Gravt 40 40
+                   #Propagator  GJ Seconds 0;
 EphemerisFile nsgf_lageos2  SP3c Hermite nsgf.orb.lageos2.210626.v70.sp3;
 OutputRate Minutes 1;
 Command PrintRTC lageos2 nsgf_lageos2 lageos2_rtc;

@@ -34,7 +34,7 @@ namespace eom {
  * @tparam  N  Dimension of input vectors
  *
  * @author  Kurt Motekew
- * @date    2022/23/12
+ * @date    2022/12/12
  */
 template<typename T, int N>
 class Hermite1 {
