@@ -34,6 +34,7 @@ enum class PropagatorType {
 enum class Propagator {
 #ifdef GENPL
   gj,
+  gjs,
 #endif
   rk4                             ///< Simple zonal-only gravity model
 };

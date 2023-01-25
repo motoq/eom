@@ -130,6 +130,9 @@ static void parse_propagator(std::deque<std::string>& prop_toks,
     } else if (prop_toks[0] == "GJ") {
       prop_toks.pop_front();
       pCfg.setPropagator(eom::Propagator::gj);
+    } else if (prop_toks[0] == "GJs") {
+      prop_toks.pop_front();
+      pCfg.setPropagator(eom::Propagator::gjs);
 #endif
     }
     pCfg.setStepSize(eom_app::parse_duration(prop_toks));

@@ -1,11 +1,11 @@
 #ifndef ASTRO_GJ_LITE_H
 #define ASTRO_GJ_LITE_H
 
+#include <array>
 #include <memory>
 
 #include <Eigen/Dense>
 
-#include <phy_const.h>
 #include <cal_julian_date.h>
 #include <cal_duration.h>
 #include <mth_ode.h>
@@ -16,10 +16,10 @@ namespace eom {
 
 /**
  * Propagates astrodynamics equations of motion using a legacy
- * Gauss Jackson integrator (GENPL option).
+ * Gauss Jackson integrator with time regularization (GENPL option).
  *
  * @author  Kurt Motekew
- * @date    2022/12/26
+ * @date    2023/01/18
  */
 class GjLite : public OdeSolver<JulianDate, double, 6> {
 public:
@@ -63,23 +63,36 @@ public:
    */
   JulianDate step() override;
 
-
 private:
+  static constexpr int NEQ {22};
+
   std::unique_ptr<Ode<JulianDate, double, 6>> m_deq {nullptr};
+  JulianDate m_jd0;
   JulianDate m_jd;
+  double m_time {};
   Eigen::Matrix<double, 6, 1> m_x;
   Eigen::Matrix<double, 6, 1> m_dx;
 
-  double m_h {1.0*phy_const::tu_per_min};
+    // Self-adjusting integration step size, units of minutes
+  double m_h {0};
+    // Temporary arrays for time units of minutes
+    // Need to check constants to switch over to internal TU
+  std::array<double, 4> y;
+  std::array<double, 4> yp;
+  std::array<double, 4> y2p;
 
-  static constexpr unsigned int NEQ {22};
   double f1p[NEQ], f2p[NEQ];
   double dlt1[NEQ], dlt2[NEQ], dlt3[NEQ], dlt4[NEQ],
          dlt5[NEQ], dlt6[NEQ], dlt7[NEQ], dlt8[NEQ],
-         t1[NEQ]  , t2[NEQ]  , t3[NEQ]  , t4[NEQ]  ,
-         t5[NEQ]  , t6[NEQ]  , t7[NEQ];
+           t1[NEQ]  , t2[NEQ]  , t3[NEQ]  , t4[NEQ]  ,
+           t5[NEQ]  , t6[NEQ]  , t7[NEQ];
+
+
+                        /* internal status and monitoring variables */
+                        /* must be preserved from call to call      */
   double ha, hmax, test;
   int    k, kc, ks, ndub;
+
 
 };
 

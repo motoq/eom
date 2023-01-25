@@ -86,6 +86,10 @@ build_orbit(const OrbitDef& orbitParams,
       sp = std::make_unique<GaussJackson>(std::move(deq),
                                           orbitParams.getEpoch(),
                                           xeciVec);
+    } else if (pCfg.getPropagator() == Propagator::gjs) {
+      sp = std::make_unique<GjLite>(std::move(deq),
+                                    orbitParams.getEpoch(),
+                                    xeciVec);
 #endif
     } else {
       sp = std::make_unique<Rk4>(std::move(deq),

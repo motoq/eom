@@ -68,7 +68,6 @@ private:
   void setx();
 
   static constexpr int NEQ {21};
-  static constexpr int neq {3};
 
   std::unique_ptr<Ode<JulianDate, double, 6>> m_deq {nullptr};
   JulianDate m_jd;
