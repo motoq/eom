@@ -7,7 +7,6 @@
 #include <Eigen/Dense>
 
 #include <cal_julian_date.h>
-#include <cal_duration.h>
 #include <mth_ode.h>
 
 #include <mth_ode_solver.h>

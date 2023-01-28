@@ -26,6 +26,7 @@ Orbit  lageos2s  SP  GD 2021  6 20  0  0  0.00
                    Propagator  GJs Seconds 0;
 EphemerisFile nsgf_lageos2  SP3c Hermite nsgf.orb.lageos2.210626.v70.sp3;
 OutputRate Minutes 1;
-Command PrintRTC lageos2 nsgf_lageos2 lageos2_rtc;
-Command PrintRTC lageos2s nsgf_lageos2 lageos2s_rtc;
+Command PrintRange lageos2 nsgf_lageos2 lageos2_rng;
+Command PrintRange lageos2s nsgf_lageos2 lageos2s_rng;
+Command PrintRange lageos2 lageos2s lageos2_s_rng;
 
