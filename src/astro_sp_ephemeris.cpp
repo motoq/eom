@@ -83,6 +83,7 @@ SpEphemeris::SpEphemeris(const std::string& name,
   m_ndxr = std::make_unique<IndexMapper<JulianDate>>(times);
 }
 
+
 Eigen::Matrix<double, 6, 1> SpEphemeris::getStateVector(const JulianDate& jd,
                                                         EphemFrame frame) const
 {
@@ -90,7 +91,7 @@ Eigen::Matrix<double, 6, 1> SpEphemeris::getStateVector(const JulianDate& jd,
   try {
     ndx = m_ndxr->getIndex(jd);
   } catch (const std::invalid_argument& ia) {
-    throw std::invalid_argument("SpEphemeris::getgetStateVector() - bad time");
+    throw std::invalid_argument("SpEphemeris::getStateVector() - bad time");
   }
   const auto& irec = m_eph_interpolators[ndx];
   double dt_tu {phy_const::tu_per_day*(jd - irec.jd1)};
@@ -104,5 +105,27 @@ Eigen::Matrix<double, 6, 1> SpEphemeris::getStateVector(const JulianDate& jd,
 
   return xeci;
 }
+
+
+Eigen::Matrix<double, 3, 1> SpEphemeris::getPosition(const JulianDate& jd,
+                                                     EphemFrame frame) const
+{
+  unsigned long ndx {};
+  try {
+    ndx = m_ndxr->getIndex(jd);
+  } catch (const std::invalid_argument& ia) {
+    throw std::invalid_argument("SpEphemeris::getPosition() - bad time");
+  }
+  const auto& irec = m_eph_interpolators[ndx];
+  double dt_tu {phy_const::tu_per_day*(jd - irec.jd1)};
+  Eigen::Matrix<double, 3, 1> xeci = irec.hItp.getPosition(dt_tu);
+
+  if (frame == EphemFrame::ecf) {
+    return m_ecfeciSys->eci2ecf(jd, xeci);
+  }
+
+  return xeci;
+}
+
 
 }

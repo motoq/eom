@@ -77,6 +77,22 @@ public:
             bool interpolate = true);
 
   /**
+   * @return  Earliest time for which transformations can be performed
+   */
+  JulianDate getBeginTime() const
+  {
+    return jdStart;
+  }
+
+  /**
+   * @return  Latest time for which transformations can be performed
+   */
+  JulianDate getEndTime() const
+  {
+    return jdStop;
+  }
+
+  /**
    * Returns an ecf_eci struucture.  Primarily intended for internal use
    * but public given the potential usefulness.
    *
@@ -84,6 +100,8 @@ public:
    *
    * @return  Structure of ECF to ECI parameters.  All transformations
    *          are in the direction of ECF to ECI.
+   *
+   * @throws  out_of_range if the requested time is out of range
    */
   ecf_eci getEcfEciData(const JulianDate& utc) const;
 
@@ -95,6 +113,8 @@ public:
    *
    * @return  Cartesian ECI position vector of same units as innput
    *          vector
+   *
+   * @throws  out_of_range if the requested time is out of range
    */
   Eigen::Matrix<double, 3, 1>
   ecf2eci(const JulianDate& utc, const Eigen::Matrix<double, 3, 1>& posf) const;
@@ -107,6 +127,8 @@ public:
    * @param  posf  Cartesian ECF velocity vector, DU/TU
    *
    * @return  Cartesian ECI state vector, DU and DU/TU
+   *
+   * @throws  out_of_range if the requested time is out of range
    */
   Eigen::Matrix<double, 6, 1>
   ecf2eci(const JulianDate& utc, const Eigen::Matrix<double, 3, 1>& posf,
@@ -120,6 +142,8 @@ public:
    *
    * @return  Cartesian ECF position vector of same units as innput
    *          vector
+   *
+   * @throws  out_of_range if the requested time is out of range
    */
   Eigen::Matrix<double, 3, 1>
   eci2ecf(const JulianDate& utc, const Eigen::Matrix<double, 3, 1>& posi) const;
@@ -132,6 +156,8 @@ public:
    * @param  posf  Cartesian ECI velocity vector, DU/TU
    *
    * @return  Cartesian ECF state vector, DU and DU/TU
+   *
+   * @throws  out_of_range if the requested time is out of range
    */
   Eigen::Matrix<double, 6, 1>
   eci2ecf(const JulianDate& utc, const Eigen::Matrix<double, 3, 1>& posi,
@@ -146,6 +172,8 @@ public:
    * @param  posf  Cartesian ECF velocity vector, DU/TU
    *
    * @return  Cartesian TEME state vector, DU and DU/TU
+   *
+   * @throws  out_of_range if the requested time is out of range
    */
   Eigen::Matrix<double, 6, 1>
   ecf2teme(const JulianDate& utc,
@@ -160,11 +188,27 @@ public:
    * @param  posf  Cartesian TEME velocity vector, DU/TU
    *
    * @return  Cartesian ECF state vector, DU and DU/TU
+   *
+   * @throws  out_of_range if the requested time is out of range
    */
   Eigen::Matrix<double, 6, 1>
   teme2ecf(const JulianDate& utc,
            const Eigen::Matrix<double, 3, 1>& posi,
            const Eigen::Matrix<double, 3, 1>& veli) const;
+
+  /**
+   * Convert a TEME position vector to ECF.
+   *
+   * @param  utc   UTC time of position vector
+   * @param  posf  Cartesian TEME position vector, DU
+   *
+   * @return  Cartesian ECF state vector, DU and DU/TU
+   *
+   * @throws  out_of_range if the requested time is out of range
+   */
+  Eigen::Matrix<double, 3, 1>
+  teme2ecf(const JulianDate& utc,
+           const Eigen::Matrix<double, 3, 1>& posi) const;
 
   /**
    * Print stored ECF2ECI data to the supplied stream.

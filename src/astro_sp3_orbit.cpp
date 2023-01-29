@@ -222,7 +222,7 @@ Eigen::Matrix<double, 6, 1> Sp3Orbit::getStateVector(const JulianDate& jd,
   try {
     ndx = m_ndxr->getIndex(jd);
   } catch (const std::invalid_argument& ia) {
-    throw std::invalid_argument("Sp3Orbit::getgetStateVector() - bad time");
+    throw std::invalid_argument("Sp3Orbit::getStateVector() - bad time");
   }
   const auto& irec = m_eph_interpolators[ndx];
   double dt_tu {phy_const::tu_per_day*(jd - irec.jd1)};
@@ -232,6 +232,27 @@ Eigen::Matrix<double, 6, 1> Sp3Orbit::getStateVector(const JulianDate& jd,
 
   if (frame == EphemFrame::eci) {
     return m_ecfeciSys->ecf2eci(jd, xecf.block<3,1>(0,0), xecf.block<3,1>(3,0));
+  }
+
+  return xecf;
+}
+
+
+Eigen::Matrix<double, 3, 1> Sp3Orbit::getPosition(const JulianDate& jd,
+                                                  EphemFrame frame) const
+{
+  unsigned long ndx {};
+  try {
+    ndx = m_ndxr->getIndex(jd);
+  } catch (const std::invalid_argument& ia) {
+    throw std::invalid_argument("Sp3Orbit::getPosition - bad time");
+  }
+  const auto& irec = m_eph_interpolators[ndx];
+  double dt_tu {phy_const::tu_per_day*(jd - irec.jd1)};
+  Eigen::Matrix<double, 3, 1> xecf = irec.hItp.getPosition(dt_tu);
+
+  if (frame == EphemFrame::eci) {
+    return m_ecfeciSys->ecf2eci(jd, xecf);
   }
 
   return xecf;

@@ -59,10 +59,27 @@ Eigen::Matrix<double, 6, 1> Kepler::getStateVector(const JulianDate& jd,
   xeci(5,0) = phy_const::du_per_km*x1[5]*phy_const::sec_per_tu;
 
   if (frame == EphemFrame::ecf) {
-    Eigen::Matrix<double, 6, 1> xecf = ecfeci->eci2ecf(jd,
-                                                       xeci.block<3,1>(0,0),
-                                                       xeci.block<3,1>(3,0));
-    return xecf;
+    return ecfeci->eci2ecf(jd, xeci.block<3,1>(0,0), xeci.block<3,1>(3,0));
+  }
+  return xeci;
+}
+
+
+Eigen::Matrix<double, 3, 1> Kepler::getPosition(const JulianDate& jd,
+                                                EphemFrame frame) const
+{
+  double x {0.0};
+  std::array<double, 6> x1;
+  double t1 {cal_const::sec_per_day*(jd - jd0)};
+  Kepler1(planet.data(), 0.0, x0.data(), t1, x1.data(), &x);
+
+  Eigen::Matrix<double, 3, 1> xeci;
+  xeci(0,0) = phy_const::du_per_km*x1[0];
+  xeci(1,0) = phy_const::du_per_km*x1[1];
+  xeci(2,0) = phy_const::du_per_km*x1[2];
+
+  if (frame == EphemFrame::ecf) {
+    return ecfeci->eci2ecf(jd, xeci);
   }
   return xeci;
 }

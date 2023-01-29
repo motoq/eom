@@ -30,6 +30,8 @@ enum class EphemFrame {
  * Interface defining an ephemeris provider.  Ephemeris is typically
  * assumed to be from an orbit, but can be anything for which ECF or ECI
  * Cartesian postion and velocity make sense.
+ *
+ * @author  Kurt Motekew
  */
 class Ephemeris {
 public:
@@ -51,13 +53,32 @@ public:
   virtual JulianDate getEpoch() const = 0;
 
   /**
-   * @param  jd     UTC time for which to return a state vector
+   * @return  Earliest time for which ephemeris can be retrieved
+   */
+  virtual JulianDate getBeginTime() const = 0;
+
+  /**
+   * @return  Latest time for which ephemeris can be retrieved
+   */
+  virtual JulianDate getEndTime() const = 0;
+
+  /**
+   * @param  jd     Time for which to return a state vector, UTC
    * @param  frame  Reference frame of returned state vector
    *
    * @return  Cartesian position and velocity state vector, DU and DU/TU
    */
   virtual Eigen::Matrix<double, 6, 1> getStateVector(const JulianDate& jd,
                                                      EphemFrame frame) const=0;
+
+  /**
+   * @param  jd     Time for which to return a position vector, UTC
+   * @param  frame  Reference frame of returned position vector
+   *
+   * @return  Cartesian position vector, DU
+   */
+  virtual Eigen::Matrix<double, 3, 1> getPosition(const JulianDate& jd,
+                                                  EphemFrame frame) const=0;
 };
 
 

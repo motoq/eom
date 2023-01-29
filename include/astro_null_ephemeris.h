@@ -48,6 +48,22 @@ public:
   }
 
   /**
+   * @return  Earliest time for which ephemeris can be retrieved
+   */
+  JulianDate getBeginTime() const override
+  {
+    return jd0;
+  }
+
+  /**
+   * @return  Latest time for which ephemeris can be retrieved
+   */
+  JulianDate getEndTime() const override
+  {
+    return jd0;
+  }
+
+  /**
    * Center of the earth
    *
    * @param  jd     Not used
@@ -59,6 +75,18 @@ public:
                                              EphemFrame) const override
   {
     return nullState;
+  }
+
+  /**
+   * @param  jd     Not used
+   * @param  frame  Not used
+   *
+   * @return  Zero vector
+   */
+  Eigen::Matrix<double, 3, 1> getPosition(const JulianDate&,
+                                          EphemFrame) const override
+  {
+    return nullState.block<3,1>(0,0);
   }
 
 private:

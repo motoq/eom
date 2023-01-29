@@ -133,7 +133,7 @@ ecf_eci EcfEciSys::getEcfEciData(const JulianDate& utc) const
     // Check for valid date
   double days {utc - jdStart};
   if (days < 0.0  ||  jdStop - utc < 0.0) {
-    throw std::out_of_range ("EcfEciSys::getEcfEciData() Time out of range");
+    throw std::out_of_range("EcfEciSys::getEcfEciData() Time out of range");
   }
 
     // Always need first index
@@ -170,8 +170,7 @@ EcfEciSys::ecf2eci(const JulianDate& utc,
   auto ut1 {utc + phy_const::day_per_tu*f2i.ut1mutc};
   double era {iauEra00(ut1.getJdHigh(), ut1.getJdLow())};
   Eigen::Quaterniond qera{Eigen::AngleAxisd(era, Eigen::Vector3d::UnitZ())};
-  Eigen::Matrix<double, 3, 1> posi = f2i.bpn*qera*f2i.pm*posf;
-  return posi;
+  return f2i.bpn*qera*f2i.pm*posf;
 }
 
 
@@ -209,10 +208,7 @@ EcfEciSys::eci2ecf(const JulianDate& utc,
   auto ut1 {utc + phy_const::day_per_tu*f2i.ut1mutc};
   double era {iauEra00(ut1.getJdHigh(), ut1.getJdLow())};
   Eigen::Quaterniond qera{Eigen::AngleAxisd(-era, Eigen::Vector3d::UnitZ())};
-  Eigen::Matrix<double, 3, 1> posf =
-                              f2i.pm.conjugate()*qera*f2i.bpn.conjugate()*posi;
-
-  return posf;
+  return f2i.pm.conjugate()*qera*f2i.bpn.conjugate()*posi;
 }
 
 
@@ -239,7 +235,6 @@ EcfEciSys::eci2ecf(const JulianDate& utc,
   xecf.block<3, 1>(3, 0) = velf;
 
   return xecf;
-  
 }
 
 
@@ -289,7 +284,20 @@ EcfEciSys::teme2ecf(const JulianDate& utc,
   xecf.block<3, 1>(3, 0) = velf;
 
   return xecf;
-  
+}
+
+
+Eigen::Matrix<double, 3, 1>
+EcfEciSys::teme2ecf(const JulianDate& utc,
+                    const Eigen::Matrix<double, 3, 1>& posi) const
+{
+  ecf_eci f2i {this->getEcfEciData(utc)};
+  auto ut1 {utc + phy_const::day_per_tu*f2i.ut1mutc};
+  double gmst {iauGmst82(ut1.getJdHigh(), ut1.getJdLow())};
+  Eigen::Quaterniond qgmst{Eigen::AngleAxisd(-gmst, Eigen::Vector3d::UnitZ())};
+  Eigen::Matrix<double, 3, 1> pos_tirf = qgmst*posi;
+
+  return f2i.pm.conjugate()*pos_tirf;
 }
 
 

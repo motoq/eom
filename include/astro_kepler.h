@@ -73,6 +73,22 @@ public:
   }
 
   /**
+   * @return  Earliest time for which ephemeris can be retrieved
+   */
+  JulianDate getBeginTime() const override
+  {
+    return ecfeci->getBeginTime();
+  }
+
+  /**
+   * @return  Latest time for which ephemeris can be retrieved
+   */
+  JulianDate getEndTime() const override
+  {
+    return ecfeci->getEndTime();
+  }
+
+  /**
    * Compute state vector given a time
    *
    * @param  jd     Time of desired state vector, UTC
@@ -83,6 +99,15 @@ public:
    */
   Eigen::Matrix<double, 6, 1> getStateVector(const JulianDate& jd,
                                              EphemFrame frame) const override;
+
+  /**
+   * @param  jd     Time of desired position vector, UTC
+   * @param  frame  Desired output reference frame
+   *
+   * @return  Cartesian position vector, DU
+   */
+  Eigen::Matrix<double, 3, 1> getPosition(const JulianDate& jd,
+                                          EphemFrame frame) const override;
 
 private:
   std::string name {""};

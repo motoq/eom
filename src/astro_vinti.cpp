@@ -73,10 +73,28 @@ Eigen::Matrix<double, 6, 1> Vinti::getStateVector(const JulianDate& jd,
                                                       xteme.block<3,1>(3,0));
 
   if (frame == EphemFrame::eci) {
-    Eigen::Matrix<double, 6, 1> xeci = ecfeci->ecf2eci(jd,
-                                                       xecf.block<3,1>(0,0),
-                                                       xecf.block<3,1>(3,0));
-    return xeci;
+    return ecfeci->ecf2eci(jd, xecf.block<3,1>(0,0), xecf.block<3,1>(3,0));
+  }
+  return xecf;
+}
+
+
+Eigen::Matrix<double, 3, 1> Vinti::getPosition(const JulianDate& jd,
+                                               EphemFrame frame) const
+{
+  std::array<double, 6> oe;
+  std::array<double, 6> x1;
+  double t1 {cal_const::sec_per_day*(jd - jd0)};
+  Vinti6(planet.data(), 0.0, x0.data(), t1, x1.data(), oe.data());
+
+  Eigen::Matrix<double, 3, 1> xteme;
+  xteme(0,0) = phy_const::du_per_km*x1[0];
+  xteme(1,0) = phy_const::du_per_km*x1[1];
+  xteme(2,0) = phy_const::du_per_km*x1[2];
+  Eigen::Matrix<double, 3, 1> xecf = ecfeci->teme2ecf(jd, xteme);
+
+  if (frame == EphemFrame::eci) {
+    return ecfeci->ecf2eci(jd, xecf);
   }
   return xecf;
 }
