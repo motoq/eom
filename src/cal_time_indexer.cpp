@@ -115,7 +115,7 @@ unsigned long TimeIndexer::getIndex(const JulianDate& jd) const
   }
 
   if (!found) {
-    throw std::invalid_argument("TimeIndexer::getIndex() - time");
+    throw std::out_of_range("TimeIndexer::getIndex() - time");
   }
 
   return ndx;

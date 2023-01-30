@@ -57,6 +57,8 @@ public:
    *         value is to be found.
    *
    * @return  The index of the interval containing the input value.
+   *
+   * @throws  out_of_range if value is not covered
    */
   unsigned long getIndex(const T& val) const;
 
@@ -147,7 +149,7 @@ unsigned long IndexMapper<T>::getIndex(const T& val) const
   }
 
   if (!found) {
-    throw std::invalid_argument("IndexMapper::getIndex() - bad value");
+    throw std::out_of_range("IndexMapper::getIndex() - bad value");
   }
 
   return ndx;

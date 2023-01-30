@@ -105,6 +105,11 @@ public:
    *
    * @return  Cartesian state vector at requested time in the requested
    *          reference frame, DU and DU/TU
+   *
+   * @throws  out_of_range if the requested time is out of range.  This
+   *          would be due to a time for which ECF/ECI transformation
+   *          data is not available vs. a limitation of the analytic
+   *          propagator itself.
    */
   Eigen::Matrix<double, 6, 1> getStateVector(const JulianDate& jd,
                                              EphemFrame frame) const override;
@@ -114,6 +119,11 @@ public:
    * @param  frame  Desired output reference frame
    *
    * @return  Cartesian position vector, DU
+   *
+   * @throws  out_of_range if the requested time is out of range.  This
+   *          would be due to a time for which ECF/ECI transformation
+   *          data is not available vs. a limitation of the analytic
+   *          propagator itself.
    */
   Eigen::Matrix<double, 3, 1> getPosition(const JulianDate& jd,
                                           EphemFrame frame) const override;

@@ -111,13 +111,12 @@ void EomRtcPrinter::execute() const
       eom::JulianDate jdNow {jdStart +
                              phy_const::day_per_tu*(dtnow/to_time_units)};
       Eigen::Matrix<double, 6, 1> pv1 =
-          eph[0]->getStateVector(jdNow, eom::EphemFrame::eci);
-      Eigen::Matrix<double, 6, 1> pv2 =
-          eph[1]->getStateVector(jdNow, eom::EphemFrame::eci);
+              eph[0]->getStateVector(jdNow, eom::EphemFrame::eci);
       Eigen::Matrix<double, 3, 1> r1 {pv1.block<3,1>(0,0)};
-      Eigen::Matrix<double, 3, 1> v1 {pv1.block<3,1>(3,0)};
-      Eigen::Matrix<double, 3, 1> r2 {pv2.block<3,1>(0,0)};
+      Eigen::Matrix<double, 3, 1> r2 =
+              eph[1]->getPosition(jdNow, eom::EphemFrame::eci);
       Eigen::Matrix<double, 3, 1> dr = r1 - r2;
+      Eigen::Matrix<double, 3, 1> v1 {pv1.block<3,1>(3,0)};
       Eigen::Matrix<double, 3, 3> i2rtcDcm {eom::AttitudeRtc<double>(r1, v1)};
       dr = i2rtcDcm*dr;
       for (int jj=0; jj<3; ++jj) {

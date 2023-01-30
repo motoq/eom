@@ -221,8 +221,8 @@ Eigen::Matrix<double, 6, 1> Sp3Orbit::getStateVector(const JulianDate& jd,
   unsigned long ndx {};
   try {
     ndx = m_ndxr->getIndex(jd);
-  } catch (const std::invalid_argument& ia) {
-    throw std::invalid_argument("Sp3Orbit::getStateVector() - bad time");
+  } catch (const std::out_of_range& ia) {
+    throw std::out_of_range("Sp3Orbit::getStateVector() - bad time");
   }
   const auto& irec = m_eph_interpolators[ndx];
   double dt_tu {phy_const::tu_per_day*(jd - irec.jd1)};
@@ -244,8 +244,8 @@ Eigen::Matrix<double, 3, 1> Sp3Orbit::getPosition(const JulianDate& jd,
   unsigned long ndx {};
   try {
     ndx = m_ndxr->getIndex(jd);
-  } catch (const std::invalid_argument& ia) {
-    throw std::invalid_argument("Sp3Orbit::getPosition - bad time");
+  } catch (const std::out_of_range& ia) {
+    throw std::out_of_range("Sp3Orbit::getPosition - bad time");
   }
   const auto& irec = m_eph_interpolators[ndx];
   double dt_tu {phy_const::tu_per_day*(jd - irec.jd1)};

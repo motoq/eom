@@ -31,6 +31,8 @@ public:
    *
    * @param
    * @param  dt_eps  Optional endpoint tolerance.
+   *
+   * @throws  out_of_range for an invalid time request
    */
   TimeIndexer(std::vector<std::pair<JulianDate, JulianDate>> times,
               double dt_eps = 0.0);
