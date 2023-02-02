@@ -61,6 +61,13 @@ public:
     return taimutc;
   }
 
+  /**
+   * Convert UTC to TT
+   *
+   * @param  utc  UTC time
+   *
+   * @return  TT time
+   */
   JulianDate utc2tt(const JulianDate& utc) const noexcept {
     return utc + (taimutc + cal_const::ttmtai)*cal_const::day_per_sec;
   }

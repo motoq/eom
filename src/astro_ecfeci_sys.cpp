@@ -80,7 +80,7 @@ EcfEciSys::EcfEciSys(const JulianDate& startTime,
   double cirf2gcrf[3][3];         // CIRF to GCRF
   double itrf2tirf[3][3];         // ITRF to TIRF
     //
-  eom::LeapSeconds& ls = eom::LeapSeconds::getInstance();
+  LeapSeconds& ls = LeapSeconds::getInstance();
   auto jd = jdStart;
     // If only one message, compute for middle time and set rate
     // to be the full duration of the time period

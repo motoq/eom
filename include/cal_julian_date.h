@@ -97,6 +97,14 @@ public:
   }
 
   /**
+   * @return  Julian Centuries
+   */
+  double getJulianCenturies() const noexcept
+  {
+    return (jdHi - 2451545.0 + jdLo)/36525.0;
+  }
+
+  /**
    * This method allows for compatibility with external libraries
    * that are designed to make use of a two part Julian date.
    *
