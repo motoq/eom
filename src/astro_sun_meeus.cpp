@@ -59,44 +59,50 @@ Eigen::Matrix<double, 3, 1> SunMeeus::getPosition(const JulianDate& jd,
     // Eccentricity of Earth orbit
   auto ecc = 0.016708634 - jdCent*(0.000042037 + jdCent*0.0000001267);
     // Mean longitude of the Sun w.r.t. the mean equinox of date
-    // and mean anomaly (degrees to radians)
+    // and mean anomaly (working in degrees)
   auto el0 = 280.46646 + jdCent*(36000.76983 + jdCent*0.0003032);
   auto em  = 357.52911 + jdCent*(35999.05029 - jdCent*0.0001537);
-  el0 *= utl_const::rad_per_deg;
-  em *= utl_const::rad_per_deg;
     // Sun equation of center
-  auto cee = (1.914602 - jdCent*(0.004817 + jdCent*0.000014))*std::sin(em) +
-             (0.019993 - jdCent*0.000101)*std::sin(2.0*em) +
-             0.000289*std::sin(3.0*em);
-  cee *= utl_const::rad_per_deg;
+  auto em_rad = em*utl_const::rad_per_deg;
+  auto cee = (1.914602 - jdCent*(0.004817 + jdCent*0.000014))*std::sin(em_rad) +
+             (0.019993 - jdCent*0.000101)*std::sin(2.0*em_rad) +
+             0.000289*std::sin(3.0*em_rad);
+
     // Sun true longitude w.r.t. the mean equinox of the date,
-    // true anomaly, and radial distance (AU)
   auto lon_sun = el0 + cee;
+    // J2000 equinox
+  lon_sun -= 0.01397*100.0*jdCent;
+    // true anomaly
   auto nu_sun = em + cee;
-  auto r_sun = 1.000001018*(1.0 - ecc*ecc)/(1.0 + ecc*std::cos(nu_sun));
+    // radial distance (AU)
+  auto r_sun = 1.000001018*(1.0 - ecc*ecc)/
+              (1.0 + ecc*std::cos(utl_const::rad_per_deg*nu_sun));
     // Convert to DU using Meeus value
   r_sun *= 149597870.0*phy_const::du_per_km;
-    // J2000 equinox
-  lon_sun -= utl_const::rad_per_deg*(0.01397*100.0*jdCent);
 
-    // Mean obliquity of the ecliptic
-  //auto e0 = (23.0 + 26.0/60.0 + 21.448/3600.0) - jdCent*(46.8150/3600.0 +
-  //                                               jdCent*(0.00059/3600.0 -
-  //                                               jdCent*(0.001813/3600.0)));
-    // Seconds
+    // Mean obliquity of the ecliptic, seconds
   auto e0 = 21.448 + 60.0*(26.0 + 60.0*23) - jdCent*(46.8150 +
                                              jdCent*(0.00059 -
                                              jdCent*(0.001813)));
-    // Degrees
+    // degrees
   e0 /= 3600.0;
-  e0 *= utl_const::rad_per_deg;
 
-  auto ra = std::atan2(std::cos(e0)*std::sin(lon_sun), std::cos(lon_sun));
-  auto de = std::asin(std::sin(e0)*std::sin(lon_sun));
+  auto e0_rad = utl_const::rad_per_deg*e0;
+  auto se0 = std::sin(e0_rad);
+  auto ce0 = std::cos(e0_rad);
+    //
+  auto lon_sun_rad = utl_const::rad_per_deg*lon_sun;
+  auto slon = std::sin(lon_sun_rad);
+  auto clon = std::cos(lon_sun_rad);
+    //
+  auto ra = std::atan2(ce0*slon, clon);
+  auto sde = se0*slon;
+  auto de = std::asin(sde);
+  auto cde = cos(de);
   Eigen::Matrix<double, 3, 1> xeci;
-  xeci(0) = r_sun*std::cos(de)*std::cos(ra);
-  xeci(1) = r_sun*std::cos(de)*std::sin(ra);
-  xeci(2) = r_sun*std::sin(de);
+  xeci(0) = r_sun*cde*std::cos(ra);
+  xeci(1) = r_sun*cde*std::sin(ra);
+  xeci(2) = r_sun*sde;
 
   if (frame == EphemFrame::ecf) {
     return m_ecfeci->eci2ecf(jd, xeci);
