@@ -37,6 +37,11 @@ void eom_test(std::deque<std::string>& tokens);
  */
 void eom_test_earth_x();
 
+/**
+ * Generate test ephemeris for all supported sun models
+ */
+void eom_test_sun();
+
 
 }
 

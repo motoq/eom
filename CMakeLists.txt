@@ -36,6 +36,7 @@ set(SOURCES
   src/eom_rtc_printer.cpp
   src/eom_test.cpp
   src/eom_test_earth_xt.cpp
+  src/eom_test_sun.cpp
   src/parse_datetime.cpp
   src/parse_duration.cpp
   src/parse_ephem_file_def.cpp

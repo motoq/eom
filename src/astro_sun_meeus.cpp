@@ -77,12 +77,18 @@ Eigen::Matrix<double, 3, 1> SunMeeus::getPosition(const JulianDate& jd,
     // Convert to DU using Meeus value
   r_sun *= 149597870.0*phy_const::du_per_km;
     // J2000 equinox
-  lon_sun -= utl_const::rad_per_deg*(0.01397*jdTT.getMjd2000()/364.25);
+  lon_sun -= utl_const::rad_per_deg*(0.01397*100.0*jdCent);
 
     // Mean obliquity of the ecliptic
-  auto e0 = (23.0 + 26.0/60.0 + 21.448/3600.0) - jdCent*(46.8150/3600.0 +
-                                                 jdCent*(0.00059/3600.0 -
-                                                 jdCent*(0.001813/3600.0)));
+  //auto e0 = (23.0 + 26.0/60.0 + 21.448/3600.0) - jdCent*(46.8150/3600.0 +
+  //                                               jdCent*(0.00059/3600.0 -
+  //                                               jdCent*(0.001813/3600.0)));
+    // Seconds
+  auto e0 = 21.448 + 60.0*(26.0 + 60.0*23) - jdCent*(46.8150 +
+                                             jdCent*(0.00059 -
+                                             jdCent*(0.001813)));
+    // Degrees
+  e0 /= 3600.0;
   e0 *= utl_const::rad_per_deg;
 
   auto ra = std::atan2(std::cos(e0)*std::sin(lon_sun), std::cos(lon_sun));

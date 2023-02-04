@@ -26,7 +26,9 @@ namespace eom {
  * Write .e format ephemeris to a file.  Position and velocity are
  * output in meters and meters/sec
  * 
- * @param  file_name  Name of the output file to be created.
+ * @param  file_name  Name of the output file to be created.  The
+ *                    full filename should be used including the desired
+ *                    extension as .e is not assumed.
  * @param  jdStart    Time of first ephemeris output
  * @param  jdStop     Time of final ephemeris output
  * @param  dtout      Output rate

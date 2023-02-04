@@ -59,7 +59,7 @@ public:
    * @param  min  Minutes from gd and hr
    * @param  sec  Seconds from gd, hr, and min
    */
-  JulianDate(const GregDate& gd, int hr, int min, double sec);
+  JulianDate(const GregDate& gd, int hr = 0, int min = 0, double sec = 0.0);
 
   /**
    * See the constructor with the same signature
