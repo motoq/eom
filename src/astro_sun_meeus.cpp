@@ -15,6 +15,7 @@
 
 #include <utl_const.h>
 #include <phy_const.h>
+#include <cal_greg_date.h>
 #include <cal_julian_date.h>
 #include <cal_leap_seconds.h>
 #include <astro_ephemeris.h>
@@ -28,6 +29,18 @@ SunMeeus::SunMeeus(const std::shared_ptr<const EcfEciSys>& ecfeciSys,
 {
   m_ecfeci = ecfeciSys;
   m_name = name;
+
+  GregDate gdStart(1900, 1, 1);
+  GregDate gdStop(2100, 1, 1);
+  m_jdStart.set(gdStart);
+  m_jdStop.set(gdStop);
+
+  if (m_jdStart < m_ecfeci->getBeginTime()) {
+    m_jdStart = m_ecfeci->getBeginTime();
+  }
+  if (m_ecfeci->getEndTime() < m_jdStop) {
+    m_jdStop = m_ecfeci->getEndTime();
+  }
 }
 
 
@@ -52,8 +65,11 @@ Eigen::Matrix<double, 6, 1> SunMeeus::getStateVector(const JulianDate& jd,
 Eigen::Matrix<double, 3, 1> SunMeeus::getPosition(const JulianDate& jd,
                                                 EphemFrame frame) const
 {
-  LeapSeconds& ls = eom::LeapSeconds::getInstance();
-  auto jdTT = ls.utc2tt(jd);
+  if (jd < m_jdStart  ||  m_jdStop < jd) {
+    throw std::out_of_range("SunMeeus::getPosition() - bad time");
+  }
+
+  auto jdTT = eom::LeapSeconds::getInstance().utc2tt(jd);
   double jdCent {jdTT.getJulianCenturies()};
 
     // Eccentricity of Earth orbit
@@ -99,10 +115,9 @@ Eigen::Matrix<double, 3, 1> SunMeeus::getPosition(const JulianDate& jd,
   auto sde = se0*slon;
   auto de = std::asin(sde);
   auto cde = cos(de);
-  Eigen::Matrix<double, 3, 1> xeci;
-  xeci(0) = r_sun*cde*std::cos(ra);
-  xeci(1) = r_sun*cde*std::sin(ra);
-  xeci(2) = r_sun*sde;
+  Eigen::Matrix<double, 3, 1> xeci {r_sun*cde*std::cos(ra),
+                                    r_sun*cde*std::sin(ra),
+                                    r_sun*sde};
 
   if (frame == EphemFrame::ecf) {
     return m_ecfeci->eci2ecf(jd, xeci);

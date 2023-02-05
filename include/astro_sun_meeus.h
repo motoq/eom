@@ -28,10 +28,11 @@ namespace eom {
  * ~20 MAS difference is well in the noise.  Position magnitude is not
  * great, but this is a reasonable approximation for force model
  * perturbations.  Velocity is included to satisfy the Ephemeris
- * interface, computed via
+ * interface, computed via simple differencing.
  *
  * Meeus, Jean, "Astronomical Algorithms", 2nd Ed., Willmann-Bell, Inc.,
- * 1998.  Chapter 25 algorithm converted to rectangular coords.
+ * 1998.  Chapter 25 algorithm using rectangular coords with the J2000
+ * conversion valid from 1900 through 2100.
  *
  * @author  Kurt Motekew
  * @date    2023/01/30
@@ -48,15 +49,14 @@ public:
    * Initialize with ECF/ECI service
    *
    * @param  ecfeciSys  ECF/ECI conversion resource
-   * @param  name       Optional unique ID, meant for use if
-   *                    instantiated outside of a function requiring
-   *                    solar ephemeris.
+   * @param  name       Optional unique ID if needed.
    */
   SunMeeus(const std::shared_ptr<const EcfEciSys>& ecfeciSys,
            const std::string& name = "SunMeeus");
 
   /**
-   * @return  Unique ephemeris identifier
+   * @return  Identifier, with defalut value SunMeeus unless set
+   *          during construction.
    */
   std::string getName() const override
   {
@@ -68,7 +68,7 @@ public:
    */
   JulianDate getEpoch() const override
   {
-    return m_jd0;
+    return m_jdStart;
   }
 
   /**
@@ -76,7 +76,7 @@ public:
    */
   JulianDate getBeginTime() const override
   {
-    return m_ecfeci->getBeginTime();
+    return m_jdStart;
   }
 
   /**
@@ -84,7 +84,7 @@ public:
    */
   JulianDate getEndTime() const override
   {
-    return m_ecfeci->getEndTime();
+    return m_jdStop;
   }
 
   /**
@@ -98,8 +98,8 @@ public:
    *
    * @throws  out_of_range if the requested time is out of range.  This
    *          would be due to a time for which ECF/ECI transformation
-   *          data is not available vs. a limitation of the analytic
-   *          propagator itself.
+   *          data is not available or falls outside of the range
+   *          supported by this theory.
    */
   Eigen::Matrix<double, 6, 1> getStateVector(const JulianDate& jd,
                                              EphemFrame frame) const override;
@@ -114,8 +114,8 @@ public:
    *
    * @throws  out_of_range if the requested time is out of range.  This
    *          would be due to a time for which ECF/ECI transformation
-   *          data is not available vs. a limitation of the analytic
-   *          propagator itself.
+   *          data is not available or falls outside of the range
+   *          supported by this theory.
    */
   Eigen::Matrix<double, 3, 1> getPosition(const JulianDate& jd,
                                           EphemFrame frame) const override;
@@ -123,7 +123,8 @@ public:
 private:
   std::string m_name {};
   std::shared_ptr<const EcfEciSys> m_ecfeci {nullptr};
-  JulianDate m_jd0;
+  JulianDate m_jdStart;
+  JulianDate m_jdStop;
 };
 
 
