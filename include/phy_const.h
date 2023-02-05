@@ -80,6 +80,14 @@ namespace phy_const {
   constexpr double gm {1.0};
   constexpr double re {1.0};
 
+  /** Solar parameters */
+  constexpr double gm_sun {1.32712442099e20*du_per_m*du_per_m*du_per_m*
+                                            sec_per_tu*sec_per_tu};
+  constexpr double au {1.49597870700e11*du_per_m};
+
+  /** Lunar parameters */
+  // Moon/earth mass ratio 0.0123000371
+
   /** 1 mm movement at a sea level orbital altitude */
   constexpr double epsdt {1.0e-6*du_per_km};
   constexpr double epsdt_days {epsdt*phy_const::day_per_tu};

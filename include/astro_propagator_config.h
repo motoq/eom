@@ -49,6 +49,14 @@ enum class GravityModel {
   jn                              ///< Simple zonal-only gravity model
 };
 
+/**
+ * Sun gravity model options
+ */
+enum class SunGravityModel {
+  none,
+  meeus                           ///< Analytic Astronomical Algorithms
+};
+
 
 /**
  * Contains propagator configuration parameters
@@ -146,7 +154,20 @@ public:
    */
   GravityModel getGravityModel() const noexcept
   {
-    return  m_gravity_model;
+    return m_gravity_model;
+  }
+
+  /**
+   * @param  Set the solar gravity model to use
+   */
+  void setSunGravityModel(SunGravityModel sun_gravity);
+
+  /**
+   * @return  Solar gravity model to use
+   */
+  SunGravityModel getSunGravityModel() const noexcept
+  {
+    return m_sun_gravity;
   }
 
   /**
@@ -184,6 +205,7 @@ private:
   Duration m_dt;
     // Gravity model
   GravityModel m_gravity_model {GravityModel::jn};
+  SunGravityModel m_sun_gravity {SunGravityModel::none};
 
   int m_degree {0};
   int m_order {0};

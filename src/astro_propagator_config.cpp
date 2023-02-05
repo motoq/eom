@@ -32,6 +32,12 @@ void PropagatorConfig::setGravityModel(GravityModel gravity_model)
 }
 
 
+void PropagatorConfig::setSunGravityModel(SunGravityModel sun_gravity)
+{
+  m_sun_gravity = sun_gravity;
+}
+
+
 void PropagatorConfig::setDegreeOrder(int degree, int order)
 {
   m_degree = degree;

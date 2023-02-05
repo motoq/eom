@@ -27,6 +27,8 @@ static void parse_propagator(std::deque<std::string>&,
                              eom::PropagatorConfig&);
 static void parse_gravity_model(std::deque<std::string>&,
                                 eom::PropagatorConfig&);
+static void parse_sun_model(std::deque<std::string>&,
+                            eom::PropagatorConfig&);
 
 namespace eom_app {
 
@@ -55,12 +57,15 @@ eom::OrbitDef parse_orbit_def(std::deque<std::string>& tokens,
     std::array<double, 6> xeci = parse_state_vector(tokens, cfg, coord_type,
                                                                  frame_type);
       // Loop through enough times to support finding all
-      // supported options - currently gravity model and 
-      // integrator options.
-    unsigned int sp_options {2};
+      // supported options:
+      //   1. Earth gravity model
+      //   2. Sun gravity model
+      //   3. Integrator options
+    unsigned int sp_options {3};
     for (unsigned int ii=0; ii<sp_options; ++ii) {
       parse_propagator(tokens, propCfg);
       parse_gravity_model(tokens, propCfg);
+      parse_sun_model(tokens, propCfg);
     }
     eom::OrbitDef orbit {name, propCfg, epoch, xeci, coord_type, frame_type};
     return orbit;
@@ -177,6 +182,20 @@ static void parse_gravity_model(std::deque<std::string>& grav_toks,
         ;
       }
 #endif
+    }
+  }
+}
+
+
+static void parse_sun_model(std::deque<std::string>& sun_toks,
+                            eom::PropagatorConfig& pCfg)
+{
+    // "SunGravity  Model"
+  if (sun_toks.size() > 1  &&  sun_toks[0] == "SunGravity") {
+    sun_toks.pop_front();
+    if (sun_toks[0] == "Meeus") {
+      sun_toks.pop_front();
+      pCfg.setSunGravityModel(eom::SunGravityModel::meeus);
     }
   }
 }
