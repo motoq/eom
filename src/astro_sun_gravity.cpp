@@ -38,7 +38,7 @@ Eigen::Matrix<double, 3, 1>
   double r_sun_o3 {r_sun_o.norm()};
   r_sun_o3 *= r_sun_o3*r_sun_o3;
 
-  return -1.0*phy_const::gm_sun*(r_sat_sun/r_sat_sun3 + r_sun_o/r_sun_o3);
+  return 1.0*phy_const::gm_sun*(r_sat_sun/r_sat_sun3 + r_sun_o/r_sun_o3);
 }
 
 

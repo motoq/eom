@@ -10,6 +10,7 @@
 #define ASTRO_DEQ_H
 
 #include <memory>
+#include <vector>
 
 #include <Eigen/Dense>
 
@@ -17,6 +18,7 @@
 #include <cal_julian_date.h>
 #include <astro_ecfeci_sys.h>
 #include <astro_gravity.h>
+#include <astro_force_model.h>
 
 namespace eom {
 
@@ -57,9 +59,17 @@ public:
                                       OdeEvalMethod method =
                                           OdeEvalMethod::predictor) override;
 
+  /**
+   * Add additional force models to the EOM.
+   *
+   * @param  Additional force model, moved to this class
+   */
+  void addForceModel(std::unique_ptr<ForceModel> fm);
+
 private:
   std::shared_ptr<const EcfEciSys> m_ecfeci {nullptr};
   std::unique_ptr<Gravity> m_grav {nullptr};
+  std::vector<std::unique_ptr<ForceModel>> m_fmodels;
 
 };
 

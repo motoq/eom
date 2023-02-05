@@ -37,8 +37,6 @@ public:
    * Initialize with sun ephemeris source.
    *
    * @param  degree  Desired degree of model, up to J4.
-   *
-   * @throws  runtime_error if degree exceeds limits
    */
   SunGravity(std::unique_ptr<Ephemeris> sunEph);
 

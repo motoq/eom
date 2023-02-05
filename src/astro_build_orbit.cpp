@@ -22,11 +22,14 @@
 #include <astro_rk4.h>
 #include <astro_gravity.h>
 #include <astro_gravity_jn.h>
+#include <astro_force_model.h>
 #include <astro_keplerian.h>
 #include <astro_ephemeris.h>
 #include <astro_sp_ephemeris.h>
 #include <astro_kepler.h>
 #include <astro_vinti.h>
+#include <astro_sun_meeus.h>
+#include <astro_sun_gravity.h>
 #ifdef GENPL
 #include <astro_gravt.h>
 #include <astro_oscj2.h>
@@ -74,6 +77,13 @@ build_orbit(const OrbitDef& orbitParams,
       forceModel = std::make_unique<GravityJn>(0);
     }
     auto deq = std::make_unique<Deq>(std::move(forceModel), ecfeciSys);
+      // Additional force models
+    if (pCfg.getSunGravityModel() == SunGravityModel::meeus) {
+      std::unique_ptr<Ephemeris> sunEph = std::make_unique<SunMeeus>(ecfeciSys);
+      std::unique_ptr<ForceModel> sunG =
+              std::make_unique<SunGravity>(std::move(sunEph));
+      deq->addForceModel(std::move(sunG));
+    }
       // Integrator
     std::unique_ptr<OdeSolver<JulianDate, double, 6>> sp {nullptr};
     if (pCfg.getPropagator() == Propagator::rk4) {

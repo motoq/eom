@@ -9,6 +9,7 @@
 #include <astro_deq.h>
 
 #include <memory>
+#include <vector>
 
 #include <Eigen/Dense>
 
@@ -42,7 +43,17 @@ Eigen::Matrix<double, 6, 1> Deq::getXdot(const JulianDate& utc,
     // vector components to ECI frame
   xd.block<3,1>(3,0) = m_ecfeci->ecf2eci(utc, a_i_f);
 
+  for (auto& fm : m_fmodels) {
+    xd.block<3,1>(3,0) += fm->getAcceleration(utc, x);
+  }
+
   return xd;
+}
+
+
+void Deq::addForceModel(std::unique_ptr<ForceModel> fm)
+{
+  m_fmodels.push_back(std::move(fm));
 }
 
 
