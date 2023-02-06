@@ -38,6 +38,12 @@ void PropagatorConfig::setSunGravityModel(SunGravityModel sun_gravity)
 }
 
 
+void PropagatorConfig::setMoonGravityModel(MoonGravityModel moon_gravity)
+{
+  m_moon_gravity = moon_gravity;
+}
+
+
 void PropagatorConfig::setDegreeOrder(int degree, int order)
 {
   m_degree = degree;

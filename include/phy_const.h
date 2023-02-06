@@ -80,13 +80,16 @@ namespace phy_const {
   constexpr double gm {1.0};
   constexpr double re {1.0};
 
-  /** Solar parameters */
+  /** Solar gravitational parameter, TN36, TCB-compatible value, DU^3/TU^2 */
   constexpr double gm_sun {1.32712442099e20*du_per_m*du_per_m*du_per_m*
                                             sec_per_tu*sec_per_tu};
+  /** Astronomical unit, TN36, DU */
   constexpr double au {1.49597870700e11*du_per_m};
 
-  /** Lunar parameters */
-  // Moon/earth mass ratio 0.0123000371
+  /** TN36 moon/earth mass ratio */
+  constexpr double moon_per_earth_mass {0.0123000371};
+  /** Lunar gravitational parameter, TT-compatible value, DU^3/TU^2 */
+  constexpr double gm_moon {moon_per_earth_mass*gm};
 
   /** 1 mm movement at a sea level orbital altitude */
   constexpr double epsdt {1.0e-6*du_per_km};

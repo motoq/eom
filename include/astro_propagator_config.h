@@ -57,6 +57,14 @@ enum class SunGravityModel {
   meeus                           ///< Analytic Astronomical Algorithms
 };
 
+/**
+ * Moon gravity model options
+ */
+enum class MoonGravityModel {
+  none,
+  meeus                           ///< Analytic Astronomical Algorithms
+};
+
 
 /**
  * Contains propagator configuration parameters
@@ -171,6 +179,19 @@ public:
   }
 
   /**
+   * @param  Set the lunar gravity model to use
+   */
+  void setMoonGravityModel(MoonGravityModel moon_gravity);
+
+  /**
+   * @return  Lunar gravity model to use
+   */
+  MoonGravityModel getMoonGravityModel() const noexcept
+  {
+    return m_moon_gravity;
+  }
+
+  /**
    * Order <= Degree
    *
    * @param  Degree of gravitational coefficients to consider
@@ -206,6 +227,7 @@ private:
     // Gravity model
   GravityModel m_gravity_model {GravityModel::jn};
   SunGravityModel m_sun_gravity {SunGravityModel::none};
+  MoonGravityModel m_moon_gravity {MoonGravityModel::none};
 
   int m_degree {0};
   int m_order {0};
