@@ -29,7 +29,7 @@
 #include <astro_kepler.h>
 #include <astro_vinti.h>
 #include <astro_sun_meeus.h>
-#include <astro_sun_gravity.h>
+#include <astro_third_body_gravity.h>
 #ifdef GENPL
 #include <astro_gravt.h>
 #include <astro_oscj2.h>
@@ -80,9 +80,10 @@ build_orbit(const OrbitDef& orbitParams,
       // Additional force models
     if (pCfg.getSunGravityModel() == SunGravityModel::meeus) {
       std::unique_ptr<Ephemeris> sunEph = std::make_unique<SunMeeus>(ecfeciSys);
-      std::unique_ptr<ForceModel> sunG =
-              std::make_unique<SunGravity>(std::move(sunEph));
-      deq->addForceModel(std::move(sunG));
+      std::unique_ptr<ForceModel> sunGrav =
+              std::make_unique<ThirdBodyGravity>(phy_const::gm_sun,
+                                                 std::move(sunEph));
+      deq->addForceModel(std::move(sunGrav));
     }
       // Integrator
     std::unique_ptr<OdeSolver<JulianDate, double, 6>> sp {nullptr};

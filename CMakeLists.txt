@@ -64,8 +64,8 @@ set(SOURCES
   src/astro_rk4.cpp
   src/astro_sp3_orbit.cpp
   src/astro_sp_ephemeris.cpp
-  src/astro_sun_gravity.cpp
   src/astro_sun_meeus.cpp
+  src/astro_third_body_gravity.cpp
   src/astro_vinti.cpp
 )
 
