@@ -46,7 +46,7 @@ public:
   SunMeeus& operator=(SunMeeus&&) = default;       // move assignment
 
   /**
-   * Initialize with ECF/ECI service
+   * Initialize with ECF/ECI service and optional ID
    *
    * @param  ecfeciSys  ECF/ECI conversion resource
    * @param  name       Optional unique ID if needed.

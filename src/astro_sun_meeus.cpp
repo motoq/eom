@@ -50,6 +50,7 @@ Eigen::Matrix<double, 6, 1> SunMeeus::getStateVector(const JulianDate& jd,
   Eigen::Matrix<double, 6, 1> xeci;
   xeci.block<3,1>(0,0) = this->getPosition(jd, EphemFrame::eci);
 
+    // One minute delta_t
   xeci.block<3,1>(3,0) =
       (this->getPosition(jd +  1.0*utl_const::day_per_min, EphemFrame::eci) -
        this->getPosition(jd + -1.0*utl_const::day_per_min, EphemFrame::eci))/
@@ -103,6 +104,7 @@ Eigen::Matrix<double, 3, 1> SunMeeus::getPosition(const JulianDate& jd,
     // degrees
   e0 /= 3600.0;
 
+    // Right ascension (J2000) and declination to Cartesian
   auto e0_rad = utl_const::rad_per_deg*e0;
   auto se0 = std::sin(e0_rad);
   auto ce0 = std::cos(e0_rad);

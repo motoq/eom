@@ -20,7 +20,7 @@
 namespace eom {
 
 /**
- * Gravitational attraction due to the sun given an ephemeris source
+ * Gravitational attraction due to the sun given an ephemeris source.
  *
  * @author  Kurt Motekew
  * @date    2023/02/05
@@ -36,16 +36,17 @@ public:
   /**
    * Initialize with sun ephemeris source.
    *
-   * @param  degree  Desired degree of model, up to J4.
+   * @param  sunEph  Solar ephemeris resource
    */
   SunGravity(std::unique_ptr<Ephemeris> sunEph);
 
   /**
    * Compute gravitational acceleration due to the sun.
    *
-   * @param  state  ECI state vector, DU, DU/TU
+   * @param  state  ECI state vector at the point for which solar
+   *                gravity is to be computed, DU, DU/TU
    *
-   * @return  artesian acceleration, ECI, DU/TU^2
+   * @return  Cartesian acceleration at state vector, ECI, DU/TU^2
    */
   Eigen::Matrix<double, 3, 1>
           getAcceleration(const JulianDate& jd,

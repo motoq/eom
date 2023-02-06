@@ -60,7 +60,8 @@ public:
                                           OdeEvalMethod::predictor) override;
 
   /**
-   * Add additional force models to the EOM.
+   * Add additional force models to the EOM.  Possession of the
+   * unique_ptr is taken.
    *
    * @param  Additional force model, moved to this class
    */

@@ -32,7 +32,7 @@ Eigen::Matrix<double, 6, 1> Deq::getXdot(const JulianDate& utc,
                                          const Eigen::Matrix<double, 6, 1>& x,
                                          OdeEvalMethod method)
 {
-    // Force model
+    // Central body gravity model
   Eigen::Matrix<double, 3, 1> posf = m_ecfeci->eci2ecf(utc, x.block<3,1>(0,0));
   Eigen::Matrix<double, 3, 1> a_i_f = m_grav->getAcceleration(posf, method);
 
@@ -43,8 +43,13 @@ Eigen::Matrix<double, 6, 1> Deq::getXdot(const JulianDate& utc,
     // vector components to ECI frame
   xd.block<3,1>(3,0) = m_ecfeci->ecf2eci(utc, a_i_f);
 
-  for (auto& fm : m_fmodels) {
-    xd.block<3,1>(3,0) += fm->getAcceleration(utc, x);
+    // Add non-central body accelerations
+  if (m_fmodels.size() > 0) {
+    Eigen::Matrix<double, 3, 1> a_i_i = Eigen::Matrix<double, 3, 1>::Zero();
+    for (auto& fm : m_fmodels) {
+      a_i_i += fm->getAcceleration(utc, x);
+    }
+    xd.block<3,1>(3,0) += a_i_i;
   }
 
   return xd;

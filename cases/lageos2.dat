@@ -6,7 +6,7 @@
 #
 
 SimStart GD 2021  6 20  0  0  0.00;
-SimDuration Days 1;
+SimDuration Days 5;
 LeapSeconds 37;
 EcfEciRate Minutes 240;
 
