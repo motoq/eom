@@ -57,6 +57,7 @@ set(SOURCES
   src/astro_ground_point.cpp
   src/astro_kepler.cpp
   src/astro_keplerian.cpp
+  src/astro_moon_meeus.cpp
   src/astro_orbit_def.cpp
   src/astro_print_ephemeris.cpp
   src/astro_propagator_config.cpp

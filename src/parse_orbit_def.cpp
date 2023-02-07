@@ -29,6 +29,8 @@ static void parse_gravity_model(std::deque<std::string>&,
                                 eom::PropagatorConfig&);
 static void parse_sun_model(std::deque<std::string>&,
                             eom::PropagatorConfig&);
+static void parse_moon_model(std::deque<std::string>&,
+                             eom::PropagatorConfig&);
 
 namespace eom_app {
 
@@ -60,12 +62,17 @@ eom::OrbitDef parse_orbit_def(std::deque<std::string>& tokens,
       // supported options:
       //   1. Earth gravity model
       //   2. Sun gravity model
-      //   3. Integrator options
-    unsigned int sp_options {3};
+      //   3. Moon gravity model
+      //   4. Integrator options
+    unsigned int sp_options {4};
     for (unsigned int ii=0; ii<sp_options; ++ii) {
-      parse_propagator(tokens, propCfg);
       parse_gravity_model(tokens, propCfg);
       parse_sun_model(tokens, propCfg);
+      parse_moon_model(tokens, propCfg);
+      parse_propagator(tokens, propCfg);
+      if (tokens.size() == 0) {
+        break;
+      }
     }
     eom::OrbitDef orbit {name, propCfg, epoch, xeci, coord_type, frame_type};
     return orbit;
@@ -196,6 +203,20 @@ static void parse_sun_model(std::deque<std::string>& sun_toks,
     if (sun_toks[0] == "Meeus") {
       sun_toks.pop_front();
       pCfg.setSunGravityModel(eom::SunGravityModel::meeus);
+    }
+  }
+}
+
+
+static void parse_moon_model(std::deque<std::string>& moon_toks,
+                             eom::PropagatorConfig& pCfg)
+{
+    // "MoonGravity  Model"
+  if (moon_toks.size() > 1  &&  moon_toks[0] == "MoonGravity") {
+    moon_toks.pop_front();
+    if (moon_toks[0] == "Meeus") {
+      moon_toks.pop_front();
+      pCfg.setMoonGravityModel(eom::MoonGravityModel::meeus);
     }
   }
 }
