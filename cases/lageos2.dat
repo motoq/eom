@@ -15,11 +15,9 @@ TimeUnits Seconds;
 Orbit  lageos2  SP  GD 2021  6 20  0  0  0.00
        CART  ITRF  3755.000640  -8255.568135  -8261.039865
                    2.7492729000  3.6003699000 -2.4422898000
-                   #GravityModel  Jn 3
-                   #Propagator  RK4 Minutes 0.0;
                    GravityModel  Gravt 40 40
+                   MoonGravity  Meeus
                    SunGravity   Meeus
-                   #MoonGravity  Meeus
                    Propagator  GJ Seconds 0;
 Orbit  lageos2s  SP  GD 2021  6 20  0  0  0.00
        CART  ITRF  3755.000640  -8255.568135  -8261.039865

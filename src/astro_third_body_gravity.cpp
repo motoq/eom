@@ -39,7 +39,7 @@ Eigen::Matrix<double, 3, 1>
   double r_3rd_o3 {r_3rd_o.norm()};
   r_3rd_o3 *= r_3rd_o3*r_3rd_o3;
 
-  return m_gm*(r_sat_3rd/r_sat_3rd3 + r_3rd_o/r_3rd_o3);
+  return -1.0*m_gm*(r_sat_3rd/r_sat_3rd3 + r_3rd_o/r_3rd_o3);
 }
 
 
