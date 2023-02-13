@@ -33,6 +33,7 @@ struct ecf_eci {
   double lod {0.0};          ///< Length of day, TU (for TIRF to CIRF)
   Eigen::Quaterniond pm;     ///< Polar motion; ITRF to TIRF
   Eigen::Quaterniond bpn;    ///< Frame bias, precession, nutation; CIRF to GCRF
+  Eigen::Quaterniond p76;    ///< Mean of date to IAU 76 J2000 precession
 };
 
 /**
@@ -209,6 +210,23 @@ public:
   Eigen::Matrix<double, 3, 1>
   teme2ecf(const JulianDate& utc,
            const Eigen::Matrix<double, 3, 1>& posi) const;
+
+  /**
+   * Convert a mean of date position or velocity vector to ECI.
+   * The conversion is actually to a J2000 vector given systems
+   * using MOD most likely are not accurate enough to need to account
+   * for the J2000/GCRF frame bias transformation.
+   *
+   * @param  utc  UTC time of position vector
+   * @param  mod  Cartesian MOD vector
+   *
+   * @return  ECI vector
+   *
+   * @throws  out_of_range if the requested time is out of range
+   */
+  Eigen::Matrix<double, 3, 1>
+  mod2eci(const JulianDate& utc,
+         const Eigen::Matrix<double, 3, 1>& mod) const;
 
   /**
    * Print stored ECF2ECI data to the supplied stream.

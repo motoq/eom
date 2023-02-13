@@ -23,6 +23,8 @@ Orbit  lageos2s  SP  GD 2021  6 20  0  0  0.00
        CART  ITRF  3755.000640  -8255.568135  -8261.039865
                    2.7492729000  3.6003699000 -2.4422898000
                    GravityModel  Gravt 40 40
+                   MoonGravity  Meeus
+                   SunGravity   Meeus
                    Propagator  GJs Seconds 0;
 EphemerisFile nsgf_lageos2  SP3c Hermite nsgf.orb.lageos2.210626.v70.sp3;
 OutputRate Minutes 1;

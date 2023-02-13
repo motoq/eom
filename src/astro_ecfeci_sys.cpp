@@ -79,6 +79,7 @@ EcfEciSys::EcfEciSys(const JulianDate& startTime,
   double s;                       // CIO locator, radians
   double cirf2gcrf[3][3];         // CIRF to GCRF
   double itrf2tirf[3][3];         // ITRF to TIRF
+  double mod2j2000[3][3];         // MOD to J2000
     //
   LeapSeconds& ls = LeapSeconds::getInstance();
   auto jd = jdStart;
@@ -119,6 +120,13 @@ EcfEciSys::EcfEciSys(const JulianDate& startTime,
     Eigen::Quaterniond qpm(mpm);
     f2i.pm = qpm;
     f2i.bpn = qbpn;
+      // IAU 76 Precession to support legacy celestial algorithms
+    iauPmat76(jdTT.getJdHigh(), jdTT.getJdLow(), mod2j2000);
+    iauTr(mod2j2000, mod2j2000);
+    Eigen::Matrix3d mp76 = from3x3(mod2j2000);
+    Eigen::Quaterniond qp76(mp76);
+    f2i.p76 = qp76;
+      // Store record
     f2iData.push_back(f2i);
 
     jd += rate_days;
@@ -298,6 +306,15 @@ EcfEciSys::teme2ecf(const JulianDate& utc,
   Eigen::Matrix<double, 3, 1> pos_tirf = qgmst*posi;
 
   return f2i.pm.conjugate()*pos_tirf;
+}
+
+
+Eigen::Matrix<double, 3, 1>
+EcfEciSys::mod2eci(const JulianDate& utc,
+                   const Eigen::Matrix<double, 3, 1>& mod) const
+{
+  ecf_eci f2i {this->getEcfEciData(utc)};
+  return f2i.p76*mod;
 }
 
 
