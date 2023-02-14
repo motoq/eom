@@ -133,14 +133,14 @@ Eigen::Matrix<double, 3, 1> MoonMeeus::getPosition(const JulianDate& jd,
                   terms47a[aoff+1]*em +
                   terms47a[aoff+2]*em_prime +
                   terms47a[aoff+3]*eff};
-    auto lon = std::sin(lonrt)*terms47a[aoff+4];
-    auto rng = std::cos(lonrt)*terms47a[aoff+5];
+    auto lon = std::sin(utl_const::rad_per_deg*lonrt)*terms47a[aoff+4];
+    auto rng = std::cos(utl_const::rad_per_deg*lonrt)*terms47a[aoff+5];
       // Periodic term for latitude
     double latt {terms47b[boff]*dee +
                  terms47b[boff+1]*em +
                  terms47b[boff+2]*em_prime +
                  terms47b[boff+3]*eff};
-    auto lat = std::sin(latt)*terms47b[boff+4];
+    auto lat = std::sin(utl_const::rad_per_deg*latt)*terms47b[boff+4];
       // Adjust for earth orbit eccentricity
     for (int jj=0; jj<std::abs(terms47a[aoff+1]); ++jj) {
       lon *= ecc;

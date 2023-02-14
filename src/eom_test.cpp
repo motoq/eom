@@ -26,6 +26,8 @@ void eom_test(std::deque<std::string>& tokens)
     eom_test_earth_x();
   } else if (test_str == "SunEph") {
     eom_test_sun();
+  } else if (test_str == "MoonEph") {
+    eom_test_moon();
   } else {
     throw std::invalid_argument("eom_test Invalid test type: " + test_str);
   }

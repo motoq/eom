@@ -42,6 +42,11 @@ void eom_test_earth_x();
  */
 void eom_test_sun();
 
+/**
+ * Generate test ephemeris for all supported moon models
+ */
+void eom_test_moon();
+
 
 }
 
