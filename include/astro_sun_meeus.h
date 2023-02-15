@@ -31,8 +31,7 @@ namespace eom {
  * interface, computed via simple differencing.
  *
  * Meeus, Jean, "Astronomical Algorithms", 2nd Ed., Willmann-Bell, Inc.,
- * 1998.  Chapter 25 algorithm using rectangular coords with the J2000
- * conversion valid from 1900 through 2100.
+ * 1998.  Chapter 25 algorithm converted to Cartesian coordinates.
  *
  * @author  Kurt Motekew
  * @date    2023/01/30
@@ -98,8 +97,7 @@ public:
    *
    * @throws  out_of_range if the requested time is out of range.  This
    *          would be due to a time for which ECF/ECI transformation
-   *          data is not available or falls outside of the range
-   *          supported by this theory.
+   *          data is not available.
    */
   Eigen::Matrix<double, 6, 1> getStateVector(const JulianDate& jd,
                                              EphemFrame frame) const override;
@@ -114,8 +112,7 @@ public:
    *
    * @throws  out_of_range if the requested time is out of range.  This
    *          would be due to a time for which ECF/ECI transformation
-   *          data is not available or falls outside of the range
-   *          supported by this theory.
+   *          data is not available.
    */
   Eigen::Matrix<double, 3, 1> getPosition(const JulianDate& jd,
                                           EphemFrame frame) const override;

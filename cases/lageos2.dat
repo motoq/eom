@@ -30,5 +30,5 @@ EphemerisFile nsgf_lageos2  SP3c Hermite nsgf.orb.lageos2.210626.v70.sp3;
 OutputRate Minutes 1;
 Command PrintRange lageos2 nsgf_lageos2 lageos2_rng;
 Command PrintRange lageos2s nsgf_lageos2 lageos2s_rng;
-Command PrintRange lageos2 lageos2s lageos2_s_rng;
+Command PrintRTC lageos2 lageos2s lageos2_s_rtc;
 

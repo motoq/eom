@@ -15,7 +15,6 @@
 
 #include <utl_const.h>
 #include <phy_const.h>
-#include <cal_greg_date.h>
 #include <cal_julian_date.h>
 #include <cal_leap_seconds.h>
 #include <astro_ephemeris.h>
@@ -29,18 +28,8 @@ SunMeeus::SunMeeus(const std::shared_ptr<const EcfEciSys>& ecfeciSys,
 {
   m_ecfeci = ecfeciSys;
   m_name = name;
-
-  GregDate gdStart(1900, 1, 1);
-  GregDate gdStop(2100, 1, 1);
-  m_jdStart.set(gdStart);
-  m_jdStop.set(gdStop);
-
-  if (m_jdStart < m_ecfeci->getBeginTime()) {
-    m_jdStart = m_ecfeci->getBeginTime();
-  }
-  if (m_ecfeci->getEndTime() < m_jdStop) {
-    m_jdStop = m_ecfeci->getEndTime();
-  }
+  m_jdStart = m_ecfeci->getBeginTime();
+  m_jdStop = m_ecfeci->getEndTime();
 }
 
 
@@ -87,8 +76,6 @@ Eigen::Matrix<double, 3, 1> SunMeeus::getPosition(const JulianDate& jd,
 
     // Sun true longitude w.r.t. the mean equinox of the date,
   auto lon_sun = el0 + cee;
-    // J2000 equinox
-  lon_sun -= 0.01397*100.0*jdCent;
     // true anomaly
   auto nu_sun = em + cee;
     // radial distance (AU)
@@ -104,7 +91,7 @@ Eigen::Matrix<double, 3, 1> SunMeeus::getPosition(const JulianDate& jd,
     // degrees
   e0 /= 3600.0;
 
-    // Right ascension (J2000) and declination to Cartesian
+    // Right ascension and declination to Cartesian MOD
   auto e0_rad = utl_const::rad_per_deg*e0;
   auto se0 = std::sin(e0_rad);
   auto ce0 = std::cos(e0_rad);
@@ -120,6 +107,8 @@ Eigen::Matrix<double, 3, 1> SunMeeus::getPosition(const JulianDate& jd,
   Eigen::Matrix<double, 3, 1> xeci {r_sun*cde*std::cos(ra),
                                     r_sun*cde*std::sin(ra),
                                     r_sun*sde};
+    // MOD to J2000
+  xeci = m_ecfeci->mod2eci(jd, xeci);
 
   if (frame == EphemFrame::ecf) {
     return m_ecfeci->eci2ecf(jd, xeci);

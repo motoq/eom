@@ -6,6 +6,11 @@
 /**
  * Tables 47.A and 47.B of Meeus' Astronomical Algorithms, 2nd ed.
  * Moon periodic terms for longitude, distance, and lattitude.
+ *
+ * Periodic terms in soft copy borrowed and reformatted as integers from:
+ * David Eagle (2023). A MATLAB Implementation of a Jean Meeus Lunar
+ * Algorithm, Version 1.0.0, 12 Feb 2020 (with a correction to row
+ * 59 of terms47b (data45b in Matlab)).
  */
 namespace meeus_t47
 {
@@ -138,7 +143,7 @@ constexpr std::array<long, nt47*btcols> terms47b = {
   1,  0,  1, -1,     -164,
   4,  0,  1, -1,      132,
   1,  0, -1, -1,     -119,
-  4, -1,  0,  1,      115,
+  4, -1,  0, -1,      115,
   2, -2,  0,  1,      107
 };
 

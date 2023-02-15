@@ -180,7 +180,7 @@ Eigen::Matrix<double, 3, 1> MoonMeeus::getPosition(const JulianDate& jd,
     // degrees
   e0 /= 3600.0;
 
-    // Right ascension (J2000) and declination to Cartesian
+    // Right ascension and declination to Cartesian MOD
   auto e0_rad = utl_const::rad_per_deg*e0;
   auto se0 = std::sin(e0_rad);
   auto ce0 = std::cos(e0_rad);
@@ -198,6 +198,7 @@ Eigen::Matrix<double, 3, 1> MoonMeeus::getPosition(const JulianDate& jd,
   Eigen::Matrix<double, 3, 1> xeci {rng_moon_du*cde*std::cos(ra),
                                     rng_moon_du*cde*std::sin(ra),
                                     rng_moon_du*sde};
+    // MOD to J2000
   xeci = m_ecfeci->mod2eci(jd, xeci);
 
   if (frame == EphemFrame::ecf) {
