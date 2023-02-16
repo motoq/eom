@@ -1,0 +1,11 @@
+
+#
+# Run Sun and Moon test data generation
+#
+# 2023/02/03
+#
+
+
+Test SunEph;
+Test MoonEph;
+

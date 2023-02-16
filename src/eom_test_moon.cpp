@@ -29,13 +29,17 @@ void eom_test_moon()
   std::cout << "\n\n  === Test:  Moon ===";
   std::cout << "\n  Generating Meeus based moon ephemeris";
 
-  //Meeus Example:eom::GregDate gdStart(1992, 10, 13);
+  /*
+   * Meeus Example:eom::GregDate gdStart(1992, 10, 13);
   eom::GregDate gdStart(1992, 4, 12);
   double tott {-1.0*(37.0 + 32.184)/86400.0};
-  //eom::GregDate gdStart(2023, 02, 04);
   eom::JulianDate jdStart(gdStart);
   jdStart += tott;
-  auto jdStop = jdStart + 10.0;
+   */
+
+  eom::GregDate gdStart(2023, 02, 04);
+  eom::JulianDate jdStart(gdStart);
+  auto jdStop = jdStart + 30.0;
 
   eom::Duration dt {1.0, phy_const::tu_per_day};
   std::shared_ptr<eom::EcfEciSys> ecfeci =
@@ -48,7 +52,7 @@ void eom_test_moon()
           std::make_shared<eom::MoonMeeus>(ecfeci);
 
 
-  eom::Duration dtEph {1.0, phy_const::tu_per_day};
+  eom::Duration dtEph {1.25, phy_const::tu_per_day};
   eom::print_ephemeris("MoonMeeus.e", jdStart, jdStop, dtEph,
                        eom::EphemFrame::eci, ephPtr);
 
