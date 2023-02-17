@@ -170,6 +170,8 @@ Eigen::Matrix<double, 3, 1> MoonMeeus::getPosition(const JulianDate& jd,
                115.0*std::sin(el_prime_rad + em_prime_rad);
 
   auto lon_moon = el_prime + sum_lon/1000000.0;
+    // To J2000
+  lon_moon -= 0.01397*(jdTT.getMjd2000()/365.25);
   auto lat_moon = sum_lat/1000000.0;
   auto rng_moon = 385000.56 + sum_rng/1000;
 
@@ -189,17 +191,15 @@ Eigen::Matrix<double, 3, 1> MoonMeeus::getPosition(const JulianDate& jd,
   auto slon = std::sin(lon_moon_rad);
   auto clon = std::cos(lon_moon_rad);
     //
+  auto lat_moon_rad = utl_const::rad_per_deg*lat_moon;
+  auto slat = std::sin(lat_moon_rad);
+  auto clat = std::cos(lat_moon_rad);
+    //
   auto rng_moon_du = phy_const::du_per_km*rng_moon;
     //
-  auto ra = std::atan2(ce0*slon, clon);
-  auto sde = se0*slon;
-  auto de = std::asin(sde);
-  auto cde = cos(de);
-  Eigen::Matrix<double, 3, 1> xeci {rng_moon_du*cde*std::cos(ra),
-                                    rng_moon_du*cde*std::sin(ra),
-                                    rng_moon_du*sde};
-    // MOD to J2000
-  xeci = m_ecfeci->mod2eci(jd, xeci);
+  Eigen::Matrix<double, 3, 1> xeci {rng_moon_du*clat*clon,
+                                    rng_moon_du*(clat*slon*ce0 - slat*se0),
+                                    rng_moon_du*(clat*slon*se0 + slat*ce0)};
 
   if (frame == EphemFrame::ecf) {
     return m_ecfeci->eci2ecf(jd, xeci);
