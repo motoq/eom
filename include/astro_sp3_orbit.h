@@ -16,7 +16,7 @@
 #include <Eigen/Dense>
 
 #include <cal_julian_date.h>
-#include <mth_hermite1.h>
+#include <mth_hermite2.h>
 #include <astro_ephemeris.h>
 #include <astro_ecfeci_sys.h>
 #include <mth_index_mapper.h>
@@ -46,11 +46,11 @@ struct sp3_rec {
 struct sp3_interp_rec {
   JulianDate jd1;                           ///< Interpolator start time
   JulianDate jd2;                           ///< Interpolator stop time
-  Hermite1<double, 3> hItp;                 ///< Interpolator
+  Hermite2<double, 3> hItp;                 ///< Interpolator
 
   sp3_interp_rec(const JulianDate& jdStart,
                  const JulianDate& jdEnd,
-                 const Hermite1<double, 3>& hInterp) : jd1(jdStart),
+                 const Hermite2<double, 3>& hInterp) : jd1(jdStart),
                                                        jd2(jdEnd),
                                                        hItp(hInterp)
   {

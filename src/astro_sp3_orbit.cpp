@@ -22,8 +22,9 @@
 #include <cal_duration.h>
 #include <cal_greg_date.h>
 #include <cal_julian_date.h>
-#include <mth_hermite1.h>
+#include <mth_hermite2.h>
 #include <astro_ephemeris.h>
+#include <astro_gravity_jn.h>
 #include <mth_index_mapper.h>
 
 namespace eom {
@@ -92,7 +93,8 @@ Sp3Orbit::Sp3Orbit(const std::string& name,
   Eigen::Matrix<double, 3, 1> vel;
   std::vector<sp3_rec> sp3_records;
   std::string sp3_name {""};
-  while (std::getline(ifs,input_line)) {
+  bool done {false};
+  while (std::getline(ifs,input_line)  &&  !done) {
     if (input_line == "EOF") {
       break;
     }
@@ -175,7 +177,16 @@ Sp3Orbit::Sp3Orbit(const std::string& name,
         }
         line = 1;
           // Can now insert full state vector
-        sp3_records.emplace_back(jd, pos, vel);
+          // Skip if before ECF/ECI data
+          // Done if beyond ECF/ECI data
+        if (jd < m_ecfeciSys->getBeginTime()) {
+          break;
+        }
+        if (jd <= m_ecfeciSys->getEndTime()) {
+          sp3_records.emplace_back(jd, pos, vel);
+        } else {
+          done = true;
+        }
         break;
     }
   }
@@ -199,14 +210,19 @@ Sp3Orbit::Sp3Orbit(const std::string& name,
   }
 
   std::vector<std::pair<JulianDate, JulianDate>> times;
+  GravityJn grv(4);
     // Generate and store Hermite interpolation objects
   for (unsigned int ii=1U; ii<sp3_records.size(); ++ii) {
     sp3_rec& r1 = sp3_records[ii-1U];
     sp3_rec& r2 = sp3_records[ii];
+    Eigen::Matrix<double, 3, 1> a1 = grv.getAcceleration(r1.p);
+    a1 = m_ecfeciSys->gravity2ecf(r1.t, r1.p, r1.v, a1);
+    Eigen::Matrix<double, 3, 1> a2 = grv.getAcceleration(r2.p);
+    a2 = m_ecfeciSys->gravity2ecf(r2.t, r2.p, r2.v, a2);
     double dt_tu {phy_const::tu_per_day*(r2.t - r1.t)};
-    Hermite1<double, 3> hItp(dt_tu,
-                             r1.p, r1.v,
-                             r2.p, r2.v,
+    Hermite2<double, 3> hItp(dt_tu,
+                             r1.p, r1.v, a1,
+                             r2.p, r2.v, a2,
                              phy_const::epsdt);
     m_eph_interpolators.emplace_back(r1.t, r2.t, hItp);
     times.emplace_back(r1.t, r2.t);

@@ -170,8 +170,7 @@ Eigen::Matrix<double, 3, 1> MoonMeeus::getPosition(const JulianDate& jd,
                115.0*std::sin(el_prime_rad + em_prime_rad);
 
   auto lon_moon = el_prime + sum_lon/1000000.0;
-    // To J2000
-  lon_moon -= 0.01397*(jdTT.getMjd2000()/365.25);
+  lon_moon -= 0.01397*(jdTT.getMjd2000()/365.25);          // To J2000 equinox
   auto lat_moon = sum_lat/1000000.0;
   auto rng_moon = 385000.56 + sum_rng/1000;
 

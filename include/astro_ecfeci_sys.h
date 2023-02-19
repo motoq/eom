@@ -121,6 +121,25 @@ public:
   ecf2eci(const JulianDate& utc, const Eigen::Matrix<double, 3, 1>& posf) const;
 
   /**
+   * Convert the acceleration vector from a central body gravity model
+   * to full ECF.
+   *
+   * @param  utc      UTC time
+   * @param  r_s_o_f  Position w.r.t. the center of earth in ECF coordinates
+   * @param  v_s_f_f  Velocity w.r.t. ECF in ECF coordinates
+   * @param  a_s_i_f  Acceleration w.r.t. ECI in ECF coordinates
+   *
+   * @return  Acceleration w.r.t. ECF in ECF coordinates
+   *
+   * @throws  out_of_range if the requested time is out of range
+   */
+  Eigen::Matrix<double, 3, 1>
+  gravity2ecf(const JulianDate& utc,
+              const Eigen::Matrix<double, 3, 1>& r_s_o_f,
+              const Eigen::Matrix<double, 3, 1>& v_s_f_f,
+              const Eigen::Matrix<double, 3, 1>& a_s_i_f) const;
+
+  /**
    * Convert an ECF position and velocity state vector to ECI.
    *
    * @param  utc   UTC time of state vector

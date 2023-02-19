@@ -69,7 +69,7 @@ public:
    */
   Eigen::Matrix<double, 3, 1>
       getAcceleration(const Eigen::Matrix<double, 3, 1>& pos,
-                      OdeEvalMethod) override;
+                      OdeEvalMethod entry = OdeEvalMethod::predictor) override;
 
 private:
   int nterm {0};                  ///< number of terms

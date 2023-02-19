@@ -76,8 +76,7 @@ Eigen::Matrix<double, 3, 1> SunMeeus::getPosition(const JulianDate& jd,
 
     // Sun true longitude w.r.t. the mean equinox of the date,
   auto lon_sun = el0 + cee;
-    // To J2000 equinox
-  lon_sun -= 0.01397*(jdTT.getMjd2000()/365.25);
+  lon_sun -= 0.01397*(jdTT.getMjd2000()/365.25);           // To J2000 equinox
     // true anomaly
   auto nu_sun = em + cee;
     // radial distance (AU)

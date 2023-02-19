@@ -209,6 +209,28 @@ EcfEciSys::ecf2eci(const JulianDate& utc,
 
 
 Eigen::Matrix<double, 3, 1>
+EcfEciSys::gravity2ecf(const JulianDate& utc, 
+                       const Eigen::Matrix<double, 3, 1>& r_s_o_f,
+                       const Eigen::Matrix<double, 3, 1>& v_s_f_f,
+                       const Eigen::Matrix<double, 3, 1>& a_s_i_f) const
+{
+  ecf_eci f2i {this->getEcfEciData(utc)};
+  double we {phy_const::earth_angular_velocity(f2i.lod)};
+  Eigen::Matrix<double, 3, 1> wvec {0.0, 0.0, we};
+
+    // Convert position and velocity to instantaneous spin axis
+    // coordinates 'w' (Polar motion)
+  Eigen::Matrix<double, 3, 1> r_s_o_w = f2i.pm*r_s_o_f;
+  Eigen::Matrix<double, 3, 1> v_s_f_w = f2i.pm*v_s_f_f;
+
+  Eigen::Matrix<double, 3, 1> da_s_f_w = 2.0*wvec.cross(v_s_f_w) +
+                                             wvec.cross(wvec.cross(r_s_o_w));
+
+  return a_s_i_f - f2i.pm.conjugate()*da_s_f_w;
+}
+
+
+Eigen::Matrix<double, 3, 1>
 EcfEciSys::eci2ecf(const JulianDate& utc,
                   const Eigen::Matrix<double, 3, 1>& posi) const
 {

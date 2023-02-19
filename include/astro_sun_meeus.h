@@ -30,6 +30,11 @@ namespace eom {
  * perturbations.  Velocity is included to satisfy the Ephemeris
  * interface, computed via simple differencing.
  *
+ * Up to 1' of error compared to precision ephemerides during the month
+ * of Feb 2023 have been observed with this implementation (note the sun
+ * appears to span an arc on the order of 30').  The conversion to the
+ * J2000 equinox is valid through 2100.
+ *
  * Meeus, Jean, "Astronomical Algorithms", 2nd Ed., Willmann-Bell, Inc.,
  * 1998.  Chapter 25 algorithm converted to Cartesian coordinates.
  *
