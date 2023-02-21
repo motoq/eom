@@ -55,7 +55,8 @@ void Keplerian::set(const std::array<double, 6>& oe)
   double ecv {e*cv};
   double suop {std::sqrt(phy_const::gm/semip)};
 
-  hmag = std::sqrt(phy_const::gm*semip);
+  m_sme = -0.5*phy_const::gm/a;
+  m_hmag = std::sqrt(phy_const::gm*semip);
 
   Eigen::Matrix<double, 3, 1> r_pqw;
   r_pqw(0,0) = semip*cv/(1.0 + ecv);
@@ -94,7 +95,7 @@ Keplerian::Keplerian(const Eigen::Matrix<double, 6, 1>& cart)
 
   double rmag {rvec.norm()};
   double vmag {vvec.norm()};
-  hmag = hvec.norm();
+  m_hmag = hvec.norm();
   double nmag {nvec.norm()};
   double v2 {vmag*vmag};
   double rdotv {rvec.dot(vvec)};
@@ -106,11 +107,11 @@ Keplerian::Keplerian(const Eigen::Matrix<double, 6, 1>& cart)
                                    };
   double emag {evec.norm()};
     // Vis-viva eqn
-  double sme {v2/2.0 - muor};
+  m_sme = v2/2.0 - muor;
     // Semimajor axis
-  double sma {-0.5*phy_const::gm/sme};
+  double sma {-0.5*phy_const::gm/m_sme};
     // Inclination
-  double inc {std::acos(hvec(2)/hmag)};
+  double inc {std::acos(hvec(2)/m_hmag)};
     // RAAN
   double raan {std::acos(nvec(0)/nmag)};
   if (nvec(1) < 0.0) {
@@ -162,6 +163,13 @@ double Keplerian::getMeanAnomaly() const
 }
 
 
+double Keplerian::getPeriod() const
+{
+  double a {m_oe[ia]};
+  return utl_const::tpi*std::sqrt(a*a*a/phy_const::gm);
+}
+
+
 /*
  * Based on Vallado's "Fundamentals of Astrodynamics and Applications",
  * 4th edition, Algorithms 2 KepEqtnE and 6 Anomaly to
@@ -207,6 +215,8 @@ void Keplerian::setWithMeanAnomaly(double ma)
 void Keplerian::print(std::ostream& stream) const
 {
   stream << std::fixed;
+  stream << std::setprecision(2);
+  stream << "    (" << phy_const::tu_per_day/getPeriod() << " rev/day)";
   stream << std::setprecision(3);
   stream << "\n  a: " << phy_const::km_per_du*m_oe[0] << " km";
   stream << std::setprecision(6);

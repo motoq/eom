@@ -76,11 +76,19 @@ public:
   }
 
   /**
+   * @return  Orbit energy, negative for elliptical orbits, DU^2/TU^2
+   */
+  double getEnergy() const override
+  {
+    return m_sme;
+  }
+
+  /**
    * @return  Orbit angular momentum, DU^2/TU
    */
   double getAngularMomentum() const override
   {
-    return hmag;
+    return m_hmag;
   }
 
   /**
@@ -102,6 +110,11 @@ public:
   double getMeanAnomaly() const;
 
   /*
+   * @return the orbit period, TU
+   */
+  double getPeriod() const;
+
+  /*
    * Updates the true anomaly given the input mean anomaly.  Only the
    * true anomaly is modified.
    *
@@ -112,7 +125,8 @@ public:
 private:
   void set(const std::array<double, 6>& oe);
 
-  double hmag {0.0};
+  double m_sme {0.0};
+  double m_hmag {0.0};
   std::array<double, 6> m_oe;
   Eigen::Matrix<double, 6, 1> m_cart;
 };

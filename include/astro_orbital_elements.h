@@ -47,6 +47,11 @@ public:
   virtual Eigen::Matrix<double, 6, 1> getCartesian() const = 0;
 
   /**
+   * @return  Orbit energy, DU^2/TU^2
+   */
+  virtual double getEnergy() const = 0;
+
+  /**
    * @return  Orbit angular momentum, DU^2/TU
    */
   virtual double getAngularMomentum() const = 0;

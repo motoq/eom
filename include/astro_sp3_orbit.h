@@ -63,6 +63,17 @@ struct sp3_interp_rec {
  * "EP" and "EV" fields are skipped.  Each "ID" must be the same
  * throughout the file or an exception will be trown.
  *
+ * Hermite interpolation using two position and velocity pairs is
+ * employed, augmented with a J4 gravity model to create acceleration.
+ * This method was chosen because the spacing for a 2 rev/day orbit was
+ * 15 minutes, causing significant error with position-velocity only
+ * Hermite interpolation.  Hermite interpolation does limit this class
+ * to ephemeris where velocity is the derivative of position, and the J4
+ * acceleration model is a sufficient representation of acceleration.
+ * For a 2 rev/day orbit with 15 minute state vector spacing, results in
+ * an oscillation of about 5 cm.  A Chebyshev interpolation option will
+ * probably be more appropriate.
+ *
  * @author  Kurt Motekew  2023/01/10
  */
 class Sp3Orbit : public Ephemeris {
