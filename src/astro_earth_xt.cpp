@@ -75,16 +75,16 @@ void EarthXt::setEarthXt(const Eigen::Matrix<double, 3, 1>& pos,
   Eigen::Matrix<double, 2, 1> p = pnt2D.block<2,1>(0,0);
   Eigen::Matrix<double, 2, 1> xy;
   if (m_mode == HorizonMode::horizon_always) {
-    xy = mth_unit_circle::tangent(r, p);
+    xy = unit_circle::tangent(r, p);
     earth_x = false;
   } else {
     try {
-      xy = mth_unit_circle::intersect(r, p);
+      xy = unit_circle::intersect(r, p);
       earth_x = true;
     } catch (const NoSolutionException& nsl) {
       earth_x = false;
       if (m_mode == HorizonMode::horizon_miss) {
-        xy = mth_unit_circle::tangent(r, p);
+        xy = unit_circle::tangent(r, p);
       } else if (m_mode == HorizonMode::horizon_never) {
         m_xyz.setZero();
         return;

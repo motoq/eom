@@ -21,7 +21,7 @@ namespace eom {
 /**
  * Template utility functions for unit circle
  */
-namespace mth_unit_circle {
+namespace unit_circle {
 
 /*
  * Computes the intersection point on a unit circle given a location
@@ -58,7 +58,7 @@ Eigen::Matrix<T, 2, 1> intersect(const Eigen::Matrix<T, 2, 1>& pos,
     T s = -(beta + std::sqrt(d))/alpha;
     return pos + s*pnt_hat;
   } else {
-    throw NoSolutionException("mth_unit_circle::intersect");
+    throw NoSolutionException("unit_circle::intersect");
   }
 }
 

@@ -13,7 +13,6 @@
 
 #include <Eigen/Dense>
 
-#include <mth_unit_circle.h>
 #include <astro_earth_surf.h>
 
 namespace eom {
