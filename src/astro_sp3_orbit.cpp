@@ -91,7 +91,7 @@ Sp3Orbit::Sp3Orbit(const std::string& name,
   JulianDate jd;
   Eigen::Matrix<double, 3, 1> pos;
   Eigen::Matrix<double, 3, 1> vel;
-  std::vector<sp3_rec> sp3_records;
+  std::vector<state_vector_rec> sp3_records;
   std::string sp3_name {""};
   bool done {false};
   while (std::getline(ifs,input_line)  &&  !done) {
@@ -212,9 +212,9 @@ Sp3Orbit::Sp3Orbit(const std::string& name,
   std::vector<std::pair<JulianDate, JulianDate>> times;
   GravityJn grv(4);
     // Generate and store Hermite interpolation objects
-  for (unsigned int ii=1U; ii<sp3_records.size(); ++ii) {
-    sp3_rec& r1 = sp3_records[ii-1U];
-    sp3_rec& r2 = sp3_records[ii];
+  for (unsigned long ii=1UL; ii<sp3_records.size(); ++ii) {
+    state_vector_rec& r1 = sp3_records[ii-1UL];
+    state_vector_rec& r2 = sp3_records[ii];
     Eigen::Matrix<double, 3, 1> a1 = grv.getAcceleration(r1.p);
     a1 = m_ecfeciSys->gravity2ecf(r1.t, r1.p, r1.v, a1);
     Eigen::Matrix<double, 3, 1> a2 = grv.getAcceleration(r2.p);

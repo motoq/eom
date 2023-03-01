@@ -18,6 +18,23 @@
 namespace eom {
 
 /**
+ * State vector record structure
+ */
+struct state_vector_rec {
+  JulianDate t;
+  Eigen::Matrix<double, 3, 1> p;            ///< Position
+  Eigen::Matrix<double, 3, 1> v;            ///< Velocity
+
+  state_vector_rec(const JulianDate& jd,
+                   const Eigen::Matrix<double, 3, 1>& x,
+                   const Eigen::Matrix<double, 3, 1>& dx) : t(jd),
+                                                            p(x),
+                                                            v(dx)
+  {
+  }
+};
+
+/**
  * The GCRF and ITRF are the two reference frames supported throughout
  * the codebase.
  */

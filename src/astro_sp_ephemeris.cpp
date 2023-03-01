@@ -27,11 +27,6 @@
 
 namespace eom {
 
-/*
- * Work in progress...
- * Testing interpolator finder, exceptions for out of range,
- * boundary/edge resolution
- */
 SpEphemeris::SpEphemeris(const std::string& name,
                          const JulianDate& jdStart,
                          const JulianDate& jdStop,
@@ -69,8 +64,8 @@ SpEphemeris::SpEphemeris(const std::string& name,
 
   std::vector<std::pair<JulianDate, JulianDate>> times;
     // Generate and store Hermite interpolation objects
-  for (unsigned int ii=1U; ii<fwd_eph.size(); ++ii) {
-    eph_record& r1 = fwd_eph[ii-1U];
+  for (unsigned long ii=1UL; ii<fwd_eph.size(); ++ii) {
+    eph_record& r1 = fwd_eph[ii-1UL];
     eph_record& r2 = fwd_eph[ii];
     double dt_tu {phy_const::tu_per_day*(r2.t - r1.t)};
     Hermite2<double, 3> hItp(dt_tu,

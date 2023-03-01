@@ -24,23 +24,6 @@
 namespace eom {
 
 /**
- * SP3 records used for generating interpolators
- */
-struct sp3_rec {
-  JulianDate t;
-  Eigen::Matrix<double, 3, 1> p;            ///< Position
-  Eigen::Matrix<double, 3, 1> v;            ///< Velocity
-
-  sp3_rec(const JulianDate& jd,
-          const Eigen::Matrix<double, 3, 1>& x,
-          const Eigen::Matrix<double, 3, 1>& dx) : t(jd),
-                                                   p(x),
-                                                   v(dx)
-  {
-  }
-};
-
-/**
  * Interpolation records generated from ephemeris
  */
 struct sp3_interp_rec {
