@@ -37,8 +37,12 @@ eom::EphemerisFile parse_eph_file_def(std::deque<std::string>& tokens)
                                  model);
   }
   auto interp = tokens[0];
-  if (interp == "Hermite") {
-    tokens.pop_front();
+  tokens.pop_front();
+  eom::EphInterpType interp_type {};
+  if (interp == "Chebyshev") {
+    interp_type = eom::EphInterpType::chebyshev;
+  } else if (interp == "Hermite") {
+    interp_type = eom::EphInterpType::hermite;
   } else {
      throw std::invalid_argument("eom_app::parse_eph_file_def() "s +
                                  "Invalid ephemeris interpolation type: "s +
@@ -50,8 +54,7 @@ eom::EphemerisFile parse_eph_file_def(std::deque<std::string>& tokens)
   eom::EphemerisFile efd(name,
                          file_name,
                          eom::EphFileFormat::sp3c,
-                         eom::EphInterpType::hermite);
-
+                         interp_type);
   return efd;
 }
 

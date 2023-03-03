@@ -20,6 +20,7 @@ Orbit  etalong2  SP  GD 2019  2 3  0  0  0.00
                    SunGravity   Meeus
                    Propagator  GJ Seconds 0;
 EphemerisFile nsgf_etalong2  SP3c Hermite nsgf.orb.etalon2.190209.v70.sp3;
+#EphemerisFile nsgf_etalong2  SP3c Chebyshev nsgf.orb.etalon2.190209.v70.sp3;
 OutputRate Minutes 1;
 Command PrintRange etalong2 nsgf_etalong2 etalong2_rng;
 

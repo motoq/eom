@@ -24,6 +24,7 @@ enum class EphFileFormat {
  * Supported interpolation methods
  */
 enum class EphInterpType {
+  chebyshev,
   hermite
 };
 

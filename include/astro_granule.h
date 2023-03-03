@@ -15,7 +15,7 @@
 #include <Eigen/Dense>
 
 #include <phy_const.h>
-#include <mth_chebyshev.m>
+#include <mth_chebyshev.h>
 
 namespace eom {
 
@@ -83,7 +83,7 @@ public:
    *
    * @throws  invalid_argument if the requested time is out of range
    */
-  Eigen::Matrix<double, 3, 1> getVelocity(JulianDate jd) const;
+  Eigen::Matrix<double, 3, 1> getVelocity(const JulianDate& jd) const;
 
 private:
   JulianDate m_jdStart;
@@ -91,9 +91,9 @@ private:
   double m_days {};
   double m_dt_norm {1.0};
   double m_dt_shift {};
-  Eigen::Matrix<double, 3, 1> m_ax;
-  Eigen::Matrix<double, 3, 1> m_ay;
-  Eigen::Matrix<double, 3, 1> m_az;
+  Eigen::Matrix<double, ORDER+1, 1> m_ax;
+  Eigen::Matrix<double, ORDER+1, 1> m_ay;
+  Eigen::Matrix<double, ORDER+1, 1> m_az;
 };
 
 
@@ -150,9 +150,8 @@ Granule<ORDER,N>::getPosition(const JulianDate& jd) const
   }
   double dt {(tu - m_dt_shift)/m_dt_norm};
   Eigen::Matrix<double, 1, ORDER+1> tpoly = chebyshev::poly<double, ORDER>(dt);
-  Eigen::Matrix<double, 3, 1> pos = { m_ax.transpose()*tpoly,
-                                      m_ay.transpose()*tpoly,
-                                      m_az.transpose()*tpoly };
+  Eigen::Matrix<double, 3, 1> pos = { tpoly*m_ax, tpoly*m_ay, tpoly*m_az };
+
   return pos;
 }
   
@@ -168,9 +167,7 @@ Granule<ORDER,N>::getVelocity(const JulianDate& jd) const
   double dt {(tu - m_dt_shift)/m_dt_norm};
   Eigen::Matrix<double, 1, ORDER+1> tpoly = chebyshev::poly_dot<double,
                                                                 ORDER>(dt);
-  Eigen::Matrix<double, 3, 1> vel = { m_ax.transpose()*tpoly,
-                                      m_ay.transpose()*tpoly,
-                                      m_az.transpose()*tpoly };
+  Eigen::Matrix<double, 3, 1> vel = { tpoly*m_ax, tpoly*m_ay, tpoly*m_az };
   return vel;
 }
 

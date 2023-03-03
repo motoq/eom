@@ -10,6 +10,7 @@
 
 #include <cal_julian_date.h>
 #include <astro_ephemeris_file.h>
+#include <astro_sp3_ephem.h>
 #include <astro_sp3_orbit.h>
 #include <astro_ephemeris.h>
 
@@ -23,13 +24,20 @@ build_ephemeris(const EphemerisFile& efd,
                 const JulianDate& stopTime,
                 const std::shared_ptr<const EcfEciSys>& ecfeciSys)
 {
-    // Only one option for now from efd
-  std::unique_ptr<Ephemeris> eph =
-      std::make_unique<Sp3Orbit>(efd.getName(),
-                                 efd.getEphFileName(),
-                                 startTime,
-                                 stopTime,
-                                 ecfeciSys);
+  std::unique_ptr<Ephemeris> eph {nullptr};
+  if (efd.getEphInterpMethod() == EphInterpType::hermite) {
+    eph = std::make_unique<Sp3Orbit>(efd.getName(),
+                                     efd.getEphFileName(),
+                                     startTime,
+                                     stopTime,
+                                     ecfeciSys);
+  } else {
+    eph = std::make_unique<Sp3Ephem>(efd.getName(),
+                                     efd.getEphFileName(),
+                                     startTime,
+                                     stopTime,
+                                     ecfeciSys);
+  }
   return eph;
 }
 
