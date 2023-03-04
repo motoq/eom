@@ -211,6 +211,7 @@ Sp3Ephem::Sp3Ephem(const std::string& name,
   }
 
   unsigned long nrec = sp3_records.size()/static_cast<unsigned long>(npts-1UL);
+  nrec--;
   std::vector<std::pair<JulianDate, JulianDate>> times;
     // Generate and store Chebyshev granules
   std::array<JulianDate, sp3::np> jds;
@@ -221,8 +222,8 @@ Sp3Ephem::Sp3Ephem(const std::string& name,
     for (int jj=0; jj<sp3::np; ++jj) {
       state_vector_rec& erec = sp3_records[ndx];
       jds[jj] = erec.t;
-      pvecs.block(0,3,jj,jj) = erec.p;
-      vvecs.block(0,3,jj,jj) = erec.v;
+      pvecs.block(0,jj,3,1) = erec.p;
+      vvecs.block(0,jj,3,1) = erec.v;
       ndx++;
     }
     Granule<sp3::order, sp3::np> tItp(jds, pvecs, vvecs);

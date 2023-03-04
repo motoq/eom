@@ -123,8 +123,8 @@ Granule<ORDER,N>::Granule(const std::array<JulianDate, N>& ts,
     double dt {(tu - m_dt_shift)/m_dt_norm};
     int prow {2*ii};
     int vrow {prow+1};
-    tmat.block(prow,0,0,ORDER) = chebyshev::poly<double, ORDER>(dt);
-    tmat.block(vrow,0,0,ORDER) = chebyshev::poly_dot<double, ORDER>(dt);
+    tmat.block(prow,0,1,ORDER+1) = chebyshev::poly<double, ORDER>(dt);
+    tmat.block(vrow,0,1,ORDER+1) = chebyshev::poly_dot<double, ORDER>(dt);
     fx(prow) = ps(0, ii);
     fx(vrow) = vs(0, ii);
     fy(prow) = ps(1, ii);
@@ -144,11 +144,12 @@ template<int ORDER, int N>
 Eigen::Matrix<double, 3, 1>
 Granule<ORDER,N>::getPosition(const JulianDate& jd) const
 {
+  double dtlim {1.0 + phy_const::epsdt/m_dt_norm};
   double tu {phy_const::tu_per_day*(jd - m_jdStart)};
-  if (tu < -phy_const::epsdt  ||  tu > phy_const::epsdt) {
+  double dt {(tu - m_dt_shift)/m_dt_norm};
+  if (dt < -dtlim  ||  dt > dtlim) {
     throw std::invalid_argument("Granule<T,N>::getPosition() - bad jd");
   }
-  double dt {(tu - m_dt_shift)/m_dt_norm};
   Eigen::Matrix<double, 1, ORDER+1> tpoly = chebyshev::poly<double, ORDER>(dt);
   Eigen::Matrix<double, 3, 1> pos = { tpoly*m_ax, tpoly*m_ay, tpoly*m_az };
 
@@ -160,11 +161,12 @@ template<int ORDER, int N>
 Eigen::Matrix<double, 3, 1>
 Granule<ORDER,N>::getVelocity(const JulianDate& jd) const
 {
+  double dtlim {1.0 + phy_const::epsdt/m_dt_norm};
   double tu {phy_const::tu_per_day*(jd - m_jdStart)};
-  if (tu < -phy_const::epsdt  ||  tu > phy_const::epsdt) {
+  double dt {(tu - m_dt_shift)/m_dt_norm};
+  if (dt < -dtlim  ||  dt > dtlim) {
     throw std::invalid_argument("Granule<T,N>::getVelocity() - bad jd");
   }
-  double dt {(tu - m_dt_shift)/m_dt_norm};
   Eigen::Matrix<double, 1, ORDER+1> tpoly = chebyshev::poly_dot<double,
                                                                 ORDER>(dt);
   Eigen::Matrix<double, 3, 1> vel = { tpoly*m_ax, tpoly*m_ay, tpoly*m_az };
