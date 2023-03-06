@@ -24,7 +24,7 @@
 namespace eom {
 
 namespace sp3 {
-  constexpr int order {5};
+  constexpr int order {8};
   constexpr int np {9};
 }
 

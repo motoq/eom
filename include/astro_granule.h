@@ -91,12 +91,8 @@ private:
   double m_days {};
   double m_dt_norm {1.0};
   double m_dt_shift {};
-  Eigen::Matrix<double, ORDER+1, 1> m_ax;
-  Eigen::Matrix<double, ORDER+1, 1> m_ay;
-  Eigen::Matrix<double, ORDER+1, 1> m_az;
-  Eigen::Matrix<double, ORDER+1, 1> m_adx;
-  Eigen::Matrix<double, ORDER+1, 1> m_ady;
-  Eigen::Matrix<double, ORDER+1, 1> m_adz;
+  Eigen::Matrix<double, ORDER+1, 3> m_a_pos;
+  Eigen::Matrix<double, ORDER+1, 3> m_a_vel;
 };
 
 
@@ -123,14 +119,9 @@ Granule<ORDER,N>::Granule(const std::array<JulianDate, N>& ts,
     double dt {(tu - m_dt_shift)/m_dt_norm};
     tmat.block(ii,0,1,ORDER+1) = chebyshev::poly<double, ORDER>(dt);
   }
-  //ColPivHouseholderQR<Matrix3f> dec(A);
-  //Vector3f x = dec.solve(b);
-  m_ax = tmat.colPivHouseholderQr().solve(ps.block(0,0,1,N).transpose());
-  m_ay = tmat.colPivHouseholderQr().solve(ps.block(1,0,1,N).transpose());
-  m_az = tmat.colPivHouseholderQr().solve(ps.block(2,0,1,N).transpose());
-  m_adx = tmat.colPivHouseholderQr().solve(vs.block(0,0,1,N).transpose());
-  m_ady = tmat.colPivHouseholderQr().solve(vs.block(1,0,1,N).transpose());
-  m_adz = tmat.colPivHouseholderQr().solve(vs.block(2,0,1,N).transpose());
+  Eigen::ColPivHouseholderQR<Eigen::Matrix<double, N, ORDER+1>> tqr(tmat);
+  m_a_pos = tqr.solve(ps.transpose());
+  m_a_vel = tqr.solve(vs.transpose());
 }
   
 
@@ -145,9 +136,9 @@ Granule<ORDER,N>::getPosition(const JulianDate& jd) const
     throw std::invalid_argument("Granule<T,N>::getPosition() - bad jd");
   }
   Eigen::Matrix<double, 1, ORDER+1> tpoly = chebyshev::poly<double, ORDER>(dt);
-  Eigen::Matrix<double, 3, 1> pos = {tpoly*m_ax, tpoly*m_ay, tpoly*m_az};
+  Eigen::Matrix<double, 1, 3> post = tpoly*m_a_pos;
 
-  return pos;
+  return post.transpose();
 }
   
 
@@ -162,9 +153,9 @@ Granule<ORDER,N>::getVelocity(const JulianDate& jd) const
     throw std::invalid_argument("Granule<T,N>::getVelocity() - bad jd");
   }
   Eigen::Matrix<double, 1, ORDER+1> tpoly = chebyshev::poly<double, ORDER>(dt);
-  Eigen::Matrix<double, 3, 1> vel = {tpoly*m_adx, tpoly*m_ady, tpoly*m_adz};
+  Eigen::Matrix<double, 1, 3> velt = tpoly*m_a_vel;
 
-  return vel;
+  return velt.transpose();
 }
 
 
