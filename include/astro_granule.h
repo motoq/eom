@@ -94,6 +94,9 @@ private:
   Eigen::Matrix<double, ORDER+1, 1> m_ax;
   Eigen::Matrix<double, ORDER+1, 1> m_ay;
   Eigen::Matrix<double, ORDER+1, 1> m_az;
+  Eigen::Matrix<double, ORDER+1, 1> m_adx;
+  Eigen::Matrix<double, ORDER+1, 1> m_ady;
+  Eigen::Matrix<double, ORDER+1, 1> m_adz;
 };
 
 
@@ -113,30 +116,21 @@ Granule<ORDER,N>::Granule(const std::array<JulianDate, N>& ts,
 
     // N is the number of position or velocity observations
     // 2N is the total number of observations - alternate pos then vel
-  Eigen::Matrix<double, 2*N, ORDER+1> tmat;
-  Eigen::Matrix<double, 2*N, 1> fx;
-  Eigen::Matrix<double, 2*N, 1> fy;
-  Eigen::Matrix<double, 2*N, 1> fz;
+  Eigen::Matrix<double, N, ORDER+1> tmat;
 
   for (int ii=0; ii<N; ++ii) {
     double tu {phy_const::tu_per_day*(ts[ii] - m_jdStart)};
     double dt {(tu - m_dt_shift)/m_dt_norm};
-    int prow {2*ii};
-    int vrow {prow+1};
-    tmat.block(prow,0,1,ORDER+1) = chebyshev::poly<double, ORDER>(dt);
-    tmat.block(vrow,0,1,ORDER+1) = chebyshev::poly_dot<double, ORDER>(dt);
-    fx(prow) = ps(0, ii);
-    fx(vrow) = vs(0, ii);
-    fy(prow) = ps(1, ii);
-    fy(vrow) = vs(1, ii);
-    fz(prow) = ps(2, ii);
-    fz(vrow) = vs(2, ii);
+    tmat.block(ii,0,1,ORDER+1) = chebyshev::poly<double, ORDER>(dt);
   }
   //ColPivHouseholderQR<Matrix3f> dec(A);
   //Vector3f x = dec.solve(b);
-  m_ax = tmat.colPivHouseholderQr().solve(fx);
-  m_ay = tmat.colPivHouseholderQr().solve(fy);
-  m_az = tmat.colPivHouseholderQr().solve(fz);
+  m_ax = tmat.colPivHouseholderQr().solve(ps.block(0,0,1,N).transpose());
+  m_ay = tmat.colPivHouseholderQr().solve(ps.block(1,0,1,N).transpose());
+  m_az = tmat.colPivHouseholderQr().solve(ps.block(2,0,1,N).transpose());
+  m_adx = tmat.colPivHouseholderQr().solve(vs.block(0,0,1,N).transpose());
+  m_ady = tmat.colPivHouseholderQr().solve(vs.block(1,0,1,N).transpose());
+  m_adz = tmat.colPivHouseholderQr().solve(vs.block(2,0,1,N).transpose());
 }
   
 
@@ -151,7 +145,7 @@ Granule<ORDER,N>::getPosition(const JulianDate& jd) const
     throw std::invalid_argument("Granule<T,N>::getPosition() - bad jd");
   }
   Eigen::Matrix<double, 1, ORDER+1> tpoly = chebyshev::poly<double, ORDER>(dt);
-  Eigen::Matrix<double, 3, 1> pos = { tpoly*m_ax, tpoly*m_ay, tpoly*m_az };
+  Eigen::Matrix<double, 3, 1> pos = {tpoly*m_ax, tpoly*m_ay, tpoly*m_az};
 
   return pos;
 }
@@ -167,9 +161,9 @@ Granule<ORDER,N>::getVelocity(const JulianDate& jd) const
   if (dt < -dtlim  ||  dt > dtlim) {
     throw std::invalid_argument("Granule<T,N>::getVelocity() - bad jd");
   }
-  Eigen::Matrix<double, 1, ORDER+1> tpoly = chebyshev::poly_dot<double,
-                                                                ORDER>(dt);
-  Eigen::Matrix<double, 3, 1> vel = { tpoly*m_ax, tpoly*m_ay, tpoly*m_az };
+  Eigen::Matrix<double, 1, ORDER+1> tpoly = chebyshev::poly<double, ORDER>(dt);
+  Eigen::Matrix<double, 3, 1> vel = {tpoly*m_adx, tpoly*m_ady, tpoly*m_adz};
+
   return vel;
 }
 
