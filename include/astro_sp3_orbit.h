@@ -54,8 +54,7 @@ struct sp3_interp_rec {
  * to ephemeris where velocity is the derivative of position, and the J4
  * acceleration model is a sufficient representation of acceleration.
  * For a 2 rev/day orbit with 15 minute state vector spacing, results in
- * an oscillation of about 5 cm.  A Chebyshev interpolation option will
- * probably be more appropriate.
+ * an oscillation of about 5 cm.
  *
  * @author  Kurt Motekew  2023/01/10
  */

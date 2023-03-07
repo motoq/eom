@@ -11,6 +11,7 @@
 
 #include <array>
 #include <stdexcept>
+#include <cassert>
 
 #include <Eigen/Dense>
 
@@ -20,14 +21,25 @@
 namespace eom {
 
 /**
- * Creates an ephemeris "granule" composed of 
+ * Creates an ephemeris "granule" suitable for interpolation of
+ * ephemerides via Chebyshev interpolation.  Currently, position and
+ * velocity are fit to coefficients separately and no constraints are
+ * employed, meaning an nth order fit should be created with n+1 fit
+ * points to ensure continuity (more points results in an unconstrained
+ * least squares fit).  The below reference still needs to be fully
+ * implemented.  Keeping position and velocity separate does add greater
+ * flexibility.  An 8th order polynomial fit with 9 points was found to
+ * be sufficient for a 2 rev/day orbit with ephemeris spaced 15 minutes
+ * apart.
  *
  * Reference:  X X Newhall, "Numerical Representation of Planetary
  *             Ephemerides", Jet Propulsion Laboratory, 1989.
  *
  * @tparam  ORDER  Order of the polynomial (highest exponent)
- * @tparam  N      Number of fit points
- *
+ * @tparam  N      Number of fit points, N > ORDER.
+ *                 N = ORDER+1 results in a polynomial that passes
+ *                 through each fit point.
+ *                 
  * @author  Kurt Motekew
  * @date    2023/02/22
  */
@@ -101,19 +113,18 @@ Granule<ORDER,N>::Granule(const std::array<JulianDate, N>& ts,
                           const Eigen::Matrix<double, 3, N>& ps,
                           const Eigen::Matrix<double, 3, N>& vs)
 {
-  // N > O assert
+  static_assert(N > ORDER, "Granule: N <= ORDER");
 
   m_jdStart = ts[0];
   m_jdStop = ts[N-1];
   
+    // Time normalization to [-1, 1]
   m_days = m_jdStop - m_jdStart;
   m_dt_norm = 0.5*phy_const::tu_per_day*m_days;
   m_dt_shift = 0.0 + m_dt_norm;
 
     // N is the number of position or velocity observations
-    // 2N is the total number of observations - alternate pos then vel
   Eigen::Matrix<double, N, ORDER+1> tmat;
-
   for (int ii=0; ii<N; ++ii) {
     double tu {phy_const::tu_per_day*(ts[ii] - m_jdStart)};
     double dt {(tu - m_dt_shift)/m_dt_norm};
