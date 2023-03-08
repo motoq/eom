@@ -23,6 +23,9 @@
 
 namespace eom {
 
+/**
+ * Polynomial order and number of fit points
+ */
 namespace sp3 {
   constexpr int order {8};
   constexpr int np {9};
@@ -51,7 +54,8 @@ struct sp3_granule {
  * "EP" and "EV" fields are skipped.  Each "ID" must be the same
  * throughout the file or an exception will be trown.
  *
- * Chebyshev interpolation using
+ * Chebyshev interpolation using 8th order polynomials with 8 fit points
+ * is employed, separate coefficients for position and velocity.
  *
  * @author  Kurt Motekew  2023/02/28
  */

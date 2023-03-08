@@ -29,7 +29,7 @@
 
 namespace eom {
 
-// Currently reads in all ephemeris within the file
+// Read ephemeris data for which ECF/ECI transformations are available
 Sp3Orbit::Sp3Orbit(const std::string& name,
                    const std::string& file_name,
                    const JulianDate& jdStart,

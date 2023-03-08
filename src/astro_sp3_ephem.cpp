@@ -29,7 +29,7 @@
 
 namespace eom {
 
-// Currently reads in all ephemeris within the file
+// Read ephemeris data for which ECF/ECI transformations are available
 Sp3Ephem::Sp3Ephem(const std::string& name,
                    const std::string& file_name,
                    const JulianDate& jdStart,
@@ -213,7 +213,8 @@ Sp3Ephem::Sp3Ephem(const std::string& name,
   unsigned long nrec = sp3_records.size()/static_cast<unsigned long>(npts-1UL);
   nrec--;
   std::vector<std::pair<JulianDate, JulianDate>> times;
-    // Generate and store Chebyshev granules
+    // Generate and store Chebyshev granules - separate position and
+    // velocity coefficients
   std::array<JulianDate, sp3::np> jds;
   Eigen::Matrix<double, 3, sp3::np> pvecs;
   Eigen::Matrix<double, 3, sp3::np> vvecs;
