@@ -147,9 +147,8 @@ Granule<ORDER,N>::getPosition(const JulianDate& jd) const
     throw std::invalid_argument("Granule<T,N>::getPosition() - bad jd");
   }
   Eigen::Matrix<double, 1, ORDER+1> tpoly = chebyshev::poly<double, ORDER>(dt);
-  Eigen::Matrix<double, 1, 3> post = tpoly*m_a_pos;
 
-  return post.transpose();
+  return (tpoly*m_a_pos).transpose();
 }
   
 
@@ -164,9 +163,8 @@ Granule<ORDER,N>::getVelocity(const JulianDate& jd) const
     throw std::invalid_argument("Granule<T,N>::getVelocity() - bad jd");
   }
   Eigen::Matrix<double, 1, ORDER+1> tpoly = chebyshev::poly<double, ORDER>(dt);
-  Eigen::Matrix<double, 1, 3> velt = tpoly*m_a_vel;
 
-  return velt.transpose();
+  return (tpoly*m_a_vel).transpose();
 }
 
 
