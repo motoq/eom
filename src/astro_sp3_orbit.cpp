@@ -111,6 +111,11 @@ Sp3Orbit::Sp3Orbit(const std::string& name,
     }
     switch (line) {
       case 1:
+          // Ephemeris should start on line 23, but some sources
+          // do not honor this - look for first '*'
+        if (input_line.size() > 0  &&  input_line[0] != '*') {
+          continue;
+        }
         if (tokens.size() < 7  ||  input_line[0] != '*') {
           throw std::runtime_error(
               "Sp3Orbit::Sp3Orbit() Invalid time record; file " +
