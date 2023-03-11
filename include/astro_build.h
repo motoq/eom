@@ -9,6 +9,8 @@
 #ifndef ASTRO_BUILD_H
 #define ASTRO_BUILD_H
 
+#include <string>
+#include <vector>
 #include <memory>
 
 #include <astro_orbit_def.h>
@@ -73,6 +75,23 @@ build_ephemeris(const EphemerisFile& efd,
                 const JulianDate& startTime,
                 const JulianDate& stopTime,
                 const std::shared_ptr<const EcfEciSys>& ecfeciSys);
+
+/**
+ * Parse NGS SP3-c compatible ephemeris.  'V' format ECF position and
+ * velocity format is expected - position only will thrown an exception.
+ * "EP" and "EV" fields are skipped.  Each "ID" must be the same
+ * throughout the file or an exception will be trown.
+ *
+ * @param  file_name  Filename with SP3-c compatible ephemeris
+ * @param  jdStart    Start time for which to store ephemeris records
+ * @param  jdStop     End time for which to store ephemeris records
+ *
+ * @return  Position and velocity records, ECF, DU and DU/TU
+ */
+std::vector<state_vector_rec> parse_sp3_file(const std::string& file_name,
+                                             const JulianDate& jdStart,
+                                             const JulianDate& jdStop);
+
 }
 
 #endif

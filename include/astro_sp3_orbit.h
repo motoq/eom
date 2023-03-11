@@ -69,16 +69,19 @@ public:
   /**
    * Initialize with SP3 compatible format ephemeris.
    *
-   * @param  name       Unique ephemeris identifier
-   * @param  file_name  Filename with SP3-c compatible ephemeris.
-   * @param  jdStart    Start time for which ephemeris must be available
-   * @param  jdStop     End time for which ephemeris must be available
-   * @param  ecfeciSys  ECF/ECI conversion resource
+   * @param  name         Unique ephemeris identifier
+   * @param  sp3_records  Position and velocity records to form Hermite
+   *                      interpolation polynomials.  At least two must
+   *                      be present and must cover jdStart and jdStop.
+   *                      ECF, DU and DU/TU
+   * @param  jdStart      Start time for which ephemeris must be available
+   * @param  jdStop       End time for which ephemeris must be available
+   * @param  ecfeciSys    ECF/ECI conversion resource
    *
    * @throws  runtime_error for parsing and processing errors
    */
   Sp3Orbit(const std::string& name,
-           const std::string& file_name,
+           const std::vector<state_vector_rec>& sp3_records,
            const JulianDate& jdStart,
            const JulianDate& jdStop,
            const std::shared_ptr<const EcfEciSys>& ecfeciSys);
