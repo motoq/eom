@@ -16,10 +16,6 @@
 #include <cal_julian_date.h>
 #include <astro_propagator_config.h>
 #include <astro_orbit_def.h>
-#include <astro_gravity_jn.h>
-#ifdef GENPL
-#include <astro_gravt.h>
-#endif
 
 #include <eom_config.h>
 
@@ -164,10 +160,22 @@ static void parse_gravity_model(std::deque<std::string>& grav_toks,
       pCfg.setGravityModel(eom::GravityModel::jn);
       try {
         int degree {std::stoi(grav_toks[0])};
-        if (degree >= 0  &&  degree <= eom::GravityJn::getMaxDegree()) {
-          grav_toks.pop_front();
-          pCfg.setDegreeOrder(degree, 0);
-        }
+        grav_toks.pop_front();
+        pCfg.setDegreeOrder(degree, 0);
+      } catch (const std::invalid_argument& ia) {
+        ;
+      }
+    } else if (grav_toks.size() > 2  &&  grav_toks[0] == "Standard") {
+      grav_toks.pop_front();
+      pCfg.setGravityModel(eom::GravityModel::std);
+        // Not all tokens will be consumed if an error is thrown,
+        // signaling a parsing error
+      try {
+        int degree {std::stoi(grav_toks[0])};
+        grav_toks.pop_front();
+        int order {std::stoi(grav_toks[0])};
+        grav_toks.pop_front();
+        pCfg.setDegreeOrder(degree, order);
       } catch (const std::invalid_argument& ia) {
         ;
       }
@@ -179,12 +187,8 @@ static void parse_gravity_model(std::deque<std::string>& grav_toks,
         int degree {std::stoi(grav_toks[0])};
         grav_toks.pop_front();
         int order {std::stoi(grav_toks[0])};
-        if (order <= degree  &&
-            degree >= 0  &&  degree <= eom::Gravt::getMaxDegree()  &&
-            order >= 0   &&  order <= eom::Gravt::getMaxOrder()) {
-          grav_toks.pop_front();
-          pCfg.setDegreeOrder(degree, order);
-        }
+        grav_toks.pop_front();
+        pCfg.setDegreeOrder(degree, order);
       } catch (const std::invalid_argument& ia) {
         ;
       }

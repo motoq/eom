@@ -22,6 +22,7 @@
 #include <astro_rk4.h>
 #include <astro_gravity.h>
 #include <astro_gravity_jn.h>
+#include <astro_gravity_std.h>
 #include <astro_force_model.h>
 #include <astro_keplerian.h>
 #include <astro_ephemeris.h>
@@ -70,6 +71,9 @@ build_orbit(const OrbitDef& orbitParams,
     std::unique_ptr<Gravity> forceModel {nullptr};
     if (pCfg.getGravityModel() == GravityModel::jn) {
       forceModel = std::make_unique<GravityJn>(pCfg.getDegree());
+    } else if (pCfg.getGravityModel() == GravityModel::std) {
+      forceModel = std::make_unique<GravityStd>(pCfg.getDegree(),
+                                                pCfg.getOrder());
 #ifdef GENPL
     } else if (pCfg.getGravityModel() == GravityModel::gravt) {
       forceModel = std::make_unique<Gravt>(pCfg.getDegree(), pCfg.getOrder());

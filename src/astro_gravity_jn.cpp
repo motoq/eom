@@ -22,7 +22,7 @@ namespace eom
 
 GravityJn::GravityJn(int degree) : nterm {degree}
 {
-  if (degree > GravityJn::getMaxDegree()) {
+  if (degree < 0  ||  degree > GravityJn::getMaxDegree()) {
     throw std::invalid_argument("GravityJn::GravityJn() Unsupported Degree: " +
                                 std::to_string(degree));
   }

@@ -46,7 +46,8 @@ enum class GravityModel {
 #ifdef GENPL
   gravt,
 #endif
-  jn                              ///< Simple zonal-only gravity model
+  jn,                             ///< Simple zonal-only gravity model
+  std,                            ///< Degree, Order gravity model
 };
 
 /**

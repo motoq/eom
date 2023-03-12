@@ -55,6 +55,7 @@ set(SOURCES
   src/astro_ecfeci_sys.cpp
   src/astro_eop_sys.cpp
   src/astro_gravity_jn.cpp
+  src/astro_gravity_std.cpp
   src/astro_ground_point.cpp
   src/astro_kepler.cpp
   src/astro_keplerian.cpp
