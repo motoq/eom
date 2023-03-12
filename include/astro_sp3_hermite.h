@@ -6,8 +6,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef ASTRO_SP3_ORBIT_H
-#define ASTRO_SP3_ORBIT_H
+#ifndef ASTRO_SP3_HERMITE_H
+#define ASTRO_SP3_HERMITE_H
 
 #include <string>
 #include <vector>
@@ -26,16 +26,16 @@ namespace eom {
 /**
  * Interpolation records generated from ephemeris
  */
-struct sp3_interp_rec {
+struct sp3_hermite {
   JulianDate jd1;                           ///< Interpolator start time
   JulianDate jd2;                           ///< Interpolator stop time
   Hermite2<double, 3> hItp;                 ///< Interpolator
 
-  sp3_interp_rec(const JulianDate& jdStart,
-                 const JulianDate& jdEnd,
-                 const Hermite2<double, 3>& hInterp) : jd1(jdStart),
-                                                       jd2(jdEnd),
-                                                       hItp(hInterp)
+  sp3_hermite(const JulianDate& jdStart,
+              const JulianDate& jdEnd,
+              const Hermite2<double, 3>& hInterp) : jd1(jdStart),
+                                                    jd2(jdEnd),
+                                                    hItp(hInterp)
   {
   }
 };
@@ -58,13 +58,13 @@ struct sp3_interp_rec {
  *
  * @author  Kurt Motekew  2023/01/10
  */
-class Sp3Orbit : public Ephemeris {
+class Sp3Hermite : public Ephemeris {
 public:
-  ~Sp3Orbit() = default;
-  Sp3Orbit(const Sp3Orbit&) = default;
-  Sp3Orbit& operator=(const Sp3Orbit&) = default;
-  Sp3Orbit(Sp3Orbit&&) = default;
-  Sp3Orbit& operator=(Sp3Orbit&&) = default;
+  ~Sp3Hermite() = default;
+  Sp3Hermite(const Sp3Hermite&) = default;
+  Sp3Hermite& operator=(const Sp3Hermite&) = default;
+  Sp3Hermite(Sp3Hermite&&) = default;
+  Sp3Hermite& operator=(Sp3Hermite&&) = default;
 
   /**
    * Initialize with SP3 compatible format ephemeris.
@@ -80,11 +80,11 @@ public:
    *
    * @throws  runtime_error for parsing and processing errors
    */
-  Sp3Orbit(const std::string& name,
-           const std::vector<state_vector_rec>& sp3_records,
-           const JulianDate& jdStart,
-           const JulianDate& jdStop,
-           const std::shared_ptr<const EcfEciSys>& ecfeciSys);
+  Sp3Hermite(const std::string& name,
+             const std::vector<state_vector_rec>& sp3_records,
+             const JulianDate& jdStart,
+             const JulianDate& jdStop,
+             const std::shared_ptr<const EcfEciSys>& ecfeciSys);
 
   /**
    * @return  Unique ephemeris identifier
@@ -151,7 +151,7 @@ private:
   std::shared_ptr<const EcfEciSys> m_ecfeciSys {nullptr};
 
   std::unique_ptr<IndexMapper<JulianDate>> m_ndxr {nullptr};
-  std::vector<sp3_interp_rec> m_eph_interpolators;
+  std::vector<sp3_hermite> m_eph_interpolators;
 };
 
 

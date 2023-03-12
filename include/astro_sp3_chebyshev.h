@@ -6,8 +6,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef ASTRO_SP3_EPHEM_H
-#define ASTRO_SP3_EPHEM_H
+#ifndef ASTRO_SP3_CHEBYSHEV_H
+#define ASTRO_SP3_CHEBYSHEV_H
 
 #include <string>
 #include <vector>
@@ -59,13 +59,13 @@ struct sp3_granule {
  *
  * @author  Kurt Motekew  2023/02/28
  */
-class Sp3Ephem : public Ephemeris {
+class Sp3Chebyshev : public Ephemeris {
 public:
-  ~Sp3Ephem() = default;
-  Sp3Ephem(const Sp3Ephem&) = default;
-  Sp3Ephem& operator=(const Sp3Ephem&) = default;
-  Sp3Ephem(Sp3Ephem&&) = default;
-  Sp3Ephem& operator=(Sp3Ephem&&) = default;
+  ~Sp3Chebyshev() = default;
+  Sp3Chebyshev(const Sp3Chebyshev&) = default;
+  Sp3Chebyshev& operator=(const Sp3Chebyshev&) = default;
+  Sp3Chebyshev(Sp3Chebyshev&&) = default;
+  Sp3Chebyshev& operator=(Sp3Chebyshev&&) = default;
 
   /**
    * Initialize with SP3 compatible format ephemeris.
@@ -81,11 +81,11 @@ public:
    *
    * @throws  runtime_error for parsing and processing errors
    */
-  Sp3Ephem(const std::string& name,
-           const std::vector<state_vector_rec>& sp3_records,
-           const JulianDate& jdStart,
-           const JulianDate& jdStop,
-           const std::shared_ptr<const EcfEciSys>& ecfeciSys);
+  Sp3Chebyshev(const std::string& name,
+               const std::vector<state_vector_rec>& sp3_records,
+               const JulianDate& jdStart,
+               const JulianDate& jdStop,
+               const std::shared_ptr<const EcfEciSys>& ecfeciSys);
 
   /**
    * @return  Unique ephemeris identifier

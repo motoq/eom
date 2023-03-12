@@ -18,8 +18,8 @@
 #include <cal_greg_date.h>
 #include <cal_julian_date.h>
 #include <astro_ephemeris_file.h>
-#include <astro_sp3_ephem.h>
-#include <astro_sp3_orbit.h>
+#include <astro_sp3_chebyshev.h>
+#include <astro_sp3_hermite.h>
 #include <astro_ephemeris.h>
 
 #include <astro_build.h>
@@ -37,17 +37,17 @@ build_ephemeris(const EphemerisFile& efd,
                                            ecfeciSys->getEndTime());
   std::unique_ptr<Ephemeris> eph {nullptr};
   if (efd.getEphInterpMethod() == EphInterpType::hermite) {
-    eph = std::make_unique<Sp3Orbit>(efd.getName(),
-                                     sp3_recs,
-                                     startTime,
-                                     stopTime,
-                                     ecfeciSys);
+    eph = std::make_unique<Sp3Hermite>(efd.getName(),
+                                       sp3_recs,
+                                       startTime,
+                                       stopTime,
+                                       ecfeciSys);
   } else {
-    eph = std::make_unique<Sp3Ephem>(efd.getName(),
-                                     sp3_recs,
-                                     startTime,
-                                     stopTime,
-                                     ecfeciSys);
+    eph = std::make_unique<Sp3Chebyshev>(efd.getName(),
+                                         sp3_recs,
+                                         startTime,
+                                         stopTime,
+                                         ecfeciSys);
   }
   return eph;
 }
@@ -59,25 +59,25 @@ std::vector<state_vector_rec> parse_sp3_file(const std::string& file_name,
 {
   std::ifstream ifs(file_name);
   if (!ifs.is_open()) {
-    throw std::runtime_error("Sp3Orbit::Sp3Orbit() Can't open " + file_name);
+    throw std::runtime_error("parse_sp3_file() Can't open " + file_name);
   }
 
   std::string input_line;
   if (std::getline(ifs, input_line)) {
     if (input_line.size() < 51) {
       throw std::runtime_error(
-          "Sp3Orbit::Sp3Orbit() Invalid format, line 1 too short in file " +
+          "parse_sp3_file() Invalid format, line 1 too short in file " +
           file_name + " and line " + input_line);
     }
     if (input_line[2] != 'V') {
       throw std::runtime_error(
-          "Sp3Orbit::Sp3Orbit() SP3 file must supply velocity; file " +
+          "parse_sp3_file() SP3 file must supply velocity; file " +
           file_name + " and line " + input_line);
     }
     auto frame = input_line.substr(48, 3);
     if (frame != "ECF") {
       throw std::runtime_error(
-          "Sp3Orbit::Sp3Orbit() Only ECF frame supported; file " +
+          "parse_sp3_file() Only ECF frame supported; file " +
           file_name + " and line " + input_line);
     }
   }
@@ -85,13 +85,13 @@ std::vector<state_vector_rec> parse_sp3_file(const std::string& file_name,
   for (int ii=0; ii<12; ++ii) {
     if (!std::getline(ifs, input_line)) {
       throw std::runtime_error(
-          "Sp3Orbit::Sp3Orbit() Incomplete header; file " + file_name);
+          "parse_sp3_file() Incomplete header; file " + file_name);
     }
   }
   auto time_scale = input_line.substr(9, 3);
   if (time_scale != "UTC") {
     throw std::runtime_error(
-        "Sp3Orbit::Sp3Orbit() Only UTC time supported; file " +
+        "parse_sp3_file() Only UTC time supported; file " +
           file_name + " and line " + input_line);
   }
 
@@ -99,7 +99,7 @@ std::vector<state_vector_rec> parse_sp3_file(const std::string& file_name,
   for (int ii=0; ii<9; ++ii) {
     if (!std::getline(ifs, input_line)) {
       throw std::runtime_error(
-          "Sp3Orbit::Sp3Orbit() Ephemeris record start expected; file " +
+          "parse_sp3_file() Ephemeris record start expected; file " +
           file_name + " and line " + input_line);
     }
   }
@@ -136,7 +136,7 @@ std::vector<state_vector_rec> parse_sp3_file(const std::string& file_name,
         }
         if (tokens.size() < 7  ||  input_line[0] != '*') {
           throw std::runtime_error(
-              "Sp3Orbit::Sp3Orbit() Invalid time record; file " +
+              "parse_sp3_file() Invalid time record; file " +
               file_name + " and line " + input_line);
         }
         try {
@@ -146,7 +146,7 @@ std::vector<state_vector_rec> parse_sp3_file(const std::string& file_name,
                      std::stod(tokens[6]));
         } catch (const std::invalid_argument& ia) {
           throw std::runtime_error(
-              "Sp3Orbit::Sp3Orbit() Error parsing date/time values; file " +
+              "parse_sp3_file() Error parsing date/time values; file " +
               file_name + " and line " + input_line);
         }
         line = 2;
@@ -154,14 +154,14 @@ std::vector<state_vector_rec> parse_sp3_file(const std::string& file_name,
       case 2:
         if (tokens.size() < 4  ||  input_line[0] != 'P') {
           throw std::runtime_error(
-              "Sp3Orbit::Sp3Orbit() Position record expected; file " +
+              "parse_sp3_file() Position record expected; file " +
               file_name + " and line " + input_line);
         }
         if (sp3_name.size() == 0) {
           sp3_name = input_line.substr(1, 3);
         } else if (sp3_name != input_line.substr(1, 3)) {
           throw std::runtime_error(
-              "Sp3Orbit::Sp3Orbit() Inconsistent satellite ID; file " +
+              "parse_sp3_file() Inconsistent satellite ID; file " +
               file_name + " and line " + input_line);
         }
         try {
@@ -170,7 +170,7 @@ std::vector<state_vector_rec> parse_sp3_file(const std::string& file_name,
           pos(2) = phy_const::du_per_km*std::stod(tokens[3]);
         } catch (const std::invalid_argument& ia) {
           throw std::runtime_error(
-              "Sp3Orbit::Sp3Orbit() Error parsing position values; file " +
+              "parse_sp3_file() Error parsing position values; file " +
               file_name + " and line " + input_line);
         }
         line = 3;
@@ -178,12 +178,12 @@ std::vector<state_vector_rec> parse_sp3_file(const std::string& file_name,
       case 3:
         if (tokens.size() < 4  ||  input_line[0] != 'V') {
           throw std::runtime_error(
-              "Sp3Orbit::Sp3Orbit() Velocity record expected; file " +
+              "parse_sp3_file() Velocity record expected; file " +
               file_name + " and line " + input_line);
         }
         if (sp3_name != input_line.substr(1, 3)) {
           throw std::runtime_error(
-              "Sp3Orbit::Sp3Orbit() Inconsistent satellite ID; file " +
+              "parse_sp3_file() Inconsistent satellite ID; file " +
               file_name + " and line " + input_line);
         }
         try {
@@ -195,7 +195,7 @@ std::vector<state_vector_rec> parse_sp3_file(const std::string& file_name,
                           phy_const::du_per_km*std::stod(tokens[3]);
         } catch (const std::invalid_argument& ia) {
           throw std::runtime_error(
-              "Sp3Orbit::Sp3Orbit() Error parsing velocity values; file " +
+              "parse_sp3_file() Error parsing velocity values; file " +
               file_name + " and line " + input_line);
         }
         line = 1;

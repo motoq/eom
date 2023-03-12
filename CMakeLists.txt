@@ -65,8 +65,8 @@ set(SOURCES
   src/astro_propagator_config.cpp
   src/astro_rel_orbit_def.cpp
   src/astro_rk4.cpp
-  src/astro_sp3_ephem.cpp
-  src/astro_sp3_orbit.cpp
+  src/astro_sp3_chebyshev.cpp
+  src/astro_sp3_hermite.cpp
   src/astro_sp_ephemeris.cpp
   src/astro_sun_meeus.cpp
   src/astro_third_body_gravity.cpp

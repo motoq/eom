@@ -6,7 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <astro_sp3_ephem.h>
+#include <astro_sp3_chebyshev.h>
 
 #include <string>
 #include <array>
@@ -25,11 +25,11 @@
 
 namespace eom {
 
-Sp3Ephem::Sp3Ephem(const std::string& name,
-                   const std::vector<state_vector_rec>& sp3_records,
-                   const JulianDate& jdStart,
-                   const JulianDate& jdStop,
-                   const std::shared_ptr<const EcfEciSys>& ecfeciSys)
+Sp3Chebyshev::Sp3Chebyshev(const std::string& name,
+                           const std::vector<state_vector_rec>& sp3_records,
+                           const JulianDate& jdStart,
+                           const JulianDate& jdStop,
+                           const std::shared_ptr<const EcfEciSys>& ecfeciSys)
 {
   m_name = name;
   m_ecfeciSys = ecfeciSys;
@@ -41,15 +41,15 @@ Sp3Ephem::Sp3Ephem(const std::string& name,
     m_jdStop = sp3_records.back().t;
   } else {
     throw std::runtime_error(
-        "Sp3Ephem::Sp3Ephem() insufficient eph records: " + m_name);
+        "Sp3Chebyshev::Sp3Chebyshev() insufficient eph records: " + m_name);
   }
   if (jdStart < m_jdStart) {
     throw std::runtime_error(
-        "Sp3Ephem::Sp3Ephem() Ephemeris begins too late: " + m_name);
+        "Sp3Chebyshev::Sp3Chebyshev() Ephemeris begins too late: " + m_name);
   }
   if (m_jdStop < jdStop) {
     throw std::runtime_error(
-        "Sp3Ephem::Sp3Ephem() Ephemeris ends too early: " + m_name);
+        "Sp3Chebyshev::Sp3Chebyshev() Ephemeris ends too early: " + m_name);
   }
 
   unsigned long nrec = sp3_records.size()/static_cast<unsigned long>(npts-1UL);
@@ -77,14 +77,14 @@ Sp3Ephem::Sp3Ephem(const std::string& name,
 }
 
 
-Eigen::Matrix<double, 6, 1> Sp3Ephem::getStateVector(const JulianDate& jd,
-                                                     EphemFrame frame) const
+Eigen::Matrix<double, 6, 1>
+Sp3Chebyshev::getStateVector(const JulianDate& jd, EphemFrame frame) const
 {
   unsigned long ndx {};
   try {
     ndx = m_ndxr->getIndex(jd);
   } catch (const std::out_of_range& ia) {
-    throw std::out_of_range("Sp3Ephem::getStateVector() - bad time");
+    throw std::out_of_range("Sp3Chebyshev::getStateVector() - bad time");
   }
   const auto& irec = m_eph_interpolators[ndx];
   Eigen::Matrix<double, 6, 1> xecf;
@@ -99,14 +99,14 @@ Eigen::Matrix<double, 6, 1> Sp3Ephem::getStateVector(const JulianDate& jd,
 }
 
 
-Eigen::Matrix<double, 3, 1> Sp3Ephem::getPosition(const JulianDate& jd,
-                                                  EphemFrame frame) const
+Eigen::Matrix<double, 3, 1>
+Sp3Chebyshev::getPosition(const JulianDate& jd, EphemFrame frame) const
 {
   unsigned long ndx {};
   try {
     ndx = m_ndxr->getIndex(jd);
   } catch (const std::out_of_range& ia) {
-    throw std::out_of_range("Sp3Ephem::getPosition - bad time");
+    throw std::out_of_range("Sp3Chebyshev::getPosition - bad time");
   }
   const auto& irec = m_eph_interpolators[ndx];
   Eigen::Matrix<double, 3, 1> xecf = irec.tItp.getPosition(jd);
