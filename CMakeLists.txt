@@ -47,6 +47,7 @@ set(SOURCES
   src/parse_state_vector.cpp
   src/cal_greg_date.cpp
   src/cal_julian_date.cpp
+  src/mth_legendre_af.cpp
   src/astro_build_ephemeris.cpp
   src/astro_build_orbit.cpp
   src/astro_deq.cpp
