@@ -28,8 +28,8 @@ namespace eom {
 class Deq : public Ode<JulianDate, double, 6> {
 public:
   ~Deq() = default;
-  Deq(const Deq&) = default;
-  Deq& operator=(const Deq&) = default;
+  Deq(const Deq&) = delete;
+  Deq& operator=(const Deq&) = delete;
   Deq(Deq&&) = default;
   Deq& operator=(Deq&&) = default;
 

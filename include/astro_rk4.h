@@ -30,8 +30,8 @@ namespace eom {
 class Rk4 : public OdeSolver<JulianDate, double, 6> {
 public:
   ~Rk4() = default;
-  Rk4(const Rk4&) = default;
-  Rk4& operator=(const Rk4&) = default;
+  Rk4(const Rk4&) = delete;
+  Rk4& operator=(const Rk4&) = delete;
   Rk4(Rk4&&) = default;
   Rk4& operator=(Rk4&&) = default;
 

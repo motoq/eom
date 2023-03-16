@@ -71,8 +71,8 @@ struct interp_record {
 class SpEphemeris : public Ephemeris {
 public:
   ~SpEphemeris() = default;
-  SpEphemeris(const SpEphemeris&) = default;             // copy constructor
-  SpEphemeris& operator=(const SpEphemeris&) = default;  // copy assignment
+  SpEphemeris(const SpEphemeris&) = delete;
+  SpEphemeris& operator=(const SpEphemeris&) = delete;
   SpEphemeris(SpEphemeris&&) = default;                  // move constructor
   SpEphemeris& operator=(SpEphemeris&&) = default;       // move assignment
 

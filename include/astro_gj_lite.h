@@ -23,8 +23,8 @@ namespace eom {
 class GjLite : public OdeSolver<JulianDate, double, 6> {
 public:
   ~GjLite() = default;
-  GjLite(const GjLite&) = default;
-  GjLite& operator=(const GjLite&) = default;
+  GjLite(const GjLite&) = delete;
+  GjLite& operator=(const GjLite&) = delete;
   GjLite(GjLite&&) = default;
   GjLite& operator=(GjLite&&) = default;
 

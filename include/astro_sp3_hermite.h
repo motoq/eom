@@ -61,8 +61,8 @@ struct sp3_hermite {
 class Sp3Hermite : public Ephemeris {
 public:
   ~Sp3Hermite() = default;
-  Sp3Hermite(const Sp3Hermite&) = default;
-  Sp3Hermite& operator=(const Sp3Hermite&) = default;
+  Sp3Hermite(const Sp3Hermite&) = delete;
+  Sp3Hermite& operator=(const Sp3Hermite&) = delete;
   Sp3Hermite(Sp3Hermite&&) = default;
   Sp3Hermite& operator=(Sp3Hermite&&) = default;
 
