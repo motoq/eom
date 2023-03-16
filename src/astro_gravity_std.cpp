@@ -8,16 +8,17 @@
 
 #include <astro_gravity_std.h>
 
-//#include <array>
 #include <string>
+#include <memory>
 #include <stdexcept>
 
 #include <Eigen/Dense>
 
 #include <phy_const.h>
 #include <mth_ode.h>
-#include <astro_gravity.h>
 #include <astro_egm_coeff.h>
+#include <astro_gravity.h>
+#include <mth_legendre_af.h>
 
 namespace eom {
 
@@ -45,6 +46,7 @@ GravityStd::GravityStd(int max_degree, int max_order)
 
   m_degree = max_degree;
   m_order = max_order;
+  m_alf = std::make_unique<LegendreAf>(m_degree, m_order);
 }
 
 

@@ -9,13 +9,14 @@
 #ifndef ASTRO_GRAVITY_STD_H
 #define ASTRO_GRAVITY_STD_H
 
-//#include <array>
+#include <memory>
 
 #include <Eigen/Dense>
 
 #include <mth_ode.h>
-#include <astro_gravity.h>
 #include <astro_egm_coeff.h>
+#include <astro_gravity.h>
+#include <mth_legendre_af.h>
 
 namespace eom {
 
@@ -34,8 +35,8 @@ namespace eom {
 class GravityStd : public Gravity {
 public:
   ~GravityStd() = default;
-  GravityStd(const GravityStd&) = default;
-  GravityStd& operator=(const GravityStd&) = default;
+  GravityStd(const GravityStd&) = delete;
+  GravityStd& operator=(const GravityStd&) = delete;
   GravityStd(GravityStd&&) = default;
   GravityStd& operator=(GravityStd&&) = default;
 
@@ -91,6 +92,7 @@ public:
 private:
   int m_degree {};
   int m_order {};
+  std::unique_ptr<LegendreAf> m_alf {nullptr};
 /*
     // Cached values for predictor/corrector
   std::array<double, 3> gs;
