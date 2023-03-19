@@ -92,6 +92,9 @@ public:
 private:
   int m_degree {};
   int m_order {};
+  std::unique_ptr<double[]> m_smlon {nullptr};
+  std::unique_ptr<double[]> m_cmlon {nullptr};
+  std::unique_ptr<double[]> m_re_r_n {nullptr};
   std::unique_ptr<LegendreAf> m_alf {nullptr};
 /*
     // Cached values for predictor/corrector

@@ -46,6 +46,9 @@ GravityStd::GravityStd(int max_degree, int max_order)
 
   m_degree = max_degree;
   m_order = max_order;
+  m_smlon = std::make_unique<double[]>(max_order + 1);
+  m_cmlon = std::make_unique<double[]>(max_order + 1);
+  m_re_r_n = std::make_unique<double[]>(max_degree + 1);
   m_alf = std::make_unique<LegendreAf>(m_degree, m_order);
 }
 
@@ -54,12 +57,76 @@ Eigen::Matrix<double, 3, 1>
     GravityStd::getAcceleration(const Eigen::Matrix<double, 3, 1>& pos,
                            OdeEvalMethod entry)
 {
-  double rmag {pos.norm()};
-  double invr {1.0/rmag};
-  //double rxy {std::sqrt(pos(0)*pos(0) + pos(1)*pos(1))};
-  //double invrxy {1.0/rxy};
-    
-  return -1.0*phy_const::gm*invr*invr*invr*pos;
+  using namespace egm_coeff;
+
+    // Geometry
+  const double rmag {pos.norm()};
+  const double invr {1.0/rmag};
+  const double invr2 {invr*invr};
+  const double rxy2 {pos(0)*pos(0) + pos(1)*pos(1)};
+  const double rxy {std::sqrt(rxy2)};
+  const double invrxy {1.0/rxy};
+  const double invrxy2 {invrxy*invrxy};
+  const double slat {invr*pos(2)};
+  const double clat {invr*rxy};
+  const double tlat {invrxy*pos(2)};
+  const double slon {invrxy*pos(1)};
+  const double clon {invrxy*pos(0)};
+  const double re_r {invr*phy_const::re};
+  const double gm_r {phy_const::gm/rmag};
+
+  m_re_r_n[0] = 1.0;
+  m_re_r_n[1] = re_r;
+  m_smlon[0] = 0.0;
+  m_smlon[1] = slon;
+  m_cmlon[0] = 1.0;
+  m_cmlon[1] = clon;
+  for (int mdx=2; mdx<=m_order; ++mdx) {
+    m_smlon[mdx] = 2*clon*m_smlon[mdx-1] - m_smlon[mdx-2];
+    m_cmlon[mdx] = 2*clon*m_cmlon[mdx-1] - m_cmlon[mdx-2];
+    m_re_r_n[mdx] = re_r*m_re_r_n[mdx-1];
+  }
+  for (int ndx=(m_order+1); ndx<=m_degree; ++ndx) {
+    m_re_r_n[ndx] = re_r*m_re_r_n[ndx-1];
+  }
+
+  m_alf->set(slat, clat);
+
+    // Init accumulation of partials w.r.t. spherical
+  double du_dr {0.0};
+  double du_dlat {0.0};
+  double du_dlon {0.0};
+    // Loop based on indexing in egm_coeff
+  int ndx {0};
+  while (xn[ndx] <= m_degree ) {
+    const auto nn = xn[ndx];
+    const auto mm = xm[ndx];
+    if (mm <= nn) {
+      du_dr += (nn + 1)*m_re_r_n[nn]*(*m_alf)(nn, mm)*
+                       (cnm[ndx]*m_cmlon[mm] + snm[ndx]*m_smlon[mm]);
+      du_dlat += m_re_r_n[nn]*((*m_alf)(nn, mm+1) - mm*tlat*(*m_alf)(nn, mm))*
+                              (cnm[ndx]*m_cmlon[mm] + snm[ndx]*m_smlon[mm]);
+      du_dlon += mm*m_re_r_n[nn]*(*m_alf)(nn, mm)*
+                                 (snm[ndx]*m_cmlon[mm] - cnm[ndx]*m_smlon[mm]);
+    }
+    ndx++;
+  }
+    // Finish partials
+  du_dr += 1.0;
+  du_dr *= -1.0*gm_r*invr;
+  du_dlat *= gm_r;
+  du_dlon *= gm_r;
+    // Convert from spherical to Cartesian
+  double dlat {invr*du_dr - du_dlat*pos(2)*invrxy*invr2};
+  double dlon {du_dlon*invrxy2};
+  double ai {dlat*pos(0) - dlon*pos(1)};
+  double aj {dlat*pos(1) + dlon*pos(0)};
+  double ak {invr*du_dr*pos(2) + du_dlat*rxy*invr2};
+
+  Eigen::Matrix<double, 3, 1> acc = {ai, aj, ak};
+  
+  return acc;
+  //return -1.0*phy_const::gm*invr*invr*invr*pos;
 }
 
 

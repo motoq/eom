@@ -32,7 +32,8 @@ LegendreAf::LegendreAf(int degree, int order)
     // tracking or on the fly term swapping - need to zero due to
     // P(n-2,m) term being access in recursion where m > n (order of
     // derivative greater than degree, so equal to zero)..
-  alf = Eigen::MatrixXd::Zero(m_degree+1, m_order+1);
+    // Need order+2 vs. +1 due to use by gravity model
+  alf = Eigen::MatrixXd::Zero(m_degree+1, m_order+2);
 }
 
 
