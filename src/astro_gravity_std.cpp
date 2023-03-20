@@ -8,6 +8,9 @@
 
 #include <astro_gravity_std.h>
 
+#include <iostream>
+#include <cmath>
+
 #include <string>
 #include <memory>
 #include <stdexcept>
@@ -60,20 +63,23 @@ Eigen::Matrix<double, 3, 1>
   using namespace egm_coeff;
 
     // Geometry
+  const double rx {pos(0)};
+  const double ry {pos(1)};
+  const double rz {pos(2)};
   const double rmag {pos.norm()};
   const double invr {1.0/rmag};
   const double invr2 {invr*invr};
-  const double rxy2 {pos(0)*pos(0) + pos(1)*pos(1)};
+  const double rxy2 {rx*rx + ry*ry};
   const double rxy {std::sqrt(rxy2)};
   const double invrxy {1.0/rxy};
   const double invrxy2 {invrxy*invrxy};
-  const double slat {invr*pos(2)};
-  const double clat {invr*rxy};
-  const double tlat {invrxy*pos(2)};
-  const double slon {invrxy*pos(1)};
-  const double clon {invrxy*pos(0)};
-  const double re_r {invr*phy_const::re};
-  const double gm_r {phy_const::gm/rmag};
+  const double slat {rz*invr};
+  const double clat {rxy*invr};
+  const double tlat {rz*invrxy};
+  const double slon {ry*invrxy};
+  const double clon {rx*invrxy};
+  const double re_r {phy_const::re*invr};
+  const double gm_r {phy_const::gm*invr};
 
   m_re_r_n[0] = 1.0;
   m_re_r_n[1] = re_r;
@@ -97,17 +103,35 @@ Eigen::Matrix<double, 3, 1>
   double du_dlat {0.0};
   double du_dlon {0.0};
     // Loop based on indexing in egm_coeff
-  int ndx {0};
-  while (xn[ndx] <= m_degree ) {
+  for (int ndx=0; ndx<nc; ++ndx) {
     const auto nn = xn[ndx];
     const auto mm = xm[ndx];
-    if (mm <= nn) {
+    if (nn <= m_degree  &&  mm <= m_order) {
+      double lon = asin(slon);
+      double smlon = std::sin(mm*lon);
+      double cmlon = std::cos(mm*lon);
+      {
+        if (std::fabs(smlon - m_smlon[mm]) > 1.0e-8  ||
+            std::fabs(cmlon - m_cmlon[mm]) > 1.0e-8) {
+          std::cerr << "\n\nRecursive trig error\n";
+        }
+      }
+      double pnm = (*m_alf)(nn, mm);
+      double pnmp1 = (*m_alf)(nn, mm+1);
+      double scnm = cnm[ndx];
+      double ssnm = snm[ndx];
+      du_dr += (nn+1)*m_re_r_n[nn]*pnm*(scnm*cmlon + ssnm*smlon);
+      du_dlat += m_re_r_n[nn]*(pnmp1 - mm*tlat*pnm)*
+                              (scnm*cmlon + ssnm*smlon);
+      du_dlon += mm*m_re_r_n[nn]*pnm*(ssnm*cmlon - scnm*smlon);
+/*
       du_dr += (nn + 1)*m_re_r_n[nn]*(*m_alf)(nn, mm)*
                        (cnm[ndx]*m_cmlon[mm] + snm[ndx]*m_smlon[mm]);
       du_dlat += m_re_r_n[nn]*((*m_alf)(nn, mm+1) - mm*tlat*(*m_alf)(nn, mm))*
                               (cnm[ndx]*m_cmlon[mm] + snm[ndx]*m_smlon[mm]);
       du_dlon += mm*m_re_r_n[nn]*(*m_alf)(nn, mm)*
                                  (snm[ndx]*m_cmlon[mm] - cnm[ndx]*m_smlon[mm]);
+*/
     }
     ndx++;
   }
@@ -117,13 +141,13 @@ Eigen::Matrix<double, 3, 1>
   du_dlat *= gm_r;
   du_dlon *= gm_r;
     // Convert from spherical to Cartesian
-  double dlat {invr*du_dr - du_dlat*pos(2)*invrxy*invr2};
+  double dlat {invr*du_dr - du_dlat*rz*invrxy*invr2};
   double dlon {du_dlon*invrxy2};
-  double ai {dlat*pos(0) - dlon*pos(1)};
-  double aj {dlat*pos(1) + dlon*pos(0)};
-  double ak {invr*du_dr*pos(2) + du_dlat*rxy*invr2};
+  double ax {dlat*rx - dlon*ry};
+  double ay {dlat*ry + dlon*rx};
+  double az {invr*du_dr*rz + du_dlat*rxy*invr2};
 
-  Eigen::Matrix<double, 3, 1> acc = {ai, aj, ak};
+  Eigen::Matrix<double, 3, 1> acc = {ax, ay, az};
   
   return acc;
   //return -1.0*phy_const::gm*invr*invr*invr*pos;
