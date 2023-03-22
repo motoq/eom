@@ -39,17 +39,16 @@ LegendreAf::LegendreAf(int degree, int order)
 
 void LegendreAf::set(double sx, double cx)
 {
-    // Prime recursion
+    // Prime recursion - note alf is at least a 1x2
   alf(0, 0) = 1.0;
   if (m_degree > 0) {
     alf(1, 0) = sx;
-    if (m_order > 0) {
-      alf(1, 1) = cx;
-    }
+    alf(1, 1) = cx;
   }
 
+  const int mmax {m_order + 1};
   for (int nn = 2; nn <= m_degree; ++nn) {
-    for (int mm = 0; mm <= m_order; ++mm) {
+    for (int mm = 0; mm <= mmax; ++mm) {
       if (nn == mm) {
         alf(nn, nn) = (2*nn - 1)*cx*alf(nn-1, nn-1);
       } else if (mm != 0) {
@@ -60,6 +59,35 @@ void LegendreAf::set(double sx, double cx)
     }
   }
 
+}
+
+double LegendreAf::get(int degree, int order, double sx, double cx)
+{
+
+    // Derivative > polynomial
+  if (order > degree) {
+    return 0.0;
+  }
+
+  if (degree < 0  ||  order < 0  || 
+      degree > 2  ||  order > 2) {
+    throw std::invalid_argument("LegendreAf::get: Bad order or deg");
+  }
+
+  if (degree == 1  && order == 0) {
+    return sx;
+  } else if (degree == 1  &&  order == 1) {
+    return cx;
+  } else if (degree  == 2  &&  order == 0) {
+    return 0.5*(3.0*sx*sx - 1.0);
+  } else if (degree  == 2  &&  order == 1) {
+    return 3.0*sx*cx;
+  } else if (degree  == 2  &&  order == 2) {
+    return 3.0*cx*cx;
+  }
+
+    // P00
+  return 1.0;
 }
 
 

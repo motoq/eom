@@ -110,14 +110,22 @@ Eigen::Matrix<double, 3, 1>
       double lon = asin(slon);
       double smlon = std::sin(mm*lon);
       double cmlon = std::cos(mm*lon);
+      double pnm = (*m_alf)(nn, mm);
+      double pnmp1 = (*m_alf)(nn, mm+1);
       {
         if (std::fabs(smlon - m_smlon[mm]) > 1.0e-8  ||
             std::fabs(cmlon - m_cmlon[mm]) > 1.0e-8) {
           std::cerr << "\n\nRecursive trig error\n";
         }
+        if (std::fabs(pnm - m_alf->get(nn, mm, slat, clat)) > 1.0e-8) {
+          std::cerr << "\n\nALF Pnm error\n";
+        }
+        if (std::fabs(pnmp1 - m_alf->get(nn, mm+1, slat, clat)) > 1.0e-8) {
+          std::cerr << "\n\nALF Pnm+1 error " << pnmp1 << " vs. " <<
+                       m_alf->get(nn, mm+1, slat, clat) << " for degree " <<
+                       nn << " and order " << mm+1 << '\n';
+        }
       }
-      double pnm = (*m_alf)(nn, mm);
-      double pnmp1 = (*m_alf)(nn, mm+1);
       double scnm = cnm[ndx];
       double ssnm = snm[ndx];
       du_dr += (nn+1)*m_re_r_n[nn]*pnm*(scnm*cmlon + ssnm*smlon);

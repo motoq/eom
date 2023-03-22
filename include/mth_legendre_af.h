@@ -56,6 +56,8 @@ public:
     return alf(degree, order);
   }
 
+  double get(int degree, int order, double sx, double cx);
+
 private:
   int m_degree {};
   int m_order {};
