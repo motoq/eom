@@ -8,9 +8,6 @@
 
 #include <astro_gravity_std.h>
 
-#include <iostream>
-#include <cmath>
-
 #include <string>
 #include <memory>
 #include <stdexcept>
@@ -104,36 +101,18 @@ Eigen::Matrix<double, 3, 1>
   double du_dlon {0.0};
     // Loop based on indexing in egm_coeff
   for (int ndx=0; ndx<nc; ++ndx) {
-    const auto nn = xn[ndx];
-    const auto mm = xm[ndx];
+    const int nn {xn[ndx]};
+    const int mm {xm[ndx]};
     if (nn <= m_degree  &&  mm <= m_order) {
-      double smlon {m_smlon[mm]};
-      double cmlon {m_cmlon[mm]};
-      double pnm = (*m_alf)(nn, mm);
-      double pnmp1 = (*m_alf)(nn, mm+1);
-      {
-        double lon = atan2(slon, clon);
-        if (std::fabs(smlon - std::sin(mm*lon)) > 1.0e-12  ||
-            std::fabs(cmlon - std::cos(mm*lon)) > 1.0e-12) {
-          std::cerr << "\nRecursive trig error\n";
-        }
-      }
-      double scnm = cnm[ndx];
-      double ssnm = snm[ndx];
-      du_dr += (nn+1)*m_re_r_n[nn]*pnm*(scnm*cmlon + ssnm*smlon);
-      du_dlat += m_re_r_n[nn]*(pnmp1 - mm*tlat*pnm)*
-                              (scnm*cmlon + ssnm*smlon);
-      du_dlon += mm*m_re_r_n[nn]*pnm*(ssnm*cmlon - scnm*smlon);
-/*
-      du_dr += (nn + 1)*m_re_r_n[nn]*(*m_alf)(nn, mm)*
-                       (cnm[ndx]*m_cmlon[mm] + snm[ndx]*m_smlon[mm]);
-      du_dlat += m_re_r_n[nn]*((*m_alf)(nn, mm+1) - mm*tlat*(*m_alf)(nn, mm))*
-                              (cnm[ndx]*m_cmlon[mm] + snm[ndx]*m_smlon[mm]);
-      du_dlon += mm*m_re_r_n[nn]*(*m_alf)(nn, mm)*
-                                 (snm[ndx]*m_cmlon[mm] - cnm[ndx]*m_smlon[mm]);
-*/
+      const double pnm {(*m_alf)(nn, mm)};
+      const double pnmp1 {(*m_alf)(nn, mm+1)};
+      du_dr += (nn+1)*m_re_r_n[nn]*pnm*
+                      (cnm[ndx]*m_cmlon[mm] + snm[ndx]*m_smlon[mm]);
+      du_dlat +=      m_re_r_n[nn]*(pnmp1 - mm*tlat*pnm)*
+                      (cnm[ndx]*m_cmlon[mm] + snm[ndx]*m_smlon[mm]);
+      du_dlon +=  mm*m_re_r_n[nn]*pnm*
+                     (snm[ndx]*m_cmlon[mm] - cnm[ndx]*m_smlon[mm]);
     }
-    ndx++;
   }
     // Finish partials
   du_dr += 1.0;
