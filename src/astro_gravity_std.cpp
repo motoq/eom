@@ -129,7 +129,6 @@ Eigen::Matrix<double, 3, 1>
   Eigen::Matrix<double, 3, 1> acc = {ax, ay, az};
   
   return acc;
-  //return -1.0*phy_const::gm*invr*invr*invr*pos;
 }
 
 
