@@ -61,7 +61,8 @@ void LegendreAf::set(double sx, double cx)
 
 }
 
-double LegendreAf::get(int degree, int order, double sx, double cx)
+
+double legendre_af(int degree, int order, double sx, double cx)
 {
 
     // Derivative > polynomial
@@ -69,21 +70,46 @@ double LegendreAf::get(int degree, int order, double sx, double cx)
     return 0.0;
   }
 
-  if (degree < 0  ||  order < 0  || 
-      degree > 2  ||  order > 2) {
+  if (degree < 0  ||  order < 0  || degree > 4) {
     throw std::invalid_argument("LegendreAf::get: Bad order or deg");
   }
 
-  if (degree == 1  && order == 0) {
-    return sx;
-  } else if (degree == 1  &&  order == 1) {
-    return cx;
-  } else if (degree  == 2  &&  order == 0) {
-    return 0.5*(3.0*sx*sx - 1.0);
-  } else if (degree  == 2  &&  order == 1) {
-    return 3.0*sx*cx;
-  } else if (degree  == 2  &&  order == 2) {
-    return 3.0*cx*cx;
+  if (degree == 1) {
+    if (order == 0) {
+      return sx;
+    } else if (order == 1) {
+      return cx;
+    }
+  } else if (degree  == 2) {
+    if (order == 0) {
+      return 0.5*(3.0*sx*sx - 1.0);
+    } else if (order == 1) {
+      return 3.0*sx*cx;
+    } else if (order == 2) {
+      return 3.0*cx*cx;
+    }
+  } else if (degree  == 3) {
+    if (order == 0) {
+      return 0.5*sx*(5.0*sx*sx - 3.0);
+    } else if (order == 1) {
+      return 0.5*cx*(15.0*sx*sx - 3.0);
+    } else if (order == 2) {
+      return 15.0*cx*cx*sx;
+    } else if (order == 3) {
+      return 15.0*cx*cx*cx;
+    }
+  } else if (degree  == 4) {
+    if (order == 0) {
+      return 0.125*(35.0*sx*sx*sx*sx - 30.0*sx*sx + 3.0);
+    } else if (order == 1) {
+      return 2.5*cx*sx*(7.0*sx*sx - 3.0);
+    } else if (order == 2) {
+      return 7.5*cx*cx*(7.0*sx*sx - 1.0);
+    } else if (order == 3) {
+      return 105.0*cx*cx*cx*sx;
+    } else if (order == 4) {
+      return 105.0*cx*cx*cx*cx;
+    }
   }
 
     // P00
