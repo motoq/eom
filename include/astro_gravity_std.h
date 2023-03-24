@@ -96,12 +96,8 @@ private:
   std::unique_ptr<double[]> m_cmlon {nullptr};
   std::unique_ptr<double[]> m_re_r_n {nullptr};
   std::unique_ptr<LegendreAf> m_alf {nullptr};
-/*
     // Cached values for predictor/corrector
-  std::array<double, 3> gs;
-  std::array<double, 3> gv;
-  std::array<double, 3> gw;
-*/
+  std::array<double, 3> m_gs;
 };
 
 

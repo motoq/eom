@@ -55,7 +55,7 @@ GravityStd::GravityStd(int max_degree, int max_order)
 
 Eigen::Matrix<double, 3, 1>
     GravityStd::getAcceleration(const Eigen::Matrix<double, 3, 1>& pos,
-                           OdeEvalMethod entry)
+                                OdeEvalMethod entry)
 {
   using namespace egm_coeff;
 
@@ -70,52 +70,66 @@ Eigen::Matrix<double, 3, 1>
   const double rxy {std::sqrt(rxy2)};
   const double invrxy {1.0/rxy};
   const double invrxy2 {invrxy*invrxy};
-  const double slat {rz*invr};
-  const double clat {rxy*invr};
-  const double tlat {rz*invrxy};
-  const double slon {ry*invrxy};
-  const double clon {rx*invrxy};
-  const double re_r {phy_const::re*invr};
-  const double gm_r {phy_const::gm*invr};
-
-  m_re_r_n[0] = 1.0;
-  m_re_r_n[1] = re_r;
-  m_smlon[0] = 0.0;
-  m_smlon[1] = slon;
-  m_cmlon[0] = 1.0;
-  m_cmlon[1] = clon;
-  for (int mdx=2; mdx<=m_order; ++mdx) {
-    m_smlon[mdx] = 2*clon*m_smlon[mdx-1] - m_smlon[mdx-2];
-    m_cmlon[mdx] = 2*clon*m_cmlon[mdx-1] - m_cmlon[mdx-2];
-    m_re_r_n[mdx] = re_r*m_re_r_n[mdx-1];
-  }
-  for (int ndx=(m_order+1); ndx<=m_degree; ++ndx) {
-    m_re_r_n[ndx] = re_r*m_re_r_n[ndx-1];
-  }
-
-  m_alf->set(slat, clat);
 
     // Init accumulation of partials w.r.t. spherical
   double du_dr {0.0};
   double du_dlat {0.0};
   double du_dlon {0.0};
-    // Loop based on indexing in egm_coeff
-  for (int ndx=0; ndx<nc; ++ndx) {
-    const int nn {xn[ndx]};
-    const int mm {xm[ndx]};
-    if (nn <= m_degree  &&  mm <= m_order) {
-      const double pnm {(*m_alf)(nn, mm)};
-      const double pnmp1 {(*m_alf)(nn, mm+1)};
-      du_dr += (nn+1)*m_re_r_n[nn]*pnm*
-                      (cnm[ndx]*m_cmlon[mm] + snm[ndx]*m_smlon[mm]);
-      du_dlat +=      m_re_r_n[nn]*(pnmp1 - mm*tlat*pnm)*
-                      (cnm[ndx]*m_cmlon[mm] + snm[ndx]*m_smlon[mm]);
-      du_dlon +=  mm*m_re_r_n[nn]*pnm*
-                     (snm[ndx]*m_cmlon[mm] - cnm[ndx]*m_smlon[mm]);
+  if (entry == OdeEvalMethod::predictor) {
+    const double slat {rz*invr};
+    const double clat {rxy*invr};
+    const double tlat {rz*invrxy};
+    const double slon {ry*invrxy};
+    const double clon {rx*invrxy};
+    const double re_r {phy_const::re*invr};
+      // Recursive powers and trig harmonics
+    m_re_r_n[0] = 1.0;
+    m_re_r_n[1] = re_r;
+    m_smlon[0] = 0.0;
+    m_smlon[1] = slon;
+    m_cmlon[0] = 1.0;
+    m_cmlon[1] = clon;
+      // Trig harmonics through order
+    for (int mdx=2; mdx<=m_order; ++mdx) {
+      m_smlon[mdx] = 2*clon*m_smlon[mdx-1] - m_smlon[mdx-2];
+      m_cmlon[mdx] = 2*clon*m_cmlon[mdx-1] - m_cmlon[mdx-2];
+      m_re_r_n[mdx] = re_r*m_re_r_n[mdx-1];
     }
+      // Scale range through degree
+    for (int ndx=(m_order+1); ndx<=m_degree; ++ndx) {
+      m_re_r_n[ndx] = re_r*m_re_r_n[ndx-1];
+    }
+      // Update associated Legendre functions for this geometry
+    m_alf->set(slat, clat);
+      // Loop based on indexing in egm_coeff
+    for (int ndx=0; ndx<nc; ++ndx) {
+      const int nn {xn[ndx]};
+      const int mm {xm[ndx]};
+      if (nn <= m_degree  &&  mm <= m_order) {
+        const double pnm {(*m_alf)(nn, mm)};
+        const double pnmp1 {(*m_alf)(nn, mm+1)};
+        du_dr += (nn+1)*m_re_r_n[nn]*pnm*
+                        (cnm[ndx]*m_cmlon[mm] + snm[ndx]*m_smlon[mm]);
+        du_dlat +=      m_re_r_n[nn]*(pnmp1 - mm*tlat*pnm)*
+                        (cnm[ndx]*m_cmlon[mm] + snm[ndx]*m_smlon[mm]);
+        du_dlon +=  mm*m_re_r_n[nn]*pnm*
+                       (snm[ndx]*m_cmlon[mm] - cnm[ndx]*m_smlon[mm]);
+      }
+    }
+    m_gs[0] = du_dr;
+    m_gs[1] = du_dlat;
+    m_gs[2] = du_dlon;
+  } else {
+      // Use cached values for corrector
+    du_dr = m_gs[0];
+    du_dlat = m_gs[1];
+    du_dlon = m_gs[2];;
   }
-    // Finish partials
+
+    // Central body
   du_dr += 1.0;
+    // Complete partials using updated or cached accumulated terms
+  double gm_r {phy_const::gm*invr};
   du_dr *= -1.0*gm_r*invr;
   du_dlat *= gm_r;
   du_dlon *= gm_r;
