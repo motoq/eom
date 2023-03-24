@@ -15,7 +15,7 @@ TimeUnits Seconds;
 Orbit  etalong2  SP  GD 2019  2 3  0  0  0.00
        CART  ITRF  -8602.742352  14480.998066 -19094.191748
                    0.0801959660 -2.6280127000 -2.0318439000
-                   GravityModel  Gravt 40 40
+                   GravityModel  Standard 40 40
                    MoonGravity  Meeus
                    SunGravity   Meeus
                    Propagator  GJ Seconds 0;
