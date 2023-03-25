@@ -24,59 +24,16 @@ namespace {
     // Convergence
   constexpr int niter {100};
   constexpr double eps {1.e-10};
+    // oe_eps {
+  constexpr double oe_eps {1.0e-6};
 }
 
 namespace eom {
 
-/*
- * Based on Vallado's "Fundamentals of Astrodynamics and Applications",
- * 4th edition, Algorithm 10: COE2RV
- */
 Keplerian::Keplerian(const std::array<double, 6>& oe)
 {
   this->set(oe);
 }
-
-
-void Keplerian::set(const std::array<double, 6>& oe)
-{
-  m_oe = oe;
-
-  double a {oe[0]};
-  double e {oe[1]};
-  double i {oe[2]};
-  double o {oe[3]};
-  double w {oe[4]};
-  double v {oe[5]};
-
-  double semip {a*(1.0 - e*e)};
-  double cv {std::cos(v)};
-  double sv {std::sin(v)};
-  double ecv {e*cv};
-  double suop {std::sqrt(phy_const::gm/semip)};
-
-  m_sme = -0.5*phy_const::gm/a;
-  m_hmag = std::sqrt(phy_const::gm*semip);
-
-  Eigen::Matrix<double, 3, 1> r_pqw;
-  r_pqw(0,0) = semip*cv/(1.0 + ecv);
-  r_pqw(1,0) = semip*sv/(1.0 + ecv);
-  r_pqw(2,0) = 0.0;
-  Eigen::Matrix<double, 3, 1> v_pqw;
-  v_pqw(0,0) = -suop*sv;
-  v_pqw(1,0) = suop*(e + cv);
-  v_pqw(2,0) = 0.0;
-
-  Eigen::Quaterniond qw{Eigen::AngleAxisd(w, Eigen::Vector3d::UnitZ())};
-  Eigen::Quaterniond qi{Eigen::AngleAxisd(i, Eigen::Vector3d::UnitX())};
-  Eigen::Quaterniond qo{Eigen::AngleAxisd(o, Eigen::Vector3d::UnitZ())};
-
-  Eigen::Quaterniond q_pqw2eci {qo*qi*qw};
-
-  m_cart.block<3,1>(0,0) = q_pqw2eci*r_pqw;
-  m_cart.block<3,1>(3,0) = q_pqw2eci*v_pqw;
-}
-
 
 /*
  * Based on Vallado's "Fundamentals of Astrodynamics and Applications",
@@ -108,8 +65,28 @@ Keplerian::Keplerian(const Eigen::Matrix<double, 6, 1>& cart)
   double emag {evec.norm()};
     // Vis-viva eqn
   m_sme = v2/2.0 - muor;
-    // Semimajor axis
+
+    // Some initial error checking
+  if (emag < oe_eps) {
+    throw std::invalid_argument(
+        "Keplerian::Keplerian(): Eccentricity too close to zero");
+  }
+  if (nmag < oe_eps) {
+    throw std::invalid_argument(
+        "Keplerian::Keplerian(): Inclination too close to zero");
+  }
+  if (m_sme >= 0.0) {
+    throw std::invalid_argument(
+        "Keplerian::Keplerian(): Orbit must be elliptical");
+  }
+    // Semimajor axis, perigee radius, final error check
   double sma {-0.5*phy_const::gm/m_sme};
+  m_rp = sma*(1.0 - emag);
+  if (m_rp < phy_const::re) {
+    throw std::invalid_argument(
+        "Keplerian::set(): Perigee distance less than 1 DU");
+  }
+
     // Inclination
   double inc {std::acos(hvec(2)/m_hmag)};
     // RAAN
@@ -137,6 +114,66 @@ Keplerian::Keplerian(const Eigen::Matrix<double, 6, 1>& cart)
   m_oe[io] = raan;
   m_oe[iw] = argp;
   m_oe[iv] = ta;
+}
+
+
+/*
+ * Based on Vallado's "Fundamentals of Astrodynamics and Applications",
+ * 4th edition, Algorithm 10: COE2RV
+ */
+void Keplerian::set(const std::array<double, 6>& oe)
+{
+  m_oe = oe;
+
+  double a {oe[0]};
+  double e {oe[1]};
+  double i {oe[2]};
+  double o {oe[3]};
+  double w {oe[4]};
+  double v {oe[5]};
+  m_rp = a*(1.0 - e);
+
+    // Error checking.  Gravity models not valid below scaling radius.
+    // Etc...
+  if (m_rp < phy_const::re) {
+    throw std::invalid_argument(
+        "Keplerian::set(): Perigee distance less than 1 DU");
+  }
+  if (e < oe_eps) {
+    throw std::invalid_argument(
+        "Keplerian::set(): Eccentricity too close to zero or negative");
+  }
+  if (i < oe_eps) {
+    throw std::invalid_argument(
+        "Keplerian::set(): Inclination too close to zero");
+  }
+
+  double semip {a*(1.0 - e*e)};
+  double cv {std::cos(v)};
+  double sv {std::sin(v)};
+  double ecv {e*cv};
+  double suop {std::sqrt(phy_const::gm/semip)};
+
+  m_sme = -0.5*phy_const::gm/a;
+  m_hmag = std::sqrt(phy_const::gm*semip);
+
+  Eigen::Matrix<double, 3, 1> r_pqw;
+  r_pqw(0,0) = semip*cv/(1.0 + ecv);
+  r_pqw(1,0) = semip*sv/(1.0 + ecv);
+  r_pqw(2,0) = 0.0;
+  Eigen::Matrix<double, 3, 1> v_pqw;
+  v_pqw(0,0) = -suop*sv;
+  v_pqw(1,0) = suop*(e + cv);
+  v_pqw(2,0) = 0.0;
+
+  Eigen::Quaterniond qw{Eigen::AngleAxisd(w, Eigen::Vector3d::UnitZ())};
+  Eigen::Quaterniond qi{Eigen::AngleAxisd(i, Eigen::Vector3d::UnitX())};
+  Eigen::Quaterniond qo{Eigen::AngleAxisd(o, Eigen::Vector3d::UnitZ())};
+
+  Eigen::Quaterniond q_pqw2eci {qo*qi*qw};
+
+  m_cart.block<3,1>(0,0) = q_pqw2eci*r_pqw;
+  m_cart.block<3,1>(3,0) = q_pqw2eci*v_pqw;
 }
 
 
@@ -186,7 +223,6 @@ void Keplerian::setWithMeanAnomaly(double ma)
     ea = ma - e;
   }
 
-  
   int itr {0};
   double ea0 {ea};
   while (itr < niter) {
@@ -200,7 +236,6 @@ void Keplerian::setWithMeanAnomaly(double ma)
   if (itr == niter) {
     throw NonconvergenceException("Keplerian::setWithMeanAnomaly()");
   }
-                                 
 
   double cea {std::cos(ea)};
   double denom {1.0/(1.0 - e*cea)};
