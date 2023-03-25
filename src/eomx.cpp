@@ -357,7 +357,7 @@ int main(int argc, char* argv[])
   std::cout << '\n';
   for (const auto& [name, eph] : *ephemerides) {
     std::cout << "\n  " << name;
-    std::cout << "\n  " << eph->getEpoch().to_str();
+    std::cout << "\n  " << eph->getEpoch().to_str() << "    GCRF";
     eom::Keplerian oeCart(eph->getStateVector(eph->getEpoch(),
                                               eom::EphemFrame::eci));
     oeCart.print(std::cout);
