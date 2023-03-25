@@ -22,13 +22,29 @@
 namespace eom {
 
 /**
- * Standard spherical harmonic based gravity model supporting rectangular
- * degree (n) and order (m) coefficients, m <= n.
+ * Standard spherical harmonic based gravity model supporting a
+ * rectangular gravity model of degree (n) and order (m), n >= m.
+ * Some memory is sacrificed for simplicity and speed.  The associated
+ * Legendre functions, trig harmonics, and powers of re/r are computed
+ * in batch before accumulation of the spherical harmonic terms.  This
+ * eliminates any bookkeeping logic needed to recursively compute these
+ * values on the fly.  It also allows this gravity model to work with
+ * unordered spherical harmonic coefficients.  Accumulation is done from
+ * the last coefficients (largest degree and order) backwards.
+ * Therefore, ordering the spherical harmonics with increasing degree
+ * and order allows the smallest contributors to be accumulated first,
+ * possibly minimizing roundoff error.
+ *
+ * The gravitational acceleration model presented in section 8.6.1
+ * "Gravity Field of a Central Body" of David Vallado's "Fundamentals of
+ * Astrodynamics and Applications", 3rd ed, form the basis of the
+ * gravity model, along with the recursive trig harmonics from section
+ * 8.7.2 "Application: Complex Acceleration Model".
  *
  * This implementation is not thread safe due to the cached values used
- * for the predictor/corrector option.  One instance per integrator
- * should be created.  However, copies should be cheap as header file
- * constexpr coefficients are used vs. local memory storage.
+ * for the predictor/corrector option and memory allocated for the
+ * associated Legendre function class along with other recursively
+ * computed terms.
  *
  * @author  Kurt Motekew
  * @date    2023/03/10
@@ -47,7 +63,7 @@ public:
    * @param  degree  Desired degree of model
    * @param  order   Desired order of model, order <= degree
    *
-   * @throws  runtime_error if degree and order are inconsistent
+   * @throws  invalid_argument if degree and order are inconsistent
    *          or exceed allowed dimensions.
    */
   GravityStd(int degree, int order);
@@ -80,7 +96,7 @@ public:
    * @param  pos    Cartesian ECEF position vector, DU
    * @param  entry  Predictor performs spherical harmonic evaluation.
    *                Corrector uses cached values and updates the
-   *                central body term only
+   *                central body term only.
    *
    * @return  Cartesian acceleration, earth fixed coordinates
    *          with derivatives w.r.t. the inertial reference frame,

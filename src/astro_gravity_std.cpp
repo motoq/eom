@@ -49,8 +49,8 @@ GravityStd::GravityStd(int max_degree, int max_order)
 
     //  Locate indicies to be accumulated
     //  Accumulate smallest terms to largest for a sorted list
-    //for (int ndx=0; ndx<egm_coeff::nc; ++ndx) {
-  for (int ndx=egm_coeff::nc; ndx>=0; --ndx) {
+    //for (int ndx=0; ndx<egm_coeff::nc; ++ndx)
+  for (int ndx=(egm_coeff::nc-1); ndx>=0; --ndx) {
     int nn {egm_coeff::xn[ndx]};
     int mm {egm_coeff::xm[ndx]};
     if (nn <= m_degree  &&  mm <= m_order) {
@@ -90,7 +90,7 @@ Eigen::Matrix<double, 3, 1>
     const double slon {ry*invrxy};
     const double clon {rx*invrxy};
     const double re_r {phy_const::re*invr};
-      // Recursive powers and trig harmonics
+      // Store all recursive powers and trig harmonics up front
     m_re_r_n[0] = 1.0;
     m_re_r_n[1] = re_r;
     m_smlon[0] = 0.0;
@@ -103,13 +103,17 @@ Eigen::Matrix<double, 3, 1>
       m_cmlon[mdx] = 2*clon*m_cmlon[mdx-1] - m_cmlon[mdx-2];
       m_re_r_n[mdx] = re_r*m_re_r_n[mdx-1];
     }
-      // Scale range through degree
+      // Gravitational scale factor through degree
     for (int ndx=(m_order+1); ndx<=m_degree; ++ndx) {
       m_re_r_n[ndx] = re_r*m_re_r_n[ndx-1];
     }
       // Update associated Legendre functions for this geometry
     m_alf->set(slat, clat);
       // Loop over selected egm_coeff offsets
+      // Note, complicating this loop by factoring out m_re_r_n[nn]
+      // and applying it to sets of summed degrees ended up doubling
+      // the computational time for a stressful case (Starlette with a
+      // 40x40 gravity model using GJ integrator)
     for (const int ndx : ndx_list) {
       const int nn {xn[ndx]};
       const int mm {xm[ndx]};
@@ -124,7 +128,7 @@ Eigen::Matrix<double, 3, 1>
     }
       // Central body
     du_dr += 1.0;
-      // Save cached values
+      // Save cached values for corrector option
     m_gs[0] = du_dr;
     m_gs[1] = du_dlat;
     m_gs[2] = du_dlon;
@@ -135,7 +139,7 @@ Eigen::Matrix<double, 3, 1>
     du_dlon = m_gs[2];;
   }
 
-    // Complete partials using updated or cached accumulated terms
+    // Complete partials
   double gm_r {phy_const::gm*invr};
   du_dr *= -1.0*gm_r*invr;
   du_dlat *= gm_r;
