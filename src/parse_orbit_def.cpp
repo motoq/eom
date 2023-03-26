@@ -52,8 +52,8 @@ eom::OrbitDef parse_orbit_def(std::deque<std::string>& tokens,
     eom::PropagatorConfig propCfg {eom::PropagatorType::sp};
     propCfg.setStartStopTime(cfg.getStartTime(), cfg.getStopTime());
     eom::JulianDate epoch = parse_datetime(tokens);
-    std::array<double, 6> xeci = parse_state_vector(tokens, cfg, coord_type,
-                                                                 frame_type);
+    std::array<double, 6> state = parse_state_vector(tokens, cfg, coord_type,
+                                                                  frame_type);
       // Loop through enough times to support finding all
       // supported options:
       //   1. Earth gravity model
@@ -70,43 +70,43 @@ eom::OrbitDef parse_orbit_def(std::deque<std::string>& tokens,
         break;
       }
     }
-    eom::OrbitDef orbit {name, propCfg, epoch, xeci, coord_type, frame_type};
+    eom::OrbitDef orbit {name, propCfg, epoch, state, coord_type, frame_type};
     return orbit;
   } else if (model == "Kepler1"  &&  tokens.size() > 0 ) {
     eom::PropagatorConfig propCfg {eom::PropagatorType::kepler1};
     eom::JulianDate epoch = parse_datetime(tokens);
-    std::array<double, 6> xeci = parse_state_vector(tokens, cfg, coord_type,
-                                                                 frame_type);
-    eom::OrbitDef orbit {name, propCfg, epoch, xeci, coord_type, frame_type};
+    std::array<double, 6> state = parse_state_vector(tokens, cfg, coord_type,
+                                                                  frame_type);
+    eom::OrbitDef orbit {name, propCfg, epoch, state, coord_type, frame_type};
     return orbit;
   } else if (model == "Vinti6"  &&  tokens.size() > 0 ) {
     eom::PropagatorConfig propCfg {eom::PropagatorType::vinti6};
     eom::JulianDate epoch = parse_datetime(tokens);
-    std::array<double, 6> xeci = parse_state_vector(tokens, cfg, coord_type,
-                                                                 frame_type);
-    eom::OrbitDef orbit {name, propCfg, epoch, xeci, coord_type, frame_type};
+    std::array<double, 6> state = parse_state_vector(tokens, cfg, coord_type,
+                                                                  frame_type);
+    eom::OrbitDef orbit {name, propCfg, epoch, state, coord_type, frame_type};
     return orbit;
   } else if (model == "VintiJ2"  &&  tokens.size() > 0 ) {
     eom::PropagatorConfig propCfg {eom::PropagatorType::vinti_j2};
     eom::JulianDate epoch = parse_datetime(tokens);
-    std::array<double, 6> xeci = parse_state_vector(tokens, cfg, coord_type,
-                                                                 frame_type);
-    eom::OrbitDef orbit {name, propCfg, epoch, xeci, coord_type, frame_type};
+    std::array<double, 6> state = parse_state_vector(tokens, cfg, coord_type,
+                                                                  frame_type);
+    eom::OrbitDef orbit {name, propCfg, epoch, state, coord_type, frame_type};
     return orbit;
 #ifdef GENPL
   } else if (model == "SecJ2"  &&  tokens.size() > 0 ) {
     eom::PropagatorConfig propCfg {eom::PropagatorType::sec_j2};
     eom::JulianDate epoch = parse_datetime(tokens);
-    std::array<double, 6> xeci = parse_state_vector(tokens, cfg, coord_type,
-                                                                 frame_type);
-    eom::OrbitDef orbit {name, propCfg, epoch, xeci, coord_type, frame_type};
+    std::array<double, 6> state = parse_state_vector(tokens, cfg, coord_type,
+                                                                  frame_type);
+    eom::OrbitDef orbit {name, propCfg, epoch, state, coord_type, frame_type};
     return orbit;
   } else if (model == "OscJ2"  &&  tokens.size() > 0 ) {
     eom::PropagatorConfig propCfg {eom::PropagatorType::osc_j2};
     eom::JulianDate epoch = parse_datetime(tokens);
-    std::array<double, 6> xeci = parse_state_vector(tokens, cfg, coord_type,
-                                                                 frame_type);
-    eom::OrbitDef orbit {name, propCfg, epoch, xeci, coord_type, frame_type};
+    std::array<double, 6> state = parse_state_vector(tokens, cfg, coord_type,
+                                                                  frame_type);
+    eom::OrbitDef orbit {name, propCfg, epoch, state, coord_type, frame_type};
     return orbit;
 #endif
   }

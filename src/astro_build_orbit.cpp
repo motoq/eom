@@ -48,15 +48,21 @@ std::unique_ptr<Ephemeris>
 build_orbit(const OrbitDef& orbitParams,
             const std::shared_ptr<const EcfEciSys>& ecfeciSys)
 {
-    // Once more than one CoordType is added, convert
-    // xeciVec to Cartesian here after copying from array
   std::array<double, 6> xeci_array = orbitParams.getInitialState();
   Eigen::Matrix<double, 6, 1> xeciVec;
-  for (int ii=0; ii<6; ++ii) {
-    xeciVec(ii) = xeci_array[ii];
+    // Once more reference frame besides GCRF is added for Keplerian
+    // elements, the transformation to GCRF should be done here.
+  if (orbitParams.getCoordinateType() == CoordType::keplerian) {
+    Keplerian kep(xeci_array);
+    xeciVec = kep.getCartesian();
+  } else {
+    for (int ii=0; ii<6; ++ii) {
+      xeciVec(ii) = xeci_array[ii];
+    }
   }
-    // ITRF to GCRF
-  if (orbitParams.getReferenceFrameType() == FrameType::itrf) {
+    // ITRF to GCRF for Cartesian
+  if (orbitParams.getCoordinateType() == CoordType::cartesian  &&
+      orbitParams.getReferenceFrameType() == FrameType::itrf) {
     xeciVec = ecfeciSys->ecf2eci(orbitParams.getEpoch(),
                                  xeciVec.block<3, 1>(0, 0),
                                  xeciVec.block<3, 1>(3, 0));

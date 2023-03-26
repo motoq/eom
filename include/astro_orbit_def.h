@@ -22,7 +22,8 @@ namespace eom {
  * Supported input coordinate frame (orbital element) types
  */
 enum class CoordType {
-  cartesian                       ///< position (DU), velocity (DU/TU)
+  cartesian,                      ///< position (DU), velocity (DU/TU)
+  keplerian                       ///< Orbital elements with true anomaly
 };
 
 /**

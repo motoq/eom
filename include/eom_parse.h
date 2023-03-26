@@ -108,7 +108,7 @@ eom::RelOrbitDef parse_rel_orbit_def(std::deque<std::string>& tokens,
 eom::EphemerisFile parse_eph_file_def(std::deque<std::string>& tokens);
 
 /**
- * Parses an orbit state vector
+ * Parses an orbit state vector (including orbital elements)
  *
  * @param  tokens      Tokens consisting of coordinat system time,
  *                     reference frame, and 6 components of the state vector.

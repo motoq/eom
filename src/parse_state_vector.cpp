@@ -13,6 +13,7 @@
 #include <deque>
 #include <stdexcept>
 
+#include <utl_const.h>
 #include <eom_config.h>
 #include <astro_orbit_def.h>
 
@@ -31,7 +32,10 @@ std::array<double, 6> parse_state_vector(std::deque<std::string>& tokens,
                                 std::to_string(tokens.size()));
   }
   if (tokens[0] == "CART") {
-    coord_type == eom::CoordType::cartesian;
+    coord_type = eom::CoordType::cartesian;
+    tokens.pop_front();
+  } else if (tokens[0] == "KEP_T") {
+    coord_type = eom::CoordType::keplerian;
     tokens.pop_front();
   } else {
     throw std::invalid_argument("eom_app::parse_state_vector() "s +
@@ -49,23 +53,41 @@ std::array<double, 6> parse_state_vector(std::deque<std::string>& tokens,
                                 "Invalid reference frame type: "s +
                                 tokens[0]);
   }
+  if (coord_type == eom::CoordType::keplerian  &&
+      frame_type == eom::FrameType::itrf) {
+    throw std::invalid_argument("eom_app::parse_state_vector() ITRF frame"s +
+                                " not compatible with Keplerian elements"s);
+  }
 
   double du_per_io {1.0/cfg.getIoPerDu()};
   double io_per_tu {cfg.getIoPerTu()};
-  std::array<double, 6> xeci;
+  std::array<double, 6> state;
   try {
     for (unsigned int ii=0; ii<6; ++ii) {
-      xeci[ii] = du_per_io*std::stod(tokens[0]);
-      tokens.pop_front();
-      if (ii > 2L) {
-        xeci[ii] *= io_per_tu;
+        // Cartesian pos_vel or some form of orbital elements where
+        // the first component is distance and the rest are angles
+      if (coord_type == eom::CoordType::cartesian) {
+        state[ii] = du_per_io*std::stod(tokens[0]);
+        tokens.pop_front();
+        if (ii > 2U) {
+          state[ii] *= io_per_tu;
+        }
+      } else {
+        state[ii] = std::stod(tokens[0]);
+        tokens.pop_front();
+        if (ii == 0) {
+          state[ii] *= du_per_io;
+        } else if (ii != 1U) {
+          state[ii] *= utl_const::rad_per_deg;
+        }
       }
     }
   } catch (const std::invalid_argument& ia) {
     throw std::invalid_argument("eom_app::parse_state_vector() "s +
                                 "invalid parameter type"s);
   }
-  return xeci;
+
+  return state;
 }
 
 }

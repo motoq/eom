@@ -1,23 +1,31 @@
-
 #
-# Orbital elements and different entry types
-# (placeholder for when something other than CART is added)
+# Vinti based
+# 2023/03/25
 #
 
 SimStart GD 2021 11 12 17 00 00.0;     # Gregorian date, UTC
 SimDuration Days 1;
 LeapSeconds 37;
 EcfEciRate Minutes 240;
-
 DistanceUnits  Kilometers;             # Sticky distance and time settings
-TimeUnits Seconds;                     # For inputs without unit specifications
-Orbit  kep_test  Kepler1  GD 2021 11 12 17 00 00.0
-       CART  GCRF  -5552.0  -2563.0  3258.0   2.149  -7.539  -2.186;
-DistanceUnits  DU;
-TimeUnits TU;
-Orbit  t1  Kepler1  GD 2021 11 12 17 00 00.0
-       CART  GCRF      0.05     0.7     0.4  -1.2     0.02    0.3;
+#TimeUnits Minutes;
+Orbit  orbit1    OscJ2  GD 2021 11 12 17 00 00.0
+       KEP_T  GCRF  6900.0  0.001  50.0  45.0  225.0  0.0;
+#Orbit  orbit2    OscJ2  GD 2021 11 12 17 00 00.0
+#       KEP_T  GCRF  6900.0  0.001  50.0  45.0  225.0  0.5;
+#OutputRate Minutes 5;
+#Command PrintRange orbit1 orbit2 orbit_drift;
 end;
-Orbit  t2  Kepler1  GD 2021 11 12 17 00 00.0
-       CART  GCRF     -0.1      0.7     0.8  -0.7    -0.6     0.6;
-#      CART  GCRF      0.05     0.7     0.4  -1.2     0.02    0.3;
+
+Orbit  kep    Kepler1  GD 2021 11 12 17 00 00.0
+       KEP_T  GCRF  6900.0  0.001  50.0  45.0  225.0  0.0;
+Orbit  vinti    Vinti6   GD 2021 11 12 17 00 00.0
+       CART  GCRF  -5552.0  -2563.0  3258.0   2.149  -7.539  -2.186;
+Orbit  vintij2  VintiJ2  GD 2021 11 12 17 00 00.0
+       CART  GCRF  -5552.0  -2563.0  3258.0   2.149  -7.539  -2.186;
+Orbit  spj3     SP       GD 2021 11 12 17 00 00.0
+       CART  GCRF  -5552.0  -2563.0  3258.0   2.149  -7.539  -2.186
+       GravityModel  Jn 3
+       Propagator  RK4 Minutes 0.0;
+Command PrintRange vinti vintij2 vinti_rng_vvj2;
+Command PrintRTC vinti spj3 vinti_rtc_vsp;
