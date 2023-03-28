@@ -12,6 +12,7 @@
 #include <utl_nonconvergence_exception.h>
 #include <utl_const.h>
 #include <phy_const.h>
+#include <mth_angle.h>
 
 namespace {
     // Indexing
@@ -97,13 +98,13 @@ Keplerian::Keplerian(const Eigen::Matrix<double, 6, 1>& cart)
     // Argument of perigee
   Eigen::Matrix<double, 3, 1> ehat {evec/emag};
   Eigen::Matrix<double, 3, 1> nhat {nvec/nmag};
-  double argp {std::acos(nhat.dot(ehat))};
+  double argp {mth_angle::unit_vec_angle<double>(nhat, ehat)};
   if (evec(2) < 0.0) {
     argp = utl_const::tpi - argp;
   }
     // True anomaly
   Eigen::Matrix<double, 3, 1> rhat {rvec/rmag};
-  double ta {std::acos(ehat.dot(rhat))};
+  double ta {mth_angle::unit_vec_angle<double>(ehat, rhat)};
   if (rdotv < 0.0) {
     ta = utl_const::tpi - ta;
   }
@@ -114,6 +115,7 @@ Keplerian::Keplerian(const Eigen::Matrix<double, 6, 1>& cart)
   m_oe[io] = raan;
   m_oe[iw] = argp;
   m_oe[iv] = ta;
+
 }
 
 

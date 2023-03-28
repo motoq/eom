@@ -9,10 +9,15 @@ LeapSeconds 37;
 EcfEciRate Minutes 240;
 DistanceUnits  Kilometers;             # Sticky distance and time settings
 #TimeUnits Minutes;
-Orbit  orbit1    OscJ2  GD 2021 11 12 17 00 00.0
-       KEP_T  GCRF  6900.0  0.001  50.0  45.0  225.0  0.0;
-#Orbit  orbit2    OscJ2  GD 2021 11 12 17 00 00.0
-#       KEP_T  GCRF  6900.0  0.001  50.0  45.0  225.0  0.5;
+#Orbit  orbit1    OscJ2  GD 2021 11 12 17 00 00.0
+#       KEP_T  GCRF  6900.0  0.001  50.0  45.0  0.0  0.0;
+Orbit  orbit2    Vinti6  GD 2021 11 12 17 00 00.0
+       KEP_T  GCRF  6900.0  0.001  50.0  45.0  45.0  0.0;
+#nan       KEP_T  GCRF  6900.0  0.001  50.0  45.0  45.0  0.0;
+#Orbit  orbit2  SP  GD 2021 11 12 17 00 00.0
+#       KEP_T  GCRF  6900.0  0.001  50.0  45.0  1.0  0.0
+#       GravityModel  Jn 3
+#       Propagator  RK4 Minutes 0.0;
 #OutputRate Minutes 5;
 #Command PrintRange orbit1 orbit2 orbit_drift;
 end;
