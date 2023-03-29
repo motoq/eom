@@ -50,11 +50,13 @@ Keplerian::Keplerian(const Eigen::Matrix<double, 6, 1>& cart)
   Eigen::Matrix<double, 3, 1> hvec {rvec.cross(vvec)};
   Eigen::Matrix<double, 3, 1> khat {Eigen::Vector3d::UnitZ()};
   Eigen::Matrix<double, 3, 1> nvec {khat.cross(hvec)};
+  double nmag {nvec.norm()};
+    // By definition - potential numerical roundoff with cross product
+  nvec(2) = 0.0;
 
   double rmag {rvec.norm()};
   double vmag {vvec.norm()};
   m_hmag = hvec.norm();
-  double nmag {nvec.norm()};
   double v2 {vmag*vmag};
   double rdotv {rvec.dot(vvec)};
   double muor {phy_const::gm/rmag};
@@ -89,9 +91,23 @@ Keplerian::Keplerian(const Eigen::Matrix<double, 6, 1>& cart)
   }
 
     // Inclination
-  double inc {std::acos(hvec(2)/m_hmag)};
+  double inc {};
+  if (hvec(0) == 0.0  &&  hvec(1) == 0.0) {
+    if (hvec(2) > 0.0) {
+      inc = 0.0;
+    } else {
+      inc = utl_const::pi; 
+    }
+  } else {
+    inc = std::acos(hvec(2)/m_hmag);
+  }
     // RAAN
-  double raan {std::acos(nvec(0)/nmag)};
+  double raan {};
+  if (nvec(1) == 0.0) {
+    raan = 0.0;
+  } else {
+    raan = std::acos(nvec(0)/nmag);
+  }
   if (nvec(1) < 0.0) {
     raan = utl_const::tpi - raan;
   }
@@ -107,6 +123,9 @@ Keplerian::Keplerian(const Eigen::Matrix<double, 6, 1>& cart)
   double ta {mth_angle::unit_vec_angle<double>(ehat, rhat)};
   if (rdotv < 0.0) {
     ta = utl_const::tpi - ta;
+  }
+  if (ta >= utl_const::tpi) {
+    ta -= utl_const::tpi;
   }
 
   m_oe[ia] = sma;

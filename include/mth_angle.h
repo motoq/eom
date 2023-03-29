@@ -13,6 +13,8 @@
 
 #include <Eigen/Dense>
 
+#include <utl_const.h>
+
 /**
  * Angle related utilities
  */
@@ -37,10 +39,15 @@ T unit_vec_angle(const Eigen::Matrix<double, 3, 1>& u1,
                  const Eigen::Matrix<double, 3, 1>& u2)
 {
   T eps {static_cast<T>(0.00001)};
-  if ((u1 - u2).norm() < eps) {
+  T cang {u1.dot(u2)};
+    // Unit vector dot product can exceed +/-1.0 due to roundoff
+    // Very small angles via atan (also accomodates dot exceeding 1.0)
+  if (cang <= -1.0) {
+    return utl_const::pi;
+  } else if ((u1 - u2).norm() < eps) {
     return std::atan(u1.cross(u2).norm());
   } else {
-    return std::acos(u1.dot(u2));
+    return std::acos(cang);
   }
 }
 
