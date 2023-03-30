@@ -1,6 +1,11 @@
 #
-# Vinti based
-# 2023/03/25
+# Orbital elements test case.
+# Also used to observe the effect argument of perigee has on the drift
+# rate between two identical orbits separated by a small difference in
+# true anomaly.  Notice analytic secular J2 propagators do not capture
+# this effect while the Vinti and numerical integration does.
+#
+# 2023/03/28
 #
 
 SimStart GD 2021 11 12 17 00 00.0;     # Gregorian date, UTC
@@ -8,7 +13,6 @@ SimDuration Days 1;
 LeapSeconds 37;
 EcfEciRate Minutes 240;
 DistanceUnits  Kilometers;             # Sticky distance and time settings
-#TimeUnits Minutes;
 Orbit  gp_orbit1    VintiJ2 GD 2021 11 12 17 00 00.0
        KEP_T  GCRF  6900.0  0.001  50.0  45.0  225.0  1.0;
 Orbit  gp_orbit2    VintiJ2 GD 2021 11 12 17 00 00.0
@@ -20,6 +24,7 @@ end;
 
 #nan       KEP_T  GCRF  6900.0  0.001  50.0  45.0  45.0  0.0;
 #
+# SP method for comparison against analytic methods
 Orbit  sp_orbit1    SP      GD 2021 11 12 17 00 00.0
        KEP_T  GCRF  6900.0  0.001  50.0  45.0  225.0  0.1
        GravityModel Jn 2
@@ -28,7 +33,7 @@ Orbit  sp_orbit2    SP      GD 2021 11 12 17 00 00.0
        KEP_T  GCRF  6900.0  0.001  50.0  45.0  225.0  0.0
        GravityModel Jn 2
        Propagator  RK4 Minutes 0.0;
-#
+# Alternate analytic methods
 Orbit  gp_orbit1    SecJ2   GD 2021 11 12 17 00 00.0
 Orbit  gp_orbit1    OscJ2   GD 2021 11 12 17 00 00.0
 Orbit  gp_orbit1    Kepler1 GD 2021 11 12 17 00 00.0

@@ -1,6 +1,7 @@
 
 #
-# Loads ephemeris from an SP3 format file.
+# Loads ephemeris for LAGEOS-2 from an SP3 format file and compare to
+# propagated ephemeris.
 #
 # 2023/01/16
 #

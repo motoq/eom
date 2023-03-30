@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Kurt Motekew
+ * Copyright 2023 Kurt Motekew
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -33,6 +33,8 @@ namespace mth_angle {
  *
  * @return  Angle between two input unit vectors, radians
  *
+ * @author  Kurt Motekew
+ * @date    2023/03/29
  */
 template<typename T>
 T unit_vec_angle(const Eigen::Matrix<double, 3, 1>& u1,

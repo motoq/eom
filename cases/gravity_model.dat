@@ -1,9 +1,9 @@
 
 #
-# Gauss-Jackson orbit propagator and Gravt gravity model example
+# Test standard gravity model vs GRAVT with Gauss-Jackson integrator.
 # (requires GENPL option)
 #
-# 2022/12/30
+# 2023/03/25
 #
 
 SimStart GD 2021 11 12 17 00 00.0;
