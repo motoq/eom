@@ -1,0 +1,260 @@
+/******************************************************************************
+ *  Orbital and Celestial Mechanics		                                       *
+ *  ------------------------------------------------------------------------  *
+ *                                                                            *
+ *  Kepler1()...Kepler Solution with Universal Variables.                     *
+ *                                                                            *
+ *  Originator:                 Gim J. Der, 1995                              *
+ *  Fortran to C Conversion:    Herbert B. Reynolds, 1997                     *
+ *  ------------------------------------------------------------------------  *
+ *                                                                            *
+ *  This function computes the kepler solution (state vector, x1, at          *
+ *  any time, t1) from a given initial state vector, x0, at an arbitrary      *
+ *  time t0, using the universal variable formulation.                        *
+ *                                                                            *
+ *  It accommodates all orbits (circular, elliptic, parabolic,                *
+ *  hyperbolic) with no discontinuity or singularity.  No problem of          *
+ *  convergence was encountered, and it always converges in less than:        *
+ *                                                                            *
+ *      a. five iterations for circle and ellipse                             *
+ *      b. seven iterations for parabola and hyperbola                        *
+ *                                                                            *
+ *  The "if(dx2 > 0)" loop is not for efficiency but to guarantee a good      *
+ *  solution for parabolic and hyperbolic orbits up to 1,000,000 km from      *
+ *  Earth.                                                                    *
+ *                                                                            *
+ *  Input variables:                                                          *
+ *          x0[6] = initial state vector at t0, (ECI),     (km,km/s)          *
+ *          t0    = time with respect to x0, initial time, (sec)              *
+ *          t1    = time with respect to x1, final time,   (sec)              *
+ *                                                                            *
+ *          Note: unit (km, km/s) depends only on that of the data gmx, rex   *
+ *                                                                            *
+ *  Output variables:                                                         *
+ *          x1[6] = state vector at t1:(t0+dt),   (km,km/s)                   *
+ *          xxx   = universal variable, xhat in Getchell at t1  (Unitless)    *
+ *                                                                            *
+ *****************************************************************************/
+
+#include <astro_kepler_prop.h>
+
+#include <string>
+#include <array>
+#include <memory>
+
+#include <Eigen/Dense>
+
+#include <cal_julian_date.h>
+#include <phy_const.h>
+#include <astro_ephemeris.h>
+#include <astro_ecfeci_sys.h>
+
+#include <Vinti.h>
+
+static void kepler1_mod(double t0, const double x0[6],
+                        double t1, double x1[6], double *xxx);
+namespace eom {
+
+
+KeplerProp::KeplerProp(const std::string& orbit_name,
+                       const JulianDate& epoch,
+                       const Eigen::Matrix<double, 6, 1>& xeci,
+                       const std::shared_ptr<const EcfEciSys>& ecfeciSys)
+{
+  name = orbit_name;
+  jd0 = epoch;
+  ecfeci = ecfeciSys;
+  x0[0] = xeci(0);
+  x0[1] = xeci(1);
+  x0[2] = xeci(2);
+  x0[3] = xeci(3);
+  x0[4] = xeci(4);
+  x0[5] = xeci(5);
+}
+
+
+Eigen::Matrix<double, 6, 1> KeplerProp::getStateVector(const JulianDate& jd,
+                                                       EphemFrame frame) const 
+{
+  double x {0.0};
+  std::array<double, 6> x1;
+  double t1 {phy_const::tu_per_day*(jd - jd0)};
+  kepler1_mod(0.0, x0.data(), t1, x1.data(), &x);
+
+  Eigen::Matrix<double, 6, 1> xeci;
+  xeci(0) = x1[0];
+  xeci(1) = x1[1];
+  xeci(2) = x1[2];
+  xeci(3) = x1[3];
+  xeci(4) = x1[4];
+  xeci(5) = x1[5];
+
+  if (frame == EphemFrame::ecf) {
+    return ecfeci->eci2ecf(jd, xeci.block<3,1>(0,0), xeci.block<3,1>(3,0));
+  }
+  return xeci;
+}
+
+
+Eigen::Matrix<double, 3, 1> KeplerProp::getPosition(const JulianDate& jd,
+                                                    EphemFrame frame) const
+{
+  double x {0.0};
+  std::array<double, 6> x1;
+  double t1 {phy_const::tu_per_day*(jd - jd0)};
+  kepler1_mod(0.0, x0.data(), t1, x1.data(), &x);
+
+  Eigen::Matrix<double, 3, 1> xeci;
+  xeci(0) = x1[0];
+  xeci(1) = x1[1];
+  xeci(2) = x1[2];
+
+  if (frame == EphemFrame::ecf) {
+    return ecfeci->eci2ecf(jd, xeci);
+  }
+  return xeci;
+}
+
+
+}
+
+
+
+void kepler1_mod(double t0, const double x0[6],
+                 double t1, double x1[6], double *xxx)
+{
+   double muqr = 1;
+
+   double tlimit = 1.0e-10;
+   int kn = 10;
+
+   int i, k;
+   double x;
+   double r0[3], v0[3];
+   double dfx, u1, u2, u3;
+   double dt;
+   double r0mag, v0mag, d0;
+   double sigma0, alp0;
+   double y, yqr, cy, sy;
+   double fx, dfx2, sdfx;
+   double dx2;
+   double dx;
+   double rmag, f, g, df, dg;
+
+   dt = t1 - t0;
+
+   if(fabs(dt) < tlimit)
+   {
+      for(i = 0; i < 6; i++)
+      {
+          x1[i] = x0[i];
+      }
+
+      *xxx = 0;   /* Better initialize it to something */
+
+      return;
+   }
+
+   for(i = 0; i < 3; i++)
+   {
+      r0[i] = x0[i];
+      v0[i] = x0[i+3];
+   }
+
+   r0mag = sqrt( r0[0]*r0[0] + r0[1]*r0[1] + r0[2]*r0[2] );
+   v0mag = sqrt( v0[0]*v0[0] + v0[1]*v0[1] + v0[2]*v0[2] );
+
+   d0 = r0[0]*v0[0] +r0[1]*v0[1] +r0[2]*v0[2];
+
+   sigma0 = d0 / muqr;
+   alp0 = 2.0 / r0mag - v0mag*v0mag;
+
+   /*
+    * x = Flight angle (theta) computed by kepler's solution
+    *     first guessed of:
+    *
+    *     x = alp0*muqr*(t - t0)          For circle and ellipse
+    *     x = muqr*(t - t0)/(10*r0mag)    For parabola and hyperbola
+    */
+   
+   x = alp0*dt;
+
+   if (alp0 <= 0)
+   {
+      //x = 0.1*dt/r0mag;
+      x = 0.5*dt/r0mag; // replace 9/5/97
+   }
+
+   for(k = 1; k <= kn; k++)
+   {
+      if(alp0 < 0)
+      {
+         y = alp0*x*x;
+         yqr = sqrt(-y);
+         cy = (1 - cosh(yqr))/y;
+         sy = (sinh(yqr) - yqr)/(yqr*yqr*yqr);
+      }
+      else if(alp0 == 0)
+      {
+         y = 0;
+         cy = 0.5;
+         sy = 1.0/6.0;
+      }
+      else if(alp0 > 0)
+      {
+         y = alp0*x*x;
+         yqr = sqrt(y);
+         cy = ( 1 - cos(yqr) )/y;
+         sy = (yqr - sin(yqr))/(yqr*yqr*yqr);
+      }
+
+      u1 = x*(1 - y*sy);
+      u2 = x*x*cy;
+      u3 = x*x*x*sy;
+
+      fx = r0mag*u1 + sigma0*u2 + u3 - dt*muqr;
+      dfx = sigma0*u1 + (1 - alp0*r0mag)*u2 + r0mag;
+      dfx2 = sigma0*(1 - y*cy) + (1 - alp0*r0mag)*u1;
+      sdfx = dfx /(fabs(dfx));
+      
+      dx2 = 16*dfx*dfx - 20*fx*dfx2;
+
+      if(dx2 > 0)
+      {
+         dx = 5*fx/( dfx + sdfx*sqrt(dx2) );
+      }
+      else
+      {
+         dx = 0.5*x;
+      }
+      
+      if(fabs(dx) < 1.0e-10) break;
+
+      x = x - dx;
+
+   }   
+
+   /*
+    *  Kepler solution  converged
+    *  Coefficients and constants associated with the partials
+    */
+   rmag = dfx;
+   f = 1 - u2/r0mag;
+   g = dt - u3/muqr;
+
+   /*
+    *  Time derivatives associated with the partials
+    */
+   df = -muqr*u1/(rmag*r0mag);
+   dg = 1 - u2/rmag;
+   
+   for(i = 0; i < 3; i++)
+   {
+      x1[i] = ( f*r0[i] + g*v0[i] );
+      x1[i+3] = ( df*r0[i] + dg*v0[i] );
+   }
+                            /* Universal variable for state transition */
+   *xxx = x;               /* So we don't have to change all the x's */
+
+}
+

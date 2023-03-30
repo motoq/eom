@@ -25,6 +25,7 @@ enum class PropagatorType {
   kepler1,                        ///< Gim J. Der version
   vinti6,                         ///< Gim J. Der version
   vinti_j2,                       ///< Gim J. Der version with J3 = 0
+  kepler1mod,                     ///< Experimental, modified Gim J. Der version
   sp                              ///< Special Pert with more config options
 };
 

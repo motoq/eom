@@ -28,6 +28,7 @@
 #include <astro_ephemeris.h>
 #include <astro_sp_ephemeris.h>
 #include <astro_kepler.h>
+#include <astro_kepler_prop.h>
 #include <astro_vinti.h>
 #include <astro_sun_meeus.h>
 #include <astro_moon_meeus.h>
@@ -141,6 +142,13 @@ build_orbit(const OrbitDef& orbitParams,
                                     orbitParams.getEpoch(),
                                     xeciVec,
                                     ecfeciSys);
+    return orbit;
+  } else if (pCfg.getPropagatorType() == PropagatorType::kepler1mod) {
+    std::unique_ptr<Ephemeris> orbit =
+           std::make_unique<KeplerProp>(orbitParams.getOrbitName(),
+                                        orbitParams.getEpoch(),
+                                        xeciVec,
+                                        ecfeciSys);
     return orbit;
   } else if (pCfg.getPropagatorType() == PropagatorType::vinti6) {
     std::unique_ptr<Ephemeris> orbit =

@@ -79,6 +79,13 @@ eom::OrbitDef parse_orbit_def(std::deque<std::string>& tokens,
                                                                   frame_type);
     eom::OrbitDef orbit {name, propCfg, epoch, state, coord_type, frame_type};
     return orbit;
+  } else if (model == "Kepler1Mod"  &&  tokens.size() > 0 ) {
+    eom::PropagatorConfig propCfg {eom::PropagatorType::kepler1mod};
+    eom::JulianDate epoch = parse_datetime(tokens);
+    std::array<double, 6> state = parse_state_vector(tokens, cfg, coord_type,
+                                                                  frame_type);
+    eom::OrbitDef orbit {name, propCfg, epoch, state, coord_type, frame_type};
+    return orbit;
   } else if (model == "Vinti6"  &&  tokens.size() > 0 ) {
     eom::PropagatorConfig propCfg {eom::PropagatorType::vinti6};
     eom::JulianDate epoch = parse_datetime(tokens);
