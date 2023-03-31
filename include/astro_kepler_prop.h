@@ -121,7 +121,22 @@ public:
   Eigen::Matrix<double, 3, 1> getPosition(const JulianDate& jd,
                                           EphemFrame frame) const override;
 
+  /**
+   * @param  jd  Time of desired position vector, UTC
+   *
+   * @return  Universal variable, xhat in Getchell at t1  (Unitless)
+   */
+  double getX(const JulianDate& jd) const;
+
 private:
+  /**
+   * @param  dt  Time from epoch, TU
+   *
+   * @return  Universal variable, xhat in Getchell at t1  (Unitless)
+   */
+  double f_and_g(double dt,
+                 double& dfx, double& u1, double& u2, double& u3) const;
+
   std::string name {""};
   std::shared_ptr<const EcfEciSys> ecfeci {nullptr};
   JulianDate jd0;
