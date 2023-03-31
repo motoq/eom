@@ -125,7 +125,11 @@ private:
   std::string name {""};
   std::shared_ptr<const EcfEciSys> ecfeci {nullptr};
   JulianDate jd0;
-  std::array<double, 6> x0;
+  std::array<double, 3> r0;
+  std::array<double, 3> v0;
+  double r0mag {0.0};
+  double v0mag {0.0};
+  double d0 {0.0};
 };
 
 

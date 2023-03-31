@@ -51,8 +51,11 @@
 
 #include <Vinti.h>
 
-static void kepler1_mod(double t0, const double x0[6],
-                        double t1, double x1[6], double *xxx);
+namespace {
+  constexpr int kn {10};
+  constexpr double muqr {1.0};
+}
+
 namespace eom {
 
 
@@ -62,78 +65,34 @@ KeplerProp::KeplerProp(const std::string& orbit_name,
                        const std::shared_ptr<const EcfEciSys>& ecfeciSys)
 {
   name = orbit_name;
+    // Initial state
   jd0 = epoch;
   ecfeci = ecfeciSys;
-  x0[0] = xeci(0);
-  x0[1] = xeci(1);
-  x0[2] = xeci(2);
-  x0[3] = xeci(3);
-  x0[4] = xeci(4);
-  x0[5] = xeci(5);
+  for (int ii=0; ii<3; ++ii) {
+    r0[ii] = xeci(ii);
+    v0[ii] = xeci(ii+3);
+  }
+  r0mag = sqrt( r0[0]*r0[0] + r0[1]*r0[1] + r0[2]*r0[2] );
+  v0mag = sqrt( v0[0]*v0[0] + v0[1]*v0[1] + v0[2]*v0[2] );
+  d0 = r0[0]*v0[0] +r0[1]*v0[1] +r0[2]*v0[2];
 }
 
 
+  //kepler1_mod(0.0, x0.data(), t1, x1.data(), &x);
 Eigen::Matrix<double, 6, 1> KeplerProp::getStateVector(const JulianDate& jd,
                                                        EphemFrame frame) const 
 {
-  double x {0.0};
+    // Time since initial state
+  double dt {phy_const::tu_per_day*(jd - jd0)};
+    // Propagated state vector
   std::array<double, 6> x1;
-  double t1 {phy_const::tu_per_day*(jd - jd0)};
-  kepler1_mod(0.0, x0.data(), t1, x1.data(), &x);
-
-  Eigen::Matrix<double, 6, 1> xeci;
-  xeci(0) = x1[0];
-  xeci(1) = x1[1];
-  xeci(2) = x1[2];
-  xeci(3) = x1[3];
-  xeci(4) = x1[4];
-  xeci(5) = x1[5];
-
-  if (frame == EphemFrame::ecf) {
-    return ecfeci->eci2ecf(jd, xeci.block<3,1>(0,0), xeci.block<3,1>(3,0));
-  }
-  return xeci;
-}
-
-
-Eigen::Matrix<double, 3, 1> KeplerProp::getPosition(const JulianDate& jd,
-                                                    EphemFrame frame) const
-{
+    // Universal variable for state transition
   double x {0.0};
-  std::array<double, 6> x1;
-  double t1 {phy_const::tu_per_day*(jd - jd0)};
-  kepler1_mod(0.0, x0.data(), t1, x1.data(), &x);
-
-  Eigen::Matrix<double, 3, 1> xeci;
-  xeci(0) = x1[0];
-  xeci(1) = x1[1];
-  xeci(2) = x1[2];
-
-  if (frame == EphemFrame::ecf) {
-    return ecfeci->eci2ecf(jd, xeci);
-  }
-  return xeci;
-}
-
-
-}
 
 
 
-void kepler1_mod(double t0, const double x0[6],
-                 double t1, double x1[6], double *xxx)
-{
-   double muqr = 1;
 
-   double tlimit = 1.0e-10;
-   int kn = 10;
-
-   int i, k;
-   double x;
-   double r0[3], v0[3];
    double dfx, u1, u2, u3;
-   double dt;
-   double r0mag, v0mag, d0;
    double sigma0, alp0;
    double y, yqr, cy, sy;
    double fx, dfx2, sdfx;
@@ -141,30 +100,17 @@ void kepler1_mod(double t0, const double x0[6],
    double dx;
    double rmag, f, g, df, dg;
 
-   dt = t1 - t0;
-
-   if(fabs(dt) < tlimit)
+   if(fabs(dt) < phy_const::epsdt)
    {
-      for(i = 0; i < 6; i++)
+      for(int i = 0; i < 3; i++)
       {
-          x1[i] = x0[i];
+          x1[i]   = r0[i];
+          x1[i+3] = v0[i];
       }
-
-      *xxx = 0;   /* Better initialize it to something */
-
-      return;
+      goto exit;
    }
 
-   for(i = 0; i < 3; i++)
-   {
-      r0[i] = x0[i];
-      v0[i] = x0[i+3];
-   }
 
-   r0mag = sqrt( r0[0]*r0[0] + r0[1]*r0[1] + r0[2]*r0[2] );
-   v0mag = sqrt( v0[0]*v0[0] + v0[1]*v0[1] + v0[2]*v0[2] );
-
-   d0 = r0[0]*v0[0] +r0[1]*v0[1] +r0[2]*v0[2];
 
    sigma0 = d0 / muqr;
    alp0 = 2.0 / r0mag - v0mag*v0mag;
@@ -185,7 +131,7 @@ void kepler1_mod(double t0, const double x0[6],
       x = 0.5*dt/r0mag; // replace 9/5/97
    }
 
-   for(k = 1; k <= kn; k++)
+   for(int k = 1; k <= kn; k++)
    {
       if(alp0 < 0)
       {
@@ -248,13 +194,43 @@ void kepler1_mod(double t0, const double x0[6],
    df = -muqr*u1/(rmag*r0mag);
    dg = 1 - u2/rmag;
    
-   for(i = 0; i < 3; i++)
+   for(int i = 0; i < 3; i++)
    {
       x1[i] = ( f*r0[i] + g*v0[i] );
       x1[i+3] = ( df*r0[i] + dg*v0[i] );
    }
-                            /* Universal variable for state transition */
-   *xxx = x;               /* So we don't have to change all the x's */
+
+
+  exit:
+
+  Eigen::Matrix<double, 6, 1> xeci;
+  xeci(0) = x1[0];
+  xeci(1) = x1[1];
+  xeci(2) = x1[2];
+  xeci(3) = x1[3];
+  xeci(4) = x1[4];
+  xeci(5) = x1[5];
+
+  if (frame == EphemFrame::ecf) {
+    return ecfeci->eci2ecf(jd, xeci.block<3,1>(0,0), xeci.block<3,1>(3,0));
+  }
+  return xeci;
+}
+
+
+Eigen::Matrix<double, 3, 1> KeplerProp::getPosition(const JulianDate& jd,
+                                                    EphemFrame frame) const
+{
+  Eigen::Matrix<double, 6, 1> xeci = getStateVector(jd, frame);
+  Eigen::Matrix<double, 3, 1> posi = xeci.block<3,1>(0,0);
+
+  if (frame == EphemFrame::ecf) {
+    return ecfeci->eci2ecf(jd, posi);
+  }
+  return posi;
+}
+
 
 }
+
 
