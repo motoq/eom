@@ -30,6 +30,7 @@
 #include <astro_kepler.h>
 #include <astro_kepler_prop.h>
 #include <astro_vinti.h>
+#include <astro_vinti_prop.h>
 #include <astro_sun_meeus.h>
 #include <astro_moon_meeus.h>
 #include <astro_third_body_gravity.h>
@@ -164,6 +165,13 @@ build_orbit(const OrbitDef& orbitParams,
                                  xeciVec,
                                  ecfeciSys,
                                  VintiPertModel::J2_ONLY);
+    return orbit;
+  } else if (pCfg.getPropagatorType() == PropagatorType::vinti6mod) {
+    std::unique_ptr<Ephemeris> orbit =
+           std::make_unique<VintiProp>(orbitParams.getOrbitName(),
+                                       orbitParams.getEpoch(),
+                                       xeciVec,
+                                       ecfeciSys);
     return orbit;
 #ifdef GENPL
   } else if (pCfg.getPropagatorType() == PropagatorType::sec_j2) {

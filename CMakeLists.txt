@@ -73,6 +73,7 @@ set(SOURCES
   src/astro_sun_meeus.cpp
   src/astro_third_body_gravity.cpp
   src/astro_vinti.cpp
+  src/astro_vinti_prop.cpp
 )
 
 # Set path to SOFA library here
