@@ -60,17 +60,11 @@
 
 #include <Eigen/Dense>
 
-#include <Vinti.h>
-
 #include <utl_const.h>
 #include <phy_const.h>
 #include <cal_julian_date.h>
 #include <astro_ephemeris.h>
 #include <astro_ecfeci_sys.h>
-
-static void vinti_local(const double planet[4],
-                        double t0, const double x0[6],
-                        double tf, double x1[6], double oe[6]);
 
 namespace eom {
 
@@ -96,16 +90,17 @@ VintiProp::VintiProp(const std::string& orbit_name,
   x0[3] = xteme(3);
   x0[4] = xteme(4);
   x0[5] = xteme(5);
+
+  m_kep = std::make_unique<KeplerProp>("", epoch, xeci, ecfeciSys);
 }
 
 
 Eigen::Matrix<double, 6, 1> VintiProp::getStateVector(const JulianDate& jd,
                                                       EphemFrame frame) const
 {
-  std::array<double, 6> oe;
   std::array<double, 6> x1;
-  double t1 {phy_const::tu_per_day*(jd - jd0)};
-  vinti_local(planet.data(), 0.0, x0.data(), t1, x1.data(), oe.data());
+  vinti_local(jd, x1.data());
+  //vinti_local(planet.data(), 0.0, x0.data(), t1, x1.data(), oe.data());
 
   Eigen::Matrix<double, 6, 1> xteme;
   xteme(0) = x1[0];
@@ -128,31 +123,20 @@ Eigen::Matrix<double, 6, 1> VintiProp::getStateVector(const JulianDate& jd,
 Eigen::Matrix<double, 3, 1> VintiProp::getPosition(const JulianDate& jd,
                                                    EphemFrame frame) const
 {
-  std::array<double, 6> oe;
-  std::array<double, 6> x1;
-  double t1 {phy_const::tu_per_day*(jd - jd0)};
-  vinti_local(planet.data(), 0.0, x0.data(), t1, x1.data(), oe.data());
+  Eigen::Matrix<double, 6, 1> pv = getStateVector(jd, frame);
+  Eigen::Matrix<double, 3, 1> pos = pv.block<3,1>(0,0);
 
-  Eigen::Matrix<double, 3, 1> xteme;
-  xteme(0) = x1[0];
-  xteme(1) = x1[1];
-  xteme(2) = x1[2];
-  Eigen::Matrix<double, 3, 1> xecf = ecfeci->teme2ecf(jd, xteme);
-
-  if (frame == EphemFrame::eci) {
-    return ecfeci->ecf2eci(jd, xecf);
-  }
-  return xecf;
+  return pos;
 }
 
 
-}
-
-
-static void vinti_local(const double planet[4],
-                        double t0, const double x0[6],
-                        double tf, double x1[6], double oe[6])
+void VintiProp::vinti_local(const JulianDate& jd, double x1[6]) const
 {
+   double tf {phy_const::tu_per_day*(jd - jd0)};
+
+   double t0 {0.0};
+   double oe[6];
+
    int i, icf, icg, ick;   /* Loop indices */
 
    double pin[3], vin[3], pf[3], vf[3];
@@ -247,11 +231,9 @@ static void vinti_local(const double planet[4],
    }                                         /* 8/20/97 */
 
    /*
-    * Compute 
-    *    a. The initial guess of the universal variable xhat at tf.
-    *    b. The Kepler solution as a default for the focal circle case. 
+    * Compute the initial guess of the universal variable xhat at tf.
     */
-   Kepler1(planet, t0, x0, tf, x1, &xhat0);
+   xhat0 = m_kep->getX(jd);
 
    /*
     *  Check Vinti's forbidden zone 
@@ -989,3 +971,5 @@ static void vinti_local(const double planet[4],
    }
 }
 
+
+}

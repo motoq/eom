@@ -19,6 +19,7 @@
 #include <cal_julian_date.h>
 #include <astro_ephemeris.h>
 #include <astro_ecfeci_sys.h>
+#include <astro_kepler_prop.h>
 
 
 namespace eom {
@@ -119,6 +120,8 @@ public:
   Eigen::Matrix<double, 3, 1> getPosition(const JulianDate& jd,
                                           EphemFrame frame) const override;
 private:
+  void vinti_local(const JulianDate& jd, double x1[6]) const;
+
   std::string name {""};
   std::shared_ptr<const EcfEciSys> ecfeci {nullptr};
   std::array<double, 4> planet = {phy_const::re,
@@ -126,6 +129,8 @@ private:
                                   phy_const::j2, 0.0};
   JulianDate jd0;
   std::array<double, 6> x0;
+
+  std::unique_ptr<KeplerProp> m_kep {nullptr};
 };
 
 

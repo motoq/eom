@@ -141,14 +141,10 @@ Eigen::Matrix<double, 6, 1> KeplerProp::getStateVector(const JulianDate& jd,
 Eigen::Matrix<double, 3, 1> KeplerProp::getPosition(const JulianDate& jd,
                                                     EphemFrame frame) const
 {
-   Eigen::Matrix<double, 6, 1> xeci = getStateVector(jd, frame);
-   Eigen::Matrix<double, 3, 1> posi = xeci.block<3,1>(0,0);
+   Eigen::Matrix<double, 6, 1> pv = getStateVector(jd, frame);
+   Eigen::Matrix<double, 3, 1> pos = pv.block<3,1>(0,0);
 
-   if (frame == EphemFrame::ecf)
-   {
-      return ecfeci->eci2ecf(jd, posi);
-   }
-   return posi;
+   return pos;
 }
 
 
