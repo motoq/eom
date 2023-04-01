@@ -155,9 +155,6 @@ static void vinti_local(const double planet[4],
    const double PI = 3.141592653589793238;
    const double TWOPI = 2.0*PI;
 
-   double ae;
-   double gm;
-   double xj2;
    double xj3;
 
    int i, icf, icg, ick;   /* Loop indices */
@@ -165,7 +162,7 @@ static void vinti_local(const double planet[4],
    double pin[3], vin[3], pf[3], vf[3];
    double xhat0;
    double r1, r2;
-   double time_factor, ve, t0, tf;
+   double t0, tf;
 
    /* Steps 1 - 3 variables */
    double delta, csq, d0, alph0 ;
@@ -246,19 +243,14 @@ static void vinti_local(const double planet[4],
    double rhocsq, df, snalp, csalp;
    double rhoqd, drhofp, drhof, temp12, dsigf;
    double temp20, temp21, dd, dalphf;
-   double dt;                                /* 8/20/97 */
 
-   dt = vt1 - vt0;                           /* 8/20/97 */
-   if(fabs(dt) < 1.0e-15)                    /* 8/20/97 */
+   if(fabs(vt1 - vt0) < phy_const::epsdt)    /* 4/01/23 */  // kam
    {                                         /* 8/20/97 */
       for(i = 0; i < 6; i++) x1[i] = x0[i];  /* 8/20/97 */
                                              /* 8/20/97 */
       return;                                /* 8/20/97 */
    }                                         /* 8/20/97 */
 
-   ae  = planet[0];  // Equatorial radius of planet
-   gm  = planet[1];  // Gravitational mass constant
-   xj2 = planet[2];  // J2
    xj3 = planet[3];  // J3
 
    /*
@@ -267,8 +259,6 @@ static void vinti_local(const double planet[4],
     *    b. The Kepler solution as a default for the focal circle case. 
     */
    Kepler1(planet, vt0, x0, vt1, x1, &xhat0);
-
-   xhat0 = xhat0/sqrt(ae);    /* Change to Astronomical units */
 
    /*
     *  Check Vinti's forbidden zone 
@@ -281,16 +271,16 @@ static void vinti_local(const double planet[4],
    r0mag = sqrt(x0[0]*x0[0] + x0[1]*x0[1] + x0[2]*x0[2]);
    v0mag = sqrt(x0[3]*x0[3] + x0[4]*x0[4] + x0[5]*x0[5]);
 
-   alp0  = 2.0/r0mag - v0mag*v0mag/gm;
+   alp0  = 2.0/r0mag - v0mag*v0mag/phy_const::gm;
 
    if (fabs(alp0) < 1.0e-15)
    {
-     r1 = h02/(2.0*gm);	  				  /* Parabolic */
+     r1 = h02/(2.0*phy_const::gm);	  /* Parabolic */
    }
    else
    {
      a0 = 1.0/alp0;                   /* Others */
-     e02 = 1 - alp0*h02/gm;
+     e02 = 1 - alp0*h02/phy_const::gm;
 
      //if(e02 < 0) e0 = 0;   /* For most machines  this test is unnececessary */
      //else        e0 = sqrt(1.0 - alp0*h02/gm);
@@ -310,22 +300,20 @@ static void vinti_local(const double planet[4],
    /*
     *  Change from SI (derived) units to astronomical units
     */ 
-   time_factor = sqrt(ae*ae*ae/gm);
-   ve = ae /time_factor;
-   t0 = vt0/time_factor;
-   tf = vt1/time_factor;
+   t0 = vt0;
+   tf = vt1;
  
    for(i = 0; i < 3; i++)
    {
-      pin[i] = x0[i]/ae;
-      vin[i] = x0[i+3]/ve;
+      pin[i] = x0[i];
+      vin[i] = x0[i+3];
    }
 
    /*   
     * Step 1. Initial coordinate transformation
     */   
-   delta = -xj3/(2*xj2);
-   csq   =  xj2*(1 - delta*delta/xj2);
+   delta = -xj3/(2*phy_const::j2);
+   csq   =  phy_const::j2*(1 - delta*delta/phy_const::j2);
    d0    =  sqrt( pin[0]*pin[0] + pin[1]*pin[1] ) ;
    alph0 =  atan2(pin[1], pin[0]);
 
@@ -845,7 +833,7 @@ static void vinti_local(const double planet[4],
    deltat  = tf - capt;			  
    comega  = alph0 + csq*r3 - en3;	   /* beta3 */
 
-   oe[3] = -capt*time_factor;       /* Vinti mean element  "beta1" */
+   oe[3] = -capt;                   /* Vinti mean element  "beta1" */
    oe[4] = somega;                  /* Vinti mean element  "beta2" */
    oe[5] = comega;                  /* Vinti mean element  "beta3" */
 
@@ -1012,8 +1000,8 @@ static void vinti_local(const double planet[4],
     */
    for(i = 0; i < 3; i++)
    {
-      x1[i] = pf[i]*ae;      /* Change back to km */
-      x1[i+3] = vf[i]*ve;    /* Change back to km/s */
+      x1[i] = pf[i];
+      x1[i+3] = vf[i];
    }
 }
 
