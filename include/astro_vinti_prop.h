@@ -121,8 +121,8 @@ public:
 private:
   std::string name {""};
   std::shared_ptr<const EcfEciSys> ecfeci {nullptr};
-  std::array<double, 4> planet = {phy_const::km_per_du,
-                                  phy_const::gm_km3_sec2,
+  std::array<double, 4> planet = {phy_const::re,
+                                  phy_const::gm,
                                   phy_const::j2, 0.0};
   JulianDate jd0;
   std::array<double, 6> x0;
