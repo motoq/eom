@@ -62,14 +62,15 @@
 
 #include <Vinti.h>
 
-#include <cal_julian_date.h>
+#include <utl_const.h>
 #include <phy_const.h>
+#include <cal_julian_date.h>
 #include <astro_ephemeris.h>
 #include <astro_ecfeci_sys.h>
 
 static void vinti_local(const double planet[4],
-                        double vt0, const double x0[6],
-                        double vt1, double x1[6], double oe[6]);
+                        double t0, const double x0[6],
+                        double tf, double x1[6], double oe[6]);
 
 namespace eom {
 
@@ -149,24 +150,18 @@ Eigen::Matrix<double, 3, 1> VintiProp::getPosition(const JulianDate& jd,
 
 
 static void vinti_local(const double planet[4],
-                        double vt0, const double x0[6],
-                        double vt1, double x1[6], double oe[6])
+                        double t0, const double x0[6],
+                        double tf, double x1[6], double oe[6])
 {
-   const double PI = 3.141592653589793238;
-   const double TWOPI = 2.0*PI;
-
-   double xj3;
-
    int i, icf, icg, ick;   /* Loop indices */
 
    double pin[3], vin[3], pf[3], vf[3];
    double xhat0;
    double r1, r2;
-   double t0, tf;
 
    /* Steps 1 - 3 variables */
-   double delta, csq, d0, alph0 ;
-   double r02, zpdelta, rhotemp, rho0, rho02, sigma0, rrd, delsig0, csqsig0, rcs, v, v0;    
+   double csq, d0, alph0 ;
+   double r02, zpdelta, rhotemp, rho0, rho02, sigma0, rrd, csqsig0, rcs, v, v0;    
    double alph3, alph32, alph1, sqrf, sqrg, alph22, alph2;
    double gamma0, csgam0, p0, s0, pcsgam0, csqs0p0;
    double a1p, b1, a1;
@@ -202,7 +197,7 @@ static void vinti_local(const double planet[4],
    double cr31, cr32, cr33, cr34, cr35;
    double bmg, bpg, d1ma, d1pa, beta1, beta2, b12, b13, b22, b23, xmm1;
    double xmm2;
-   double d2, d3, d4;
+   double d3, d4;
    double d1md3, bmag;
    double d10, d20, dd2, dd3, dd4, dd5, dd6;
    double c15, c14, c13, c12, c11, c10, c25, c24, c23, c22, c21, c20;
@@ -244,21 +239,19 @@ static void vinti_local(const double planet[4],
    double rhoqd, drhofp, drhof, temp12, dsigf;
    double temp20, temp21, dd, dalphf;
 
-   if(fabs(vt1 - vt0) < phy_const::epsdt)    /* 4/01/23 */  // kam
+   if(fabs(tf - t0) < phy_const::epsdt)      /* 4/01/23 */  // kam
    {                                         /* 8/20/97 */
       for(i = 0; i < 6; i++) x1[i] = x0[i];  /* 8/20/97 */
                                              /* 8/20/97 */
       return;                                /* 8/20/97 */
    }                                         /* 8/20/97 */
 
-   xj3 = planet[3];  // J3
-
    /*
     * Compute 
     *    a. The initial guess of the universal variable xhat at tf.
     *    b. The Kepler solution as a default for the focal circle case. 
     */
-   Kepler1(planet, vt0, x0, vt1, x1, &xhat0);
+   Kepler1(planet, t0, x0, tf, x1, &xhat0);
 
    /*
     *  Check Vinti's forbidden zone 
@@ -292,17 +285,11 @@ static void vinti_local(const double planet[4],
      r1 = a0*(1.0 - e0);
    }
 
-	 if (r1 < 210*phy_const::du_per_km)       // converted to du from km, kam
+	 if (r1 < 210.0*phy_const::du_per_km)       // converted to du from km, kam
    {
       return;
    }
 
-   /*
-    *  Change from SI (derived) units to astronomical units
-    */ 
-   t0 = vt0;
-   tf = vt1;
- 
    for(i = 0; i < 3; i++)
    {
       pin[i] = x0[i];
@@ -312,27 +299,25 @@ static void vinti_local(const double planet[4],
    /*   
     * Step 1. Initial coordinate transformation
     */   
-   delta = -xj3/(2*phy_const::j2);
-   csq   =  phy_const::j2*(1 - delta*delta/phy_const::j2);
+   csq   =  phy_const::j2;
    d0    =  sqrt( pin[0]*pin[0] + pin[1]*pin[1] ) ;
    alph0 =  atan2(pin[1], pin[0]);
 
    if(alph0 < 0)
    {
-      alph0 = TWOPI + alph0;
+      alph0 = utl_const::tpi + alph0;
    }
 
    r02     =  d0*d0 + pin[2]*pin[2];
-   zpdelta =  pin[2] + delta;
-   rhotemp =  r02 - csq + delta*(zpdelta + pin[2]);
+   zpdelta =  pin[2];
+   rhotemp =  r02 - csq;
    rho0    =  sqrt(rhotemp + sqrt(rhotemp*rhotemp + 4*csq*(zpdelta*zpdelta)))/sqrt(2.0);
    rho02   =  rho0*rho0;
    sigma0  =  zpdelta/rho0;
    rrd     =  pin[0]*vin[0] + pin[1]*vin[1] + pin[2]*vin[2];
-   delsig0 =  delta*sigma0;
    csqsig0 =  csq*sigma0;
    rcs     =  rho02 + csqsig0*sigma0;
-   v       = -(rho0 + delsig0)/rcs;
+   v       = -rho0/rcs;
    v0      =  sqrt( vin[0]*vin[0] + vin[1]*vin[1] + vin[2]*vin[2] );
 
    /*
@@ -341,8 +326,8 @@ static void vinti_local(const double planet[4],
    alph3   = pin[0]*vin[1] - pin[1]*vin[0];
    alph32  = alph3*alph3;
    alph1   = 0.5*v0*v0 + v;
-   sqrf    = rho0*rrd + (csqsig0 + delta*rho0)*vin[2];
-   sqrg    =-sigma0*rrd - (delsig0 - rho0)*vin[2];
+   sqrf    = rho0*rrd + csqsig0*vin[2];
+   sqrg    =-sigma0*rrd + rho0*vin[2];
    alph22  = 2*rho0 + 2*alph1*rho02 + (csq*alph32 - sqrf*sqrf)/(rho02 + csq);
    alph2   = sqrt(alph22);
    gamma0  = 2*alph1;
@@ -415,8 +400,8 @@ static void vinti_local(const double planet[4],
    {
       p0s1 = p0*s1;
       q1 = -csgam0/p0s1;
-      p1 = 2*delta/p0s1 - 2*q1*px;
-      px = delta/p0s1 - s0*p1/(2*s1);
+      p1 = 2.0*q1*px;
+      px = s0*p1/(2.0*s1);
       s1 = (pcsgam0 - s0*p0*q1)/((1 - 2*px*p1)*p0);
       dels1 = s1 - s1p;
       
@@ -438,7 +423,7 @@ static void vinti_local(const double planet[4],
  
    xinc = asin(q);
 
-   if( alph3*cos(xinc) < 0 )  xinc = PI - xinc;
+   if( alph3*cos(xinc) < 0 )  xinc = utl_const::pi - xinc;
 
    q2 = q*q;
    q4 = q2*q2;
@@ -577,15 +562,14 @@ static void vinti_local(const double planet[4],
 
    if(xmm2*alph3 < 0) xmm2 = -xmm2;
 
-   d2 = delta/(p0*(s1 - s0*q1));
-   d3 = q1 + 2*p1*d2;
+   d3 = q1;
    d4 = d1*alph3/(2.*alph2);
 
    d1md3 = 1 - d3;
    bmag  = b - a*g;
 
-   d10 = bmag/bmg*sqrt(d1md3/(d5*(1 - xm/b12)*(1 - 2*d2)));
-   d20 = bmag/bpg*sqrt(d1md3/(d5*(1 - xm/b22)*(1 + 2*d2)));
+   d10 = bmag/bmg*sqrt(d1md3/(d5*(1.0 - xm/b12)));
+   d20 = bmag/bpg*sqrt(d1md3/(d5*(1.0 - xm/b22)));
 
    dd2 = xm/2;
    dd3 = dd2*g;
@@ -712,7 +696,7 @@ static void vinti_local(const double planet[4],
          cacs =(rho0 - rho1)*gamma/ecc + 1;
          acs  = atan2(shat*smgam, cacs);
       
-         if(acs <  0) acs = TWOPI + acs;
+         if(acs <  0) acs = utl_const::tpi + acs;
 
          xhat = acs/smgam;
       }   
@@ -815,12 +799,12 @@ static void vinti_local(const double planet[4],
    cb1qs = cstar - b1q*sstar;
    psi1  = atan(xmm1*sstar/cb1qs);
 
-   if(cb1qs*cos(psi1) < 0.0) psi1 = PI + psi1;
+   if(cb1qs*cos(psi1) < 0.0) psi1 = utl_const::pi + psi1;
 
    cb2qs = cstar - b2q*sstar;
    psi2  = atan(xmm2*sstar/cb2qs);
 
-   if(cb2qs*cos(psi2) < 0.0) psi2 = PI + psi2;
+   if(cb2qs*cos(psi2) < 0.0) psi2 = utl_const::pi + psi2;
 
    r3 = cr31*w2 + cr32*w3 + cr33*w4 + cr34*w5 + cr35*w6;
 
@@ -951,12 +935,12 @@ static void vinti_local(const double planet[4],
    cb1qs = cstar - b1q*sstar;
    psi1  = atan(xmm1*sstar/cb1qs);
 
-   if(cb1qs*cos(psi1) < 0) psi1 = PI + psi1;
+   if(cb1qs*cos(psi1) < 0) psi1 = utl_const::pi + psi1;
 
    cb2qs = cstar - b2q*sstar;
    psi2  = atan(xmm2*sstar/cb2qs);
 
-   if(cb2qs*cos(psi2) < 0) psi2 = PI + psi2;
+   if(cb2qs*cos(psi2) < 0) psi2 = utl_const::pi + psi2;
 
    r3 = cr31*w2 + cr32*w3 + cr33*w4 + cr34*w5 + cr35*w6;
    en3 = d10*psi1 + d20*psi2 + cn31*u + cn32*t1 + cn33*t2 + cn34*t3 + cn35*t4 + cn36*t5;
@@ -965,7 +949,7 @@ static void vinti_local(const double planet[4],
    rhof   = rho1 + ecc*chat;
    sigmaf = (a + b*qsnu)/(1 + g*qsnu);
 
-   pf[2] = rhof*sigmaf - delta;
+   pf[2] = rhof*sigmaf;
 
    rhof2 = rhof*rhof;
    sigf2 = sigmaf*sigmaf;
