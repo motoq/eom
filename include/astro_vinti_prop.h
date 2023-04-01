@@ -128,7 +128,8 @@ private:
                                   phy_const::gm,
                                   phy_const::j2, 0.0};
   JulianDate jd0;
-  std::array<double, 6> x0;
+  std::array<double, 3> pin;
+  std::array<double, 3> vin;
 
   std::unique_ptr<KeplerProp> m_kep {nullptr};
 };

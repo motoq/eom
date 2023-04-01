@@ -84,14 +84,45 @@ VintiProp::VintiProp(const std::string& orbit_name,
   Eigen::Matrix<double, 6, 1> xteme = ecfeci->ecf2teme(jd0,
                                                        xecf.block<3,1>(0,0),
                                                        xecf.block<3,1>(3,0));
-  x0[0] = xteme(0);
-  x0[1] = xteme(1);
-  x0[2] = xteme(2);
-  x0[3] = xteme(3);
-  x0[4] = xteme(4);
-  x0[5] = xteme(5);
+  for (int ii=0; ii<3; ++ii) {
+    pin[ii] = xteme(ii);
+    vin[ii] = xteme(ii+3);
+  }
 
   m_kep = std::make_unique<KeplerProp>("", epoch, xeci, ecfeciSys);
+
+  /*
+   *  Check Vinti's forbidden zone 
+   */
+  std::array<double, 3> h0;
+  h0[0] = pin[1]*vin[2] - pin[2]*vin[1];
+  h0[1] = pin[2]*vin[0] - pin[0]*vin[2];
+  h0[2] = pin[0]*vin[1] - pin[1]*vin[0];
+  double h02 {h0[0]*h0[0] + h0[1]*h0[1] + h0[2]*h0[2]};
+
+  double r0mag {sqrt(pin[0]*pin[0] + pin[1]*pin[1] + pin[2]*pin[2])};
+  double v0mag {sqrt(vin[0]*vin[0] + vin[1]*vin[1] + vin[2]*vin[2])};
+
+  double alp0 {2.0/r0mag - v0mag*v0mag/phy_const::gm};
+
+  double r1 {};
+  if (fabs(alp0) < 1.0e-15) {
+    r1 = h02/(2.0*phy_const::gm);	               // Parabolic
+  } else {
+    double a0 {1.0/alp0};                        // Others
+    double e02 {1.0 - alp0*h02/phy_const::gm};
+    double e0 {};
+    if(e02 <= 0) {                               // For most machines
+      e0 = 0;                                    // this test is unnececessary
+    } else {
+      e0 = sqrt(e02);
+    }
+    r1 = a0*(1.0 - e0);
+  }
+
+  if (r1 < 210.0*phy_const::du_per_km) {
+      return;
+  }
 }
 
 
@@ -100,7 +131,6 @@ Eigen::Matrix<double, 6, 1> VintiProp::getStateVector(const JulianDate& jd,
 {
   std::array<double, 6> x1;
   vinti_local(jd, x1.data());
-  //vinti_local(planet.data(), 0.0, x0.data(), t1, x1.data(), oe.data());
 
   Eigen::Matrix<double, 6, 1> xteme;
   xteme(0) = x1[0];
@@ -133,13 +163,11 @@ Eigen::Matrix<double, 3, 1> VintiProp::getPosition(const JulianDate& jd,
 void VintiProp::vinti_local(const JulianDate& jd, double x1[6]) const
 {
    double tf {phy_const::tu_per_day*(jd - jd0)};
-
    double t0 {0.0};
-   double oe[6];
 
    int i, icf, icg, ick;   /* Loop indices */
 
-   double pin[3], vin[3], pf[3], vf[3];
+   double pf[3], vf[3];
    double xhat0;
    double r1, r2;
 
@@ -155,7 +183,6 @@ void VintiProp::vinti_local(const JulianDate& jd, double x1[6]) const
    double s1p, px, s1;
    double p0s1, q1, p1;
    double dels1;
-   double h0[3], h02, r0mag, v0mag, alp0, a0, e0;
 
    /* Step 4 variables */
    double gams3, s, pxs, q;   
@@ -223,60 +250,21 @@ void VintiProp::vinti_local(const JulianDate& jd, double x1[6]) const
    double rhoqd, drhofp, drhof, temp12, dsigf;
    double temp20, temp21, dd, dalphf;
 
-   if(fabs(tf - t0) < phy_const::epsdt)      /* 4/01/23 */  // kam
-   {                                         /* 8/20/97 */
-      for(i = 0; i < 6; i++) x1[i] = x0[i];  /* 8/20/97 */
-                                             /* 8/20/97 */
-      return;                                /* 8/20/97 */
-   }                                         /* 8/20/97 */
+   if(fabs(tf - t0) < phy_const::epsdt)
+   {
+      for (i = 0; i < 3; i++)
+      {
+         x1[i]   = pin[i];
+         x1[i+3] = vin[i];
+      }
+      return;
+   }
 
    /*
     * Compute the initial guess of the universal variable xhat at tf.
     */
    xhat0 = m_kep->getX(jd);
 
-   /*
-    *  Check Vinti's forbidden zone 
-    */
-   h0[0] = x0[1]*x0[5] - x0[2]*x0[4];
-   h0[1] = x0[2]*x0[3] - x0[0]*x0[5];
-   h0[2] = x0[0]*x0[4] - x0[1]*x0[3];
-   h02   = h0[0]*h0[0] + h0[1]*h0[1] + h0[2]*h0[2];
-
-   r0mag = sqrt(x0[0]*x0[0] + x0[1]*x0[1] + x0[2]*x0[2]);
-   v0mag = sqrt(x0[3]*x0[3] + x0[4]*x0[4] + x0[5]*x0[5]);
-
-   alp0  = 2.0/r0mag - v0mag*v0mag/phy_const::gm;
-
-   if (fabs(alp0) < 1.0e-15)
-   {
-     r1 = h02/(2.0*phy_const::gm);	  /* Parabolic */
-   }
-   else
-   {
-     a0 = 1.0/alp0;                   /* Others */
-     e02 = 1 - alp0*h02/phy_const::gm;
-
-     //if(e02 < 0) e0 = 0;   /* For most machines  this test is unnececessary */
-     //else        e0 = sqrt(1.0 - alp0*h02/gm);
-     
-     // Above est replaced 9/5/97
-     if(e02 <= 0) e0 = 0;    /* For most machines  this test is unnececessary */
-     else         e0 = sqrt(e02);
-
-     r1 = a0*(1.0 - e0);
-   }
-
-	 if (r1 < 210.0*phy_const::du_per_km)       // converted to du from km, kam
-   {
-      return;
-   }
-
-   for(i = 0; i < 3; i++)
-   {
-      pin[i] = x0[i];
-      vin[i] = x0[i+3];
-   }
 
    /*   
     * Step 1. Initial coordinate transformation
@@ -353,23 +341,20 @@ void VintiProp::vinti_local(const JulianDate& jd, double x1[6]) const
       a1p = a1;
    }
 
-   oe[0] = p;     // Vinti mean element (conic parameter)
-
    /*   
     * Check on some critical parameters in SI derived units
     */   
 
    e02 = 1 + 2*alph1*alph22;
 
-   /*	r1pr2_vinti = -2.d0/gamma	            // gamma=0 for parabola 
-    *	r1xr2_vinti = -p/gamma
-    *	rho1 = p/2.d0		 ! parabola
-    *	ax = -ae/gamma
-    * e0 = dsqrt(1.d0 + 2.d0*alph1*alph22)   // problem sometimes 
-    */
-
-   if (gamma < 0) smgam = sqrt(-gamma);
-	else           smgam = sqrt(gamma);
+   if (gamma < 0)
+   {
+     smgam = sqrt(-gamma);
+   }
+   else
+   {
+     smgam = sqrt(gamma);
+   }
 
    /*
     * Factorizing the G(sigma) quartic
@@ -398,10 +383,10 @@ void VintiProp::vinti_local(const JulianDate& jd, double x1[6]) const
    */
    gams3 = gamma*smgam;
    s = s0/s1;
-	pxs = px*px + s;     oe[2] = pxs;   // Vinti mean element ( sin^2 (I) )
+	 pxs = px*px + s;     // oe[2] = pxs;       Vinti mean element ( sin^2 (I) )
 
-	if (pxs < 0) q = 0;
-	else         q = sqrt(pxs);
+	 if (pxs < 0) q = 0;
+	 else         q = sqrt(pxs);
  
    xinc = asin(q);
 
@@ -425,7 +410,7 @@ void VintiProp::vinti_local(const JulianDate& jd, double x1[6]) const
    xk1 = xm*q2;
    d1  = sqrt((1 - g2*q2)/(s1*d5));
    ecc2 = 1 + p*gamma;
-   ecc  = sqrt(ecc2);      oe[1] = ecc;   // Vinti mean element (eccentricity)
+   ecc  = sqrt(ecc2);     // oe[1] = ecc;   Vinti mean element (eccentricity)
    rho1 = p/(1 + ecc);
 
   /*
@@ -799,9 +784,9 @@ void VintiProp::vinti_local(const JulianDate& jd, double x1[6]) const
    deltat  = tf - capt;			  
    comega  = alph0 + csq*r3 - en3;	   /* beta3 */
 
-   oe[3] = -capt;                   /* Vinti mean element  "beta1" */
-   oe[4] = somega;                  /* Vinti mean element  "beta2" */
-   oe[5] = comega;                  /* Vinti mean element  "beta3" */
+   //oe[3] = -capt;                   /* Vinti mean element  "beta1" */
+   //oe[4] = somega;                  /* Vinti mean element  "beta2" */
+   //oe[5] = comega;                  /* Vinti mean element  "beta3" */
 
    /*
     * Step 6. At tf, solve the kinematical equations for the oblate
