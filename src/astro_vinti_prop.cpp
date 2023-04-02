@@ -99,12 +99,9 @@ VintiProp::VintiProp(const std::string& orbit_name,
   h0[1] = pin[2]*vin[0] - pin[0]*vin[2];
   h0[2] = pin[0]*vin[1] - pin[1]*vin[0];
   double h02 {h0[0]*h0[0] + h0[1]*h0[1] + h0[2]*h0[2]};
-
   double r0mag {sqrt(pin[0]*pin[0] + pin[1]*pin[1] + pin[2]*pin[2])};
   double v0mag {sqrt(vin[0]*vin[0] + vin[1]*vin[1] + vin[2]*vin[2])};
-
   double alp0 {2.0/r0mag - v0mag*v0mag/phy_const::gm};
-
   double r1 {};
   if (fabs(alp0) < 1.0e-15) {
     r1 = h02/(2.0*phy_const::gm);	               // Parabolic
@@ -119,9 +116,9 @@ VintiProp::VintiProp(const std::string& orbit_name,
     }
     r1 = a0*(1.0 - e0);
   }
-
   if (r1 < 210.0*phy_const::du_per_km) {
-      return;
+    throw std::invalid_argument(
+        "VintiProp::VintiProp(): Failure of Vinti's forbidden zone");
   }
 }
 
@@ -130,7 +127,7 @@ Eigen::Matrix<double, 6, 1> VintiProp::getStateVector(const JulianDate& jd,
                                                       EphemFrame frame) const
 {
   std::array<double, 6> x1;
-  vinti_local(jd, x1.data());
+  vinti_local(jd, x1);
 
   Eigen::Matrix<double, 6, 1> xteme;
   xteme(0) = x1[0];
@@ -160,15 +157,14 @@ Eigen::Matrix<double, 3, 1> VintiProp::getPosition(const JulianDate& jd,
 }
 
 
-void VintiProp::vinti_local(const JulianDate& jd, double x1[6]) const
+void VintiProp::vinti_local(const JulianDate& jd,
+                            std::array<double, 6>& x1) const
 {
    double tf {phy_const::tu_per_day*(jd - jd0)};
    double t0 {0.0};
 
-   int i, icf, icg, ick;   /* Loop indices */
-
-   double pf[3], vf[3];
-   double xhat0;
+   std::array<double, 3> pf;
+   std::array<double, 3> vf;
    double r1, r2;
 
    /* Steps 1 - 3 variables */
@@ -252,7 +248,7 @@ void VintiProp::vinti_local(const JulianDate& jd, double x1[6]) const
 
    if(fabs(tf - t0) < phy_const::epsdt)
    {
-      for (i = 0; i < 3; i++)
+      for (int i = 0; i < 3; i++)
       {
          x1[i]   = pin[i];
          x1[i+3] = vin[i];
@@ -263,7 +259,7 @@ void VintiProp::vinti_local(const JulianDate& jd, double x1[6]) const
    /*
     * Compute the initial guess of the universal variable xhat at tf.
     */
-   xhat0 = m_kep->getX(jd);
+   double xhat0 {m_kep->getX(jd)};
 
 
    /*   
@@ -327,7 +323,7 @@ void VintiProp::vinti_local(const JulianDate& jd, double x1[6]) const
    b1 = csqs0p0/pcsgam0;
    a1 =(csq - b1)/pcsgam0;
    
-   for(icf = 1; icf <= 5; icf++)
+   for(int icf = 1; icf <= 5; icf++)
    {
       gam1  = 1 + gamma0*a1;
       pgam1 = pcsgam0 + b1*gamma0 - 4*a1*gam1;
@@ -363,7 +359,7 @@ void VintiProp::vinti_local(const JulianDate& jd, double x1[6]) const
    px = 0;
    s1 = 1;
 
-   for(icg = 1; icg <= 5; icg++)
+   for(int icg = 1; icg <= 5; icg++)
    {
       p0s1 = p0*s1;
       q1 = -csgam0/p0s1;
@@ -798,7 +794,7 @@ void VintiProp::vinti_local(const JulianDate& jd, double x1[6]) const
 	//xhat = xhat0;
 	xhat += xhat0;  // replaced 9/5/97
 
-   for(ick = 1; ick <= 10; ick++)
+   for(int ick = 1; ick <= 10; ick++)
    {      
       eca = smgam*xhat;
       
@@ -946,10 +942,8 @@ void VintiProp::vinti_local(const JulianDate& jd, double x1[6]) const
    vf[1] = dd*snalp + pf[0]*dalphf;
    vf[2] = sigmaf*drhof + rhof*dsigf;
 
-   /*
-    * Change from astronomical units to SI (derived) units
-    */
-   for(i = 0; i < 3; i++)
+     // Propagated state vector
+   for(int i = 0; i < 3; i++)
    {
       x1[i] = pf[i];
       x1[i+3] = vf[i];

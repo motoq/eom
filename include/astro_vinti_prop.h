@@ -120,7 +120,7 @@ public:
   Eigen::Matrix<double, 3, 1> getPosition(const JulianDate& jd,
                                           EphemFrame frame) const override;
 private:
-  void vinti_local(const JulianDate& jd, double x1[6]) const;
+  void vinti_local(const JulianDate& jd, std::array<double, 6>& x1) const;
 
   std::string name {""};
   std::shared_ptr<const EcfEciSys> ecfeci {nullptr};
