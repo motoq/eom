@@ -167,21 +167,7 @@ void VintiProp::vinti_local(const JulianDate& jd,
    std::array<double, 3> vf;
    double r1, r2;
 
-   /* Steps 1 - 3 variables */
-   double csq, d0, alph0 ;
-   double r02, zpdelta, rhotemp, rho0, rho02, sigma0, rrd, csqsig0, rcs, v, v0;    
-   double alph3, alph32, alph1, sqrf, sqrg, alph22, alph2;
-   double gamma0, csgam0, p0, s0, pcsgam0, csqs0p0;
-   double a1p, b1, a1;
-   double gam1, pgam1, gamma, p, dela1;
-   double e02;
-   double smgam;
-   double s1p, px, s1;
-   double p0s1, q1, p1;
-   double dels1;
-
-
-
+     // Return state at epoch for near zero propagation time
    if(fabs(tf - t0) < phy_const::epsdt)
    {
       for (int i = 0; i < 3; i++)
@@ -197,47 +183,48 @@ void VintiProp::vinti_local(const JulianDate& jd,
     */
    double xhat0 {m_kep->getX(jd)};
 
-
    /*   
     * Step 1. Initial coordinate transformation
     */   
-   csq   =  phy_const::j2;
-   d0    =  sqrt( pin[0]*pin[0] + pin[1]*pin[1] ) ;
-   alph0 =  atan2(pin[1], pin[0]);
+   double csq   =  phy_const::j2;
+   double d0    =  sqrt( pin[0]*pin[0] + pin[1]*pin[1] ) ;
+   double alph0 =  atan2(pin[1], pin[0]);
 
    if(alph0 < 0)
    {
       alph0 = utl_const::tpi + alph0;
    }
 
-   r02     =  d0*d0 + pin[2]*pin[2];
-   zpdelta =  pin[2];
-   rhotemp =  r02 - csq;
-   rho0    =  sqrt(rhotemp + sqrt(rhotemp*rhotemp + 4*csq*(zpdelta*zpdelta)))/sqrt(2.0);
-   rho02   =  rho0*rho0;
-   sigma0  =  zpdelta/rho0;
-   rrd     =  pin[0]*vin[0] + pin[1]*vin[1] + pin[2]*vin[2];
-   csqsig0 =  csq*sigma0;
-   rcs     =  rho02 + csqsig0*sigma0;
-   v       = -rho0/rcs;
-   v0      =  sqrt( vin[0]*vin[0] + vin[1]*vin[1] + vin[2]*vin[2] );
+   double r02     =  d0*d0 + pin[2]*pin[2];
+   double zpdelta =  pin[2];
+   double rhotemp =  r02 - csq;
+   double rho0    =  sqrt(rhotemp + sqrt(rhotemp*rhotemp +
+                     4.0*csq*(zpdelta*zpdelta)))/sqrt(2.0);
+   double rho02   =  rho0*rho0;
+   double sigma0  =  zpdelta/rho0;
+   double rrd     =  pin[0]*vin[0] + pin[1]*vin[1] + pin[2]*vin[2];
+   double csqsig0 =  csq*sigma0;
+   double rcs     =  rho02 + csqsig0*sigma0;
+   double v       = -rho0/rcs;
+   double v0      =  sqrt( vin[0]*vin[0] + vin[1]*vin[1] + vin[2]*vin[2] );
 
    /*
     * Step 2. The first three Jacobi constants, alph1, alph2, alph3
     */ 
-   alph3   = pin[0]*vin[1] - pin[1]*vin[0];
-   alph32  = alph3*alph3;
-   alph1   = 0.5*v0*v0 + v;
-   sqrf    = rho0*rrd + csqsig0*vin[2];
-   sqrg    =-sigma0*rrd + rho0*vin[2];
-   alph22  = 2*rho0 + 2*alph1*rho02 + (csq*alph32 - sqrf*sqrf)/(rho02 + csq);
-   alph2   = sqrt(alph22);
-   gamma0  = 2*alph1;
-   csgam0  = csq*gamma0;
-   p0      = alph22;
-   s0      = 1 - alph32/alph22;
-   pcsgam0 = p0 - csgam0;
-   csqs0p0 = csq*s0*p0;
+   double alph3   = pin[0]*vin[1] - pin[1]*vin[0];
+   double alph32  = alph3*alph3;
+   double alph1   = 0.5*v0*v0 + v;
+   double sqrf    = rho0*rrd + csqsig0*vin[2];
+   double sqrg    =-sigma0*rrd + rho0*vin[2];
+   double alph22  = 2*rho0 + 2*alph1*rho02 + (csq*alph32 - sqrf*sqrf)/
+                                                        (rho02 + csq);
+   double alph2   = sqrt(alph22);
+   double gamma0  = 2*alph1;
+   double csgam0  = csq*gamma0;
+   double p0      = alph22;
+   double s0      = 1 - alph32/alph22;
+   double pcsgam0 = p0 - csgam0;
+   double csqs0p0 = csq*s0*p0;
 
    /*
     *  Step 3. Factorizing the F and G quartics
@@ -255,10 +242,11 @@ void VintiProp::vinti_local(const JulianDate& jd,
     *
     *  Factorizing the F(rho) quartic
     */
-   a1p = 0;
-   b1 = csqs0p0/pcsgam0;
-   a1 =(csq - b1)/pcsgam0;
+   double a1p = 0.0;
+   double b1 = csqs0p0/pcsgam0;
+   double a1 =(csq - b1)/pcsgam0;
    
+   double gamma, gam1, pgam1, p;
    for(int icf = 1; icf <= 5; icf++)
    {
       gam1  = 1 + gamma0*a1;
@@ -267,7 +255,7 @@ void VintiProp::vinti_local(const JulianDate& jd,
       p     = pgam1/gam1;
       b1    = csqs0p0/pgam1;
       a1    =(csq - gam1*b1)/pgam1;
-      dela1 = a1 - a1p;
+      double dela1 = a1 - a1p;
       
       if(fabs(dela1) < 1.0e-15)  break;
       a1p = a1;
@@ -277,8 +265,9 @@ void VintiProp::vinti_local(const JulianDate& jd,
     * Check on some critical parameters in SI derived units
     */   
 
-   e02 = 1 + 2*alph1*alph22;
+   double e02 = 1 + 2*alph1*alph22;
 
+   double smgam {};
    if (gamma < 0)
    {
      smgam = sqrt(-gamma);
@@ -291,18 +280,19 @@ void VintiProp::vinti_local(const JulianDate& jd,
    /*
     * Factorizing the G(sigma) quartic
     */
-   s1p = 0;
-   px = 0;
-   s1 = 1;
+   double s1p = 0;
+   double px = 0;
+   double s1 = 1;
 
+   double  q1, p1;
    for(int icg = 1; icg <= 5; icg++)
    {
-      p0s1 = p0*s1;
+      double p0s1 = p0*s1;
       q1 = -csgam0/p0s1;
       p1 = 2.0*q1*px;
       px = s0*p1/(2.0*s1);
       s1 = (pcsgam0 - s0*p0*q1)/((1 - 2*px*p1)*p0);
-      dels1 = s1 - s1p;
+      double dels1 = s1 - s1p;
       
       if (fabs(dels1) < 1.0e-15)  break;
       s1p = s1;
@@ -313,43 +303,6 @@ void VintiProp::vinti_local(const JulianDate& jd,
    * First, determine the constants after the factorization, inclination, 
    * eccentricity,rho1, etc.
    */
-   double xinc;
-   double q2, q4, betad, beta, betasq, g, a, b; 
-   double g2, asq, bsq, ab, d5, xm, xk1, d1, ecc2, ecc, rho1;
-   double a1sq, b1sq;
-
-   double a2, a3, a4, a5, a6;
-   double e3, e4, e5, e6;
-   double psq;
-   double p3, p4, p5, p6;
-
-   double x21, x22;
-   double x33, x32, x31;
-   double x44, x43, x42, x41;
-   double x55, x54, x53, x52, x51;
-   double x66, x65, x64, x63, x62, x61;
-   double x77, x76, x75, x74, x73, x72, x71;
-   double gg1si, gg1psi;
-   double cr11, cr12, cr13, cr14, cr15, cr16, cr17;
-   double cr21, cr22, cr23, cr24, cr25, cr26, cr27;
-   double cr31, cr32, cr33, cr34, cr35;
-   double bmg, bpg, d1ma, d1pa, beta1, beta2, b12, b13, b22, b23, xmm1;
-   double xmm2;
-   double d3, d4;
-   double d1md3, bmag;
-   double d10, d20, dd2, dd3, dd4, dd5, dd6;
-   double c15, c14, c13, c12, c11, c10, c25, c24, c23, c22, c21, c20;
-   double b1q, b1q2, b1q4, b2q, b2q2, b2q4;
-   double xk12, xk13;
-   double sq, sq2, sq3, ucf1, ucf2, ucf3, denystt, denyst;
-   double d1a2, cn11, cn12, cn13, cn14, cn15, cn16, cn17;
-   double cn22, cn24, cn26;
-   double d41ma, d41pa;
-   double cn31, cn32, cn33, cn34, cn35, cn36;
-   double u, d5sq, ut_n, ut_d;
-   double csu, snu, snu2, snu4;
-   double t1, t2, t3, t4, t5, t6;
-   double xhat, shat, cacs, acs, chat, zz;  
 
    double gams3 = gamma*smgam;
    double s = s0/s1;
@@ -362,121 +315,124 @@ void VintiProp::vinti_local(const JulianDate& jd,
       q = sqrt(pxs);
    }
  
-   xinc = asin(q);
+   double xinc = asin(q);
 
-   if( alph3*cos(xinc) < 0 )  xinc = utl_const::pi - xinc;
+   if (alph3*cos(xinc) < 0 )
+   {
+      xinc = utl_const::pi - xinc;
+   }
 
-   q2 = q*q;
-   q4 = q2*q2;
-   betad = 1 + p1*px - q1*px*px - q1*q2;
-   beta  =(p1 - 2*q1*px)/betad;
-   betasq = beta*beta;
-   g = -beta/(1 + sqrt(1 - betasq*q2));
-   a =  px + g*q2;
-   b =  1 + g*px;
+   double q2 = q*q;
+   double q4 = q2*q2;
+   double betad = 1 + p1*px - q1*px*px - q1*q2;
+   double beta  =(p1 - 2*q1*px)/betad;
+   double betasq = beta*beta;
+   double g = -beta/(1 + sqrt(1 - betasq*q2));
+   double a =  px + g*q2;
+   double b =  1 + g*px;
 
-   g2  = g*g;
-   asq = a*a;
-   bsq = b*b;
-   ab  = a*b;
-   d5  = 1 + p1*a - q1*asq;
-   xm  = (q1*bsq - p1*b*g - g2)/d5;
-   xk1 = xm*q2;
-   d1  = sqrt((1 - g2*q2)/(s1*d5));
-   ecc2 = 1 + p*gamma;
-   ecc  = sqrt(ecc2);     // oe[1] = ecc;   Vinti mean element (eccentricity)
-   rho1 = p/(1 + ecc);
+   double g2  = g*g;
+   double asq = a*a;
+   double bsq = b*b;
+   double ab  = a*b;
+   double d5  = 1 + p1*a - q1*asq;
+   double xm  = (q1*bsq - p1*b*g - g2)/d5;
+   double xk1 = xm*q2;
+   double d1  = sqrt((1 - g2*q2)/(s1*d5));
+   double ecc2 = 1 + p*gamma;
+     // Vinti mean element (eccentricity)
+   double ecc  = sqrt(ecc2);     // oe[1] = ecc;
+   double rho1 = p/(1 + ecc);
 
   /*
    * Coefficients for the R - integrals
    * A0 = 1, A1 from factorization, A2 to A6
    */
-   a1sq = a1*a1;
-   b1sq = b1*b1;
+   double a1sq = a1*a1;
+   double b1sq = b1*b1;
 
-   a2 =(3*a1sq - b1)/2;
-   a3 =(2.5*a1sq*a1 - 1.50*a1*b1);
-   a4 = 0.375*(b1sq - 10*a1sq*b1);  
-   a5 = 1.875*a1*b1sq;
-   a6 = -0.3125*b1sq*b1;
+   double a2 =(3*a1sq - b1)/2;
+   double a3 =(2.5*a1sq*a1 - 1.50*a1*b1);
+   double a4 = 0.375*(b1sq - 10*a1sq*b1);
+   double a5 = 1.875*a1*b1sq;
+   double a6 = -0.3125*b1sq*b1;
 
   /*
    *  W1, W2 ... W6 for the R - integrals
    */
-   e3 = ecc2*ecc;
-   e4 = ecc2*ecc2;
-   e5 = e3*ecc2;
-   e6 = e3*e3;
+   double e3 = ecc2*ecc;
+   double e4 = ecc2*ecc2;
+   double e5 = e3*ecc2;
+   double e6 = e3*e3;
 
-   psq = p*p;
+   double psq = p*p;
 
-   p3 = psq*p;
-   p4 = psq*psq;
-   p5 = p3*psq;
-   p6 = p4*psq;
+   double p3 = psq*p;
+   double p4 = psq*psq;
+   double p5 = p3*psq;
+   double p6 = p4*psq;
 
-   x21 = 1/p;
-   x22 = ecc/p;
+   double x21 = 1/p;
+   double x22 = ecc/p;
 
-   x33 = 0.5*ecc2/psq;
-   x32 = 2*ecc/psq;
-   x31 = 1/psq + x33;
+   double x33 = 0.5*ecc2/psq;
+   double x32 = 2*ecc/psq;
+   double x31 = 1/psq + x33;
 
-   x44 = e3/(3*p3);
-   x43 = 1.5*ecc2/p3;
-   x42 = 3*ecc/p3 + 2*x44;
-   x41 = 1/p3 + x43;
+   double x44 = e3/(3*p3);
+   double x43 = 1.5*ecc2/p3;
+   double x42 = 3*ecc/p3 + 2*x44;
+   double x41 = 1/p3 + x43;
 
-   x55 = x33*x33;
-   x54 = 4*x44*x21;
-   x53 = 3*ecc2/p4 + 1.5*x55;
-   x52 = 4*ecc/p4 + 2*x54;
-   x51 = 1/p4 + x53;
+   double x55 = x33*x33;
+   double x54 = 4*x44*x21;
+   double x53 = 3*ecc2/p4 + 1.5*x55;
+   double x52 = 4*ecc/p4 + 2*x54;
+   double x51 = 1/p4 + x53;
 
-   x66 = 0.2*e5/p5;
-   x65 = 1.25*e4/p5;
-   x64 = 10*e3/(3*p5) + 4*x66/3;
-   x63 = 5*ecc2/p5 + 1.5*x65;
-   x62 = 5*ecc/p5 + 2*x64;
-   x61 = 1/p5 + x63;
+   double x66 = 0.2*e5/p5;
+   double x65 = 1.25*e4/p5;
+   double x64 = 10*e3/(3*p5) + 4*x66/3;
+   double x63 = 5*ecc2/p5 + 1.5*x65;
+   double x62 = 5*ecc/p5 + 2*x64;
+   double x61 = 1/p5 + x63;
 
-   x77 = e6/(6*p6);
-   x76 = 1.2*e5/p6;
-   x75 = 3.75*e4/p6 + 1.25*x77;
-   x74 = 20*e3/(3*p6) + x76/0.75;
-   x73 = 7.5*ecc2/p6 + 1.5*x75;
-   x72 = 6*ecc/p6 + 2*x74;
-   x71 = 1/p6 + x73;	         
+   double x77 = e6/(6*p6);
+   double x76 = 1.2*e5/p6;
+   double x75 = 3.75*e4/p6 + 1.25*x77;
+   double x74 = 20*e3/(3*p6) + x76/0.75;
+   double x73 = 7.5*ecc2/p6 + 1.5*x75;
+   double x72 = 6*ecc/p6 + 2*x74;
+   double x71 = 1/p6 + x73;
    /* Coefficients for the W's completed */
 
-
-   gg1si = 1.0/sqrt(gam1);	   /* gam1 > 0 always */
-   gg1psi = gg1si/sqrt(p);	   /* p > 0 always */
+   double gg1si = 1.0/sqrt(gam1);      /* gam1 > 0 always */
+   double gg1psi = gg1si/sqrt(p);      /* p > 0 always */
 
    /* R1 coefficients */
-   cr11 = (rho1 + a1)*gg1si;
-   cr12 = ecc*gg1si;
-   cr13 = a2*gg1psi;
-   cr14 = a3*gg1psi;
-   cr15 = a4*gg1psi;
-   cr16 = a5*gg1psi;
-   cr17 = a6*gg1psi;
+   double cr11 = (rho1 + a1)*gg1si;
+   double cr12 = ecc*gg1si;
+   double cr13 = a2*gg1psi;
+   double cr14 = a3*gg1psi;
+   double cr15 = a4*gg1psi;
+   double cr16 = a5*gg1psi;
+   double cr17 = a6*gg1psi;
 
    /* R2 coefficients */
-   cr21 = sqrt(p0/pgam1);
-   cr22 = a1*cr21;
-   cr23 = a2*cr21;
-   cr24 = a3*cr21;
-   cr25 = a4*cr21;
-   cr26 = a5*cr21;
-   cr27 = a6*cr21;
+   double cr21 = sqrt(p0/pgam1);
+   double cr22 = a1*cr21;
+   double cr23 = a2*cr21;
+   double cr24 = a3*cr21;
+   double cr25 = a4*cr21;
+   double cr26 = a5*cr21;
+   double cr27 = a6*cr21;
 
    /* R3 coefficients */
-   cr31 = alph3*gg1psi;
-   cr32 = a1*cr31;
-   cr33 = (a2 - csq)*cr31;
-   cr34 = (a3 - a1*csq)*cr31;
-   cr35 = a4*cr31 - csq*cr33;
+   double cr31 = alph3*gg1psi;
+   double cr32 = a1*cr31;
+   double cr33 = (a2 - csq)*cr31;
+   double cr34 = (a3 - a1*csq)*cr31;
+   double cr35 = a4*cr31 - csq*cr33;
    /* R coefficients completed */
 
 
@@ -485,113 +441,114 @@ void VintiProp::vinti_local(const JulianDate& jd,
    /*
     *  N3 coefficients
     */
-   bmg   = b - g;
-   bpg   = b + g;
-   d1ma  = 1 - a;
-   d1pa  = 1 + a;
-   beta1 = bmg/d1ma;
-   beta2 =-bpg/d1pa;
-   b12   = beta1*beta1;
-   b13   = b12*beta1;
-   b22   = beta2*beta2;
-   b23   = b22*beta2;
-   xmm1  = sqrt(1 - b12*q2);
+   double bmg   = b - g;
+   double bpg   = b + g;
+   double d1ma  = 1 - a;
+   double d1pa  = 1 + a;
+   double beta1 = bmg/d1ma;
+   double beta2 =-bpg/d1pa;
+   double b12   = beta1*beta1;
+   double b13   = b12*beta1;
+   double b22   = beta2*beta2;
+   double b23   = b22*beta2;
+   double xmm1  = sqrt(1 - b12*q2);
    
    if(xmm1*alph3 < 0) xmm1 = -xmm1;
 
-   xmm2 = sqrt(1 - b22*q2);
+   double xmm2 = sqrt(1 - b22*q2);
 
    if(xmm2*alph3 < 0) xmm2 = -xmm2;
 
-   d3 = q1;
-   d4 = d1*alph3/(2.*alph2);
+   double d3 = q1;
+   double d4 = d1*alph3/(2.*alph2);
 
-   d1md3 = 1 - d3;
-   bmag  = b - a*g;
+   double d1md3 = 1 - d3;
+   double bmag  = b - a*g;
 
-   d10 = bmag/bmg*sqrt(d1md3/(d5*(1.0 - xm/b12)));
-   d20 = bmag/bpg*sqrt(d1md3/(d5*(1.0 - xm/b22)));
+   double d10 = bmag/bmg*sqrt(d1md3/(d5*(1.0 - xm/b12)));
+   double d20 = bmag/bpg*sqrt(d1md3/(d5*(1.0 - xm/b22)));
 
-   dd2 = xm/2;
-   dd3 = dd2*g;
-   dd4 = 1.5*dd2*dd2;
-   dd5 = dd4*g;
-   dd6 = dd2*dd4/0.6;
+   double dd2 = xm/2;
+   double dd3 = dd2*g;
+   double dd4 = 1.5*dd2*dd2;
+   double dd5 = dd4*g;
+   double dd6 = dd2*dd4/0.6;
 
-   c15 = dd6/(b13*b13);
-   c14 = c15 + dd5/(b12*b13);
-   c13 = c14 + dd4/(b12*b12);
-   c12 = c13 + dd3/b13;
-   c11 = c12 + dd2/b12;
-   c10 = c11 + g/beta1;
+   double c15 = dd6/(b13*b13);
+   double c14 = c15 + dd5/(b12*b13);
+   double c13 = c14 + dd4/(b12*b12);
+   double c12 = c13 + dd3/b13;
+   double c11 = c12 + dd2/b12;
+   double c10 = c11 + g/beta1;
 
-   c25 = dd6/(b23*b23);
-   c24 = c25 + dd5/(b22*b23);
-   c23 = c24 + dd4/(b22*b22);
-   c22 = c23 + dd3/b23;
-   c21 = c22 + dd2/b22;
-   c20 = c21 + g/beta2;
+   double c25 = dd6/(b23*b23);
+   double c24 = c25 + dd5/(b22*b23);
+   double c23 = c24 + dd4/(b22*b22);
+   double c22 = c23 + dd3/b23;
+   double c21 = c22 + dd2/b22;
+   double c20 = c21 + g/beta2;
 
-   b1q  = beta1*q;
-   b1q2 = b1q*b1q;
-   b1q4 = b1q2*b1q2;
-   b2q  = beta2*q;
-   b2q2 = b2q*b2q;
-   b2q4 = b2q2*b2q2;     /* N3 coefficients completed */
+   double b1q  = beta1*q;
+   double b1q2 = b1q*b1q;
+   double b1q4 = b1q2*b1q2;
+   double b2q  = beta2*q;
+   double b2q2 = b2q*b2q;
+   double b2q4 = b2q2*b2q2;     /* N3 coefficients completed */
 
    /*
     *  N1 and N2 coefficients
     */
-   xk12 = xk1*xk1;
-   xk13 = xk12*xk1;
+   double xk12 = xk1*xk1;
+   double xk13 = xk12*xk1;
 
    /* Byrd and Friedman formula for elliptic integral */
-   sq  = xk1/16 + xk12/32 + 21*xk13/1024;
-   sq2 = sq*sq;
-   sq3 = sq2*sq;
+   double sq  = xk1/16 + xk12/32 + 21*xk13/1024;
+   double sq2 = sq*sq;
+   double sq3 = sq2*sq;
 
-   ucf1 = 2*sq/(1 + sq2);
-   ucf2 = sq2/(1 + sq2*sq2);
-   ucf3 = 2.0*sq3/(3.0*(1 + sq3*sq3));
+   double ucf1 = 2*sq/(1 + sq2);
+   double ucf2 = sq2/(1 + sq2*sq2);
+   double ucf3 = 2.0*sq3/(3.0*(1 + sq3*sq3));
 
-   denystt = 1 + sq + sq;
-   denyst  = denystt*denystt*d1;
+   double denystt = 1 + sq + sq;
+   double denyst  = denystt*denystt*d1;
 
    /* N1 coefficients */
-   d1a2 = d1/alph2;
-   cn11 = d1a2*asq;
-   cn12 = d1a2*2*ab*q;
-   cn13 = d1a2*(bsq - 4*ab*g)*q2;
-   cn14 = d1a2*(xm*ab - 2*bsq*g)*q2*q;
-   cn15 = d1a2*(3*bsq*g2 + xm*bsq/2)*q4;
-   cn16 =-d1a2*xm*bsq*g*q4*q;
-   cn17 = 0.375*d1a2*xm*xm*bsq*q4*q2;
+   double d1a2 = d1/alph2;
+   double cn11 = d1a2*asq;
+   double cn12 = d1a2*2*ab*q;
+   double cn13 = d1a2*(bsq - 4*ab*g)*q2;
+   double cn14 = d1a2*(xm*ab - 2*bsq*g)*q2*q;
+   double cn15 = d1a2*(3*bsq*g2 + xm*bsq/2)*q4;
+   double cn16 =-d1a2*xm*bsq*g*q4*q;
+   double cn17 = 0.375*d1a2*xm*xm*bsq*q4*q2;
 
    /* N2 coefficients */
-   cn22 = 0.5*xk1*d1;
-   cn24 = 0.375*xk12*d1;
-   cn26 = 0.3125*xk13*d1;
+   double cn22 = 0.5*xk1*d1;
+   double cn24 = 0.375*xk12*d1;
+   double cn26 = 0.3125*xk13*d1;
 
    /* N3 coefficients */
-   d41ma = d4/d1ma;
-   d41pa = d4/d1pa;
+   double d41ma = d4/d1ma;
+   double d41pa = d4/d1pa;
 
-   cn31 = -d41ma*c10 - d41pa*c20;
-   cn32 = -d41ma*c11*b1q - d41pa*c21*b2q;
-   cn33 = -d41ma*c12*b1q2 - d41pa*c22*b2q2;
-   cn34 = -d41ma*c13*b1q2*b1q - d41pa*c23*b2q2*b2q;
-   cn35 = -d41ma*c14*b1q4 - d41pa*c24*b2q4;
-   cn36 = -d41ma*c15*b1q4*b1q - d41pa*c25*b2q4*b2q;
+   double cn31 = -d41ma*c10 - d41pa*c20;
+   double cn32 = -d41ma*c11*b1q - d41pa*c21*b2q;
+   double cn33 = -d41ma*c12*b1q2 - d41pa*c22*b2q2;
+   double cn34 = -d41ma*c13*b1q2*b1q - d41pa*c23*b2q2*b2q;
+   double cn35 = -d41ma*c14*b1q4 - d41pa*c24*b2q4;
+   double cn36 = -d41ma*c15*b1q4*b1q - d41pa*c25*b2q4*b2q;
 
    /*
     * This is to avoid the singularity at zero inclination
     * u must be determined exactly
     */
+   double u, d5sq, ut_n, ut_d;
    if (q == 0.0)
    {
-	   u = 0;
+      u = 0;
    }
-	else
+   else
    {
       d5sq = sqrt( s1*p0*(1 + p1*sigma0 - q1*sigma0*sigma0) );
       ut_n = (sigma0 - a)*d5sq;
@@ -603,17 +560,17 @@ void VintiProp::vinti_local(const JulianDate& jd,
    /*
     * Calculate the Tk = tk, k = 0, T0 = t0 = u.  Here k = 1, ... ,6
     */
-   csu  = cos(u);
-   snu  = sin(u);
-   snu2 = snu*snu;
-   snu4 = snu2*snu2;
+   double csu  = cos(u);
+   double snu  = sin(u);
+   double snu2 = snu*snu;
+   double snu4 = snu2*snu2;
 
-   t1 = 1 - csu;
-   t2 = (u - csu*snu)/2;
-   t3 = (2*t1 - csu*snu2)/3;
-   t4 = (3*t2 - csu*snu2*snu)/4;
-   t5 = (4*t3 - csu*snu4)/5;
-   t6 = (5*t4 - csu*snu4*snu)/6;
+   double t1 = 1 - csu;
+   double t2 = (u - csu*snu)/2;
+   double t3 = (2*t1 - csu*snu2)/3;
+   double t4 = (3*t2 - csu*snu2*snu)/4;
+   double t5 = (4*t3 - csu*snu4)/5;
+   double t6 = (5*t4 - csu*snu4*snu)/6;
 
    /*
     * Compute xhat at the initial time which is used only once to get
@@ -621,6 +578,7 @@ void VintiProp::vinti_local(const JulianDate& jd,
     * Note that xhat should not be computed from the initial osculating
     * position and velocity vectors which are Kepler's solutions.
     */
+   double xhat, shat, cacs, acs, chat, zz;
    if (gamma < -1.0e-14)      /* Ellipse */
    {
       //if (fabs(ecc) < 1.0e-10 || fabs(sqrf) < 1.0e-10)
