@@ -1,5 +1,17 @@
+/*
+ *  Significantly restructured version of Kepler1() from the Vinti6.c
+ *  source.  Initialization has been localized in the constructor.
+ *  Support for non-canonical units has been dropped.
+ *
+ *  Original header file follows, although not completely applicable to
+ *  this implementation.  See the included Vinti6.c source for original
+ *  implementation.
+ *
+ *  C to C++ conversion:        Kurt A. Motekew, 2023
+ */
+
 /******************************************************************************
- *  Orbital and Celestial Mechanics		                                       *
+ *  Orbital and Celestial Mechanics		                                        *
  *  ------------------------------------------------------------------------  *
  *                                                                            *
  *  Kepler1()...Kepler Solution with Universal Variables.                     *

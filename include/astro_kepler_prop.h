@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Kurt Motekew
+ * Copyright 2023 Kurt Motekew
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,10 +24,15 @@
 namespace eom {
 
 /**
- * Experiement in progress...
- *
- * Driver class to the Gim J. Der & Herbert B. Reynolds Kepler 2-body
- * analytic propagator.  See the Vinti6.c source code.
+ * A C++ version of the the Gim J. Der & Herbert B. Reynolds Kepler 2-body
+ * analytic propagator.  See the Vinti6.c source code for the original.
+ * This version differs from astro_kepler.h/cpp in that the Kepler1 code
+ * from Vinti6.c has been separated into an initialization portion executed
+ * once in the constructor along with the Vinti6.c code being brought into
+ * the class definition.  A method was also added to return just the
+ * universal variable.  The goal with astro_kepler.cpp was to be a
+ * wrapper about the original implementation while no effort is made
+ * with this version to honor the original structure of the code.
  *
  * Vinti6.c and Vinti.h source:
  * Supplemental Material
@@ -40,13 +45,13 @@ namespace eom {
 class KeplerProp : public Ephemeris {
 public:
   ~KeplerProp() = default;
-  KeplerProp(const KeplerProp&) = default;             // copy constructor
-  KeplerProp& operator=(const KeplerProp&) = default;  // copy assignment
-  KeplerProp(KeplerProp&&) = default;                  // move constructor
-  KeplerProp& operator=(KeplerProp&&) = default;       // move assignment
+  KeplerProp(const KeplerProp&) = default;
+  KeplerProp& operator=(const KeplerProp&) = default;
+  KeplerProp(KeplerProp&&) = default;
+  KeplerProp& operator=(KeplerProp&&) = default;
 
   /**
-   * Initialize Keppler1
+   * Initialize for propagation calls.
    *
    * @param  orbit_name  Name (string identifieer) associated with orbit
    * @param  epoch       Orbit state vector epoch, UTC

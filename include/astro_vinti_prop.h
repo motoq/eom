@@ -25,8 +25,15 @@
 namespace eom {
 
 /*
- * Wrapper class to the Gim J. Der, Albert T. Monuki, & Herb Reynolds
- * VintiProp (VintiProp6) orbit propagator.  See the VintiProp6.c source code.
+ * A C++ version of the the Gim J. Der & Herbert B. Reynolds Vinti6
+ * analytic propagator.  See the Vinti6.c source code for the original.
+ * This version differs from astro_vinti.h/cpp in that the Vinti6 code
+ * from has been separated into an initialization portion executed once
+ * in the constructor along with the Vinti6.c code being brought into
+ * the class definition.  J3 effects were also removed.  The goal with
+ * astro_vinti.cpp was to be a wrapper about the original implementation
+ * while no effort is made with this version to honor the original
+ * structure of the code.
  *
  * Vinti6.c and Vinti.h source:
  * Supplemental Material
@@ -51,6 +58,9 @@ public:
    * @param  epoch           Orbit state vector epoch, UTC
    * @param  xeci            Cartesian GCRF state vector, DU and DU/TU
    * @param  ecfeciSys       ECF/ECI conversion resource
+   *
+   * @throws  std::invalid_argument if orbit definition falls within the
+   *          Vinti forbidden zone.
    */
   VintiProp(const std::string& orbit_name,
             const JulianDate& epoch,
