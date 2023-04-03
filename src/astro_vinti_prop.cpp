@@ -173,7 +173,6 @@ void VintiProp::vinti_local(const JulianDate& jd,
 
    std::array<double, 3> pf;
    std::array<double, 3> vf;
-   double r1, r2;
 
      // Return state at epoch for near zero propagation time
    if(fabs(tf - t0) < phy_const::epsdt)
@@ -712,9 +711,10 @@ void VintiProp::vinti_local(const JulianDate& jd,
       uhat = xhat*xhat*xhat/6.0;
    }
 
-   r1 = cr11*xhat + cr12*uhat + cr13*tra +
-        cr14*w1 + cr15*w2 + cr16*w3 + cr17*w4;
-   r2 = cr21*tra + cr22*w1 + cr23*w2 + cr24*w3 + cr25*w4 + cr26*w5 + cr27*w6;
+   double r1 = cr11*xhat + cr12*uhat + cr13*tra +
+               cr14*w1 + cr15*w2 + cr16*w3 + cr17*w4;
+   double r2 = cr21*tra +
+               cr22*w1 + cr23*w2 + cr24*w3 + cr25*w4 + cr26*w5 + cr27*w6;
 
    double sstar = sin(0.5*u);
    double cstar = cos(0.5*u);
@@ -744,12 +744,13 @@ void VintiProp::vinti_local(const JulianDate& jd,
    
    double somega  = en2 - r2;               /* beta2 */
    double capt    = t0 - r1 - csq*en1;      /* -beta1 */
-   double deltat  = tf - capt;			  
    double comega  = alph0 + csq*r3 - en3;   /* beta3 */
 
    //oe[3] = -capt;                   // Vinti mean element  "beta1"
    //oe[4] = somega;                  // Vinti mean element  "beta2"
    //oe[5] = comega;                  // Vinti mean element  "beta3"
+
+   double deltat  = tf - capt;			  
 
    /*
     * Step 6. At tf, solve the kinematical equations for the oblate
@@ -823,7 +824,8 @@ void VintiProp::vinti_local(const JulianDate& jd,
       
       r1 = cr11*xhat + cr12*uhat + cr13*tra +
            cr14*w1 + cr15*w2 + cr16*w3 + cr17*w4;
-      r2 = cr21*tra + cr22*w1 + cr23*w2 + cr24*w3 + cr25*w4 + cr26*w5 + cr27*w6;
+      r2 = cr21*tra +
+           cr22*w1 + cr23*w2 + cr24*w3 + cr25*w4 + cr26*w5 + cr27*w6;
       
       //if (iflag == 1) goto LABLE_60; 	// solution converged
       
