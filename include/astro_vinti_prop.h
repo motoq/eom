@@ -142,6 +142,13 @@ private:
   std::array<double, 3> vin;
 
   std::unique_ptr<KeplerProp> m_kep {nullptr};
+
+  double t0 {0.0};
+  //double xhat0 {};
+    // Initialization variables - constant after constructor
+    // Steps 1-3
+    // Step 4
+    // Step 5
 };
 
 

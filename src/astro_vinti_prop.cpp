@@ -169,10 +169,7 @@ void VintiProp::vinti_local(const JulianDate& jd,
                             std::array<double, 6>& x1) const
 {
    double tf {phy_const::tu_per_day*(jd - jd0)};
-   double t0 {0.0};
 
-   std::array<double, 3> pf;
-   std::array<double, 3> vf;
 
      // Return state at epoch for near zero propagation time
    if(fabs(tf - t0) < phy_const::epsdt)
@@ -587,12 +584,12 @@ void VintiProp::vinti_local(const JulianDate& jd,
    double t6 = (5.0*t4 - csu*snu4*snu)/6.0;
 
    /*
-    * Compute xhat at the initial time which is used only once to get
+    * Compute xhat0 at the initial time which is used only once to get
     * the Jacobi's constants (beta1= - capt, beta2=somega, beta3=comega)
-    * Note that xhat should not be computed from the initial osculating
+    * Note that xhat0 should not be computed from the initial osculating
     * position and velocity vectors which are Kepler's solutions.
     */
-   double xhat, shat, cacs, acs, chat, zz;
+   double xhat0, shat, cacs, acs, chat, zz;
    if (gamma < -1.0e-14)      /* Ellipse */
    {
       //if (fabs(ecc) < 1.0e-10 || fabs(sqrf) < 1.0e-10)
@@ -600,7 +597,7 @@ void VintiProp::vinti_local(const JulianDate& jd,
       if (fabs(ecc) < 1.0e-10 ||
           fabs(sqrf) < 1.0e-10 || fabs(rho0 -rho1) < 1e-5 )
       {
-         xhat = 0.0;
+         xhat0 = 0.0;
       }
       else
       {
@@ -615,29 +612,29 @@ void VintiProp::vinti_local(const JulianDate& jd,
             acs = utl_const::tpi + acs;
          }
 
-         xhat = acs/smgam;
+         xhat0 = acs/smgam;
       }
    }
    else if (gamma > 1.0e-14)                /* Hyperbola */
    {
       if (fabs(ecc) < 1.0e-10 || fabs(sqrf) < 1.0e-10)
       {   
-          xhat = 0.0;
+          xhat0 = 0.0;
       }
       else
       {
          chat = (rho0 - rho1)/ecc;          /* chat > 0, always */
          zz = gamma*chat + 1.0;
-         xhat = (log( zz + sqrt(zz*zz - 1.0)))/sqrt(gamma);
+         xhat0 = (log( zz + sqrt(zz*zz - 1.0)))/sqrt(gamma);
          if (sqrf < 0.0)
          {
-            xhat = -xhat;
+            xhat0 = -xhat0;
          }
       }
    }
    else                                     /* parabola */
    {
-	    xhat = rrd;                           /* r*rdot */
+      xhat0 = rrd;                          /* r*rdot */
    }
 
    /* .............. End initialization ...................*/
@@ -646,10 +643,10 @@ void VintiProp::vinti_local(const JulianDate& jd,
    /*
     * Step 5. The last three Jacobi constants, -capt, somega, comega
     *
-    * Determine the true anomaly, tra, from xhat of ti
+    * Determine the true anomaly, tra, from xhat0 of ti
     */
    double sneca, cneca, s1mes, temp3, tra;
-   double eca = smgam*xhat;
+   double eca = smgam*xhat0;
    if (gamma < -1.0e-14)                    /* Ellipse */
    {
       sneca = sin(eca);
@@ -669,7 +666,7 @@ void VintiProp::vinti_local(const JulianDate& jd,
    }
    else                                     /* Parabola */
    {
-      tra = 2.0*atan( xhat/sqrt(p) );
+      tra = 2.0*atan(xhat0/sqrt(p));
    }
 
    double snw = sin(tra);
@@ -707,11 +704,11 @@ void VintiProp::vinti_local(const JulianDate& jd,
    }
    else                                     /*  Parabola */
    {
-      chat = xhat*xhat/2.0;
-      uhat = xhat*xhat*xhat/6.0;
+      chat = xhat0*xhat0/2.0;
+      uhat = xhat0*xhat0*xhat0/6.0;
    }
 
-   double r1 = cr11*xhat + cr12*uhat + cr13*tra +
+   double r1 = cr11*xhat0 + cr12*uhat + cr13*tra +
                cr14*w1 + cr15*w2 + cr16*w3 + cr17*w4;
    double r2 = cr21*tra +
                cr22*w1 + cr23*w2 + cr24*w3 + cr25*w4 + cr26*w5 + cr27*w6;
@@ -750,8 +747,6 @@ void VintiProp::vinti_local(const JulianDate& jd,
    //oe[4] = somega;                  // Vinti mean element  "beta2"
    //oe[5] = comega;                  // Vinti mean element  "beta3"
 
-   double deltat  = tf - capt;			  
-
    /*
     * Step 6. At tf, solve the kinematical equations for the oblate
     * spheroidal coordinates (rho, sigma, phi)
@@ -759,10 +754,10 @@ void VintiProp::vinti_local(const JulianDate& jd,
     * The generalized Kepler equation is solved by iteration
     * initial guess of xhat is that of the Kepler's solution at tf 
     */
-   double xhat0 {m_kep->getX(jd)};               // universal variable xhat
-   //xhat = xhat0;
-   xhat += xhat0;  // replaced 9/5/97
+     // universal variable xhat
+   double xhat = xhat0 + m_kep->getX(jd);
 
+   double deltat  = tf - capt;
    for(int ick = 1; ick <= 10; ick++)
    {      
       eca = smgam*xhat;
@@ -894,6 +889,9 @@ void VintiProp::vinti_local(const JulianDate& jd,
    double rhof   = rho1 + ecc*chat;
    double sigmaf = (a + b*qsnu)/(1 + g*qsnu);
 
+     // Final position and velocity
+   std::array<double, 3> pf;
+   std::array<double, 3> vf;
    pf[2] = rhof*sigmaf;
 
    double rhof2 = rhof*rhof;
