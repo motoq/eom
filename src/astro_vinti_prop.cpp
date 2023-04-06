@@ -72,6 +72,10 @@
 #include <astro_ephemeris.h>
 #include <astro_ecfeci_sys.h>
 
+namespace {
+  constexpr double csq {phy_const::j2};
+}
+
 namespace eom {
 
 
@@ -130,7 +134,6 @@ VintiProp::VintiProp(const std::string& orbit_name,
    /*   
     * Step 1. Initial coordinate transformation
     */   
-   csq   =  phy_const::j2;
    double d0    =  sqrt( pin[0]*pin[0] + pin[1]*pin[1] ) ;
    double alph0 =  atan2(pin[1], pin[0]);
 

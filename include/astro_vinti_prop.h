@@ -159,7 +159,6 @@ private:
     // Initialization variables - constant after constructor
   double xhat0 {0.0};
     // Steps 1-3
-  double csq {};
   double alph3 {};
   double alph2 {};
   double b1 {};
