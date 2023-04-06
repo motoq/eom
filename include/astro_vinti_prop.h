@@ -129,6 +129,15 @@ public:
    */
   Eigen::Matrix<double, 3, 1> getPosition(const JulianDate& jd,
                                           EphemFrame frame) const override;
+
+  /**
+   * @return  Vinti mean elements at orbit epoch
+   */
+  std::array<double, 6> getVintiMean() const
+  {
+    return oe0;
+  }
+  
 private:
   void vinti_local(const JulianDate& jd, std::array<double, 6>& x1) const;
 
@@ -143,12 +152,118 @@ private:
 
   std::unique_ptr<KeplerProp> m_kep {nullptr};
 
+    // t0 at jd0
   double t0 {0.0};
-  //double xhat0 {};
+    // Vinti mean elements at epoch
+  std::array<double, 6> oe0;
     // Initialization variables - constant after constructor
+  double xhat0 {0.0};
     // Steps 1-3
+  double csq {};
+  double alph3 {};
+  double alph2 {};
+  double b1 {};
+  double a1 {};
+  double gamma {};
+  double gam1 {};
+  double p {};
+  double smgam {};
+  double s1 {};
+  double q1 {};
+  double p1 {};
     // Step 4
+  double gams3 {};
+  //double s {};
+  double q {0.0};
+  double q2 {};
+  double g {};
+  double a {};
+  double b {};
+  double g2 {};
+  double ecc2 {};
+  double ecc {};                            // Vinti mean oe
+  double rho1 {};
+    // Wi for the R - integrals
+  double x21 {};
+  double x22 {};
+  double x33 {};
+  double x32 {};
+  double x31 {};
+  double x44 {};
+  double x43 {};
+  double x42 {};
+  double x41 {};
+  double x55 {};
+  double x54 {};
+  double x53 {};
+  double x52 {};
+  double x51 {};
+  double x66 {};
+  double x65 {};
+  double x64 {};
+  double x63 {};
+  double x62 {};
+  double x61 {};
+  double x77 {};
+  double x76 {};
+  double x75 {};
+  double x74 {};
+  double x73 {};
+  double x72 {};
+  double x71 {};
+    // R1 Coefficients
+  double cr11 {};
+  double cr12 {};
+  double cr13 {};
+  double cr14 {};
+  double cr15 {};
+  double cr16 {};
+  double cr17 {};
+    // R2 Coefficients
+  double cr21 {};
+  double cr22 {};
+  double cr23 {};
+  double cr24 {};
+  double cr25 {};
+  double cr26 {};
+  double cr27 {};
+    // R3 Coefficients
+  double cr31 {};
+  double cr32 {};
+  double cr33 {};
+  double cr34 {};
+  double cr35 {};
+    // N3 Coefficients
+  double xmm1 {};
+  double xmm2 {};
+  double d10 {};
+  double d20 {};
+  double b1q {};
+  double b2q {};
+    //
+  double ucf1 {};
+  double ucf2 {};
+  double ucf3 {};
+  double denyst {};
+    // N1 Coefficients
+  double cn11 {};
+  double cn12 {};
+  double cn13 {};
+  double cn14 {};
+  double cn15 {};
+  double cn16 {};
+  double cn17 {};
+    // N2 Coefficients
+  double cn31 {};
+  double cn32 {};
+  double cn33 {};
+  double cn34 {};
+  double cn35 {};
+  double cn36 {};
     // Step 5
+  double somega {};
+  double capt {};
+  double comega {};
 };
 
 
