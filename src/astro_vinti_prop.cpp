@@ -496,16 +496,16 @@ VintiProp::VintiProp(const std::string& orbit_name,
     * This is to avoid the singularity at zero inclination
     * u must be determined exactly
     */
-   double u, d5sq, ut_n, ut_d;
+   double u {};
    if (q == 0.0)
    {
       u = 0.0;
    }
    else
    {
-      d5sq = sqrt( s1*p0*(1.0 + p1*sigma0 - q1*sigma0*sigma0) );
-      ut_n = (sigma0 - a)*d5sq;
-      ut_d = sqrg*sqrt(1.0 - g2*q2);
+      double d5sq = sqrt( s1*p0*(1.0 + p1*sigma0 - q1*sigma0*sigma0) );
+      double ut_n = (sigma0 - a)*d5sq;
+      double ut_d = sqrg*sqrt(1.0 - g2*q2);
 
       u = atan2(ut_n, ut_d);
    }

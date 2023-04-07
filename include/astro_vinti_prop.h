@@ -133,7 +133,7 @@ public:
   /**
    * @return  Vinti mean elements at orbit epoch
    */
-  std::array<double, 6> getVintiMean() const
+  std::array<double, 6> getMeanElements() const
   {
     return oe0;
   }

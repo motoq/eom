@@ -11,9 +11,9 @@ LeapSeconds 37;
 EcfEciRate Minutes 240;
 DistanceUnits  Kilometers;
 Orbit  gp_orbit1    VintiJ2   GD 2021 11 12 17 00 00.0
-       KEP_T  GCRF  6900.0  0.01  163.4  45.0  225.0  45.0;
-Orbit  gp_orbit2    Vinti6Mod GD 2021 11 12 17 00 00.0
-       KEP_T  GCRF  6900.0  0.01  163.4  45.0  225.0  45.0;
+       KEP_T  GCRF  6900.0  0.001  50.0  45.0  225.0  0.0;
+Orbit  gp_orbit2    VintiMod  GD 2021 11 12 17 00 00.0
+       KEP_T  GCRF  6900.0  0.001  50.0  45.0  225.0  0.0;
 OutputRate Minutes 5;
 Command PrintRange gp_orbit1 gp_orbit2 gp_orbit_drift;
 end;
