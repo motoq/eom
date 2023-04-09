@@ -69,35 +69,28 @@ JulianDate Rk4::step()
   Eigen::Matrix<double, 6, 1> xd;
   Eigen::Matrix<double, 6, 1> xx;
   Eigen::Matrix<double, 6, 1> xa;
+  Eigen::Matrix<double, 6, 1> q;
 
     // first
   auto jdNow = m_jd;
   xd = m_deq->getXdot(jdNow, x0);
-  for (int ii=0; ii<6; ++ii) {
-    xa(ii) = dt*xd(ii);
-    xx(ii) = 0.5*xa(ii) + x0(ii);
-  }
+  xa = dt*xd;
+  xx = 0.5*xa + x0;
     // second
   jdNow += 0.5*dt_days;
   xd = m_deq->getXdot(jdNow, xx);
-  for (int ii=0; ii<6; ++ii) {
-    auto q = dt*xd(ii);
-    xx(ii) =  x0(ii) + 0.5*q;
-    xa(ii) += q + q;
-  }
+  q = dt*xd;
+  xx = x0 + 0.5*q;
+  xa += q + q;
     // third
   xd = m_deq->getXdot(jdNow, xx);
-  for (int ii=0; ii<6; ++ii) {
-    auto q = dt*xd(ii);
-    xx(ii) = x0(ii) + q;
-    xa(ii) += q + q;
-  }
+  q = dt*xd;
+  xx = x0 + q;
+  xa += q + q;
     // forth - update member variables vs. locals
   m_jd += dt_days;
   m_dx = m_deq->getXdot(m_jd, xx);
-  for (int ii=0; ii<6; ++ii) {
-    m_x(ii) = x0(ii) + (xa(ii) + dt*m_dx(ii))/6.0;
-  }
+  m_x = x0 + (xa + dt*m_dx)/6.0;
 
   return m_jd;
 }
