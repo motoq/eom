@@ -103,4 +103,10 @@ JulianDate Rk4::step()
 }
 
 
+std::unique_ptr<Ode<JulianDate, double, 6>> Rk4::returnDeq()
+{
+  return std::move(m_deq);
+}
+
+
 }

@@ -1,15 +1,16 @@
 /*
- * Copyright 2022 Kurt Motekew
+ * Copyright 2023 Kurt Motekew
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef ASTRO_RK4_H
-#define ASTRO_RK4_H
+#ifndef ASTRO_ADAMS_4TH_H
+#define ASTRO_ADAMS_4TH_H
 
 #include <memory>
+#include <array>
 
 #include <Eigen/Dense>
 
@@ -22,18 +23,19 @@
 namespace eom {
 
 /**
- * Propagates astrodynamics equations of motion using an RK4 integrator.
+ * Propagates astrodynamics equations of motion using an Adams-Bashforth
+ * predictor with Adams-Moulton corrector, primed via RK4.
  *
  * @author  Kurt Motekew
- * @date    2022/09/11
+ * @date    2023/04/07
  */
-class Rk4 : public OdeSolver<JulianDate, double, 6> {
+class Adams4th : public OdeSolver<JulianDate, double, 6> {
 public:
-  ~Rk4() = default;
-  Rk4(const Rk4&) = delete;
-  Rk4& operator=(const Rk4&) = delete;
-  Rk4(Rk4&&) = default;
-  Rk4& operator=(Rk4&&) = default;
+  ~Adams4th() = default;
+  Adams4th(const Adams4th&) = delete;
+  Adams4th& operator=(const Adams4th&) = delete;
+  Adams4th(Adams4th&&) = default;
+  Adams4th& operator=(Adams4th&&) = default;
 
   /**
    * Initialize with equations of motion, fixed step size,
@@ -44,10 +46,10 @@ public:
    * @param  jd   State vector epoch
    * @param  x    Initial conditions - state vector at epoch
    */
-  Rk4(std::unique_ptr<Ode<JulianDate, double, 6>> deq,
-      const Duration& dt,
-      const JulianDate& jd,
-      const Eigen::Matrix<double, 6, 1>& x);
+  Adams4th(std::unique_ptr<Ode<JulianDate, double, 6>> deq,
+           const Duration& dt,
+           const JulianDate& jd,
+           const Eigen::Matrix<double, 6, 1>& x);
 
   /**
    * Time associated with current state vector and derivative
@@ -71,20 +73,16 @@ public:
    */
   JulianDate step() override;
 
- /**
-   * Return ownership of eom system - intended use is for integrators
-   * that are not self starting.
-   *
-   * @return   Equations of motion
-   */
-  std::unique_ptr<Ode<JulianDate, double, 6>> returnDeq();
-
 private:
   std::unique_ptr<Ode<JulianDate, double, 6>> m_deq {nullptr};
   Duration m_dt;
   JulianDate m_jd;
   Eigen::Matrix<double, 6, 1> m_x;
   Eigen::Matrix<double, 6, 1> m_dx;
+    // Starting values
+  std::array<JulianDate, 4> m_jdW;
+  std::array<Eigen::Matrix<double, 6, 1>, 4> m_w;
+  std::array<Eigen::Matrix<double, 6, 1>, 4> m_dw;
 };
 
 

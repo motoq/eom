@@ -20,6 +20,7 @@
 #include <astro_deq.h>
 #include <mth_ode_solver.h>
 #include <astro_rk4.h>
+#include <astro_adams_4th.h>
 #include <astro_gravity.h>
 #include <astro_gravity_jn.h>
 #include <astro_gravity_std.h>
@@ -113,6 +114,11 @@ build_orbit(const OrbitDef& orbitParams,
                                  pCfg.getStepSize(),
                                  orbitParams.getEpoch(),
                                  xeciVec);
+    } else if (pCfg.getPropagator() == Propagator::adams4) {
+      sp = std::make_unique<Adams4th>(std::move(deq),
+                                      pCfg.getStepSize(),
+                                      orbitParams.getEpoch(),
+                                      xeciVec);
 #ifdef GENPL
     } else if (pCfg.getPropagator() == Propagator::gj) {
       sp = std::make_unique<GaussJackson>(std::move(deq),

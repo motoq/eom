@@ -38,7 +38,8 @@ enum class Propagator {
   gj,
   gjs,
 #endif
-  rk4                             ///< Simple zonal-only gravity model
+  rk4,                            ///< Simple zonal-only gravity model
+  adams4                          ///< Adams-Bashforth-Moulton
 };
 
 /**
