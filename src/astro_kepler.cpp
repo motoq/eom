@@ -33,12 +33,12 @@ Kepler::Kepler(const std::string& orbit_name,
   name = orbit_name;
   jd0 = epoch;
   ecfeci = ecfeciSys;
-  x0[0] = phy_const::km_per_du*xeci(0,0);
-  x0[1] = phy_const::km_per_du*xeci(1,0);
-  x0[2] = phy_const::km_per_du*xeci(2,0);
-  x0[3] = phy_const::km_per_du*xeci(3,0)*phy_const::tu_per_sec;
-  x0[4] = phy_const::km_per_du*xeci(4,0)*phy_const::tu_per_sec;
-  x0[5] = phy_const::km_per_du*xeci(5,0)*phy_const::tu_per_sec;
+  x0[0] = phy_const::km_per_du*xeci(0);
+  x0[1] = phy_const::km_per_du*xeci(1);
+  x0[2] = phy_const::km_per_du*xeci(2);
+  x0[3] = phy_const::km_per_du*xeci(3)*phy_const::tu_per_sec;
+  x0[4] = phy_const::km_per_du*xeci(4)*phy_const::tu_per_sec;
+  x0[5] = phy_const::km_per_du*xeci(5)*phy_const::tu_per_sec;
 }
 
 
@@ -51,12 +51,12 @@ Eigen::Matrix<double, 6, 1> Kepler::getStateVector(const JulianDate& jd,
   Kepler1(planet.data(), 0.0, x0.data(), t1, x1.data(), &x);
 
   Eigen::Matrix<double, 6, 1> xeci;
-  xeci(0,0) = phy_const::du_per_km*x1[0];
-  xeci(1,0) = phy_const::du_per_km*x1[1];
-  xeci(2,0) = phy_const::du_per_km*x1[2];
-  xeci(3,0) = phy_const::du_per_km*x1[3]*phy_const::sec_per_tu;
-  xeci(4,0) = phy_const::du_per_km*x1[4]*phy_const::sec_per_tu;
-  xeci(5,0) = phy_const::du_per_km*x1[5]*phy_const::sec_per_tu;
+  xeci(0) = phy_const::du_per_km*x1[0];
+  xeci(1) = phy_const::du_per_km*x1[1];
+  xeci(2) = phy_const::du_per_km*x1[2];
+  xeci(3) = phy_const::du_per_km*x1[3]*phy_const::sec_per_tu;
+  xeci(4) = phy_const::du_per_km*x1[4]*phy_const::sec_per_tu;
+  xeci(5) = phy_const::du_per_km*x1[5]*phy_const::sec_per_tu;
 
   if (frame == EphemFrame::ecf) {
     return ecfeci->eci2ecf(jd, xeci.block<3,1>(0,0), xeci.block<3,1>(3,0));
@@ -74,9 +74,9 @@ Eigen::Matrix<double, 3, 1> Kepler::getPosition(const JulianDate& jd,
   Kepler1(planet.data(), 0.0, x0.data(), t1, x1.data(), &x);
 
   Eigen::Matrix<double, 3, 1> xeci;
-  xeci(0,0) = phy_const::du_per_km*x1[0];
-  xeci(1,0) = phy_const::du_per_km*x1[1];
-  xeci(2,0) = phy_const::du_per_km*x1[2];
+  xeci(0) = phy_const::du_per_km*x1[0];
+  xeci(1) = phy_const::du_per_km*x1[1];
+  xeci(2) = phy_const::du_per_km*x1[2];
 
   if (frame == EphemFrame::ecf) {
     return ecfeci->eci2ecf(jd, xeci);

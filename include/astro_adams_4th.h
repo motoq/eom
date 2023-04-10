@@ -23,8 +23,8 @@
 namespace eom {
 
 /**
- * Propagates astrodynamics equations of motion using an Adams-Bashforth
- * predictor with Adams-Moulton corrector, primed via RK4.
+ * Propagates astrodynamics equations of motion using a fixed step-size
+ * Adams-Bashforth predictor with Adams-Moulton corrector, primed via RK4.
  *
  * @author  Kurt Motekew
  * @date    2023/04/07
@@ -74,15 +74,17 @@ public:
   JulianDate step() override;
 
 private:
+  static constexpr int order {4};
   std::unique_ptr<Ode<JulianDate, double, 6>> m_deq {nullptr};
   Duration m_dt;
   JulianDate m_jd;
   Eigen::Matrix<double, 6, 1> m_x;
   Eigen::Matrix<double, 6, 1> m_dx;
     // Starting values
-  std::array<JulianDate, 4> m_jdW;
-  std::array<Eigen::Matrix<double, 6, 1>, 4> m_w;
-  std::array<Eigen::Matrix<double, 6, 1>, 4> m_dw;
+  int istep {};
+  std::array<JulianDate, order> m_jdW;
+  std::array<Eigen::Matrix<double, 6, 1>, order> m_w;
+  std::array<Eigen::Matrix<double, 6, 1>, order> m_dw;
 };
 
 

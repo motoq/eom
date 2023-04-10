@@ -44,12 +44,12 @@ Vinti::Vinti(const std::string& orbit_name,
   Eigen::Matrix<double, 6, 1> xteme = ecfeci->ecf2teme(jd0,
                                                        xecf.block<3,1>(0,0),
                                                        xecf.block<3,1>(3,0));
-  x0[0] = phy_const::km_per_du*xteme(0,0);
-  x0[1] = phy_const::km_per_du*xteme(1,0);
-  x0[2] = phy_const::km_per_du*xteme(2,0);
-  x0[3] = phy_const::km_per_du*xteme(3,0)*phy_const::tu_per_sec;
-  x0[4] = phy_const::km_per_du*xteme(4,0)*phy_const::tu_per_sec;
-  x0[5] = phy_const::km_per_du*xteme(5,0)*phy_const::tu_per_sec;
+  x0[0] = phy_const::km_per_du*xteme(0);
+  x0[1] = phy_const::km_per_du*xteme(1);
+  x0[2] = phy_const::km_per_du*xteme(2);
+  x0[3] = phy_const::km_per_du*xteme(3)*phy_const::tu_per_sec;
+  x0[4] = phy_const::km_per_du*xteme(4)*phy_const::tu_per_sec;
+  x0[5] = phy_const::km_per_du*xteme(5)*phy_const::tu_per_sec;
 }
 
 
@@ -62,12 +62,12 @@ Eigen::Matrix<double, 6, 1> Vinti::getStateVector(const JulianDate& jd,
   Vinti6(planet.data(), 0.0, x0.data(), t1, x1.data(), oe.data());
 
   Eigen::Matrix<double, 6, 1> xteme;
-  xteme(0,0) = phy_const::du_per_km*x1[0];
-  xteme(1,0) = phy_const::du_per_km*x1[1];
-  xteme(2,0) = phy_const::du_per_km*x1[2];
-  xteme(3,0) = phy_const::du_per_km*x1[3]*phy_const::sec_per_tu;
-  xteme(4,0) = phy_const::du_per_km*x1[4]*phy_const::sec_per_tu;
-  xteme(5,0) = phy_const::du_per_km*x1[5]*phy_const::sec_per_tu;
+  xteme(0) = phy_const::du_per_km*x1[0];
+  xteme(1) = phy_const::du_per_km*x1[1];
+  xteme(2) = phy_const::du_per_km*x1[2];
+  xteme(3) = phy_const::du_per_km*x1[3]*phy_const::sec_per_tu;
+  xteme(4) = phy_const::du_per_km*x1[4]*phy_const::sec_per_tu;
+  xteme(5) = phy_const::du_per_km*x1[5]*phy_const::sec_per_tu;
   Eigen::Matrix<double, 6, 1> xecf = ecfeci->teme2ecf(jd,
                                                       xteme.block<3,1>(0,0),
                                                       xteme.block<3,1>(3,0));
@@ -88,9 +88,9 @@ Eigen::Matrix<double, 3, 1> Vinti::getPosition(const JulianDate& jd,
   Vinti6(planet.data(), 0.0, x0.data(), t1, x1.data(), oe.data());
 
   Eigen::Matrix<double, 3, 1> xteme;
-  xteme(0,0) = phy_const::du_per_km*x1[0];
-  xteme(1,0) = phy_const::du_per_km*x1[1];
-  xteme(2,0) = phy_const::du_per_km*x1[2];
+  xteme(0) = phy_const::du_per_km*x1[0];
+  xteme(1) = phy_const::du_per_km*x1[1];
+  xteme(2) = phy_const::du_per_km*x1[2];
   Eigen::Matrix<double, 3, 1> xecf = ecfeci->teme2ecf(jd, xteme);
 
   if (frame == EphemFrame::eci) {
