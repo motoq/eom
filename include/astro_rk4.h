@@ -21,6 +21,32 @@
 
 namespace eom {
 
+
+  /**
+   * Propagate equations of motion forward in time by dt.
+   *
+   * @param  deq        Equations of motion
+   * @param  dt         Integration step size
+   * @param  jd         Input state vector epoch
+   *                    Output time of output state vector, jd + dt
+   * @param  x          Input initial conditions - state vector at epoch
+   *                    Output propagated state vector
+   * @param  dx         Derivative of state vector at output time
+   * @param  dx_method  When computing dx to be returned, predictor
+   *                    (default) will reevaluate the full spherical
+   *                    harmonics using the final update to x.  The
+   *                    corrector option will reuse past accumulated
+   *                    partials and update only the 2-body portion.
+   *                    This option saves time when dx is needed as
+   *                    an output for Hermite interpolation.
+   */
+void rk4_step(Ode<JulianDate, double, 6>* deq,
+              const Duration& dt,
+              JulianDate& jd,
+              Eigen::Matrix<double, 6, 1>& x,
+              Eigen::Matrix<double, 6, 1>& dx,
+              OdeEvalMethod dx_method = OdeEvalMethod::predictor);
+
 /**
  * Propagates astrodynamics equations of motion using an RK4 integrator.
  *
@@ -70,14 +96,6 @@ public:
    * @return   Time associated with propagated state.
    */
   JulianDate step() override;
-
- /**
-   * Return ownership of eom system - intended use is for integrators
-   * that are not self starting.
-   *
-   * @return   Equations of motion
-   */
-  std::unique_ptr<Ode<JulianDate, double, 6>> returnDeq();
 
 private:
   std::unique_ptr<Ode<JulianDate, double, 6>> m_deq {nullptr};

@@ -31,31 +31,35 @@ Adams4th::Adams4th(std::unique_ptr<Ode<JulianDate, double, 6>> deq,
                    const JulianDate& jd,
                    const Eigen::Matrix<double, 6, 1>& x)
 {
+  m_deq = std::move(deq);
   m_dt = dt;
+  m_jd = jd;
+  m_x = x;
+  m_dx = m_deq->getXdot(jd, m_x);
     // Default integration step size if not explicitly set
   if (m_dt.getTu() == 0.0) {
     Duration dt_default(0.3, phy_const::tu_per_min);
     m_dt = dt_default;
   }
 
-    // Temporarily handoff EOM to RK4 
-  Rk4 rk(std::move(deq), m_dt, jd, x);
-  m_jdW[0] = rk.getT();
-  m_w[0] = rk.getX();
-  m_dw[0] = rk.getXdot();
+  int ir {2};
+  m_jdW[0] = m_jd;
+  m_w[0]   = m_x;
+  m_dw[0]  = m_dx;
+  Duration rk4dt(m_dt.getTu()/ir, 1.0);
   for (int ii=1; ii<order; ++ii) {
-    rk.step();
-    m_jdW[ii] = rk.getT();
-    m_w[ii] = rk.getX();
-    m_dw[ii] = rk.getXdot();
+    for (int jj=0; jj<ir; ++jj) {
+      rk4_step(m_deq.get(), rk4dt, m_jd, m_x, m_dx);
+    }
+    m_jdW[ii] = m_jd;
+    m_w[ii]   = m_x;
+    m_dw[ii]  = m_dx;
   }
 
   istep = 0;
   m_jd = m_jdW[istep];
   m_x = m_w[istep];
   m_dx = m_dw[istep];
-    // Retrieve EOM - done with rk
-  m_deq = rk.returnDeq();
 }
 
 
@@ -117,7 +121,7 @@ JulianDate Adams4th::step()
   }
   m_jdW[iis] = jdNow;
   m_w[iis] = wNow;
-  m_dw[iis] = m_deq->getXdot(jdNow, wNow);
+  m_dw[iis] = m_deq->getXdot(jdNow, wNow, OdeEvalMethod::corrector);
 
   m_jd = m_jdW[iir];
   m_x = m_w[iir];

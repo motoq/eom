@@ -62,43 +62,53 @@ Eigen::Matrix<double, 6, 1> Rk4::getXdot() const noexcept
  */
 JulianDate Rk4::step()
 {
-  auto dt = m_dt.getTu();
-  auto dt_days = m_dt.getDays();
+  rk4_step(m_deq.get(), m_dt, m_jd, m_x, m_dx, OdeEvalMethod::corrector);
 
-  Eigen::Matrix<double, 6, 1> x0 = m_x;
+  return m_jd;
+}
+
+
+void rk4_step(Ode<JulianDate, double, 6>* deq,
+              const Duration& dt,
+              JulianDate& jd,
+              Eigen::Matrix<double, 6, 1>& x,
+              Eigen::Matrix<double, 6, 1>& dx,
+              OdeEvalMethod dx_method)
+{
+  auto dt_tu = dt.getTu();
+    // No forward integration - just populate derivative
+  if (dt_tu == 0.0) {
+    dx = deq->getXdot(jd, x);
+  }
+  auto dt_days = dt.getDays();
+
+  Eigen::Matrix<double, 6, 1> x0 = x;
   Eigen::Matrix<double, 6, 1> xd;
   Eigen::Matrix<double, 6, 1> xx;
   Eigen::Matrix<double, 6, 1> xa;
   Eigen::Matrix<double, 6, 1> q;
 
     // first
-  auto jdNow = m_jd;
-  xd = m_deq->getXdot(jdNow, x0);
-  xa = dt*xd;
+  auto jdNow = jd;
+  xd = deq->getXdot(jdNow, x0);
+  xa = dt_tu*xd;
   xx = 0.5*xa + x0;
     // second
   jdNow += 0.5*dt_days;
-  xd = m_deq->getXdot(jdNow, xx);
-  q = dt*xd;
+  xd = deq->getXdot(jdNow, xx);
+  q = dt_tu*xd;
   xx = x0 + 0.5*q;
   xa += q + q;
     // third
-  xd = m_deq->getXdot(jdNow, xx);
-  q = dt*xd;
+  xd = deq->getXdot(jdNow, xx);
+  q = dt_tu*xd;
   xx = x0 + q;
   xa += q + q;
     // forth - update member variables vs. locals
-  m_jd += dt_days;
-  m_dx = m_deq->getXdot(m_jd, xx);
-  m_x = x0 + (xa + dt*m_dx)/6.0;
-
-  return m_jd;
-}
-
-
-std::unique_ptr<Ode<JulianDate, double, 6>> Rk4::returnDeq()
-{
-  return std::move(m_deq);
+  jd += dt;
+  dx = deq->getXdot(jd, xx);
+  x = x0 + (xa + dt_tu*dx)/6.0;
+  dx = deq->getXdot(jd, x, dx_method);
 }
 
 
