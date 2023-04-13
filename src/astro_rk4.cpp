@@ -15,6 +15,7 @@
 #include <cal_julian_date.h>
 #include <cal_duration.h>
 #include <mth_ode.h>
+#include <mth_rk4.h>
 
 namespace eom {
 
@@ -65,50 +66,6 @@ JulianDate Rk4::step()
   rk4_step(m_deq.get(), m_dt, m_jd, m_x, m_dx, OdeEvalMethod::corrector);
 
   return m_jd;
-}
-
-
-void rk4_step(Ode<JulianDate, double, 6>* deq,
-              const Duration& dt,
-              JulianDate& jd,
-              Eigen::Matrix<double, 6, 1>& x,
-              Eigen::Matrix<double, 6, 1>& dx,
-              OdeEvalMethod dx_method)
-{
-  auto dt_tu = dt.getTu();
-    // No forward integration - just populate derivative
-  if (dt_tu == 0.0) {
-    dx = deq->getXdot(jd, x);
-  }
-  auto dt_days = dt.getDays();
-
-  Eigen::Matrix<double, 6, 1> x0 = x;
-  Eigen::Matrix<double, 6, 1> xd;
-  Eigen::Matrix<double, 6, 1> xx;
-  Eigen::Matrix<double, 6, 1> xa;
-  Eigen::Matrix<double, 6, 1> q;
-
-    // first
-  auto jdNow = jd;
-  xd = deq->getXdot(jdNow, x0);
-  xa = dt_tu*xd;
-  xx = 0.5*xa + x0;
-    // second
-  jdNow += 0.5*dt_days;
-  xd = deq->getXdot(jdNow, xx);
-  q = dt_tu*xd;
-  xx = x0 + 0.5*q;
-  xa += q + q;
-    // third
-  xd = deq->getXdot(jdNow, xx);
-  q = dt_tu*xd;
-  xx = x0 + q;
-  xa += q + q;
-    // forth - update member variables vs. locals
-  jd += dt;
-  dx = deq->getXdot(jd, xx);
-  x = x0 + (xa + dt_tu*dx)/6.0;
-  dx = deq->getXdot(jd, x, dx_method);
 }
 
 

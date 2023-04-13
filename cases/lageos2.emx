@@ -19,7 +19,8 @@ Orbit  lageos2  SP  GD 2021  6 20  0  0  0.00
                    GravityModel  Standard 40 40
                    MoonGravity  Meeus
                    SunGravity   Meeus
-                   Propagator  GJs Seconds 0;
+                   Propagator  Adams4 Seconds 10.0;
+#                  Propagator  GJs Seconds 0;
 EphemerisFile nsgf_lageos2h SP3c Hermite nsgf.orb.lageos2.210626.v70.sp3;
 EphemerisFile nsgf_lageos2t  SP3c Chebyshev nsgf.orb.lageos2.210626.v70.sp3;
 OutputRate Minutes 5;
