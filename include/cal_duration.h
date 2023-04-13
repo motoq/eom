@@ -60,6 +60,22 @@ public:
   {
     return tu;
   }
+
+  /**
+   * Multiply this duration by some value
+   *
+   * @param  sf  Scale factor
+   *
+   * @return  Copy of this Duration scaled by sf
+   */
+  inline Duration operator*(double sf) const noexcept
+  {
+    Duration dur {*this};
+    dur.tu *= sf;
+    dur.days *= sf;
+
+    return dur;
+  }
   
 private:
   double tu {0.0};

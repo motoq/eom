@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Kurt Motekew
+ * Copyright 2023 Kurt Motekew
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,19 +11,22 @@
 
 #include <Eigen/Dense>
 
-#include <cal_julian_date.h>
-#include <cal_duration.h>
 #include <mth_ode.h>
 
 namespace eom {
 
   /**
-   * Propagate equations of motion forward in time by dt.
+   * Integrates a 1st order ordinary differential equation.
+   *
+   * @tparam  T    Time type
+   * @tparam  DT   Duration compatible with T type and time units (TU)
+   * @tparam  F    Data type of state vector
+   * @tparam  DIM  State vector dimension
    *
    * @param  deq        Equations of motion
    * @param  dt         Integration step size
-   * @param  jd         Input state vector epoch
-   *                    Output time of output state vector, jd + dt
+   * @param  time       Input state vector epoch
+   *                    Output time of output state vector, time + dt
    * @param  x          Input initial conditions - state vector at epoch
    *                    Output propagated state vector
    * @param  dx         Derivative of state vector at output time
@@ -35,48 +38,50 @@ namespace eom {
    *                    This option saves time when dx is needed as
    *                    an output for Hermite interpolation.
    */
-template<typename T, int DIM>
-void rk4_step(Ode<JulianDate, T, DIM>* deq,
-              const Duration& dt,
-              JulianDate& jd,
-              Eigen::Matrix<T, DIM, 1>& x,
-              Eigen::Matrix<T, DIM, 1>& dx,
+template<typename T, typename DT, typename F, int DIM>
+void rk4_step(Ode<T, F, DIM>* deq,
+              const DT& dt,
+              T& time,
+              Eigen::Matrix<F, DIM, 1>& x,
+              Eigen::Matrix<F, DIM, 1>& dx,
               OdeEvalMethod dx_method = OdeEvalMethod::predictor)
 {
+  constexpr F half {static_cast<F>(0.5)};
+  constexpr F sixth {static_cast<F>(1.0/6.0)};
+
   auto dt_tu = dt.getTu();
     // No forward integration - just populate derivative
-  if (dt_tu == 0.0) {
-    dx = deq->getXdot(jd, x);
+  if (dt_tu == 0) {
+    dx = deq->getXdot(time, x);
   }
-  auto dt_days = dt.getDays();
 
-  Eigen::Matrix<T, DIM, 1> x0 = x;
-  Eigen::Matrix<T, DIM, 1> xd;
-  Eigen::Matrix<T, DIM, 1> xx;
-  Eigen::Matrix<T, DIM, 1> xa;
-  Eigen::Matrix<T, DIM, 1> q;
+  Eigen::Matrix<F, DIM, 1> x0 = x;
+  Eigen::Matrix<F, DIM, 1> xd;
+  Eigen::Matrix<F, DIM, 1> xx;
+  Eigen::Matrix<F, DIM, 1> xa;
+  Eigen::Matrix<F, DIM, 1> q;
 
     // first
-  auto jdNow = jd;
-  xd = deq->getXdot(jdNow, x0);
+  auto tmpTime = time;
+  xd = deq->getXdot(tmpTime, x0);
   xa = dt_tu*xd;
-  xx = 0.5*xa + x0;
+  xx = half*xa + x0;
     // second
-  jdNow += 0.5*dt_days;
-  xd = deq->getXdot(jdNow, xx);
+  tmpTime += dt*half;
+  xd = deq->getXdot(tmpTime, xx);
   q = dt_tu*xd;
-  xx = x0 + 0.5*q;
+  xx = x0 + half*q;
   xa += q + q;
     // third
-  xd = deq->getXdot(jdNow, xx);
+  xd = deq->getXdot(tmpTime, xx);
   q = dt_tu*xd;
   xx = x0 + q;
   xa += q + q;
     // forth - update member variables vs. locals
-  jd += dt;
-  dx = deq->getXdot(jd, xx);
-  x = x0 + (xa + dt_tu*dx)/6.0;
-  dx = deq->getXdot(jd, x, dx_method);
+  time += dt;
+  dx = deq->getXdot(time, xx);
+  x = x0 + (xa + dt_tu*dx)*sixth;
+  dx = deq->getXdot(time, x, dx_method);
 }
 
 }
