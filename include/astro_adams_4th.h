@@ -18,7 +18,6 @@
 #include <cal_duration.h>
 #include <mth_ode.h>
 #include <mth_rk4.h>
-#include <astro_rk4.h>
 
 #include <mth_ode_solver.h>
 

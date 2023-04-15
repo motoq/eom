@@ -17,6 +17,7 @@
 #include <eom_config.h>
 #include <eom_command.h>
 #include <eom_ephem_printer.h>
+#include <eom_orbit_printer.h>
 #include <eom_range_printer.h>
 #include <eom_rtc_printer.h>
 
@@ -46,6 +47,10 @@ EomCommandBuilder::buildCommand(std::deque<std::string>& tokens,
         std::make_unique<EomEphemPrinter>(tokens,
                                           cfg.getStartTime(), cfg.getStopTime(),
                                           m_ephemerides);
+    return command;
+  } else if (command_str == "PrintOrbit") {
+    std::unique_ptr<EomCommand> command =
+        std::make_unique<EomOrbitPrinter>(tokens, cfg, m_ephemerides);
     return command;
   } else if (command_str == "PrintRange") {
     std::unique_ptr<EomCommand> command =
