@@ -49,10 +49,8 @@ public:
    * @param  jdEphStop     Time of final range output
    * @param  ephemerides   List of ephemeris sources
    *
-   * @throws  invalid_argument if exactly 3 tokens are not present, or an
-   *          error is encountered (such as the input orbit name is not a
-   *          valid orbit, or an invalid output reference frame is not
-   *          selected.
+   * @throws  invalid_argument if exactly 3 tokens are not present.
+   *          Orbit names will be checked during the validate step.
    */
   EomRangePrinter(std::deque<std::string>& tokens, const EomConfig& cfg,
       const std::shared_ptr<std::unordered_map<std::string,
@@ -61,7 +59,8 @@ public:
   /**
    * Checks that listed ephemeris sources are valid.
    *
-   * @throws  CmdValidateException if validation fails
+   * @throws  CmdValidateException if validation fails (invalid orbit
+   *          name encountered).
    */
   void validate() override;
 

@@ -23,11 +23,10 @@ namespace eom_app {
 
 /**
  * EOM Command type that creates a Matlab/Octave function that plots the
- * position and velocity of a satellite, relative to ECI, in DU and
- * DU/TU.
+ * 3D position and velocity of a satellite in DU and DU/TU.
  *
  * @author  Kurt Motekew
- * @date    2023/04/14
+ * @date    2023/04/15
  */
 class EomOrbitPrinter : public EomCommand {
 public:
@@ -40,14 +39,16 @@ public:
   /**
    * Converts string tokens into a command
    *
-   * @param  tokens        Tokenized parameters with the orbit name and
-   *                       output filename prefix.
+   * @param  tokens        Tokenized parameters with the orbit name,
+   *                       reference frame to use, and the output filename
+   *                       prefix.
    * @param  jdEphStart    Time of first 3D position and velocity output
    * @param  jdEphStop     Time of final 3D position and velocity output
    * @param  ephemerides   List of ephemeris sources
    *
-   * @throws  invalid_argument if exactly 2 tokens are not present, or 
-   *          the parsed orbit name is not a valid orbit.
+   * @throws  invalid_argument if exactly 3 tokens are not present or 
+   *          the indicated reference frame is not valid.  Orbit names
+   *          will be checked during the validate step.
    */
   EomOrbitPrinter(std::deque<std::string>& tokens, const EomConfig& cfg,
                   const std::shared_ptr<std::unordered_map<std::string,
@@ -56,7 +57,8 @@ public:
   /**
    * Checks that listed ephemeris sources are valid.
    *
-   * @throws  CmdValidateException if validation fails
+   * @throws  CmdValidateException if validation fails (desired orbit
+   *          name is not valid).
    */
   void validate() override;
 
@@ -72,6 +74,7 @@ private:
   eom::JulianDate jdStart;
   eom::JulianDate jdStop;
   eom::Duration dtOut;
+  eom::EphemFrame frame;
   std::shared_ptr<eom::Ephemeris> eph;
   std::shared_ptr<std::unordered_map<std::string,
                   std::shared_ptr<eom::Ephemeris>>> m_ephemerides;

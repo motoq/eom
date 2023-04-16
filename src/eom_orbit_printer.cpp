@@ -36,14 +36,24 @@ EomOrbitPrinter::EomOrbitPrinter(
 
     // Read orbit name, output frame, and output filename
   using namespace std::string_literals;
-  if (tokens.size() != 2) {
+  if (tokens.size() != 3) {
     throw std::invalid_argument("EomOrbitPrinter::EomOrbitPrinter() "s +
-                                "PrintOrbit requires 2 arguments "s +
+                                "PrintOrbit requires 3 arguments "s +
                                 "vs. input "s +
                                 std::to_string(tokens.size()));
   }
   orbit_name = tokens[0];
   tokens.pop_front();
+  if (tokens[0] == "ECI") {
+    frame = eom::EphemFrame::eci;
+    tokens.pop_front();
+  } else if (tokens[0] == "ECF") {
+    frame = eom::EphemFrame::ecf;
+    tokens.pop_front();
+  } else {
+    throw std::invalid_argument("EomOrbitPrinter::EomOrbitPrinter() "s +
+                                "Invalid reference frame "s + tokens[0]);
+  }
   func_name = tokens[0];
   tokens.pop_front();
   file_name = func_name + ".m"s;
@@ -79,17 +89,18 @@ void EomOrbitPrinter::execute() const
     nrec++;
 
       // Function header
-    fout << "function [gxh, time_xyz] = " << func_name;
+    fout << "function [gxh, tpv] = " << func_name;
     fout << "\n% Orbit is an EOM generated Matlab/Octave function that";
-    fout << "\n% plots a 3D orbit trace";
+    fout << "\n% plots a 3D orbit trace in ECI or ECF coordinates";
     fout << "\n%";
     fout << "\n% Outputs:";
-    fout << "\n%   gxh       Graphics handle to new image";
-    fout << "\n%   time_xyz  Nx4 matrix of time and ECI coordinates, DU and TU";
+    fout << "\n%   gxh  Graphics handle to new image";
+    fout << "\n%   tpv  Nx7 matrix of time, pos, vel, in ECI or ECF";
+    fout << "\n%        coordinates, units of DU and DU/TU";
     fout << '\n';
 
       // Create time and range data
-    fout << "\ntime_xyz = [";
+    fout << "\ntpv = [";
     fout << std::scientific;
     fout.precision(16);
     for (unsigned long int ii=0UL; ii<nrec; ++ii) {
@@ -100,24 +111,31 @@ void EomOrbitPrinter::execute() const
       fout << "\n  " << dtnow << " ";
       eom::JulianDate jdNow {jdStart + phy_const::day_per_tu*dtnow};
       Eigen::Matrix<double, 6, 1> pv =
-          eph->getStateVector(jdNow, eom::EphemFrame::eci);
+          eph->getStateVector(jdNow, frame);
       for (int jj=0; jj<6; ++jj) {
         fout << " " << pv(jj);
       }
     }
+
       // Make the plot and annotate
+    std::string coords = "ECI";
+    if (frame == eom::EphemFrame::ecf) {
+      coords = "ECF";
+    }
     fout << "\n];";
-    fout << "\nn = size(time_xyz,1);";
+    fout << "\nn = size(tpv,1);";
     fout << "\ngxh = figure; hold on;";
-    fout << "\nplot3(time_xyz(:,2), time_xyz(:,3), time_xyz(:,4));";
-    fout << "\nscatter3(time_xyz(1,2), time_xyz(1,3), time_xyz(1,4), 'g');";
-    fout << "\nscatter3(time_xyz(n,2), time_xyz(n,3), time_xyz(n,4), 'r');";
+    fout << "\nplot3(tpv(:,2), tpv(:,3), tpv(:,4), '.b');";
+    fout << "\nscatter3(tpv(1,2), tpv(1,3), tpv(1,4), 'g');";
+    fout << "\nscatter3(tpv(n,2), tpv(n,3), tpv(n,4), 'r');";
     fout << "\nscatter3(0, 0, 0, 'b');";
-    fout << "\nplot3(time_xyz(:,5), time_xyz(:,6), time_xyz(:,7));";
-    fout << "\nxlabel('X');";
-    fout << "\nylabel('Y');";
-    fout << "\nzlabel('Z');";
-    fout << "\ntitle('" << orbit_name <<
+    fout << "\nplot3(tpv(:,5), tpv(:,6), tpv(:,7), '.m');";
+    fout << "\nscatter3(tpv(1,5), tpv(1,6), tpv(1,7), 'g');";
+    fout << "\nscatter3(tpv(n,5), tpv(n,6), tpv(n,7), 'r');";
+    fout << "\nxlabel('X, dX/dT');";
+    fout << "\nylabel('Y, dY/dT');";
+    fout << "\nzlabel('Z, dZ/dT');";
+    fout << "\ntitle('" << coords << " " << orbit_name <<
             " on " << jdStart.to_dmy_str() << "');";
     fout << "\naxis equal;";
     fout << "\nend\n";

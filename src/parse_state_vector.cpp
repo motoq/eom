@@ -61,6 +61,7 @@ std::array<double, 6> parse_state_vector(std::deque<std::string>& tokens,
 
   double du_per_io {1.0/cfg.getIoPerDu()};
   double io_per_tu {cfg.getIoPerTu()};
+  double rad_per_io {1.0/cfg.getIoPerRad()};
   std::array<double, 6> state;
   try {
     for (unsigned int ii=0; ii<6; ++ii) {
@@ -78,7 +79,7 @@ std::array<double, 6> parse_state_vector(std::deque<std::string>& tokens,
         if (ii == 0) {
           state[ii] *= du_per_io;
         } else if (ii != 1U) {
-          state[ii] *= utl_const::rad_per_deg;
+          state[ii] *= rad_per_io;
         }
       }
     }
