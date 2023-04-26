@@ -110,6 +110,11 @@ public:
   void print(std::ostream& stream) const override;
 
   /*
+   * @return orbit eccentricity
+   */
+  double getEccentricity() const;
+
+  /*
    * @return the eccentric anomaly, radians
    */
   double getEccentricAnomaly() const;

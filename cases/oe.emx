@@ -13,6 +13,7 @@ SimDuration Days 1;
 LeapSeconds 37;
 EcfEciRate Minutes 240;
 DistanceUnits  Kilometers;             # Sticky distance and time settings
+AngleUnits Degrees;
 Orbit  gp_orbit1    VintiJ2 GD 2021 11 12 17 00 00.0
        KEP_T  GCRF  6900.0  0.001  50.0  45.0  225.0  1.0;
 Orbit  gp_orbit2    VintiJ2 GD 2021 11 12 17 00 00.0

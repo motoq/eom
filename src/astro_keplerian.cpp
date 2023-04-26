@@ -24,12 +24,12 @@
 
 namespace {
     // Indexing
-  constexpr int ia {0};
-  constexpr int ie {1};
-  constexpr int ii {2};
-  constexpr int io {3};
-  constexpr int iw {4};
-  constexpr int iv {5};
+  constexpr int ia {0};           // Semimajor axis
+  constexpr int ie {1};           // Eccentricity
+  constexpr int ii {2};           // Inclination
+  constexpr int io {3};           // RAAN
+  constexpr int iw {4};           // Argument of perigee
+  constexpr int iv {5};           // True anomaly
     // Convergence
   constexpr int niter {100};
   constexpr double eps {1.e-10};
@@ -203,6 +203,12 @@ void Keplerian::set(const std::array<double, 6>& oe)
 
   m_cart.block<3,1>(0,0) = q_pqw2eci*r_pqw;
   m_cart.block<3,1>(3,0) = q_pqw2eci*v_pqw;
+}
+
+
+double Keplerian::getEccentricity() const
+{
+  return m_oe[ie];
 }
 
 

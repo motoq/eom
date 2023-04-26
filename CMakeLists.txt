@@ -49,6 +49,7 @@ set(SOURCES
   src/cal_greg_date.cpp
   src/cal_julian_date.cpp
   src/mth_legendre_af.cpp
+  src/astro_adams_4th.cpp
   src/astro_build_ephemeris.cpp
   src/astro_build_orbit.cpp
   src/astro_deq.cpp
@@ -106,7 +107,7 @@ else()
     # lots of warnings and all warnings as errors
   message(STATUS "Defaulting to gcc compatible warning flags")
   #add_compile_options(-Wall -Wextra -pedantic -Wno-parentheses)
-  add_compile_options(-Wall -Wextra -pedantic -Werror)
+  add_compile_options(-Wall -Wextra -pedantic -Werror -Wunused)
 endif()
 
 # SOFA headers are in "~/include" - update path as needed

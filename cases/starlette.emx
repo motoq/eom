@@ -16,12 +16,13 @@ TimeUnits Seconds;
 Orbit  starlette  SP  GD 2022  2  8  0  0  0.00
        CART  ITRF  -5742.304959   2727.319108   3934.171919
                    0.1162318900 -5.6156839000  3.9837925000
+#                  GravityModel  Gravt 40 40
                    GravityModel  Standard 40 40
                    MoonGravity  Meeus
                    SunGravity   Meeus
 #                  Propagator  GJ Seconds 0;
-#                  Propagator  Adams4 Seconds 8.0;
-                   Propagator  RK4 Seconds 10;
+                   Propagator  Adams4 Seconds 8.0;
+#                  Propagator  RK4 Seconds 10;
 EphemerisFile nsgf_starlette  SP3c Hermite nsgf.orb.starlette.220212.v00.sp3;
 OutputRate Minutes 5;
 Command PrintRange starlette nsgf_starlette nsgf_starlette_rng;

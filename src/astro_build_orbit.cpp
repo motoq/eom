@@ -115,10 +115,10 @@ build_orbit(const OrbitDef& orbitParams,
                                  orbitParams.getEpoch(),
                                  xeciVec);
     } else if (pCfg.getPropagator() == Propagator::adams4) {
-      sp = std::make_unique<Adams4th<6>>(std::move(deq),
-                                         pCfg.getStepSize(),
-                                         orbitParams.getEpoch(),
-                                         xeciVec);
+      sp = std::make_unique<Adams4th>(std::move(deq),
+                                      pCfg.getStepSize(),
+                                      orbitParams.getEpoch(),
+                                      xeciVec);
 #ifdef GENPL
     } else if (pCfg.getPropagator() == Propagator::gj) {
       sp = std::make_unique<GaussJackson>(std::move(deq),

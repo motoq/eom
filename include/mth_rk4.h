@@ -15,29 +15,29 @@
 
 namespace eom {
 
-  /**
-   * Integrates a 1st order ordinary differential equation.
-   *
-   * @tparam  T    Time type
-   * @tparam  DT   Duration compatible with T type and time units (TU)
-   * @tparam  F    Data type of state vector
-   * @tparam  DIM  State vector dimension
-   *
-   * @param  deq        Equations of motion
-   * @param  dt         Integration step size
-   * @param  time       Input state vector epoch
-   *                    Output time of output state vector, time + dt
-   * @param  x          Input initial conditions - state vector at epoch
-   *                    Output propagated state vector
-   * @param  dx         Derivative of state vector at output time
-   * @param  dx_method  When computing dx to be returned, predictor
-   *                    (default) will reevaluate the full spherical
-   *                    harmonics using the final update to x.  The
-   *                    corrector option will reuse past accumulated
-   *                    partials and update only the 2-body portion.
-   *                    This option saves time when dx is needed as
-   *                    an output for Hermite interpolation.
-   */
+/**
+ * Integrates a 1st order ordinary differential equation.
+ *
+ * @tparam  T    Time type
+ * @tparam  DT   Duration compatible with T type and time units (TU)
+ * @tparam  F    Data type of state vector
+ * @tparam  DIM  State vector dimension
+ *
+ * @param  deq        Equations of motion
+ * @param  dt         Integration step size
+ * @param  time       Input state vector epoch
+ *                    Output time of output state vector, time + dt
+ * @param  x          Input initial conditions - state vector at epoch
+ *                    Output propagated state vector
+ * @param  dx         Derivative of state vector at output time
+ * @param  dx_method  When computing dx to be returned, predictor
+ *                    (default) will reevaluate the full spherical
+ *                    harmonics using the final update to x.  The
+ *                    corrector option will reuse past accumulated
+ *                    partials and update only the 2-body portion.
+ *                    This option saves time when dx is needed as
+ *                    an output for Hermite interpolation.
+ */
 template<typename T, typename DT, typename F, int DIM>
 void rk4_step(Ode<T, F, DIM>* deq,
               const DT& dt,
@@ -53,6 +53,7 @@ void rk4_step(Ode<T, F, DIM>* deq,
     // No forward integration - just populate derivative
   if (dt_tu == 0) {
     dx = deq->getXdot(time, x);
+    return;
   }
 
   Eigen::Matrix<F, DIM, 1> x0 = x;
