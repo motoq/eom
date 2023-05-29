@@ -64,7 +64,7 @@ public:
    */
   Eigen::Matrix<double, 6, 1> getXdot() const noexcept override;
 
- /**
+  /**
    * Propagate forward by system integration step size.
    *
    * @return   Time associated with propagated state.

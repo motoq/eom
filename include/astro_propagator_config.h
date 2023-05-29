@@ -35,8 +35,8 @@ enum class PropagatorType {
  */
 enum class Propagator {
 #ifdef GENPL
-  gj,
-  gjs,
+  gj,                             ///< Gauss-Jackson
+  gjs,                            ///< G-J with time regularization
 #endif
   rk4,                            ///< Simple zonal-only gravity model
   adams4                          ///< Adams-Bashforth-Moulton

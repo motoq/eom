@@ -37,11 +37,25 @@ public:
    *
    * @param  dur    Duration
    * @param  to_tu  Converts dur to TU.  Note utl_units.h has
-   *                useful operators, e.g., 5 minutes: Duration(5.0, 1.0_tu)
+   *                useful operators, e.g., 5 minutes: Duration(5.0, 1.0_min)
    */
   Duration(double dur, double to_tu) : tu {dur*to_tu},
                                        days {dur*to_tu*phy_const::day_per_tu}
   {
+  }
+
+  /**
+   * Set with a scalar duration and scale factor to convert to
+   * time units.
+   *
+   * @param  dur    Duration
+   * @param  to_tu  Converts dur to TU.  Note utl_units.h has
+   *                useful operators, e.g., 5 minutes: Duration(5.0, 1.0_min)
+   */
+  void set(double dur, double to_tu)
+  {
+    tu = dur*to_tu;
+    days =  tu*phy_const::day_per_tu;
   }
 
   /**
@@ -68,7 +82,7 @@ public:
    *
    * @return  Copy of this Duration scaled by sf
    */
-  inline Duration operator*(double sf) const noexcept
+  Duration operator*(double sf) const noexcept
   {
     Duration dur {*this};
     dur.tu *= sf;

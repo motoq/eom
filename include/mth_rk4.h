@@ -16,7 +16,9 @@
 namespace eom {
 
 /**
- * Integrates a 1st order ordinary differential equation.
+ * Integrates a 1st order ordinary differential equation using
+ * RK4 algorithm adapted from "Aircraft Control and Simulation" by
+ * Brian L. Stevens and Frank L. Lewis, 1st ed.
  *
  * @tparam  T    Time type
  * @tparam  DT   Duration compatible with T type and time units (TU)

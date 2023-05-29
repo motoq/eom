@@ -67,8 +67,10 @@ set(SOURCES
   src/astro_orbit_def.cpp
   src/astro_print_ephemeris.cpp
   src/astro_propagator_config.cpp
+  src/astro_regularize.cpp
   src/astro_rel_orbit_def.cpp
   src/astro_rk4.cpp
+  src/astro_rk4s.cpp
   src/astro_sp3_chebyshev.cpp
   src/astro_sp3_hermite.cpp
   src/astro_sp_ephemeris.cpp

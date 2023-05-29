@@ -57,10 +57,6 @@ Eigen::Matrix<double, 6, 1> Rk4::getXdot() const noexcept
 }
 
 
-/*
- * RK4 algorithm adapted from "Aircraft Control and Simulation" by
- * Brian L. Stevens and Frank L. Lewis, 1st ed.
- */
 JulianDate Rk4::step()
 {
   rk4_step(m_deq.get(), m_dt, m_jd, m_x, m_dx, OdeEvalMethod::corrector);

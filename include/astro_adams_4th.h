@@ -75,7 +75,7 @@ public:
     return m_dx;
   }
 
- /**
+  /**
    * Propagate forward by system integration step size.
    *
    * @return   Time associated with propagated state.
