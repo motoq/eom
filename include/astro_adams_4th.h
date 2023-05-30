@@ -52,7 +52,7 @@ public:
            const Eigen::Matrix<double, 6, 1>& x);
 
   /**
-   * Time associated with current state vector and derivative
+   * @return  Time associated with current state vector and derivative, UTC
    */
   JulianDate getT() const noexcept override
   {
@@ -60,7 +60,7 @@ public:
   }
 
   /**
-   * Current state vector
+   * @return  Current state vector, DU
    */
   Eigen::Matrix<double, 6, 1> getX() const noexcept override
   {
@@ -68,7 +68,7 @@ public:
   }
 
   /**
-   * Time derivative of current state vector
+   * @return  Time derivative of current state vector, DU, DU/TU
    */
   Eigen::Matrix<double, 6, 1> getXdot() const noexcept override
   {

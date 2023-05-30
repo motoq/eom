@@ -148,6 +148,9 @@ static void parse_propagator(std::deque<std::string>& prop_toks,
     if (prop_toks[0] == "RK4") {
       prop_toks.pop_front();
       pCfg.setPropagator(eom::Propagator::rk4);
+    } else if (prop_toks[0] == "RK4s") {
+      prop_toks.pop_front();
+      pCfg.setPropagator(eom::Propagator::rk4s);
     } else if (prop_toks[0] == "Adams4") {
       prop_toks.pop_front();
       pCfg.setPropagator(eom::Propagator::adams4);

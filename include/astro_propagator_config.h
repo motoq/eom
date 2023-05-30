@@ -38,7 +38,8 @@ enum class Propagator {
   gj,                             ///< Gauss-Jackson
   gjs,                            ///< G-J with time regularization
 #endif
-  rk4,                            ///< Simple zonal-only gravity model
+  rk4,                            ///< Basic RK4 integration
+  rk4s,                           ///< RK4 with time regularization
   adams4                          ///< Adams-Bashforth-Moulton
 };
 
