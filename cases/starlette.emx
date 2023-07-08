@@ -24,7 +24,9 @@ Orbit  starlette  SP  GD 2022  2  8  0  0  0.00
                    Propagator  Adams4 Seconds 8.0;
 #                  Propagator  RK4 Seconds 10;
 EphemerisFile nsgf_starlette  SP3c Hermite nsgf.orb.starlette.220212.v00.sp3;
+TimeUnits Minutes;
 OutputRate Minutes 5;
-Command PrintRange starlette nsgf_starlette nsgf_starlette_rng;
+#Command PrintRange starlette nsgf_starlette starlette_rng;
+Command PrintRangeSpectrum nsgf_starlette starlette starlette_rngfft;
 #Command PrintOrbit starlette p_starlette_orbit;
 

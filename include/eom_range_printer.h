@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Kurt Motekew
+ * Copyright 2021, 2023 Kurt Motekew
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,10 +24,12 @@ namespace eom_app {
 
 /**
  * EOM Command type that creates a Matlab/Octave function that plots the
- * range between two satellites over time.
+ * range between two satellites over time.  Optionally, the amplitude
+ * spectrum of the range is plotted for perturbation analysis.
  *
  * @author  Kurt Motekew
- * @date    20211215
+ * @date    2021/12/15
+ * @date    2023/07/08  Added amplitude spectrum option
  */
 class EomRangePrinter : public EomCommand {
 public:
@@ -48,13 +50,19 @@ public:
    * @param  jdEphStart    Time of first range output
    * @param  jdEphStop     Time of final range output
    * @param  ephemerides   List of ephemeris sources
+   * @param  do_spectrum   Also create range amplitude spectrum plot.
+   *                       This option is geared towards comparison
+   *                       of the same orbit propagated via methods
+   *                       capturing different perturbation effects.
    *
    * @throws  invalid_argument if exactly 3 tokens are not present.
    *          Orbit names will be checked during the validate step.
    */
-  EomRangePrinter(std::deque<std::string>& tokens, const EomConfig& cfg,
-      const std::shared_ptr<std::unordered_map<std::string,
-                            std::shared_ptr<eom::Ephemeris>>>& ephemerides);
+  EomRangePrinter(std::deque<std::string>& tokens,
+                  const EomConfig& cfg,
+                  const std::shared_ptr<std::unordered_map<std::string,
+                  std::shared_ptr<eom::Ephemeris>>>& ephemerides,
+                  bool do_spectrum = false);
 
   /**
    * Checks that listed ephemeris sources are valid.
@@ -79,6 +87,7 @@ private:
   eom::Duration dtOut;
   std::string timeUnitsLbl;
   std::string distanceUnitsLbl;
+  bool m_spectrum;
   double to_time_units;
   double to_distance_units;
   std::array<std::shared_ptr<eom::Ephemeris>, 2> eph;

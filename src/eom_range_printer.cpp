@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <iomanip>
 #include <memory>
 #include <string>
 #include <deque>
@@ -20,19 +21,22 @@
 #include <phy_const.h>
 #include <cal_julian_date.h>
 #include <astro_ephemeris.h>
+#include <astro_keplerian.h>
 
 #include <eom_command.h>
 #include <eom_config.h>
 
 namespace eom_app {
 
-
-EomRangePrinter::EomRangePrinter(
-    std::deque<std::string>& tokens, const EomConfig& cfg,
-    const std::shared_ptr<std::unordered_map<std::string,
-                          std::shared_ptr<eom::Ephemeris>>>& ephemerides)
+EomRangePrinter::
+EomRangePrinter(std::deque<std::string>& tokens, 
+                const EomConfig& cfg,
+                const std::shared_ptr<std::unordered_map<std::string,
+                std::shared_ptr<eom::Ephemeris>>>& ephemerides,
+                bool do_spectrum)
 {
   m_ephemerides = ephemerides;
+  m_spectrum = do_spectrum;
 
     // Read orbit name, output frame, and output filename
   using namespace std::string_literals;
@@ -88,9 +92,18 @@ void EomRangePrinter::execute() const
 
       // Function header
     fout << "function [gxh, time_range] = " << func_name;
+    fout << "(detrend_opt)";
     fout << "\n% RNG is an EOM generated Matlab/Octave function that";
-    fout << "\n% plots range as a function of time";
+    fout << "\n% plots range as a function of time.";
+    if (m_spectrum) {
+      fout << " The amplitude";
+      fout << "\n% spectrum is also plotted.";
+    }
     fout << "\n%";
+    fout << "\n% Input:";
+    fout << "\n%   detrend_opt  If > 0, perform indicated detrend on fft";
+    fout << "\n%                operation.  Optional input, no detrend by";
+    fout << "\n%                default";
     fout << "\n% Outputs:";
     fout << "\n%   gxh         Graphics handle to new image";
     fout << "\n%   time_range  Nx2 matrix of time and range values";
@@ -124,7 +137,43 @@ void EomRangePrinter::execute() const
     fout << "\nylabel('" << distanceUnitsLbl << "');";
     fout << "\ntitle('" << orbit_names[0] << '-' << orbit_names[1] <<
             " Range on " << jdStart.to_dmy_str() << "');";
+    fout << "\naxis tight";
+
+      // Create and plot amplitude spectrum using Matlab/Octave fft
+    if (m_spectrum) {
+      eom::Keplerian kep(eph[0]->getStateVector(jdStart, eom::EphemFrame::eci));
+      auto dt_revs = dtOut.getTu()/kep.getPeriod();
+      fout << "\n\nrate = 1/" << dt_revs << ';';
+      fout << "\nnsamp = size(time_range,1);";
+      fout << "\nrng_freqs = rate*(0:(nsamp/2))/nsamp;";
+      fout << std::fixed;
+      fout << std::setprecision(2);
+      fout << "\nif nargin > 0";
+      fout << "\n  rngs = detrend(time_range(:,2)', detrend_opt);";
+      fout << "\n  stitle = sprintf('Amplitude Spectrum, " <<
+                   phy_const::tu_per_day/kep.getPeriod() << " rev/day,";
+      fout << " detrend = %i', detrend_opt);";
+      fout << "\nelse";
+      fout << "\n  rngs = time_range(:,2)';";
+      fout << "\n  stitle = 'Amplitude Spectrum, " <<
+                   phy_const::tu_per_day/kep.getPeriod() << " rev/day';";
+      fout << "\nend";
+      fout << "\nfft_rngs = fft(rngs);";
+      fout << "\nP2 = 2.0*abs(fft_rngs/nsamp);";
+      fout << "\nP1 = P2(1:nsamp/2+1);";
+        // Make the plot and annotate
+      fout << "\nfigure; hold on;";
+      fout << "\nplot(rng_freqs, P1);";
+      fout << "\nxlabel('revs');";
+      fout << "\nylabel('" << distanceUnitsLbl << "');";
+      fout << "\ntitle(stitle);";
+      fout << "\naxis tight";
+      fout << "\ngrid on;";
+      fout << "\ngrid minor on;";
+    }
+
     fout << "\nend\n";
+
     fout.close();
   } else {
     std::cerr << "\nCan't open " << file_name << '\n';
