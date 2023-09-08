@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Kurt Motekew
+ * Copyright 2023 Kurt Motekew
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,21 +11,26 @@
 #include <array>
 #include <string>
 #include <deque>
+#include <utility>
 #include <stdexcept>
 
 #include <astro_ground_point.h>
+#include <axs_gp_access_def.h>
 
 #include <eom_config.h>
 
 namespace eom_app {
 
-eom::GroundPoint
-parse_ground_point(std::deque<std::string>& tokens, const EomConfig& cfg)
+eom::GpAccessDef
+parse_gp_access_def(std::deque<std::string>& tokens, const EomConfig& cfg)
 {
+  eom::GpAccessDef gpDef("orbit", "gp");
+  return gpDef;
+/*
   using namespace std::string_literals;
     // Need at least the name, coord type, and coordinates
   if (tokens.size() < 5) {
-    throw std::invalid_argument("eom_app::parse_ground_point() "s +
+    throw std::invalid_argument("eom_app::parse_gp_access_def() "s +
                                 "5 tokens required vs. "s +
                                 std::to_string(tokens.size()));
   }
@@ -44,17 +49,18 @@ parse_ground_point(std::deque<std::string>& tokens, const EomConfig& cfg)
       tokens.pop_front();
       double alt {du_per_io*std::stod(tokens[0])};
       tokens.pop_front();
-      eom::GroundPoint gp(lat, lon, alt, name);
-      return gp;
+      eom::GroundPoint gp(lat, lon, alt);
+      return std::make_pair(name, gp);
     } catch (const std::invalid_argument& ia) {
-      throw std::invalid_argument("eom_app::parse_ground_point() "s +
+      throw std::invalid_argument("eom_app::parse_gp_access_def() "s +
                                   "invalid LLA parameter type"s);
     }
   }
 
-  throw std::invalid_argument("eom_app::parse_ground_point() "s +
+  throw std::invalid_argument("eom_app::parse_gp_access_def() "s +
                               "Invalid coordinate type - "s + coord_type);
 
+*/
 }
 
 

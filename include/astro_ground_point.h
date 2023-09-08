@@ -9,6 +9,7 @@
 #ifndef ASTRO_GROUND_POINT_H
 #define ASTRO_GROUND_POINT_H
 
+#include <string>
 #include <cmath>
 
 #include <Eigen/Dense>
@@ -48,21 +49,27 @@ public:
   /**
    * Initialize with geodetic coordinates
    *
-   * @param  lat  Geodetic latitude, radians
-   * @param  lon  Longitude, radians
-   * @param  alt  altitude, DU
+   * @param  lat   Geodetic latitude, radians
+   * @param  lon   Longitude, radians
+   * @param  alt   altitude, DU
+   * @param  name  Name of ground point, optional, defaults to empty
+   *               string
    */
-  GroundPoint(double lat, double lon, double alt);
+  GroundPoint(double lat, double lon, double alt,
+              const std::string& name = "");
 
   /**
    * Initialize with Cartesian earth fixed vector
    *
-   * @param  xyz  Cartesian earth fixed coordinates, DU
+   * @param  xyz   Cartesian earth fixed coordinates, DU
+   * @param  name  Name of ground point, optional, defaults to empty
+   *               string
    *
    * @throws  NonconvergenceException If somehow determination of
    *                                  geodetic latitude fails.
    */
-  GroundPoint(const Eigen::Matrix<double, 3, 1>& xyz);
+  GroundPoint(const Eigen::Matrix<double, 3, 1>& xyz,
+              const std::string& name = "");
 
   /**
    * @return  Geodetic latitude, radians
@@ -86,6 +93,11 @@ public:
   double getAltitude() const noexcept
   {
     return m_alt;
+  }
+
+  std::string getName() const noexcept
+  {
+    return m_name;
   }
 
   /**
@@ -126,6 +138,7 @@ public:
   void print(std::ostream& stream) const override;
 
 private:
+  std::string m_name;
   double m_lat;
   double m_lon;
   double m_alt;

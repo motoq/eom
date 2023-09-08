@@ -29,12 +29,14 @@ namespace {
 namespace eom {
 
 // Standard geodetic to Cartesian using Radius of curvature 'n'
-GroundPoint::GroundPoint(double lat, double lon, double alt)
+GroundPoint::GroundPoint(double lat, double lon, double alt,
+                         const std::string& name)
 {
     // Update this
   m_lat = lat;
   m_lon = lon;
   m_alt = alt;
+  m_name = name;
 
   double slat {std::sin(lat)};
   double clat {std::cos(lat)};
@@ -53,10 +55,12 @@ GroundPoint::GroundPoint(double lat, double lon, double alt)
 // "Fast transform from geocentric to geodetic coordinates"
 // T. Fukushima (National Astronomical Observatory, Japan)
 // Journal of Geodesy (1999)
-GroundPoint::GroundPoint(const Eigen::Matrix<double, 3, 1>& xyz)
+GroundPoint::GroundPoint(const Eigen::Matrix<double, 3, 1>& xyz,
+                         const std::string& name)
 {
     // Update this
   m_xyz = xyz;
+  m_name = name;
 
   double ri {m_xyz(0)};
   double rj {m_xyz(1)};

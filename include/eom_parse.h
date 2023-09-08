@@ -12,7 +12,6 @@
 #include <array>
 #include <string>
 #include <deque>
-#include <utility>
 
 #include <cal_julian_date.h>
 #include <cal_duration.h>
@@ -20,6 +19,7 @@
 #include <astro_rel_orbit_def.h>
 #include <astro_ephemeris_file.h>
 #include <astro_ground_point.h>
+#include <axs_gp_access_def.h>
 
 #include <eom_config.h>
 
@@ -137,8 +137,11 @@ std::array<double, 6> parse_state_vector(std::deque<std::string>& tokens,
  * @throws  An invalid_argument exception if parsing fails.  No error is
  *          thrown if the list of tokens is not empty upon completion.
  */
-std::pair<std::string, eom::GroundPoint>
+eom::GroundPoint
 parse_ground_point(std::deque<std::string>& tokens, const EomConfig& cfg);
+
+eom::GpAccessDef
+parse_gp_access_def(std::deque<std::string>& tokens, const EomConfig& cfg);
 
 
 }

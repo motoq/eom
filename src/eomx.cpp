@@ -13,6 +13,7 @@
 #include <vector>
 #include <deque>
 #include <unordered_map>
+#include <utility>
 #include <execution>
 #include <stdexcept>
 
@@ -31,6 +32,7 @@
 #include <astro_ecfeci_sys.h>
 #include <astro_build.h>
 #include <astro_print.h>
+#include <axs_gp_access_def.h>
 
 #include <utl_const.h>
 #include <phy_const.h>
@@ -85,8 +87,10 @@ int main(int argc, char* argv[])
   const auto ephemerides =
       std::make_shared<std::unordered_map<std::string,
                                           std::shared_ptr<eom::Ephemeris>>>();
-    // Earth fixed points
+    // Earth fixed points (ground points)
   std::unordered_map<std::string, eom::GroundPoint> ground_points;
+    // Access intervals to ground point definitions
+  std::vector<eom::GpAccessDef> gp_access_defs;
     // A bucket of resources allowing for parsing and building of
     // commands to be applied to models during the simulation
   eom_app::EomCommandBuilder cmdBuilder(ephemerides);
@@ -180,11 +184,22 @@ int main(int argc, char* argv[])
               }
             } else if (make == "GroundPoint") {
               try {
-                ground_points.insert(eom_app::parse_ground_point(tokens, cfg));
+                eom::GroundPoint gp = eom_app::parse_ground_point(tokens, cfg);
+                ground_points.insert(std::make_pair(gp.getName(), gp));
                 input_error = false;
               } catch (const std::invalid_argument& ia) {
                 std::string xerror = ia.what();
                 other_error = "Invalid Ground Point definition: " + xerror;
+              }
+            } else if (make == "Access") {
+              try {
+                gp_access_defs.push_back(eom_app::parse_gp_access_def(tokens,
+                                                                      cfg));
+                input_error = false;
+              } catch (const std::invalid_argument& ia) {
+                std::string xerror = ia.what();
+                other_error =
+                    "Invalid Ground Point Access definition: " + xerror;
               }
             } else if (make == "Command") {
               try {
@@ -365,7 +380,7 @@ int main(int argc, char* argv[])
 
     // Print ground points
   for (auto& nm_gp : ground_points) {
-    std::cout << "\n  " << nm_gp.first;
+    std::cout << "\n  " << nm_gp.second.getName();
     nm_gp.second.print(std::cout);
   }
 
