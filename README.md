@@ -11,6 +11,7 @@ astrodynamics related functionality along with a library to aid in the
 creation of custom tools.
 
 User Guide:  <https://motoq.github.io/doc/eom.html>
+
 Technical Notes:  <https://motoq.github.io/doc/tech_notes.html>
 
 

@@ -192,14 +192,24 @@ int main(int argc, char* argv[])
                 other_error = "Invalid Ground Point definition: " + xerror;
               }
             } else if (make == "Access") {
-              try {
-                gp_access_defs.push_back(eom_app::parse_gp_access_def(tokens,
-                                                                      cfg));
-                input_error = false;
-              } catch (const std::invalid_argument& ia) {
-                std::string xerror = ia.what();
-                other_error =
-                    "Invalid Ground Point Access definition: " + xerror;
+              if (tokens.size() > 0) {
+                auto model = tokens[0];
+                tokens.pop_front();
+                if (model == "GroundPointAccess") {
+                  try {
+                    gp_access_defs.push_back(
+                        eom_app::parse_gp_access_def(tokens, cfg));
+                    input_error = false;
+                  } catch (const std::invalid_argument& ia) {
+                    std::string xerror = ia.what();
+                    other_error =
+                        "Invalid Ground Point Access definition: " + xerror;
+                  }
+                } else {
+                  other_error = "Invalid Access command option: " + model;
+                }
+              } else {
+                other_error = "Access command provided with no arguments";
               }
             } else if (make == "Command") {
               try {
