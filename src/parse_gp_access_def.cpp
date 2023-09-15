@@ -19,26 +19,38 @@
 
 #include <eom_config.h>
 
+static void parse_elevation_constraint(std::deque<std::string>& cnst_toks);
+
 namespace eom_app {
 
 eom::GpAccessDef
 parse_gp_access_def(std::deque<std::string>& tokens, const EomConfig& cfg)
 {
-  eom::GpAccessDef gpDef("orbit", "gp");
-  return gpDef;
-/*
+
   using namespace std::string_literals;
     // Need at least the name, coord type, and coordinates
-  if (tokens.size() < 5) {
+  if (tokens.size() < 2) {
     throw std::invalid_argument("eom_app::parse_gp_access_def() "s +
-                                "5 tokens required vs. "s +
+                                "Minimum  of 2 tokens required vs. "s +
                                 std::to_string(tokens.size()));
   }
-  auto name = tokens[0];
+  auto orbit_name = tokens[0];
   tokens.pop_front();
-  auto coord_type = tokens[0];
+  auto gp_name = tokens[0];
   tokens.pop_front();
 
+  int n_constraints {1};
+  for (int ii=0; ii<n_constraints; ++ii) {
+    parse_elevation_constraint(tokens);
+    if (tokens.size() == 0) {
+        break;
+    }
+  }
+
+  eom::GpAccessDef gpDef(orbit_name, gp_name);
+  return gpDef;
+
+/*
   double rad_per_io {1.0/cfg.getIoPerRad()};
   double du_per_io {1.0/cfg.getIoPerDu()};
   if (coord_type == "LLA") {
@@ -64,5 +76,16 @@ parse_gp_access_def(std::deque<std::string>& tokens, const EomConfig& cfg)
 }
 
 
+}
+
+
+// Add return of constraints structure
+static void parse_elevation_constraint(std::deque<std::string>& cnst_toks)
+{
+  if (cnst_toks.size() > 1  &&  cnst_toks[0] == "MinimumElevation") {
+    cnst_toks.pop_front();
+      // Replace with double read and set constraints
+    cnst_toks.pop_front();
+  }
 }
 

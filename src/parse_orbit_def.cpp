@@ -60,8 +60,8 @@ eom::OrbitDef parse_orbit_def(std::deque<std::string>& tokens,
       //   2. Sun gravity model
       //   3. Moon gravity model
       //   4. Integrator options
-    unsigned int sp_options {4};
-    for (unsigned int ii=0; ii<sp_options; ++ii) {
+    int sp_options {4};
+    for (int ii=0; ii<sp_options; ++ii) {
       parse_gravity_model(tokens, propCfg);
       parse_sun_model(tokens, propCfg);
       parse_moon_model(tokens, propCfg);
