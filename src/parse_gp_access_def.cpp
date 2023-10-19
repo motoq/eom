@@ -15,11 +15,14 @@
 #include <stdexcept>
 
 #include <astro_ground_point.h>
+#include <axs_gp_constraints.h>
 #include <axs_gp_access_def.h>
 
 #include <eom_config.h>
 
-static void parse_elevation_constraint(std::deque<std::string>& cnst_toks);
+static void parse_elevation_constraint(std::deque<std::string>& cnst_toks,
+                                       const eom_app::EomConfig& cfg, 
+                                       eom::GpConstraints& constraints);
 
 namespace eom_app {
 
@@ -40,39 +43,16 @@ parse_gp_access_def(std::deque<std::string>& tokens, const EomConfig& cfg)
   tokens.pop_front();
 
   int n_constraints {1};
+  eom::GpConstraints xcs;
   for (int ii=0; ii<n_constraints; ++ii) {
-    parse_elevation_constraint(tokens);
+    parse_elevation_constraint(tokens, cfg, xcs);
     if (tokens.size() == 0) {
         break;
     }
   }
 
-  eom::GpAccessDef gpDef(orbit_name, gp_name);
+  eom::GpAccessDef gpDef(orbit_name, gp_name, xcs);
   return gpDef;
-
-/*
-  double rad_per_io {1.0/cfg.getIoPerRad()};
-  double du_per_io {1.0/cfg.getIoPerDu()};
-  if (coord_type == "LLA") {
-    try {
-      double lat {rad_per_io*std::stod(tokens[0])};
-      tokens.pop_front();
-      double lon {rad_per_io*std::stod(tokens[0])};
-      tokens.pop_front();
-      double alt {du_per_io*std::stod(tokens[0])};
-      tokens.pop_front();
-      eom::GroundPoint gp(lat, lon, alt);
-      return std::make_pair(name, gp);
-    } catch (const std::invalid_argument& ia) {
-      throw std::invalid_argument("eom_app::parse_gp_access_def() "s +
-                                  "invalid LLA parameter type"s);
-    }
-  }
-
-  throw std::invalid_argument("eom_app::parse_gp_access_def() "s +
-                              "Invalid coordinate type - "s + coord_type);
-
-*/
 }
 
 
@@ -80,12 +60,21 @@ parse_gp_access_def(std::deque<std::string>& tokens, const EomConfig& cfg)
 
 
 // Add return of constraints structure
-static void parse_elevation_constraint(std::deque<std::string>& cnst_toks)
+static void parse_elevation_constraint(std::deque<std::string>& cnst_toks,
+                                       const eom_app::EomConfig& cfg, 
+                                       eom::GpConstraints& constraints)
 {
+  using namespace std::string_literals;
   if (cnst_toks.size() > 1  &&  cnst_toks[0] == "MinimumElevation") {
     cnst_toks.pop_front();
-      // Replace with double read and set constraints
-    cnst_toks.pop_front();
+    try {
+      double rad_per_io {1.0/cfg.getIoPerRad()};
+      constraints.setMinEl(rad_per_io*std::stod(cnst_toks[0]));
+      cnst_toks.pop_front();
+    } catch (const std::invalid_argument& ia) {
+      throw std::invalid_argument("eom_app::parse_access_def() "s +
+                                  "invalid Minimum Elevation"s);
+    }
   }
 }
 

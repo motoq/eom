@@ -88,8 +88,10 @@ int main(int argc, char* argv[])
       std::make_shared<std::unordered_map<std::string,
                                           std::shared_ptr<eom::Ephemeris>>>();
     // Earth fixed points (ground points)
-  std::unordered_map<std::string, eom::GroundPoint> ground_points;
-    // Access intervals to ground point definitions
+  const auto ground_points =
+      std::make_shared<std::unordered_map<
+          std::string, std::shared_ptr<eom::GroundPoint>>>();
+    // Definitions of orbit to ground access analysis requests
   std::vector<eom::GpAccessDef> gp_access_defs;
     // A bucket of resources allowing for parsing and building of
     // commands to be applied to models during the simulation
@@ -185,7 +187,8 @@ int main(int argc, char* argv[])
             } else if (make == "GroundPoint") {
               try {
                 eom::GroundPoint gp = eom_app::parse_ground_point(tokens, cfg);
-                ground_points.insert(std::make_pair(gp.getName(), gp));
+                (*ground_points)[gp.getName()] =
+                    std::make_shared<eom::GroundPoint>(gp);
                 input_error = false;
               } catch (const std::invalid_argument& ia) {
                 std::string xerror = ia.what();
@@ -371,6 +374,29 @@ int main(int argc, char* argv[])
   }
   }//<==
 
+    // Set resources for access analysis
+  for (auto& axs : gp_access_defs) {
+    bool first {true};
+    try {
+      auto gp_ptr = (*ground_points).at(axs.getGpName());
+      first = false;
+      auto eph_ptr = (*ephemerides).at(axs.getOrbitName());
+      axs.setResources(gp_ptr, eph_ptr);
+    } catch (const std::out_of_range& oor) {
+      if (first) {
+        std::cerr << "\n\nError Assigning GP Access Ground Point: ";
+      } else {
+        std::cerr << "\n\nError Assigning GP Access Ephemeris: ";
+      }
+      std::cerr << oor.what() << '\n';
+      return 0;
+    }
+  }
+
+  //
+  // Print inputs
+  //
+
     // Print derived orbits
   std::cout << '\n';
   for (const auto& relOrbit : rel_orbit_defs) {
@@ -389,9 +415,9 @@ int main(int argc, char* argv[])
   }
 
     // Print ground points
-  for (auto& nm_gp : ground_points) {
-    std::cout << "\n  " << nm_gp.second.getName();
-    nm_gp.second.print(std::cout);
+  for (const auto& [name, gp] : *ground_points) {
+    std::cout << "\n  " << name;
+    gp->print(std::cout);
   }
 
 

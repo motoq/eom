@@ -129,7 +129,8 @@ std::array<double, 6> parse_state_vector(std::deque<std::string>& tokens,
 /**
  * Parses a ground point definition
  *
- * @param  tokens  Tokens defining coordinate type and coordinates
+ * @param  tokens  Tokens defining ground point constraints, consisting
+ *                 of 5 tokens (name, type, 3 components).
  * @param  cfg     Scenario configuration parameters
  *
  * @return  Ground point
@@ -140,6 +141,18 @@ std::array<double, 6> parse_state_vector(std::deque<std::string>& tokens,
 eom::GroundPoint
 parse_ground_point(std::deque<std::string>& tokens, const EomConfig& cfg);
 
+/**
+ * Parses an orbit to ground point access definition.
+ *
+ * @param  tokens       Tokens consisting of an access definition.
+ * @param  cfg          Scenario configuration parameters
+ * @param  constraints  Parsed access constraints
+ *
+ * @return  Ground point access definition
+ *
+ * @throws  An invalid_argument exception if parsing fails.  No error is
+ *          thrown if the list of tokens is not empty upon completion.
+ */
 eom::GpAccessDef
 parse_gp_access_def(std::deque<std::string>& tokens, const EomConfig& cfg);
 

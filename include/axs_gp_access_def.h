@@ -10,13 +10,21 @@
 #define AXS_GP_ACCESS_DEF_H
 
 #include <string>
+#include <memory>
+
+#include <astro_ground_point.h>
+#include <astro_ephemeris.h>
+#include <axs_gp_constraints.h>
 
 namespace eom {
 
 
 /**
  * Holds parameters defining an access analysis request between an orbit
- * and a ground point.
+ * and a ground point.  Instantiation only sets the names of resources,
+ * which must be added afterwards.  Access analysis can then be run with
+ * the results returned.  No results are returned if the resources have
+ * not been set.
  *
  * @author  Kurt Motekew
  * @date    20230906
@@ -24,30 +32,48 @@ namespace eom {
 class GpAccessDef {
 public:
   /**
-   * Create access definition
+   * Create access definition from an ephemeris source to a ground
+   * point.
    *
-   * @param  orbit_name  Name (string identifieer) associated with orbit
-   * @param  gp_name     Name (string identifieer) associated ground point
+   * @param  orbit_name  Name of orbit generating ephemeris
+   * @param  gp_name     Name of ground point for which access is to be
+   *                     generated
+   * @param  xcs         Access constraints
    */
   GpAccessDef(const std::string& orbit_name,
-              const std::string& gp_name) : m_orbit_name(orbit_name),
-                                            m_gp_name(gp_name)
+              const std::string& gp_name,
+              const GpConstraints& xcs) : m_orbit_name {orbit_name},
+                                          m_gp_name {gp_name},
+                                          m_xcs {xcs}
   {
   }
 
   /**
-   * @return  Name (string identifieer) associated with orbit
+   * @return  Name of orbit for which access is generated
    */
   std::string getOrbitName() const noexcept { return m_orbit_name; }
 
   /**
-   * @return  Name (string identifieer) associated with ground point
+   * @return  Name of ground point for which access is generated
    */
-  std::string getGptName() const noexcept { return m_gp_name; }
+  std::string getGpName() const noexcept { return m_gp_name; }
+
+  /**
+   * Sets resources used for access analysis.
+   *
+   * @param  gp   Ground point definition
+   * @param  eph  Ephemeris source
+   */
+  void setResources(const std::shared_ptr<GroundPoint>& gp,
+                    const std::shared_ptr<eom::Ephemeris>& eph);
 
 private:
-  std::string m_orbit_name {""};
-  std::string m_gp_name {""};
+  std::string m_orbit_name;
+  std::string m_gp_name;
+  GpConstraints m_xcs;
+
+  std::shared_ptr<GroundPoint> m_gp {nullptr};
+  std::shared_ptr<eom::Ephemeris> m_eph {nullptr};
 };
 
 
