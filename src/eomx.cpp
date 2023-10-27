@@ -33,6 +33,7 @@
 #include <astro_build.h>
 #include <astro_print.h>
 #include <axs_gp_access_def.h>
+#include <axs_gp_access.h>
 
 #include <utl_const.h>
 #include <phy_const.h>
@@ -92,7 +93,9 @@ int main(int argc, char* argv[])
       std::make_shared<std::unordered_map<
           std::string, std::shared_ptr<eom::GroundPoint>>>();
     // Definitions of orbit to ground access analysis requests
+    // and the access analysis objects to be created
   std::vector<eom::GpAccessDef> gp_access_defs;
+  std::vector<eom::GpAccess> gp_accesses;
     // A bucket of resources allowing for parsing and building of
     // commands to be applied to models during the simulation
   eom_app::EomCommandBuilder cmdBuilder(ephemerides);
@@ -374,14 +377,15 @@ int main(int argc, char* argv[])
   }
   }//<==
 
-    // Set resources for access analysis
-  for (auto& axs : gp_access_defs) {
+    // Create access analysis objects with resources
+    // Error if resource name is not available in existing containers
+  for (const auto& axs : gp_access_defs) {
     bool first {true};
     try {
       auto gp_ptr = (*ground_points).at(axs.getGpName());
       first = false;
       auto eph_ptr = (*ephemerides).at(axs.getOrbitName());
-      axs.setResources(gp_ptr, eph_ptr);
+      gp_accesses.emplace_back(*gp_ptr, eph_ptr, axs.getConstraints());
     } catch (const std::out_of_range& oor) {
       if (first) {
         std::cerr << "\n\nError Assigning GP Access Ground Point: ";

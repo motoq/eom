@@ -10,10 +10,7 @@
 #define AXS_GP_ACCESS_DEF_H
 
 #include <string>
-#include <memory>
 
-#include <astro_ground_point.h>
-#include <astro_ephemeris.h>
 #include <axs_gp_constraints.h>
 
 namespace eom {
@@ -59,21 +56,14 @@ public:
   std::string getGpName() const noexcept { return m_gp_name; }
 
   /**
-   * Sets resources used for access analysis.
-   *
-   * @param  gp   Ground point definition
-   * @param  eph  Ephemeris source
+   * @return  Static (not dynamic) access constraints
    */
-  void setResources(const std::shared_ptr<GroundPoint>& gp,
-                    const std::shared_ptr<eom::Ephemeris>& eph);
+  GpConstraints getConstraints() const noexcept { return m_xcs; }
 
 private:
   std::string m_orbit_name;
   std::string m_gp_name;
   GpConstraints m_xcs;
-
-  std::shared_ptr<GroundPoint> m_gp {nullptr};
-  std::shared_ptr<eom::Ephemeris> m_eph {nullptr};
 };
 
 
