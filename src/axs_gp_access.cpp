@@ -18,7 +18,7 @@ namespace eom {
 
 
 GpAccess::GpAccess(const GroundPoint& gp,
-                   const std::shared_ptr<Ephemeris>& eph,
+                   const std::shared_ptr<const Ephemeris>& eph,
                    const GpConstraints& xcs)
 {
   m_gp = std::make_unique<GroundPoint>(gp);

@@ -69,7 +69,7 @@ public:
   /**
    * @return  Ephemeris source used for access analysis
    */
-  std::shared_ptr<Ephemeris> getEphemeris() const { return m_eph; }
+  std::shared_ptr<const Ephemeris> getEphemeris() const { return m_eph; }
 
   /**
    * Set resources needed by access analysis utilities.
@@ -78,7 +78,7 @@ public:
    * @param  eph  Ephemeris source
    */
   void setResources(const GroundPoint& gp,
-                    const std::shared_ptr<Ephemeris>& eph);
+                    const std::shared_ptr<const Ephemeris>& eph);
 
 private:
   std::string m_orbit_name;
@@ -86,7 +86,7 @@ private:
   GpConstraints m_xcs;
 
   std::unique_ptr<GroundPoint> m_gp {nullptr};
-  std::shared_ptr<Ephemeris> m_eph {nullptr};
+  std::shared_ptr<const Ephemeris> m_eph {nullptr};
 };
 
 

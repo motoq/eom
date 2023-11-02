@@ -17,7 +17,7 @@ namespace eom {
 
 
 void GpAccessDef::setResources(const GroundPoint& gp,
-                               const std::shared_ptr<Ephemeris>& eph)
+                               const std::shared_ptr<const Ephemeris>& eph)
 {
   m_gp = std::make_unique<GroundPoint>(gp);
   m_eph = eph;

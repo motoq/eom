@@ -38,7 +38,7 @@ public:
    * @param  xcs  Access constraints
    */
   GpAccess(const GroundPoint& gp,
-           const std::shared_ptr<Ephemeris>& eph,
+           const std::shared_ptr<const Ephemeris>& eph,
            const GpConstraints& xcs);
 
   /**
@@ -91,7 +91,7 @@ public:
 
 private:
   std::unique_ptr<GroundPoint> m_gp {nullptr};
-  std::shared_ptr<Ephemeris> m_eph;
+  std::shared_ptr<const Ephemeris> m_eph;
   GpConstraints m_xcs;
 
   std::vector<axs_interval> m_intervals;
