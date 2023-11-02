@@ -11,10 +11,12 @@
 
 #include <string>
 #include <memory>
+#include <vector>
 
 #include <astro_ground_point.h>
 #include <astro_ephemeris.h>
 #include <axs_gp_constraints.h>
+#include <axs_interval.h>
 
 namespace eom {
 
@@ -36,27 +38,63 @@ public:
    * @param  xcs  Access constraints
    */
   GpAccess(const GroundPoint& gp,
-           const std::shared_ptr<eom::Ephemeris>& eph,
-           const GpConstraints& xcs) : m_gp {gp},
-                                       m_eph {eph},
-                                       m_xcs {xcs}
-  {
-  }
+           const std::shared_ptr<Ephemeris>& eph,
+           const GpConstraints& xcs);
 
   /**
    * @return  Name (string identifieer) associated with ground point
    */
-  std::string getGpName() const noexcept { return m_gp.getName(); }
+  std::string getGpName() const noexcept { return m_gp->getName(); }
 
   /**
    * @return  Name (string identifieer) associated with orbit
    */
   std::string getOrbitName() const { return m_eph->getName(); }
 
+  /**
+   * Provides constant iterator access to access interval structures
+   *
+   * @return  Beginning of range iterator for axs_interval structure
+   */
+  std::vector<axs_interval>::const_iterator cbegin() const {
+    return m_intervals.cbegin();
+  }
+
+  /**
+   * Provides constant iterator access to access interval structures.
+   *
+   * @return  End of range iterator for axs_interval structure
+   */
+  std::vector<axs_interval>::const_iterator cend() const {
+    return m_intervals.cend();
+  }
+
+  /**
+   * Provides constant iterator access to access interval structures.
+   * Note constant implementation.
+   *
+   * @return  Beginning of range iterator for axs_interval structure
+   */
+  std::vector<axs_interval>::const_iterator begin() const {
+    return m_intervals.cbegin();
+  }
+
+  /**
+   * Provides constant iterator access to access interval structures.
+   * Note constant implementation.
+   *
+   * @return  End of range iterator for axs_interval structure
+   */
+  std::vector<axs_interval>::const_iterator end() const {
+    return m_intervals.cend();
+  }
+
 private:
-  GroundPoint m_gp;
-  std::shared_ptr<eom::Ephemeris> m_eph;
+  std::unique_ptr<GroundPoint> m_gp {nullptr};
+  std::shared_ptr<Ephemeris> m_eph;
   GpConstraints m_xcs;
+
+  std::vector<axs_interval> m_intervals;
 };
 
 

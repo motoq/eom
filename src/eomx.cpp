@@ -379,13 +379,13 @@ int main(int argc, char* argv[])
 
     // Create access analysis objects with resources
     // Error if resource name is not available in existing containers
-  for (const auto& axs : gp_access_defs) {
+  for (auto& axs : gp_access_defs) {
     bool first {true};
     try {
       auto gp_ptr = (*ground_points).at(axs.getGpName());
       first = false;
       auto eph_ptr = (*ephemerides).at(axs.getOrbitName());
-      gp_accesses.emplace_back(*gp_ptr, eph_ptr, axs.getConstraints());
+      axs.setResources(*gp_ptr, eph_ptr);
     } catch (const std::out_of_range& oor) {
       if (first) {
         std::cerr << "\n\nError Assigning GP Access Ground Point: ";
@@ -395,6 +395,13 @@ int main(int argc, char* argv[])
       std::cerr << oor.what() << '\n';
       return 0;
     }
+  }
+
+    // Compute access analysis
+  for (auto& axs : gp_access_defs) {
+    gp_accesses.emplace_back(axs.getGroundPoint(),
+                             axs.getEphemeris(),
+                             axs.getConstraints());
   }
 
   //
@@ -422,6 +429,15 @@ int main(int argc, char* argv[])
   for (const auto& [name, gp] : *ground_points) {
     std::cout << "\n  " << name;
     gp->print(std::cout);
+  }
+
+    // Print Access Requests
+  for (const auto& all_axs : gp_accesses) {
+    std::cout << "\n  Computing access for " << all_axs.getOrbitName() <<
+                 " against " << all_axs.getGpName();
+    //for (const auto& axs : all_axs) {
+    //  std::cout << '\n' << axs.sinel_start;
+    //}
   }
 
 
