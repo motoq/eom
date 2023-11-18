@@ -93,9 +93,7 @@ int main(int argc, char* argv[])
       std::make_shared<std::unordered_map<
           std::string, std::shared_ptr<eom::GroundPoint>>>();
     // Definitions of orbit to ground access analysis requests
-    // and the access analysis objects to be created
   std::vector<eom::GpAccessDef> gp_access_defs;
-  std::vector<eom::GpAccess> gp_accesses;
     // A bucket of resources allowing for parsing and building of
     // commands to be applied to models during the simulation
   eom_app::EomCommandBuilder cmdBuilder(ephemerides);
@@ -397,12 +395,25 @@ int main(int argc, char* argv[])
     }
   }
 
-    // Compute access analysis
-  for (auto& axs : gp_access_defs) {
-    gp_accesses.emplace_back(axs.getGroundPoint(),
-                             axs.getEphemeris(),
-                             axs.getConstraints());
-  }
+    // Generate access times in parallel 
+  auto naxs = gp_access_defs.size();
+  std::vector<std::shared_ptr<eom::GpAccess>> gp_accesses(naxs);
+  {//==>
+    // Capture constant reference of config
+  const eom_app::EomConfig& rcfg = cfg;
+  std::transform(std::execution::par,
+                 gp_access_defs.begin(),
+                 gp_access_defs.end(),
+                 gp_accesses.begin(),
+                 [&rcfg](const auto& axs) {
+                   return std::make_shared<eom::GpAccess>(rcfg.getStartTime(),
+                                                          rcfg.getStopTime(),
+                                                          axs.getGroundPoint(),
+                                                        *(axs.getEphemeris()),
+                                                          axs.getConstraints());
+                 }
+  );
+  }//<==
 
   //
   // Print inputs
@@ -432,12 +443,12 @@ int main(int argc, char* argv[])
   }
 
     // Print Access Requests
-  for (const auto& all_axs : gp_accesses) {
-    std::cout << "\n  Computing access for " << all_axs.getOrbitName() <<
-                 " against " << all_axs.getGpName();
-    //for (const auto& axs : all_axs) {
-    //  std::cout << '\n' << axs.sinel_start;
-    //}
+  for (const auto& axses : gp_accesses) {
+    std::cout << "\n  Computing access for " << axses->getOrbitName() <<
+                 " against " << axses->getGpName();
+    for (const auto& axs : *axses) {
+      std::cout << '\n' << axs.sinel_start;
+    }
   }
 
 

@@ -10,20 +10,37 @@
 
 #include <memory>
 
+#include <cal_julian_date.h>
 #include <astro_ground_point.h>
 #include <astro_ephemeris.h>
 #include <axs_gp_constraints.h>
 
 namespace eom {
 
+static bool is_visible(const JulianDate& jd, 
+                       const GroundPoint& gp,
+                       const Ephemeris& eph,
+                       const GpConstraints& xcs);
 
-GpAccess::GpAccess(const GroundPoint& gp,
-                   const std::shared_ptr<const Ephemeris>& eph,
+GpAccess::GpAccess(const JulianDate& jdStart,
+                   const JulianDate& jdStop,
+                   const GroundPoint& gp,
+                   const Ephemeris& eph,
                    const GpConstraints& xcs)
 {
-  m_gp = std::make_unique<GroundPoint>(gp);
-  m_eph = eph;
-  m_xcs = xcs;
+  m_gp_name = gp.getName();
+  m_eph_name = eph.getName();
+  
+  is_visible(jdStart, gp, eph, xcs);
+}
+
+
+static bool is_visible(const JulianDate& jd, 
+                       const GroundPoint& gp,
+                       const Ephemeris& eph,
+                       const GpConstraints& xcs)
+{
+  return true;
 }
 
 

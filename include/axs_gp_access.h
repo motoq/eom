@@ -13,6 +13,7 @@
 #include <memory>
 #include <vector>
 
+#include <cal_julian_date.h>
 #include <astro_ground_point.h>
 #include <astro_ephemeris.h>
 #include <axs_gp_constraints.h>
@@ -37,19 +38,21 @@ public:
    * @param  eph  Ephemeris source
    * @param  xcs  Access constraints
    */
-  GpAccess(const GroundPoint& gp,
-           const std::shared_ptr<const Ephemeris>& eph,
+  GpAccess(const JulianDate& jdStart,
+           const JulianDate& jdStop,
+           const GroundPoint& gp,
+           const Ephemeris& eph,
            const GpConstraints& xcs);
 
   /**
    * @return  Name (string identifieer) associated with ground point
    */
-  std::string getGpName() const noexcept { return m_gp->getName(); }
+  std::string getGpName() const noexcept { return m_gp_name; }
 
   /**
    * @return  Name (string identifieer) associated with orbit
    */
-  std::string getOrbitName() const { return m_eph->getName(); }
+  std::string getOrbitName() const { return m_eph_name; }
 
   /**
    * Provides constant iterator access to access interval structures
@@ -90,9 +93,8 @@ public:
   }
 
 private:
-  std::unique_ptr<GroundPoint> m_gp {nullptr};
-  std::shared_ptr<const Ephemeris> m_eph;
-  GpConstraints m_xcs;
+  std::string m_gp_name;
+  std::string m_eph_name;
 
   std::vector<axs_interval> m_intervals;
 };
