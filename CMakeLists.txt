@@ -79,7 +79,6 @@ set(SOURCES
   src/astro_third_body_gravity.cpp
   src/astro_vinti.cpp
   src/astro_vinti_prop.cpp
-  src/axs_gp_access_def.cpp
   src/axs_gp_access.cpp
 )
 

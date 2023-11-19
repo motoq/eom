@@ -92,8 +92,10 @@ int main(int argc, char* argv[])
   const auto ground_points =
       std::make_shared<std::unordered_map<
           std::string, std::shared_ptr<eom::GroundPoint>>>();
-    // Definitions of orbit to ground access analysis requests
+    // Definitions of orbit to ground access analysis requests and
+    // access analysis producers
   std::vector<eom::GpAccessDef> gp_access_defs;
+  std::vector<eom::GpAccess> gp_accessors;
     // A bucket of resources allowing for parsing and building of
     // commands to be applied to models during the simulation
   eom_app::EomCommandBuilder cmdBuilder(ephemerides);
@@ -383,7 +385,11 @@ int main(int argc, char* argv[])
       auto gp_ptr = (*ground_points).at(axs.getGpName());
       first = false;
       auto eph_ptr = (*ephemerides).at(axs.getOrbitName());
-      axs.setResources(*gp_ptr, eph_ptr);
+      gp_accessors.emplace_back(cfg.getStartTime(),
+                                cfg.getStopTime(),
+                                *gp_ptr,
+                                axs.getConstraints(),
+                                eph_ptr);
     } catch (const std::out_of_range& oor) {
       if (first) {
         std::cerr << "\n\nError Assigning GP Access Ground Point: ";
@@ -395,25 +401,13 @@ int main(int argc, char* argv[])
     }
   }
 
+  //==>
     // Generate access times in parallel 
-  auto naxs = gp_access_defs.size();
-  std::vector<std::shared_ptr<eom::GpAccess>> gp_accesses(naxs);
-  {//==>
-    // Capture constant reference of config
-  const eom_app::EomConfig& rcfg = cfg;
-  std::transform(std::execution::par,
-                 gp_access_defs.begin(),
-                 gp_access_defs.end(),
-                 gp_accesses.begin(),
-                 [&rcfg](const auto& axs) {
-                   return std::make_shared<eom::GpAccess>(rcfg.getStartTime(),
-                                                          rcfg.getStopTime(),
-                                                          axs.getGroundPoint(),
-                                                        *(axs.getEphemeris()),
-                                                          axs.getConstraints());
-                 }
-  );
-  }//<==
+  std::for_each(std::execution::par,
+                gp_accessors.begin(),
+                gp_accessors.end(),
+                [](auto& accessor) { accessor.findAll(); });
+  //<==
 
   //
   // Print inputs
@@ -442,14 +436,16 @@ int main(int argc, char* argv[])
     gp->print(std::cout);
   }
 
+
     // Print Access Requests
-  for (const auto& axses : gp_accesses) {
-    std::cout << "\n  Computing access for " << axses->getOrbitName() <<
-                 " against " << axses->getGpName();
-    for (const auto& axs : *axses) {
+  for (const auto& axses : gp_accessors) {
+    std::cout << "\n  Computing access for " << axses.getOrbitName() <<
+                 " against " << axses.getGpName();
+    for (const auto& axs : axses) {
       std::cout << '\n' << axs.sinel_start;
     }
   }
+
 
 
   //

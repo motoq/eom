@@ -8,6 +8,7 @@
 
 #include <axs_gp_access.h>
 
+#include <string>
 #include <memory>
 
 #include <cal_julian_date.h>
@@ -17,28 +18,37 @@
 
 namespace eom {
 
-static bool is_visible(const JulianDate& jd, 
-                       const GroundPoint& gp,
-                       const Ephemeris& eph,
-                       const GpConstraints& xcs);
+static bool is_visible(const JulianDate& jd);
 
 GpAccess::GpAccess(const JulianDate& jdStart,
                    const JulianDate& jdStop,
                    const GroundPoint& gp,
-                   const Ephemeris& eph,
-                   const GpConstraints& xcs)
+                   const GpConstraints& xcs,
+                   std::shared_ptr<const Ephemeris> eph) : m_jdStart {jdStart},
+                                                           m_jdStop {jdStop},
+                                                           m_gp {gp},
+                                                           m_xcs {xcs},
+                                                           m_eph {
+                                                             std::move(eph)
+                                                           }
 {
-  m_gp_name = gp.getName();
-  m_eph_name = eph.getName();
-  
-  is_visible(jdStart, gp, eph, xcs);
+  is_visible(m_jdStart);
 }
 
 
-static bool is_visible(const JulianDate& jd, 
-                       const GroundPoint& gp,
-                       const Ephemeris& eph,
-                       const GpConstraints& xcs)
+std::string GpAccess::getGpName() const noexcept
+{
+  return m_gp.getName();
+}
+
+
+std::string GpAccess::getOrbitName() const
+{
+  return (*m_eph).getName();
+}
+
+
+static bool is_visible(const JulianDate& jd)
 {
   return true;
 }

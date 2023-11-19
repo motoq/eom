@@ -41,18 +41,25 @@ public:
   GpAccess(const JulianDate& jdStart,
            const JulianDate& jdStop,
            const GroundPoint& gp,
-           const Ephemeris& eph,
-           const GpConstraints& xcs);
+           const GpConstraints& xcs,
+           std::shared_ptr<const Ephemeris> eph);
 
   /**
    * @return  Name (string identifieer) associated with ground point
    */
-  std::string getGpName() const noexcept { return m_gp_name; }
+  std::string getGpName() const noexcept;
 
   /**
    * @return  Name (string identifieer) associated with orbit
    */
-  std::string getOrbitName() const { return m_eph_name; }
+  std::string getOrbitName() const;
+
+  /**
+   * Computes access analysis over entire duration.
+   */
+  void findAll()
+  {
+  }
 
   /**
    * Provides constant iterator access to access interval structures
@@ -93,8 +100,11 @@ public:
   }
 
 private:
-  std::string m_gp_name;
-  std::string m_eph_name;
+  JulianDate m_jdStart;
+  JulianDate m_jdStop;
+  GroundPoint m_gp;
+  GpConstraints m_xcs;
+  std::shared_ptr<const Ephemeris> m_eph;
 
   std::vector<axs_interval> m_intervals;
 };
