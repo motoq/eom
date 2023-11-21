@@ -57,7 +57,7 @@ public:
   /**
    * Computes access analysis over entire duration.
    */
-  void findAll()
+  void findAllAccesses()
   {
   }
 

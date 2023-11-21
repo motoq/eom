@@ -406,7 +406,7 @@ int main(int argc, char* argv[])
   std::for_each(std::execution::par,
                 gp_accessors.begin(),
                 gp_accessors.end(),
-                [](auto& accessor) { accessor.findAll(); });
+                [](auto& accessor) { accessor.findAllAccesses(); });
   //<==
 
   //

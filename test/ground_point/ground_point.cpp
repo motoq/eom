@@ -24,6 +24,20 @@ int main()
 {
   std::cout << "\n\n  === Test:  GroundPoint ===";
 
+    // Quick sign check on elevation function
+  eom::GroundPoint gpEnu {0.5*utl_const::pio2,
+                          0.5*utl_const::pio2,
+                          0.0};
+  Eigen::Matrix<double, 3, 1> posEl {2.0, 2.0, 2.0};
+  double el_rad {std::asin(gpEnu.getSinElevation(posEl))};
+  std::cout << "\n\nElevation is " << utl_const::deg_per_rad*el_rad <<
+               " deg" << '\n';
+  std::cout << " for lat " << utl_const::deg_per_rad*gpEnu.getLatitude() <<
+               " and lon " << utl_const::deg_per_rad*gpEnu.getLongitude() <<
+               " and alt " << phy_const::m_per_du*gpEnu.getAltitude() <<
+               " and pos [" << posEl(0) << posEl(1) << posEl(2) << "]\n";
+  
+
     // Unit tests - init with Cartesian.  Two pairs with symmetry over
     // the equatoriall plane, one exact equatorial, two near equatorial,
     // and one near polar, and two, one at each pole.

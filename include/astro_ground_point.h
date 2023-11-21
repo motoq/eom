@@ -95,18 +95,32 @@ public:
     return m_alt;
   }
 
+  /**
+   * @return  Cartesian earth fixed vector, DU
+   */
+  Eigen::Matrix<double, 3, 1> getCartesian() const noexcept
+  {
+    return m_xyz;
+  }
+
+  /**
+   * @return  Name associated with this ground point.  Empty string
+   *          if not set.
+   */
   std::string getName() const noexcept
   {
     return m_name;
   }
 
   /**
-   * @return  Cartesian earth fixed vector, DU
+   * Computes the sine of the elevation of an object w.r.t. the tangent
+   * plane of the oblate spheroid at the location of the groud point.
+   *
+   * @param  pos  ECEF position, DU
+   *
+   * @return  Sine of elevation of pos w.r.t. this ground point
    */
-  Eigen::Matrix<double, 3, 1> getCartesian()
-  {
-    return m_xyz;
-  }
+  double getSinElevation(const Eigen::Matrix<double, 3, 1>& posF) const;
 
   /**
    * @return  Number of iterations required to solve for geodetic
@@ -118,7 +132,7 @@ public:
    */
   int getItr() const noexcept
   {
-    return itr;
+    return m_itr;
   }
   
   /*
@@ -127,7 +141,7 @@ public:
    */
   FukStarter getFukStarter()
   {
-    return fstarter;
+    return m_fstarter;
   }
 
   /**
@@ -138,14 +152,24 @@ public:
   void print(std::ostream& stream) const override;
 
 private:
+    // Sets useful member variables after Cartesian and geodetic
+  void finish();
+
+    // Cartesian and geodetic ground point definitions
   std::string m_name;
   double m_lat;
   double m_lon;
   double m_alt;
   Eigen::Matrix<double, 3, 1> m_xyz;
 
-  int itr {0};
-  FukStarter fstarter {FukStarter::none};
+    // Auxiliary variables of use set during construction
+  double m_clat;
+  double m_clon;
+  double m_slat;
+  double m_slon;
+
+  int m_itr {0};
+  FukStarter m_fstarter {FukStarter::none};
 };
 
 

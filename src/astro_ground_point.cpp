@@ -46,6 +46,9 @@ GroundPoint::GroundPoint(double lat, double lon, double alt,
   m_xyz(0) = nph*clat*std::cos(lon);
   m_xyz(1) = nph*clat*std::sin(lon);
   m_xyz(2) = (n*(1.0 - phy_const::ecc2) + alt)*slat;
+
+    // Compute aux variables
+  finish();
 }
 
 
@@ -94,25 +97,25 @@ GroundPoint::GroundPoint(const Eigen::Matrix<double, 3, 1>& xyz,
     double t {1.0};
     if (tm <= 0.0) {
       t = (p - c + zp)/(p - c + 2*zp);
-      fstarter = FukStarter::case1;
+      m_fstarter = FukStarter::case1;
     } else if (tm >= 1.0) {
       t = p/v;
-      fstarter = FukStarter::case2;
+      m_fstarter = FukStarter::case2;
     } else {
       // 0 < tm < 1 is the equatorial region - evaluate quartic
       double fm {tm*(tm*tm*(p*tm + u) + v) - p};
       if (fm >= 0.0) {
         // tm >= 1 starting point
         t = p/v;
-        fstarter = FukStarter::case3a;
+        m_fstarter = FukStarter::case3a;
       } else {
         // tm <= 0 starting point - this method sometimes gets used
         t = (p - c + zp)/(p - c + 2*zp);
-        fstarter = FukStarter::case3b;
+        m_fstarter = FukStarter::case3b;
       }
     }
       // Newton's method
-    itr = -1;
+    m_itr = -1;
     for (int ii=0; ii<max_itr; ++ii) {
       double t2 {t*t};
       double num {p - (t*(t2*(p*t + u) + v))};
@@ -120,11 +123,11 @@ GroundPoint::GroundPoint(const Eigen::Matrix<double, 3, 1>& xyz,
       double dt {num/den};
       t += dt;
       if (std::fabs(dt) < tol) {
-        itr = ii + 1;
+        m_itr = ii + 1;
         break;
       }
     }
-    if (itr < 0) {
+    if (m_itr < 0) {
       throw NonconvergenceException(
           "GroundPoint::GroundPoint() geodetic latitude convergence");
     }
@@ -136,6 +139,24 @@ GroundPoint::GroundPoint(const Eigen::Matrix<double, 3, 1>& xyz,
     m_alt = (2.0*p*ep*t + z*omt2 - phy_const::earth_smaj*ep*opt2)/
             std::sqrt(opt2*opt2 - 4.0*phy_const::ecc2*t2);
   }
+
+    // Compute aux variables
+  finish();
+}
+
+
+double
+GroundPoint::getSinElevation(const Eigen::Matrix<double, 3, 1>& posF) const
+{
+    // Unit pointing vector from ground to posF
+  Eigen::Matrix<double, 3, 1> pntHat = posF - m_xyz;
+  pntHat.normalize();
+  
+    // Rotate frame by (90 + lon) about the z-axis.  Then by (90 - lat)
+    // about the x-axis.  Components are now in the ENU reference frame.
+    // Since this is a unti vector, the sine of the elevation w.r.t. the
+    // tangent plane is simply the z component:  opposite/hypotenuse = z/1
+  return m_clat*(pntHat(0)*m_clon + pntHat(1)*m_slon) + pntHat(2)*m_slat;
 }
 
 
@@ -146,6 +167,15 @@ void GroundPoint::print(std::ostream& stream) const
   stream << "\n  lat: " << utl_const::deg_per_rad*m_lat << " deg";
   stream << "  lon: " << utl_const::deg_per_rad*m_lon << " deg";
   stream << "  alt: " << phy_const::m_per_du*m_alt << " m";
+}
+
+
+void GroundPoint::finish()
+{
+  m_clat = std::cos(m_lat);
+  m_clon = std::cos(m_lon);
+  m_slat = std::sin(m_lat);
+  m_slon = std::sin(m_lon);
 }
 
 
