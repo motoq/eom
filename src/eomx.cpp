@@ -443,7 +443,12 @@ int main(int argc, char* argv[])
                  " against " << axses.getGpName();
     for (const auto& axs : axses) {
       std::cout << '\n' << axs.rise.to_str() <<
-                   "  " << axs.set.to_str();
+                   "  " << axs.set.to_str() <<
+                   "    {" <<
+                   utl_const::deg_per_rad*std::asin(axs.sinel_rise) <<
+                   ", " <<
+                   utl_const::deg_per_rad*std::asin(axs.sinel_set) <<
+                   "} deg Elevation";
     }
   }
 

@@ -106,8 +106,50 @@ private:
   /*
    * Given the time of interest, evaluates if access is satisfied based
    * on stored constraints.
-  */
+   *
+   * @param  jd  Time to evaluate if access constraints are met
+   */
   bool is_visible(const JulianDate& jd); 
+
+  /*
+   * Locate the start of an access window based on the assumption that
+   * m_jd is currently before an access window.  m_jd will be updated.
+   *
+   * @param  axs  Access interval to be updated with rise time related
+   *              values if access constraints are satisfied.
+   *
+   * @return  If the start of an access window was found before
+   *          m_jdStop, return true.
+   *
+   * Requirement:  Ensure currently outside of an access window before
+   *               calling (is_visible(m_jd) == false;).
+   */
+  bool findRise(axs_interval& axs);
+
+  /*
+   * Locate the end of an access window based on the assumption that
+   * m_jd is currently within an access window.  If m_jd exceeds
+   * m_jdStop, then the set time will be set to m_jdStop.  A set time
+   * will always exist based on the above assumption and process.
+   *
+   * @param  axs  Access interval to be updated with set time related
+   *              values.
+   *
+   * Requirement:  Ensure currently inside of an access window before
+   *               calling (is_visible(m_jd) == true;).
+   */
+  void findSet(axs_interval& axs);
+
+  /*
+   * Set geometry constraints in axs_interval for located rise and set
+   * times.
+   *
+   * @param  axs  Access interval to be updated with rise and set time
+   *              geometry values.
+   *
+   * Requirement:  Valid rise and set times have been set in axs
+   */
+  void setRiseSetStatus(axs_interval& axs);
 
   JulianDate m_jdStart;
   JulianDate m_jdStop;

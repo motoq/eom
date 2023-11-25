@@ -55,67 +55,22 @@ bool GpAccess::findNextAccess()
     return false;
   }
 
-  axs_interval axs;
-
-    // Updates m_jd, axs
-  auto findRise = [&]() {
-    double dt_days = utl_const::day_per_sec;
-    bool found_rise {false};
-    while (!(found_rise = is_visible(m_jd))) {
-      m_jd += dt_days;
-        // If past stop time, access was not found - done
-      if (m_jdStop <= m_jd) {
-        m_jd = m_jdStop;
-        break;
-      }
-    }
-
-    /*
-    Eigen::Matrix<double, 3, 1> pos = m_eph->getPosition(m_jd, EphemFrame::ecf);
-    auto dist = (pos - m_gp.getCartesian()).norm();
-
-    m_jd += phy_const::day_per_tu*(dist/m_max_vel);
-    axs.rise = m_jd;
-    // Set elevation too
-    */
-
-    if (found_rise) {
-      axs.rise = m_jd;
-      return true;
-    } else {
-      return false;
-    }
-  };
-
-    // Assumes inside a rise, looking for a set
-    // Always a set if currently within an access window
-    // Updates m_jd, axs
-  auto findSet = [&]() {
-    double dt_days = utl_const::day_per_sec;
-    while (is_visible(m_jd)) {
-      m_jd += dt_days;
-      if (m_jdStop <= m_jd) {
-        m_jd = m_jdStop;
-        break;
-      }
-    }
-    axs.set = m_jd;
-  };
-
+  axs_interval riseset;
   bool in_interval {false};
 
     // Either already in an access window, or need to locate start time
   if (is_visible(m_jd)) {
     in_interval = true;
-    axs.rise = m_jd;
+    riseset.rise = m_jd;
     // Set elevation too
   } else {
-    in_interval = findRise();
+    in_interval = findRise(riseset);
   }
 
   if (in_interval) {
-    findSet();
-    m_intervals.push_back(axs);
+    findSet(riseset);
+    setRiseSetStatus(riseset);
+    m_intervals.push_back(riseset);
     return true;
   }
 
@@ -157,5 +112,55 @@ bool GpAccess::is_visible(const JulianDate& jd)
   return false;
 }
 
+
+bool GpAccess::findRise(axs_interval& axs)
+{
+  double dt_days = utl_const::day_per_sec;
+  bool found_rise {false};
+  while (!(found_rise = is_visible(m_jd))) {
+    m_jd += dt_days;
+      // If past stop time, access was not found - done
+    if (m_jdStop <= m_jd) {
+      m_jd = m_jdStop;
+      break;
+    }
+  }
+
+    /*
+    Eigen::Matrix<double, 3, 1> pos = m_eph->getPosition(m_jd, EphemFrame::ecf);
+    auto dist = (pos - m_gp.getCartesian()).norm();
+    m_jd += phy_const::day_per_tu*(dist/m_max_vel);
+    */
+
+  if (found_rise) {
+    axs.rise = m_jd;
+    return true;
+  } else {
+    return false;
+  }
+}
+
+
+void GpAccess::findSet(axs_interval& axs)
+{
+  double dt_days = utl_const::day_per_sec;
+  while (is_visible(m_jd)) {
+    m_jd += dt_days;
+    if (m_jdStop <= m_jd) {
+      m_jd = m_jdStop;
+      break;
+    }
+  }
+  axs.set = m_jd;
+}
+
+
+void GpAccess::setRiseSetStatus(axs_interval& axs)
+{
+  axs.sinel_rise = m_gp.getSinElevation(m_eph->getPosition(axs.rise,
+                                                           EphemFrame::ecf));
+  axs.sinel_set = m_gp.getSinElevation(m_eph->getPosition(axs.set,
+                                                          EphemFrame::ecf));
+}
 
 }
