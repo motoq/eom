@@ -108,10 +108,24 @@ namespace phy_const {
    *
    * @return  Earth angular velocity, radians/TU
    */
-  constexpr double earth_angular_velocity(double lod)
+  constexpr double earth_angular_velocity(double lod) noexcept
   {
     return 7.292115146706979e-5*sec_per_tu*(1.0 - lod/tu_per_day);
   }
+
+  /**
+   * Compute the magnitude of the velocity of the surface of the earth
+   * at the equator.
+   *
+   * @param  lod  Length of day, TU
+   *
+   * @return  Speed of earth surface at equator, DU/TU
+   */
+  constexpr double earth_equatorial_speed(double lod = 0.0) noexcept
+  {
+    return earth_smaj*earth_angular_velocity(lod);
+  }
+  
 }
 
 #endif

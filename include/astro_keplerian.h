@@ -137,6 +137,11 @@ public:
     return m_rp;
   }
 
+  /**
+   * @return  Inertial velocity elocity magnitude at perigee, DU/TU
+   */
+  double getPerigeeSpeed() const;
+
   /*
    * Updates the true anomaly given the input mean anomaly.  Only the
    * true anomaly is modified.

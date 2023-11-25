@@ -23,6 +23,8 @@
 #include <mth_angle.h>
 
 namespace {
+    // Gravitational parameter
+  constexpr double gm {phy_const::gm};
     // Indexing
   constexpr int ia {0};           // Semimajor axis
   constexpr int ie {1};           // Eccentricity
@@ -67,12 +69,10 @@ Keplerian::Keplerian(const Eigen::Matrix<double, 6, 1>& cart)
   m_hmag = hvec.norm();
   double v2 {vmag*vmag};
   double rdotv {rvec.dot(vvec)};
-  double muor {phy_const::gm/rmag};
+  double muor {gm/rmag};
 
     // Eccentricity
-  Eigen::Matrix<double, 3, 1> evec {((v2 - muor)*rvec - rdotv*vvec)/
-                                     phy_const::gm
-                                   };
+  Eigen::Matrix<double, 3, 1> evec {((v2 - muor)*rvec - rdotv*vvec)/gm};
   double emag {evec.norm()};
     // Vis-viva eqn
   m_sme = v2/2.0 - muor;
@@ -91,7 +91,7 @@ Keplerian::Keplerian(const Eigen::Matrix<double, 6, 1>& cart)
         "Keplerian::Keplerian(): Orbit must be elliptical");
   }
     // Semimajor axis, perigee radius, final error check
-  double sma {-0.5*phy_const::gm/m_sme};
+  double sma {-0.5*gm/m_sme};
   m_rp = sma*(1.0 - emag);
   if (m_rp < phy_const::re) {
     throw std::invalid_argument(
@@ -181,10 +181,10 @@ void Keplerian::set(const std::array<double, 6>& oe)
   double cv {std::cos(v)};
   double sv {std::sin(v)};
   double ecv {e*cv};
-  double suop {std::sqrt(phy_const::gm/semip)};
+  double suop {std::sqrt(gm/semip)};
 
-  m_sme = -0.5*phy_const::gm/a;
-  m_hmag = std::sqrt(phy_const::gm*semip);
+  m_sme = -0.5*gm/a;
+  m_hmag = std::sqrt(gm*semip);
 
   Eigen::Matrix<double, 3, 1> r_pqw;
   r_pqw(0,0) = semip*cv/(1.0 + ecv);
@@ -238,9 +238,14 @@ double Keplerian::getMeanAnomaly() const
 double Keplerian::getPeriod() const
 {
   double a {m_oe[ia]};
-  return utl_const::tpi*std::sqrt(a*a*a/phy_const::gm);
+  return utl_const::tpi*std::sqrt(a*a*a/gm);
 }
 
+
+double Keplerian::getPerigeeSpeed() const
+{
+  return std::sqrt(gm*(2.0/m_rp - 1.0/m_oe[ia]));
+}
 
 /*
  * Based on Vallado's "Fundamentals of Astrodynamics and Applications",

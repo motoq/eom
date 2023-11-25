@@ -442,7 +442,8 @@ int main(int argc, char* argv[])
     std::cout << "\n  Computing access for " << axses.getOrbitName() <<
                  " against " << axses.getGpName();
     for (const auto& axs : axses) {
-      std::cout << '\n' << axs.sinel_start;
+      std::cout << '\n' << axs.rise.to_str() <<
+                   "  " << axs.set.to_str();
     }
   }
 

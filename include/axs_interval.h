@@ -17,10 +17,10 @@ namespace eom {
  * Access start and stop times
  */
 struct axs_interval {
-  JulianDate start;
-  JulianDate stop;
-  double sinel_start {};
-  double sinel_stop {};
+  JulianDate rise;
+  JulianDate set;
+  double sinel_rise {};
+  double sinel_set {};
 };
 
 }

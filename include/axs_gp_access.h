@@ -45,6 +45,16 @@ public:
            std::shared_ptr<const Ephemeris> eph);
 
   /**
+   * Computes access analysis over entire duration.
+   */
+  bool findNextAccess();
+
+  /**
+   * Computes access analysis over entire duration.
+   */
+  void findAllAccesses();
+
+  /**
    * @return  Name (string identifieer) associated with ground point
    */
   std::string getGpName() const noexcept;
@@ -53,13 +63,6 @@ public:
    * @return  Name (string identifieer) associated with orbit
    */
   std::string getOrbitName() const;
-
-  /**
-   * Computes access analysis over entire duration.
-   */
-  void findAllAccesses()
-  {
-  }
 
   /**
    * Provides constant iterator access to access interval structures
@@ -100,11 +103,20 @@ public:
   }
 
 private:
+  /*
+   * Given the time of interest, evaluates if access is satisfied based
+   * on stored constraints.
+  */
+  bool is_visible(const JulianDate& jd); 
+
   JulianDate m_jdStart;
   JulianDate m_jdStop;
   GroundPoint m_gp;
   GpConstraints m_xcs;
   std::shared_ptr<const Ephemeris> m_eph;
+
+  JulianDate m_jd;
+  double m_max_vel {};
 
   std::vector<axs_interval> m_intervals;
 };
