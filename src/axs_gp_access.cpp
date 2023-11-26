@@ -10,6 +10,7 @@
 
 #include <string>
 #include <memory>
+#include <cmath>
 
 #include <Eigen/Dense>
 
@@ -25,6 +26,13 @@ namespace {
     // One second increment after end of access window to start
     // searching for the next access window
   constexpr double jd_inc {1.0*utl_const::day_per_sec};
+    // Search increment
+  constexpr double dt_days {20.0*utl_const::day_per_sec};
+    // Factor to cut max search time by
+  constexpr double dt_max_sf {0.25};
+    // Access convergence
+  constexpr double tol_dt_day {0.1*utl_const::day_per_sec};
+  constexpr int max_itr {60};
 }
 
 namespace eom {
@@ -44,7 +52,14 @@ GpAccess::GpAccess(const JulianDate& jdStart,
   m_jd = jdStart;
 
   Keplerian oe(m_eph->getStateVector(m_jd, EphemFrame::eci));
-  m_max_vel = phy_const::earth_equatorial_speed() + oe.getPerigeeSpeed();
+  double max_vel {phy_const::earth_equatorial_speed() + oe.getPerigeeSpeed()};
+  m_theta_dot = max_vel/oe.getPerigeeRadius();
+
+  double alpha {utl_const::pio2 + m_xcs.getMinEl()};
+  double phi {std::sin(alpha)*
+              std::asin(phy_const::earth_smaj/oe.getPerigeeRadius())};
+  double theta {utl_const::pi - (alpha + phi)};
+  m_max_dt_days = dt_max_sf*phy_const::day_per_tu*(theta/m_theta_dot);
 }
 
 
@@ -115,7 +130,6 @@ bool GpAccess::is_visible(const JulianDate& jd)
 
 bool GpAccess::findRise(axs_interval& axs)
 {
-  double dt_days = utl_const::day_per_sec;
   bool found_rise {false};
   while (!(found_rise = is_visible(m_jd))) {
     m_jd += dt_days;
@@ -126,14 +140,28 @@ bool GpAccess::findRise(axs_interval& axs)
     }
   }
 
-    /*
-    Eigen::Matrix<double, 3, 1> pos = m_eph->getPosition(m_jd, EphemFrame::ecf);
-    auto dist = (pos - m_gp.getCartesian()).norm();
-    m_jd += phy_const::day_per_tu*(dist/m_max_vel);
-    */
+    // Bisection method to refine time
+  if (found_rise) {
+    auto jd1 = m_jd;                        // In access
+    auto jd2 = jd1 + -dt_days;              // Behind access
+    auto jd3 = jd2 + 0.5*(jd1 - jd2);
+    for (int ii=0; ii<max_itr; ++ii) {
+      if (std::fabs(jd1 - jd2) <= tol_dt_day) {
+        break;
+      }
+      if (is_visible(jd3)) {
+        jd1 = jd3;
+      } else {
+        jd2 = jd3;
+      }
+      jd3 = jd2 + 0.5*(jd1 - jd2);
+    }
+    m_jd = jd3;
+  }
 
   if (found_rise) {
     axs.rise = m_jd;
+    m_jd += dt_days;
     return true;
   } else {
     return false;
@@ -143,17 +171,40 @@ bool GpAccess::findRise(axs_interval& axs)
 
 void GpAccess::findSet(axs_interval& axs)
 {
-  double dt_days = utl_const::day_per_sec;
+  bool found_set {true};
   while (is_visible(m_jd)) {
     m_jd += dt_days;
     if (m_jdStop <= m_jd) {
       m_jd = m_jdStop;
+      found_set = false;
       break;
     }
   }
-  axs.set = m_jd;
-}
 
+    // Bisection method to refine time
+  if (found_set) {
+    auto jd1 = m_jd;                        // In access
+    auto jd2 = jd1 + -dt_days;              // Behind access
+    auto jd3 = jd2 + 0.5*(jd1 - jd2);
+    for (int ii=0; ii<max_itr; ++ii) {
+      if (std::fabs(jd1 - jd2) <= tol_dt_day) {
+        break;
+      }
+      if (!is_visible(jd3)) {
+        jd1 = jd3;
+      } else {
+        jd2 = jd3;
+      }
+      jd3 = jd2 + 0.5*(jd1 - jd2);
+    }
+    m_jd = jd3;
+  }
+
+  axs.set = m_jd;
+  if (found_set) {
+    m_jd += dt_days;
+  }
+}
 
 void GpAccess::setRiseSetStatus(axs_interval& axs)
 {

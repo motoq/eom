@@ -158,7 +158,8 @@ private:
   std::shared_ptr<const Ephemeris> m_eph;
 
   JulianDate m_jd;
-  double m_max_vel {};
+  double m_theta_dot {};
+  double m_max_dt_days {};
 
   std::vector<axs_interval> m_intervals;
 };
