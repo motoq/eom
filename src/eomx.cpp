@@ -436,8 +436,7 @@ int main(int argc, char* argv[])
     gp->print(std::cout);
   }
 
-
-    // Print Access Requests
+    // Print Access Requests - print access here for now also
   for (const auto& axses : gp_accessors) {
     std::cout << "\n  Computing access for " << axses.getOrbitName() <<
                  " against " << axses.getGpName();
@@ -451,8 +450,6 @@ int main(int argc, char* argv[])
                    "} deg Elevation";
     }
   }
-
-
 
   //
   // Model and command lists completed - no further modifications

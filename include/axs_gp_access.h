@@ -37,6 +37,8 @@ public:
    * @param  gp   Ground point definition
    * @param  eph  Ephemeris source
    * @param  xcs  Access constraints
+   *
+   * @throws  invalid_argument if not orbital ephemeris
    */
   GpAccess(const JulianDate& jdStart,
            const JulianDate& jdStop,
@@ -105,7 +107,8 @@ public:
 private:
   /*
    * Given the time of interest, evaluates if access is satisfied based
-   * on stored constraints.
+   * on stored constraints.  Returns false if requested time is outside
+   * the open interval defined by m_jdStart and m_jdStop.
    *
    * @param  jd  Time to evaluate if access constraints are met
    */

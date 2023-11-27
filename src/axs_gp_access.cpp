@@ -11,6 +11,7 @@
 #include <string>
 #include <memory>
 #include <cmath>
+#include <stdexcept>
 
 #include <Eigen/Dense>
 
@@ -32,7 +33,7 @@ namespace {
   constexpr double dt_max_sf {0.25};
     // Access convergence
   constexpr double tol_dt_day {0.1*utl_const::day_per_sec};
-  constexpr int max_itr {60};
+  constexpr int max_itr {42};
 }
 
 namespace eom {
@@ -51,15 +52,20 @@ GpAccess::GpAccess(const JulianDate& jdStart,
 {
   m_jd = jdStart;
 
-  Keplerian oe(m_eph->getStateVector(m_jd, EphemFrame::eci));
-  double max_vel {phy_const::earth_equatorial_speed() + oe.getPerigeeSpeed()};
-  m_theta_dot = max_vel/oe.getPerigeeRadius();
+  try {
+    Keplerian oe(m_eph->getStateVector(m_jd, EphemFrame::eci));
+    double max_vel {phy_const::earth_equatorial_speed() + oe.getPerigeeSpeed()};
+    m_theta_dot = max_vel/oe.getPerigeeRadius();
 
-  double alpha {utl_const::pio2 + m_xcs.getMinEl()};
-  double phi {std::sin(alpha)*
-              std::asin(phy_const::earth_smaj/oe.getPerigeeRadius())};
-  double theta {utl_const::pi - (alpha + phi)};
-  m_max_dt_days = dt_max_sf*phy_const::day_per_tu*(theta/m_theta_dot);
+    double alpha {utl_const::pio2 + m_xcs.getMinEl()};
+    double phi {std::sin(alpha)*
+                std::asin(phy_const::earth_smaj/oe.getPerigeeRadius())};
+    double theta {utl_const::pi - (alpha + phi)};
+    m_max_dt_days = dt_max_sf*phy_const::day_per_tu*(theta/m_theta_dot);
+  } catch (const std::invalid_argument& ia) {
+    throw std::invalid_argument("Non-orbital Ephemeris Sent to GpAccess: " +
+                                m_eph->getName());
+  }
 }
 
 
@@ -118,8 +124,12 @@ std::string GpAccess::getOrbitName() const
 
 bool GpAccess::is_visible(const JulianDate& jd)
 {
-  Eigen::Matrix<double, 3, 1> pos = m_eph->getPosition(jd, EphemFrame::ecf);
+    // Ensure ephemeris past availability is not requested
+  if (m_jdStop < m_jd  ||  m_jd < m_jdStart) {
+    return false;
+  }
 
+  Eigen::Matrix<double, 3, 1> pos = m_eph->getPosition(jd, EphemFrame::ecf);
   if (m_gp.getSinElevation(pos) >= m_xcs.getSineMinEl()) {
     return true;
   }
@@ -140,15 +150,12 @@ bool GpAccess::findRise(axs_interval& axs)
     }
   }
 
-    // Bisection method to refine time
+    // Bisection method to refine time:  jd2 < jd1, jd3 is average
   if (found_rise) {
     auto jd1 = m_jd;                        // In access
     auto jd2 = jd1 + -dt_days;              // Behind access
     auto jd3 = jd2 + 0.5*(jd1 - jd2);
-    for (int ii=0; ii<max_itr; ++ii) {
-      if (std::fabs(jd1 - jd2) <= tol_dt_day) {
-        break;
-      }
+    for (int ii=0; (jd1 - jd2)>tol_dt_day  &&  ii<max_itr; ++ii) {
       if (is_visible(jd3)) {
         jd1 = jd3;
       } else {
@@ -181,15 +188,12 @@ void GpAccess::findSet(axs_interval& axs)
     }
   }
 
-    // Bisection method to refine time
+    // Bisection method to refine time:  jd2 < jd1, jd3 is average
   if (found_set) {
     auto jd1 = m_jd;                        // In access
     auto jd2 = jd1 + -dt_days;              // Behind access
     auto jd3 = jd2 + 0.5*(jd1 - jd2);
-    for (int ii=0; ii<max_itr; ++ii) {
-      if (std::fabs(jd1 - jd2) <= tol_dt_day) {
-        break;
-      }
+    for (int ii=0; (jd1 - jd2)>tol_dt_day  &&  ii<max_itr; ++ii) {
       if (!is_visible(jd3)) {
         jd1 = jd3;
       } else {
