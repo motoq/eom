@@ -10,13 +10,13 @@ LeapSeconds 37;
 EcfEciRate Minutes 240;
 
 AngleUnits  Degrees;
-Orbit  heosat   SecJ2 GD 2021 11 12 17 00 00.0
+Orbit  heosat   VintiMod GD 2021 11 12 17 00 00.0
        KEP_T  GCRF  4.1632  0.741  63.4  345.0  270.0  0.0;
-Orbit  geosat   Kepler1 GD 2021 11 12 17 00 00.0
+Orbit  geosat   Kepler1  GD 2021 11 12 17 00 00.0
        KEP_T  GCRF  6.61106  0.001  7.0  50.0  0.0  0.0;
 DistanceUnits Kilometers;
 TimeUnits Seconds;
-Orbit  leosat   SecJ2    GD 2021 11 12 17 00 00.0
+Orbit  leosat   VintiMod GD 2021 11 12 17 00 00.0
        CART   GCRF  -5552.0  -2563.0  3258.0   2.149  -7.539  -2.186;
 
 GroundPoint gp01 LLA  43.0  30.0  0.0;
