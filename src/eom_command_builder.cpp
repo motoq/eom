@@ -9,6 +9,7 @@
 #include <eom_command_builder.h>
 
 #include <memory>
+#include <utility>
 #include <string>
 #include <deque>
 #include <unordered_map>
@@ -25,11 +26,12 @@
 
 namespace eom_app {
 
-EomCommandBuilder::EomCommandBuilder(
-    const std::shared_ptr<std::unordered_map<std::string,
-                          std::shared_ptr<eom::Ephemeris>>>& ephemerides)
+EomCommandBuilder::
+EomCommandBuilder(std::shared_ptr<
+                  std::unordered_map<
+                  std::string, std::shared_ptr<eom::Ephemeris>>> ephemerides)
 {
-  m_ephemerides = ephemerides;
+  m_ephemerides = std::move(ephemerides);
 }
 
 

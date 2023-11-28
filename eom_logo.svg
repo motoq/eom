@@ -1,518 +1,322 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<svg viewBox="0 0 419 314" xmlns="http://www.w3.org/2000/svg" width="419pt" xmlns:xlink="http://www.w3.org/1999/xlink" height="314pt">
+<svg viewBox="0 0 419 314" width="419pt" height="314pt" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
  <title>Figure 1</title>
  <desc>
 Creator: GL2PS 1.4.2, (C) 1999-2020 C. Geuzaine
 For: Octave
-CreationDate: Mon Nov 27 22:49:38 2023
+CreationDate: Tue Nov 28 00:43:19 2023
 </desc>
  <defs/>
- <polygon fill="#ffffff" points="0,0 419,0 419,314 0,314"/>
+ <polygon points="0,0 419,0 419,314 0,314" fill="#ffffff"/>
  <g>
-  <polygon shape-rendering="crispEdges" fill="#ffffff" points="0,314 419,314 419,0 0,0"/>
+  <polygon points="0,314 419,314 419,0 0,0" shape-rendering="crispEdges" fill="#ffffff"/>
   <clipPath id="cp00419314">
    <polygon points="0,314 419,314 419,0 0,0"/>
   </clipPath>
   <g clip-path="url(#cp00419314)">
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="228.73,166.718 227.73,166.718 227.23,165.852 227.73,164.986 228.73,164.986 229.23,165.852 229.23,165.852"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="203.846,144.166 202.846,144.166 202.346,143.3 202.846,142.434 203.846,142.434 204.346,143.3 204.346,143.3"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="216.529,134.83 215.529,134.83 215.029,133.964 215.529,133.098 216.529,133.098 217.029,133.964 217.029,133.964"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="240.619,156.668 239.619,156.668 239.119,155.802 239.619,154.936 240.619,154.936 241.119,155.802 241.119,155.802"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="211.817,177.789 210.817,177.789 210.317,176.923 210.817,176.057 211.817,176.057 212.317,176.923 212.317,176.923"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="192.254,153.992 191.254,153.992 190.754,153.126 191.254,152.26 192.254,152.26 192.754,153.126 192.754,153.126"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="229.06,126.85 228.06,126.85 227.56,125.984 228.06,125.117 229.06,125.117 229.56,125.984 229.56,125.984"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="250.864,146.791 249.864,146.791 249.364,145.925 249.864,145.059 250.864,145.059 251.364,145.925 251.364,145.925"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="199.76,184.45 198.76,184.45 198.26,183.584 198.76,182.718 199.76,182.718 200.26,183.584 200.26,183.584"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="182.491,163.373 181.491,163.373 180.991,162.507 181.491,161.641 182.491,161.641 182.991,162.507 182.991,162.507"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="240.467,120.506 239.467,120.506 238.967,119.64 239.467,118.774 240.467,118.774 240.967,119.64 240.967,119.64"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="200.398,161.025 199.398,161.025 198.898,160.159 199.398,159.293 200.398,159.293 200.898,160.159 200.898,160.159"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="237.749,146.379 236.749,146.379 236.249,145.513 236.749,144.647 237.749,144.647 238.249,145.513 238.249,145.513"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="234.992,147.797 233.992,147.797 233.492,146.931 233.992,146.065 234.992,146.065 235.492,146.931 235.492,146.931"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="197.342,162.841 196.342,162.841 195.842,161.975 196.342,161.109 197.342,161.109 197.842,161.975 197.842,161.975"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="202.939,159.705 201.939,159.705 201.439,158.839 201.939,157.973 202.939,157.973 203.439,158.839 203.439,158.839"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="241.059,144.408 240.059,144.408 239.559,143.542 240.059,142.676 241.059,142.676 241.559,143.542 241.559,143.542"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="232.707,148.831 231.707,148.831 231.207,147.965 231.707,147.099 232.707,147.099 233.207,147.965 233.207,147.965"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="205.051,158.731 204.051,158.731 203.551,157.865 204.051,156.999 205.051,156.999 205.551,157.865 205.551,157.865"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="230.804,149.598 229.804,149.598 229.304,148.732 229.804,147.866 230.804,147.866 231.304,148.732 231.304,148.732"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="193.731,165.354 192.731,165.354 192.231,164.488 192.731,163.622 193.731,163.622 194.231,164.488 194.231,164.488"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="206.816,157.999 205.816,157.999 205.316,157.133 205.816,156.267 206.816,156.267 207.316,157.133 207.316,157.133"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="229.205,150.178 228.205,150.178 227.705,149.312 228.205,148.446 229.205,148.446 229.705,149.312 229.705,149.312"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="244.922,141.673 243.922,141.673 243.422,140.807 243.922,139.941 244.922,139.941 245.422,140.807 245.422,140.807"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="208.305,157.439 207.305,157.439 206.805,156.573 207.305,155.707 208.305,155.707 208.805,156.573 208.805,156.573"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="227.85,150.625 226.85,150.625 226.35,149.759 226.85,148.893 227.85,148.893 228.35,149.759 228.35,149.759"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="209.572,157.001 208.572,157.001 208.072,156.135 208.572,155.269 209.572,155.269 210.072,156.135"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="259.218,137.784 258.218,137.784 257.718,136.918 258.218,136.052 259.218,136.052 259.718,136.918 259.718,136.918"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="226.691,150.976 225.691,150.976 225.191,150.11 225.691,149.243 226.691,149.243 227.191,150.11 227.191,150.11"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="210.661,156.653 209.661,156.653 209.161,155.787 209.661,154.921 210.661,154.921 211.161,155.787"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="225.692,151.256 224.692,151.256 224.192,150.39 224.692,149.524 225.692,149.524 226.192,150.39 226.192,150.39"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="189.717,168.761 188.717,168.761 188.217,167.895 188.717,167.029 189.717,167.029 190.217,167.895 190.217,167.895"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="211.602,156.372 210.602,156.372 210.102,155.506 210.602,154.64 211.602,154.64 212.102,155.506"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="224.823,151.484 223.823,151.484 223.323,150.618 223.823,149.752 224.823,149.752 225.323,150.618 225.323,150.618"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="212.424,156.14 211.424,156.14 210.924,155.274 211.424,154.408 212.424,154.408 212.924,155.274"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="189.148,189.602 188.148,189.602 187.648,188.736 188.148,187.87 189.148,187.87 189.648,188.736 189.648,188.736"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="224.063,151.673 223.063,151.673 222.563,150.807 223.063,149.941 224.063,149.941 224.563,150.807 224.563,150.807"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="213.144,155.946 212.144,155.946 211.644,155.08 212.144,154.214 213.144,154.214 213.644,155.08"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="249.044,138.015 248.044,138.015 247.544,137.148 248.044,136.282 249.044,136.282 249.544,137.148 249.544,137.148"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="223.393,151.832 222.393,151.832 221.893,150.965 222.393,150.099 223.393,150.099 223.893,150.965 223.893,150.965"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="174.588,171.795 173.588,171.795 173.088,170.929 173.588,170.063 174.588,170.063 175.088,170.929 175.088,170.929"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="213.779,155.781 212.779,155.781 212.279,154.915 212.779,154.049 213.779,154.049 214.279,154.915"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="222.801,151.968 221.801,151.968 221.301,151.102 221.801,150.236 222.801,150.236 223.301,151.102 223.301,151.102"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="214.343,155.639 213.343,155.639 212.843,154.773 213.343,153.907 214.343,153.907 214.843,154.773"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="222.275,152.086 221.275,152.086 220.775,151.22 221.275,150.354 222.275,150.354 222.775,151.22 222.775,151.22"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="214.845,155.514 213.845,155.514 213.345,154.648 213.845,153.782 214.845,153.782 215.345,154.648"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="221.805,152.191 220.805,152.191 220.305,151.325 220.805,150.459 221.805,150.459 222.305,151.325 222.305,151.325"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="215.293,155.403 214.293,155.403 213.793,154.537 214.293,153.671 215.293,153.671 215.793,154.537"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="250.399,115.597 249.399,115.597 248.899,114.731 249.399,113.865 250.399,113.865 250.899,114.731 250.899,114.731"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="221.384,152.284 220.384,152.284 219.884,151.418 220.384,150.552 221.384,150.552 221.884,151.418 221.884,151.418"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="214.695,155.303 214.195,154.437 214.695,153.571 215.695,153.571 216.195,154.437"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="221.006,152.37 220.006,152.37 219.506,151.504 220.006,150.638 221.006,150.638 221.506,151.504 221.506,151.504"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="215.057,155.212 214.557,154.346 215.057,153.48 216.057,153.48 216.557,154.346"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="220.666,152.448 219.666,152.448 219.166,151.582 219.666,150.716 220.666,150.716 221.166,151.582 221.166,151.582"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="215.382,155.128 214.882,154.262 215.382,153.396 216.382,153.396 216.882,154.262"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="185.969,173.023 184.969,173.023 184.469,172.157 184.969,171.291 185.969,171.291 186.469,172.157 186.469,172.157"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="220.359,152.521 219.359,152.521 218.859,151.655 219.359,150.789 220.359,150.789 220.859,151.655 220.859,151.655"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="215.676,155.05 215.176,154.184 215.676,153.318 216.676,153.318 217.176,154.184"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="220.081,152.589 219.081,152.589 218.581,151.723 219.081,150.857 220.081,150.857 220.581,151.723 220.581,151.723"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="216.942,154.977 215.942,154.977 217.442,154.111"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="218.331,151.788 218.831,150.922 219.831,150.922 220.331,151.788"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="217.182,154.908 216.182,154.908 217.682,154.042"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="218.104,151.849 218.604,150.983 219.604,150.983 220.104,151.849"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="217.399,154.842 216.399,154.842 217.899,153.976"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="217.898,151.908 218.398,151.042 219.398,151.042 219.898,151.908"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="265.917,129.879 264.917,129.879 264.417,129.013 264.917,128.147 265.917,128.147 266.417,129.013 266.417,129.013"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="217.596,154.78 216.596,154.78 218.096,153.914"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="217.712,151.965 218.212,151.099 219.212,151.099 219.712,151.965"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="217.774,154.72 216.774,154.72 218.274,153.854"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="252.459,133.66 251.459,133.66 250.959,132.794 251.459,131.928 252.459,131.928 252.959,132.794 252.959,132.794"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="217.543,152.019 218.043,151.153 219.043,151.153 219.543,152.019"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="217.935,154.662 216.935,154.662 218.435,153.796"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="217.391,152.072 217.891,151.206 218.891,151.206 219.391,152.072"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="218.08,154.606 217.08,154.606 216.58,153.74 218.58,153.74"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="217.254,152.123 217.754,151.257 218.754,151.257 219.254,152.123"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="218.211,154.553 217.211,154.553 216.711,153.686 218.711,153.686"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="217.129,152.173 217.629,151.307 218.629,151.307 219.129,152.173 219.129,152.173"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="218.33,154.501 217.33,154.501 216.83,153.635 218.83,153.635"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="180.038,193.567 179.038,193.567 178.538,192.701 179.038,191.835 180.038,191.835 180.538,192.701 180.538,192.701"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="217.018,152.221 217.518,151.355 218.518,151.355 219.018,152.221 219.018,152.221"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="218.436,154.451 217.436,154.451 216.936,153.584 218.936,153.584"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="216.917,152.268 217.417,151.402 218.417,151.402 218.917,152.268 218.917,152.268"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="218.531,154.402 217.531,154.402 217.031,153.536 219.031,153.536"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="216.828,152.313 217.328,151.447 218.328,151.447 218.828,152.313 218.828,152.313"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="218.616,154.355 217.616,154.355 219.116,153.489"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="216.748,152.357 217.248,151.491 218.248,151.491 218.748,152.357"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="168.234,179.145 167.234,179.145 166.734,178.279 167.234,177.413 168.234,177.413 168.734,178.279 168.734,178.279"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="218.691,154.31 217.691,154.31 219.191,153.444"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="216.677,152.399 217.177,151.533 218.177,151.533 218.677,152.399"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="218.758,154.266 217.758,154.266 219.258,153.4"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="216.614,152.441 217.114,151.575 218.114,151.575 218.614,152.441"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="218.816,154.224 217.816,154.224 219.316,153.358"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="216.56,152.48 217.06,151.614 218.06,151.614 218.56,152.48"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="218.867,154.184 217.867,154.184 219.367,153.318"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="216.512,152.518 217.012,151.652 218.012,151.652 218.512,152.518"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="218.911,154.145 217.911,154.145 219.411,153.279"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="216.472,152.555 216.972,151.689 217.972,151.689 218.472,152.555"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="218.949,154.108 217.949,154.108 219.449,153.242"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="216.437,152.59 216.937,151.724 217.937,151.724 218.437,152.59"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="218.98,154.073 217.98,154.073 219.48,153.207"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="258.902,111.785 257.902,111.785 257.402,110.919 257.902,110.053 258.902,110.053 259.402,110.919 259.402,110.919"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="216.409,152.624 216.909,151.758 217.909,151.758 218.409,152.624"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="219.006,154.039 218.006,154.039 219.506,153.173"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="216.385,152.656 216.885,151.79 217.885,151.79 218.385,152.656"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="219.027,154.007 218.027,154.007 219.527,153.141"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="216.367,152.687 216.867,151.821 217.867,151.821 218.367,152.687"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="219.042,153.977 218.042,153.977 219.542,153.111"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="216.354,152.715 216.854,151.849 217.854,151.849 218.354,152.715"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="219.053,153.949 218.053,153.949 219.553,153.083"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="183.979,177.34 182.979,177.34 182.479,176.474 182.979,175.608 183.979,175.608 184.479,176.474 184.479,176.474"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="216.345,152.742 216.845,151.876 217.845,151.876 218.345,152.742"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="219.06,153.922 218.06,153.922 219.56,153.056"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="216.34,152.768 216.84,151.902 217.84,151.902 218.34,152.768"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="216.339,152.791 216.839,151.925 217.839,151.925 218.339,152.791"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="271.32,123.042 270.32,123.042 269.82,122.176 270.32,121.31 271.32,121.31 271.82,122.176 271.82,122.176"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="217.365,152.881 217.865,152.015 218.865,152.015 219.365,152.881"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="172.264,196.664 171.264,196.664 170.764,195.798 171.264,194.932 172.264,194.932 172.764,195.798 172.764,195.798"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="217.216,153.761 216.716,152.895 218.716,152.895"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="217.216,152.029 218.216,152.029 218.716,152.895 218.716,152.895"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="217.243,153.75 216.743,152.884 218.743,152.884"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="217.243,152.018 218.243,152.018 218.743,152.884 218.743,152.884"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="163.076,185.496 162.076,185.496 161.576,184.63 162.076,183.764 163.076,183.764 163.576,184.63 163.576,184.63"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="217.351,153.69 216.851,152.824 218.851,152.824"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="251.893,127.432 250.893,127.432 250.393,126.566 250.893,125.7 251.893,125.7 252.393,126.566 252.393,126.566"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="266.165,108.77 265.165,108.77 264.665,107.904 265.165,107.038 266.165,107.038 266.665,107.904 266.665,107.904"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="216.864,153.2 217.364,152.334 218.864,153.2"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="185.303,180.014 184.303,180.014 183.803,179.148 184.303,178.282 185.303,178.282 185.803,179.148 185.803,179.148"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="217.568,153.245 217.068,152.379 219.068,152.379"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="217.568,151.513 218.568,151.513 219.068,152.379 219.068,152.379"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="275.738,117.148 274.738,117.148 274.238,116.282 274.738,115.415 275.738,115.415 276.238,116.282 276.238,116.282"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="217.348,154.317 216.848,153.451 218.848,153.451"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="217.556,151.5 218.556,151.5 219.056,152.366 219.056,152.366"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="218.362,154.329 217.362,154.329 216.862,153.463 218.862,153.463"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="217.541,151.488 218.541,151.488 219.041,152.354 219.041,152.354"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="218.378,154.339 217.378,154.339 216.878,153.473 218.878,153.473"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="217.523,151.479 218.523,151.479 219.023,152.345 219.023,152.345"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="218.397,154.347 217.397,154.347 216.897,153.481 218.897,153.481"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="217.503,151.473 218.503,151.473 219.003,152.339 219.003,152.339"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="218.418,154.352 217.418,154.352 216.918,153.486 218.918,153.486"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="217.48,151.47 218.48,151.47 218.98,152.336 218.98,152.336"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="218.442,154.353 217.442,154.353 216.942,153.487 218.942,153.487"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="217.454,151.469 218.454,151.469 218.954,152.335 218.954,152.335"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="218.469,154.352 217.469,154.352 216.969,153.486 218.969,153.486"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="216.925,152.339 217.425,151.473 218.425,151.473 218.925,152.339 218.925,152.339"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="218.499,154.346 217.499,154.346 216.999,153.48 218.999,153.48"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="165.617,199.137 164.617,199.137 164.117,198.271 164.617,197.405 165.617,197.405 166.117,198.271 166.117,198.271"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="216.893,152.346 217.393,151.48 218.393,151.48 218.893,152.346 218.893,152.346"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="218.532,154.337 217.532,154.337 217.032,153.471 219.032,153.471"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="216.858,152.357 217.358,151.491 218.358,151.491 218.858,152.357 218.858,152.357"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="218.568,154.323 217.568,154.323 217.068,153.457 219.068,153.457"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="216.82,152.373 217.32,151.507 218.32,151.507 218.82,152.373 218.82,152.373"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="218.607,154.304 217.607,154.304 217.107,153.438 219.107,153.438"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="216.779,152.394 217.279,151.528 218.279,151.528 218.779,152.394 218.779,152.394"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="218.648,154.281 217.648,154.281 217.148,153.415 219.148,153.415"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="216.734,152.42 217.234,151.554 218.234,151.554 218.734,152.42 218.734,152.42"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="158.827,190.978 157.827,190.978 157.327,190.112 157.827,189.246 158.827,189.246 159.327,190.112 159.327,190.112"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="218.694,154.251 217.694,154.251 217.194,153.385 219.194,153.385"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="216.686,152.452 217.186,151.586 218.186,151.586 218.686,152.452 218.686,152.452"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="218.742,154.216 217.742,154.216 217.242,153.35 219.242,153.35"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="216.634,152.491 217.134,151.625 218.134,151.625 218.634,152.491 218.634,152.491"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="218.794,154.174 217.794,154.174 217.294,153.308 219.294,153.308"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="216.579,152.536 217.079,151.67 218.079,151.67 218.579,152.536 218.579,152.536"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="218.85,154.124 217.85,154.124 217.35,153.258 219.35,153.258"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="216.52,152.588 217.02,151.722 218.02,151.722 218.52,152.588 218.52,152.588"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="218.91,154.068 217.91,154.068 217.41,153.202 217.91,152.335 219.41,153.202"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="216.456,152.649 216.956,151.783 217.956,151.783 218.456,152.649 218.456,152.649"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="218.973,154.002 217.973,154.002 217.473,153.136 219.473,153.136"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="248.489,126.557 247.489,126.557 246.989,125.691 247.489,124.825 248.489,124.825 248.989,125.691 248.989,125.691"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="216.389,152.718 216.889,151.852 217.889,151.852 218.389,152.718 218.389,152.718"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="219.04,153.928 218.04,153.928 217.54,153.062 218.04,152.196 219.04,152.196 219.54,153.062"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="272.39,106.333 271.39,106.333 270.89,105.467 271.39,104.601 272.39,104.601 272.89,105.467 272.89,105.467"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="217.816,153.663 216.816,153.663 218.316,152.797"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="216.316,152.797 216.816,151.931 217.816,151.931 218.316,152.797 218.316,152.797"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="219.112,153.844 218.112,153.844 217.612,152.978 218.112,152.112 219.112,152.112 219.612,152.978"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="217.74,153.752 216.74,153.752 218.24,152.886"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="216.24,152.886 216.74,152.02 217.74,152.02 218.24,152.886 218.24,152.886"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="219.189,153.749 218.189,153.749 217.689,152.883 218.189,152.017 219.189,152.017 219.689,152.883"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="217.658,153.853 216.658,153.853 218.158,152.987"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="216.158,152.987 216.658,152.12 217.658,152.12 218.158,152.987 218.158,152.987"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="219.27,153.642 218.27,153.642 217.77,152.776 218.27,151.91 219.27,151.91 219.77,152.776"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="217.57,153.965 216.57,153.965 216.07,153.099 216.57,152.233 217.57,152.233 218.07,153.099 218.07,153.099"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="219.357,153.523 218.357,153.523 217.857,152.657 218.357,151.791 219.357,151.791 219.857,152.657"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="217.476,154.091 216.476,154.091 215.976,153.225 216.476,152.359 217.476,152.359 217.976,153.225 217.976,153.225"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="219.45,153.39 218.45,153.39 217.95,152.524 218.45,151.658 219.45,151.658 219.95,152.524"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="217.376,154.231 216.376,154.231 215.876,153.365 216.376,152.499 217.376,152.499 217.876,153.365 217.876,153.365"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="219.549,153.241 218.549,153.241 218.049,152.375 218.549,151.509 219.549,151.509 220.049,152.375"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="217.269,154.387 216.269,154.387 215.769,153.521 216.269,152.655 217.269,152.655 217.769,153.521 217.769,153.521"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="219.656,153.076 218.656,153.076 218.156,152.21 218.656,151.344 219.656,151.344 220.156,152.21"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="189.584,179.947 188.584,179.947 188.084,179.081 188.584,178.215 189.584,178.215 190.084,179.081 190.084,179.081"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="217.154,154.561 216.154,154.561 215.654,153.695 216.154,152.829 217.154,152.829 217.654,153.695 217.654,153.695"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="219.77,152.893 218.77,152.893 218.27,152.027 218.77,151.161 219.77,151.161 220.27,152.027"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="217.03,154.754 216.03,154.754 215.53,153.888 216.03,153.022 217.03,153.022 217.53,153.888 217.53,153.888"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="219.893,152.689 218.893,152.689 218.393,151.823 218.893,150.957 220.393,151.823"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="279.411,112.056 278.411,112.056 277.911,111.19 278.411,110.324 279.411,110.324 279.911,111.19 279.911,111.19"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="216.895,154.969 215.895,154.969 215.395,154.103 215.895,153.236 216.895,153.236 217.395,154.103 217.395,154.103"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="220.026,152.463 219.026,152.463 218.526,151.597 219.026,150.731 220.526,151.597"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="216.75,155.207 215.75,155.207 215.25,154.341 215.75,153.475 216.75,153.475 217.25,154.341 217.25,154.341"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="220.17,152.212 219.17,152.212 218.67,151.346 219.17,150.48 220.67,151.346"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="216.591,155.471 215.591,155.471 215.091,154.605 215.591,153.739 216.591,153.739 217.091,154.605 217.091,154.605"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="220.328,151.933 219.328,151.933 218.828,151.067 219.328,150.201 220.328,150.201 220.828,151.067 220.828,151.067"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="216.417,155.766 215.417,155.766 214.917,154.9 215.417,154.034 216.417,154.034 216.917,154.9 216.917,154.9"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="220.5,151.622 219.5,151.622 219,150.756 219.5,149.89 220.5,149.89 221,150.756 221,150.756"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="159.904,201.159 158.904,201.159 158.404,200.293 158.904,199.427 159.904,199.427 160.404,200.293 160.404,200.293"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="216.226,156.093 215.226,156.093 214.726,155.227 215.226,154.361 216.226,154.361 216.726,155.227 216.726,155.227"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="220.691,151.277 219.691,151.277 219.191,150.411 219.691,149.545 220.691,149.545 221.191,150.411 221.191,150.411"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="216.013,156.458 215.013,156.458 214.513,155.592 215.013,154.726 216.013,154.726 216.513,155.592 216.513,155.592"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="220.903,150.891 219.903,150.891 219.403,150.025 219.903,149.159 220.903,149.159 221.403,150.025 221.403,150.025"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="215.776,156.866 214.776,156.866 214.276,156 214.776,155.134 215.776,155.134 216.276,156 216.276,156"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="155.271,195.722 154.271,195.722 153.771,194.856 154.271,193.99 155.271,193.99 155.771,194.856 155.771,194.856"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="221.14,150.46 220.14,150.46 219.64,149.594 220.14,148.728 221.14,148.728 221.64,149.594 221.64,149.594"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="243.422,128.187 242.422,128.187 241.922,127.321 242.422,126.455 243.422,126.455 243.922,127.321 243.922,127.321"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="215.509,157.323 214.509,157.323 214.009,156.457 214.509,155.591 215.509,155.591 216.009,156.457 216.009,156.457"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="221.408,149.977 220.408,149.977 219.908,149.111 220.408,148.245 221.408,148.245 221.908,149.111 221.908,149.111"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="215.207,157.836 214.207,157.836 213.707,156.97 214.207,156.104 215.207,156.104 215.707,156.97 215.707,156.97"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="221.713,149.434 220.713,149.434 220.213,148.568 220.713,147.702 222.213,148.568"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="214.86,158.414 213.86,158.414 213.36,157.548 213.86,156.682 214.86,156.682 215.36,157.548 215.36,157.548"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="222.065,148.82 221.065,148.82 220.565,147.954 221.065,147.088 222.065,147.088 222.565,147.954"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="277.753,104.319 276.753,104.319 276.253,103.453 276.753,102.587 277.753,102.587 278.253,103.453 278.253,103.453"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="194.795,177.838 193.795,177.838 193.295,176.972 193.795,176.106 194.795,176.106 195.295,176.972 195.295,176.972"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="214.458,159.069 213.458,159.069 212.958,158.203 213.458,157.337 214.458,157.337 214.958,158.203 214.958,158.203"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="222.473,148.124 221.473,148.124 220.973,147.258 221.473,146.392 222.473,146.392 222.973,147.258"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="213.988,159.813 212.988,159.813 212.488,158.947 212.988,158.081 213.988,158.081 214.488,158.947 214.488,158.947"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="222.954,147.331 221.954,147.331 221.454,146.465 221.954,145.599 222.954,145.599 223.454,146.465 223.454,146.465"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="213.431,160.664 212.431,160.664 211.931,159.798 212.431,158.932 213.431,158.932 213.931,159.798 213.931,159.798"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="223.528,146.422 222.528,146.422 222.028,145.556 222.528,144.69 223.528,144.69 224.028,145.556 224.028,145.556"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="238.535,131.012 237.535,131.012 237.035,130.146 237.535,129.28 238.535,129.28 239.035,130.146 239.035,130.146"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="212.762,161.643 211.762,161.643 211.262,160.777 211.762,159.911 212.762,159.911 213.262,160.777 213.262,160.777"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="224.222,145.373 223.222,145.373 222.722,144.507 223.222,143.641 224.222,143.641 224.722,144.507 224.722,144.507"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="211.947,162.776 210.947,162.776 210.447,161.91 210.947,161.044 211.947,161.044 212.447,161.91 212.447,161.91"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="199.444,174.977 198.444,174.977 197.944,174.111 198.444,173.245 199.444,173.245 199.944,174.111 199.944,174.111"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="225.075,144.154 224.075,144.154 223.575,143.288 224.075,142.422 225.075,142.422 225.575,143.288 225.575,143.288"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="282.511,107.645 281.511,107.645 281.011,106.779 281.511,105.912 282.511,105.912 283.011,106.779 283.011,106.779"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="210.937,164.096 209.937,164.096 209.437,163.23 209.937,162.364 210.937,162.364 211.437,163.23 211.437,163.23"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="226.139,142.729 225.139,142.729 224.639,141.862 225.139,140.996 226.139,140.996 226.639,141.862 226.639,141.862"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="234.566,134.001 233.566,134.001 233.066,133.135 233.566,132.269 234.566,132.269 235.066,133.135 235.066,133.135"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="209.665,165.646 208.665,165.646 208.165,164.78 208.665,163.913 209.665,163.913 210.165,164.78 210.165,164.78"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="227.491,141.05 226.491,141.05 225.991,140.184 226.491,139.318 227.491,139.318 227.991,140.184 227.991,140.184"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="203.117,172.147 202.117,172.147 201.617,171.281 202.117,170.415 203.117,170.415 203.617,171.281 203.617,171.281"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="208.035,167.473 207.035,167.473 206.535,166.607 207.035,165.741 208.035,165.741 208.535,166.607 208.535,166.607"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="229.238,139.064 228.238,139.064 227.738,138.198 228.238,137.332 229.238,137.332 229.738,138.198 229.738,138.198"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="231.532,136.721 230.532,136.721 230.032,135.855 230.532,134.989 231.532,134.989 232.032,135.855 232.032,135.855"/>
-   <polygon shape-rendering="crispEdges" fill="#ff00ff" points="205.913,169.629 204.913,169.629 204.413,168.763 204.913,167.897 205.913,167.897 206.413,168.763 206.413,168.763"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="154.967,202.848 153.967,202.848 153.467,201.982 153.967,201.116 154.967,201.116 155.467,201.982 155.467,201.982"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="152.25,199.839 151.25,199.839 150.75,198.973 151.25,198.107 152.25,198.107 152.75,198.973 152.75,198.973"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="282.397,102.619 281.397,102.619 280.897,101.753 281.397,100.887 282.397,100.887 282.897,101.753 282.897,101.753"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="285.165,103.808 284.165,103.808 283.665,102.942 284.165,102.076 285.165,102.076 285.665,102.942 285.665,102.942"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="150.679,204.289 149.679,204.289 149.179,203.423 149.679,202.557 150.679,202.557 151.179,203.423 151.179,203.423"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="149.652,203.424 148.652,203.424 148.152,202.558 148.652,201.692 149.652,201.692 150.152,202.558 150.152,202.558"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="286.438,101.158 285.438,101.158 284.938,100.292 285.438,99.4259 286.438,99.4259 286.938,100.292"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="287.464,100.463 286.464,100.463 285.964,99.5966 286.464,98.7305 287.464,98.7305 287.964,99.5966 287.964,99.5966"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="146.938,205.541 145.938,205.541 145.438,204.675 145.938,203.809 146.938,203.809 147.438,204.675 147.438,204.675"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="147.39,206.554 146.39,206.554 145.89,205.688 146.39,204.822 147.39,204.822 147.89,205.688 147.89,205.688"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="289.969,99.8811 288.969,99.8811 288.469,99.015 288.969,98.149 289.969,98.149 290.469,99.015 290.469,99.015"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="289.477,97.5373 288.477,97.5373 287.977,96.6713 288.477,95.8053 289.477,95.8053 289.977,96.6713 289.977,96.6713"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="143.663,206.646 142.663,206.646 142.163,205.78 142.663,204.913 143.663,204.913 144.163,205.78 144.163,205.78"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="145.404,209.292 144.404,209.292 143.904,208.426 144.404,207.56 145.404,207.56 145.904,208.426 145.904,208.426"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="293.062,98.7494 292.062,98.7494 291.562,97.8834 292.062,97.0173 293.062,97.0173 293.562,97.8834 293.562,97.8834"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="291.255,94.9754 290.256,94.9754 289.756,94.1093 290.256,93.2433 291.255,93.2433 291.755,94.1093 291.755,94.1093"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="140.789,207.633 139.789,207.633 139.289,206.767 139.789,205.901 140.789,205.901 141.289,206.767 141.289,206.767"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="143.645,211.691 142.645,211.691 142.145,210.825 142.645,209.959 143.645,209.959 144.145,210.825 144.145,210.825"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="295.779,97.7341 294.779,97.7341 294.279,96.8681 294.779,96.0021 295.779,96.0021 296.279,96.8681 296.279,96.8681"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="292.839,92.7292 291.839,92.7292 291.339,91.8632 291.839,90.9972 292.839,90.9972 293.339,91.8632 293.339,91.8632"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="138.261,208.527 137.261,208.527 136.761,207.661 137.261,206.795 138.261,206.795 138.761,207.661 138.761,207.661"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="142.076,213.794 141.076,213.794 140.576,212.928 141.076,212.062 142.076,212.062 142.576,212.928 142.576,212.928"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="298.169,96.8139 297.169,96.8139 296.669,95.9478 297.169,95.0818 298.169,95.0818 298.669,95.9478 298.669,95.9478"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="294.257,90.7594 293.257,90.7594 292.757,89.8934 293.257,89.0274 294.257,89.0274 294.757,89.8934 294.757,89.8934"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="136.036,209.344 135.036,209.344 134.536,208.478 135.036,207.612 136.036,207.612 136.536,208.478 136.536,208.478"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="140.668,215.638 139.668,215.638 139.168,214.772 139.668,213.906 140.668,213.906 141.168,214.772 141.168,214.772"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="300.273,95.9724 299.273,95.9724 298.773,95.1064 299.273,94.2403 300.273,94.2403 300.773,95.1064 300.773,95.1064"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="295.534,89.0326 294.534,89.0326 294.034,88.1666 294.534,87.3006 295.534,87.3006 296.034,88.1666 296.034,88.1666"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="134.076,210.096 133.076,210.096 132.576,209.23 133.076,208.364 134.076,208.364 134.576,209.23 134.576,209.23"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="139.399,217.252 138.399,217.252 137.899,216.386 138.399,215.52 139.399,215.52 139.899,216.386 139.899,216.386"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="302.125,95.1974 301.125,95.1974 300.625,94.3313 301.125,93.4653 302.125,93.4653 302.625,94.3313 302.625,94.3313"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="296.69,87.5207 295.69,87.5207 295.19,86.6546 295.69,85.7886 296.69,85.7886 297.19,86.6546 297.19,86.6546"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="132.35,210.793 131.35,210.793 130.85,209.927 131.35,209.061 132.35,209.061 132.85,209.927 132.85,209.927"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="138.251,218.664 137.251,218.664 136.751,217.798 137.251,216.932 138.251,216.932 138.751,217.798 138.751,217.798"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="303.755,94.4793 302.755,94.4793 302.255,93.6133 302.755,92.7473 303.755,92.7473 304.255,93.6133 304.255,93.6133"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="297.739,86.1993 296.739,86.1993 296.239,85.3332 296.739,84.4672 297.739,84.4672 298.239,85.3332 298.239,85.3332"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="130.832,211.444 129.832,211.444 129.332,210.578 129.832,209.712 130.832,209.712 131.332,210.578 131.332,210.578"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="137.208,219.896 136.208,219.896 135.708,219.03 136.208,218.164 137.208,218.164 137.708,219.03 137.708,219.03"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="305.187,93.8108 304.187,93.8108 303.687,92.9448 304.187,92.0787 305.187,92.0787 305.687,92.9448"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="298.694,85.0476 297.694,85.0476 297.194,84.1816 297.694,83.3156 298.694,83.3156 299.194,84.1816 299.194,84.1816"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="129.498,212.053 128.498,212.053 127.998,211.187 128.498,210.321 129.498,210.321 129.998,211.187 129.998,211.187"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="136.259,220.968 135.259,220.968 134.759,220.101 135.259,219.235 136.259,219.235 136.759,220.101 136.759,220.101"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="306.442,93.186 305.442,93.186 304.942,92.32 305.442,91.4539 306.442,91.4539 306.942,92.32"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="299.567,84.0475 298.567,84.0475 298.067,83.1815 298.567,82.3155 299.567,82.3155 300.067,83.1815"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="128.33,212.625 127.33,212.625 126.83,211.759 127.33,210.893 128.33,210.893 128.83,211.759 128.83,211.759"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="135.393,221.895 134.393,221.895 133.893,221.029 134.393,220.163 135.393,220.163 135.893,221.029 135.893,221.029"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="307.54,92.6004 306.54,92.6004 306.04,91.7343 306.54,90.8683 307.54,90.8683 308.04,91.7343"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="300.364,83.1832 299.364,83.1832 298.864,82.3172 299.364,81.4512 300.364,81.4512 300.864,82.3172"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="127.311,213.164 126.311,213.164 125.811,212.298 126.311,211.432 127.311,211.432 127.811,212.298 127.811,212.298"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="134.603,222.695 133.603,222.695 133.103,221.829 133.603,220.962 134.603,220.962 135.103,221.829 135.103,221.829"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="308.496,92.0501 307.496,92.0501 306.996,91.1841 307.496,90.3181 308.496,90.3181 308.996,91.1841"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="301.094,82.4407 300.094,82.4407 299.594,81.5746 300.094,80.7086 301.094,80.7086 301.594,81.5746"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="126.425,213.672 125.425,213.672 124.925,212.806 125.425,211.94 126.425,211.94 126.925,212.806 126.925,212.806"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="133.88,223.378 132.88,223.378 132.38,222.512 132.88,221.646 133.88,221.646 134.38,222.512 134.38,222.512"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="309.324,91.5324 308.324,91.5324 307.824,90.6664 308.324,89.8004 309.324,89.8004 309.824,90.6664"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="301.762,81.8076 300.762,81.8076 300.262,80.9416 300.762,80.0755 301.762,80.0755 302.262,80.9416"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="125.659,214.153 124.659,214.153 124.159,213.287 124.659,212.421 125.659,212.421 126.159,213.287 126.159,213.287"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="133.219,223.958 132.219,223.958 131.719,223.092 132.219,222.226 133.219,222.226 133.719,223.092 133.719,223.092"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="310.037,91.0448 309.037,91.0448 308.537,90.1787 309.037,89.3127 310.037,89.3127 310.537,90.1787"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="302.375,81.273 301.375,81.273 300.875,80.407 301.375,79.5409 302.375,79.5409 302.875,80.407"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="125.001,214.607 124.001,214.607 123.501,213.741 124.001,212.875 125.001,212.875 125.501,213.741 125.501,213.741"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="132.614,224.445 131.614,224.445 131.114,223.579 131.614,222.713 132.614,222.713 133.114,223.579 133.114,223.579"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="310.646,90.5852 309.646,90.5852 309.146,89.7191 309.646,88.8531 310.646,88.8531 311.146,89.7191"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="302.936,80.8271 301.936,80.8271 301.436,79.961 301.936,79.095 302.936,79.095 303.436,79.961"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="124.442,215.037 123.442,215.037 122.942,214.171 123.442,213.305 124.442,213.305 124.942,214.171 124.942,214.171"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="132.061,224.847 131.061,224.847 130.561,223.981 131.061,223.115 132.061,223.115 132.561,223.981 132.561,223.981"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="311.161,90.152 310.161,90.152 309.661,89.286 310.161,88.42 311.161,88.42 311.661,89.286"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="303.449,80.461 302.449,80.461 301.949,79.5949 302.449,78.7289 303.449,78.7289 303.949,79.5949"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="123.971,215.443 122.971,215.443 122.471,214.577 122.971,213.711 123.971,213.711 124.471,214.577 124.471,214.577"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="131.557,225.174 130.557,225.174 130.057,224.308 130.557,223.442 131.557,223.442 132.057,224.308 132.057,224.308"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="311.592,89.7439 310.592,89.7439 310.092,88.8778 310.592,88.0118 311.592,88.0118 312.092,88.8778"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="303.919,80.1668 302.919,80.1668 302.419,79.3008 302.919,78.4347 303.919,78.4347 304.419,79.3008"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="123.581,215.827 122.581,215.827 122.081,214.961 122.581,214.095 123.581,214.095 124.081,214.961 124.081,214.961"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="131.097,225.432 130.097,225.432 129.597,224.566 130.097,223.7 131.097,223.7 131.597,224.566 131.597,224.566"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="311.945,89.3596 310.945,89.3596 310.445,88.4935 310.945,87.6275 311.945,87.6275 312.445,88.4935"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="304.347,79.9373 303.347,79.9373 302.847,79.0713 303.347,78.2053 304.347,78.2053 304.847,79.0713"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="123.264,216.19 122.264,216.19 121.764,215.323 122.264,214.457 123.264,214.457 123.764,215.323 123.764,215.323"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="130.678,225.63 129.678,225.63 129.178,224.764 129.678,223.898 130.678,223.898 131.178,224.764 131.178,224.764"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="312.229,88.9981 311.229,88.9981 310.729,88.132 311.229,87.266 312.729,88.132"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="304.737,79.7661 303.737,79.7661 303.237,78.9001 303.737,78.0341 304.737,78.0341 305.237,78.9001"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="123.012,216.531 122.012,216.531 121.512,215.665 122.012,214.799 123.012,214.799 123.512,215.665 123.512,215.665"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="130.298,225.772 129.298,225.772 128.798,224.906 129.298,224.04 130.298,224.04 130.798,224.906 130.798,224.906"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="312.45,88.6584 311.45,88.6584 310.95,87.7924 311.45,86.9264 312.45,86.9264 312.95,87.7924 312.95,87.7924"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="305.092,79.6472 304.092,79.6472 303.592,78.7812 304.092,77.9152 305.092,77.9152 305.592,78.7812"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="122.82,216.853 121.82,216.853 121.32,215.987 121.82,215.121 122.82,215.121 123.32,215.987 123.32,215.987"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="129.953,225.865 128.953,225.865 128.453,224.999 128.953,224.133 129.953,224.133 130.453,224.999 130.453,224.999"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="312.614,88.3399 311.614,88.3399 311.114,87.4739 311.614,86.6078 312.614,86.6078 313.114,87.4739 313.114,87.4739"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="305.413,79.5753 304.413,79.5753 303.913,78.7092 304.413,77.8432 305.413,77.8432 305.913,78.7092"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="122.682,217.156 121.682,217.156 121.182,216.289 121.682,215.423 122.682,215.423 123.182,216.289 123.182,216.289"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="129.643,225.913 128.643,225.913 128.143,225.047 128.643,224.181 129.643,224.181 130.143,225.047 130.143,225.047"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="312.727,88.0417 311.727,88.0417 311.227,87.1756 311.727,86.3096 312.727,86.3096 313.227,87.1756 313.227,87.1756"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="305.703,79.5453 304.703,79.5453 304.203,78.6792 304.703,77.8132 305.703,77.8132 306.203,78.6792 306.203,78.6792"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="122.592,217.439 121.592,217.439 121.092,216.573 121.592,215.707 122.592,215.707 123.092,216.573 123.092,216.573"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="129.364,225.922 128.364,225.922 127.864,225.056 128.364,224.19 129.364,224.19 129.864,225.056 129.864,225.056"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="312.793,87.763 311.793,87.763 311.293,86.897 311.793,86.031 312.793,86.031 313.293,86.897 313.293,86.897"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="305.964,79.5527 304.964,79.5527 304.464,78.6867 304.964,77.8206 305.964,77.8206 306.464,78.6867 306.464,78.6867"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="122.547,217.705 121.547,217.705 121.047,216.839 121.547,215.973 122.547,215.973 123.047,216.839 123.047,216.839"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="129.114,225.896 128.114,225.896 127.614,225.03 128.114,224.164 129.114,224.164 129.614,225.03 129.614,225.03"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="312.817,87.5034 311.817,87.5034 311.317,86.6374 311.817,85.7714 312.817,85.7714 313.317,86.6374 313.317,86.6374"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="306.196,79.5934 305.196,79.5934 304.696,78.7274 305.196,77.8613 306.196,77.8613 306.696,78.7274 306.696,78.7274"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="122.54,217.953 121.54,217.953 121.04,217.087 121.54,216.221 122.54,216.221 123.04,217.087 123.04,217.087"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="128.892,225.839 127.892,225.839 127.392,224.973 127.892,224.107 128.892,224.107 129.392,224.973 129.392,224.973"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="312.804,87.2621 311.804,87.2621 311.304,86.3961 311.804,85.53 312.804,85.53 313.304,86.3961 313.304,86.3961"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="306.403,79.6636 305.403,79.6636 304.903,78.7975 305.403,77.9315 306.403,77.9315 306.903,78.7975 306.903,78.7975"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="122.569,218.184 121.569,218.184 121.069,217.318 121.569,216.452 122.569,216.452 123.069,217.318 123.069,217.318"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="128.696,225.754 127.696,225.754 127.196,224.888 127.696,224.022 128.696,224.022 129.196,224.888 129.196,224.888"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="312.758,87.0385 311.758,87.0385 311.258,86.1725 311.758,85.3065 312.758,85.3065 313.258,86.1725 313.258,86.1725"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="306.586,79.7597 305.586,79.7597 305.086,78.8936 305.586,78.0276 306.586,78.0276 307.086,78.8936 307.086,78.8936"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="121.63,218.398 121.13,217.532 121.63,216.666 122.63,216.666 123.13,217.532 123.13,217.532"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="128.525,225.645 127.525,225.645 127.025,224.779 127.525,223.913 128.525,223.913 129.025,224.779 129.025,224.779"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="312.682,86.832 311.682,86.832 311.182,85.966 311.682,85.1 312.682,85.1 313.182,85.966 313.182,85.966"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="306.746,79.8785 305.746,79.8785 305.246,79.0124 305.746,78.1464 306.746,78.1464 307.246,79.0124 307.246,79.0124"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="121.718,218.596 121.218,217.73 121.718,216.864 122.718,216.864 123.218,217.73 123.218,217.73"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="128.376,225.515 127.376,225.515 126.876,224.649 127.376,223.783 128.376,223.783 128.876,224.649 128.876,224.649"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="312.579,86.6421 311.579,86.6421 311.079,85.776 311.579,84.91 312.579,84.91 313.079,85.776 313.079,85.776"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="305.884,80.017 305.384,79.151 305.884,78.2849 306.884,78.2849 307.384,79.151 307.384,79.151"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="122.831,218.779 121.831,218.779 121.331,217.913 121.831,217.047 122.831,217.047 123.331,217.913 123.331,217.913"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="128.249,225.367 127.249,225.367 126.749,224.501 127.249,223.635 128.249,223.635 128.749,224.501 128.749,224.501"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="312.454,86.468 311.454,86.468 310.954,85.602 311.454,84.736 312.454,84.736 312.954,85.602 312.954,85.602"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="306.003,80.1724 305.503,79.3064 306.003,78.4404 307.003,78.4404 307.503,79.3064 307.503,79.3064"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="122.966,218.946 121.966,218.946 121.466,218.08 121.966,217.214 122.966,217.214 123.466,218.08 123.466,218.08"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="128.141,225.203 127.141,225.203 126.641,224.337 127.141,223.471 128.141,223.471 128.641,224.337 128.641,224.337"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="312.307,86.3093 311.307,86.3093 310.807,85.4433 311.307,84.5773 312.307,84.5773 312.807,85.4433 312.807,85.4433"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="307.103,80.3423 306.103,80.3423 305.603,79.4763 306.103,78.6102 307.103,78.6102 307.603,79.4763 307.603,79.4763"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="123.12,219.099 122.12,219.099 121.62,218.233 122.12,217.367 123.12,217.367 123.62,218.233 123.62,218.233"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="128.052,225.026 127.052,225.026 126.552,224.16 127.052,223.294 128.052,223.294 128.552,224.16 128.552,224.16"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="312.144,86.1653 311.144,86.1653 310.644,85.2993 311.144,84.4333 312.144,84.4333 312.644,85.2993 312.644,85.2993"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="307.185,80.5242 306.185,80.5242 305.685,79.6582 306.185,78.7921 307.185,78.7921 307.685,79.6582 307.685,79.6582"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="123.291,219.238 122.291,219.238 121.791,218.372 122.291,217.506 123.291,217.506 123.791,218.372 123.791,218.372"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="127.98,224.839 126.98,224.839 126.48,223.973 126.98,223.107 127.98,223.107 128.48,223.973 128.48,223.973"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="311.965,86.0354 310.965,86.0354 310.465,85.1694 310.965,84.3034 311.965,84.3034 312.465,85.1694 312.465,85.1694"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="307.251,80.716 306.251,80.716 305.751,79.8499 306.251,78.9839 307.251,78.9839 307.751,79.8499 307.751,79.8499"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="123.475,219.364 122.475,219.364 121.975,218.498 122.475,217.632 123.475,217.632 123.975,218.498 123.975,218.498"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="127.925,224.643 126.925,224.643 126.425,223.777 126.925,222.911 127.925,222.911 128.425,223.777 128.425,223.777"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="311.773,85.919 310.773,85.919 310.273,85.0529 310.773,84.1869 311.773,84.1869 312.273,85.0529 312.273,85.0529"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="307.302,80.9156 306.302,80.9156 305.802,80.0496 306.302,79.1836 307.302,79.1836 307.802,80.0496 307.802,80.0496"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="123.671,219.477 122.671,219.477 122.171,218.611 122.671,217.745 123.671,217.745 124.171,218.611 124.171,218.611"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="127.884,224.439 126.884,224.439 126.384,223.573 126.884,222.707 127.884,222.707 128.384,223.573 128.384,223.573"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="311.571,85.8154 310.571,85.8154 310.071,84.9493 310.571,84.0833 311.571,84.0833 312.071,84.9493 312.071,84.9493"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="307.339,81.1213 306.339,81.1213 305.839,80.2552 306.339,79.3892 307.339,79.3892 307.839,80.2552 307.839,80.2552"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="123.876,219.578 122.876,219.578 122.376,218.712 122.876,217.846 123.876,217.846 124.376,218.712 124.376,218.712"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="127.856,224.231 126.856,224.231 126.356,223.365 126.856,222.499 127.856,222.499 128.356,223.365 128.356,223.365"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="311.36,85.724 310.36,85.724 309.86,84.8579 310.36,83.9919 311.36,83.9919 311.86,84.8579 311.86,84.8579"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="307.364,81.3313 306.364,81.3313 305.864,80.4652 306.364,79.5992 307.364,79.5992 307.864,80.4652 307.864,80.4652"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="124.09,219.667 123.09,219.667 122.59,218.801 123.09,217.935 124.09,217.935 124.59,218.801 124.59,218.801"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="127.841,224.02 126.841,224.02 126.341,223.154 126.841,222.288 127.841,222.288 128.341,223.154 128.341,223.154"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="311.142,85.6441 310.142,85.6441 309.642,84.7781 310.142,83.9121 311.142,83.9121 311.642,84.7781 311.642,84.7781"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="307.376,81.544 306.376,81.544 305.876,80.678 306.376,79.8119 307.376,79.8119 307.876,80.678 307.876,80.678"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="124.309,219.745 123.309,219.745 122.809,218.879 123.309,218.013 124.309,218.013 124.809,218.879 124.809,218.879"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="127.838,223.806 126.838,223.806 126.338,222.94 126.838,222.074 127.838,222.074 128.338,222.94 128.338,222.94"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="310.92,85.5752 309.92,85.5752 309.42,84.7092 309.92,83.8432 310.92,83.8432 311.42,84.7092 311.42,84.7092"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="307.379,81.758 306.379,81.758 305.879,80.892 306.379,80.026 307.379,80.026 307.879,80.892 307.879,80.892"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="124.532,219.813 123.532,219.813 123.032,218.947 123.532,218.081 124.532,218.081 125.032,218.947 125.032,218.947"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="127.844,223.592 126.844,223.592 126.344,222.726 126.844,221.86 127.844,221.86 128.344,222.726 128.344,222.726"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="310.694,85.5165 309.694,85.5165 309.194,84.6504 309.694,83.7844 310.694,83.7844 311.194,84.6504 311.194,84.6504"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="307.371,81.9721 306.371,81.9721 305.871,81.1061 306.371,80.24 307.371,80.24 307.871,81.1061 307.871,81.1061"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="124.758,219.871 123.758,219.871 123.258,219.005 123.758,218.139 124.758,218.139 125.258,219.005 125.258,219.005"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="127.86,223.379 126.86,223.379 126.36,222.513 126.86,221.647 127.86,221.647 128.36,222.513 128.36,222.513"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="310.466,85.4673 309.466,85.4673 308.966,84.6013 309.466,83.7352 310.466,83.7352 310.966,84.6013 310.966,84.6013"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="307.356,82.1849 306.356,82.1849 305.856,81.3189 306.356,80.4529 307.356,80.4529 307.856,81.3189 307.856,81.3189"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="124.985,219.92 123.985,219.92 123.485,219.054 123.985,218.188 124.985,218.188 125.485,219.054 125.485,219.054"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="127.883,223.167 126.883,223.167 126.383,222.301 126.883,221.435 127.883,221.435 128.383,222.301 128.383,222.301"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="310.238,85.427 309.238,85.427 308.738,84.5609 309.238,83.6949 310.238,83.6949 310.738,84.5609 310.738,84.5609"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="307.332,82.3955 306.332,82.3955 305.832,81.5295 306.332,80.6634 307.332,80.6634 307.832,81.5295 307.832,81.5295"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="125.212,219.96 124.212,219.96 123.712,219.094 124.212,218.228 125.212,218.228 125.712,219.094 125.712,219.094"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="127.914,222.958 126.914,222.958 126.414,222.092 126.914,221.226 127.914,221.226 128.414,222.092 128.414,222.092"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="310.011,85.3948 309.011,85.3948 308.511,84.5288 309.011,83.6628 310.011,83.6628 310.511,84.5288 310.511,84.5288"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="307.303,82.6027 306.303,82.6027 305.803,81.7367 306.303,80.8707 307.303,80.8707 307.803,81.7367 307.803,81.7367"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="125.438,219.993 124.438,219.993 123.938,219.127 124.438,218.261 125.438,218.261 125.938,219.127 125.938,219.127"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="127.951,222.753 126.951,222.753 126.451,221.887 126.951,221.021 127.951,221.021 128.451,221.887 128.451,221.887"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="309.785,85.3701 308.785,85.3701 308.285,84.5041 308.785,83.6381 309.785,83.6381 310.285,84.5041 310.285,84.5041"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="307.268,82.8058 306.268,82.8058 305.768,81.9398 306.268,81.0738 307.268,81.0738 307.768,81.9398 307.768,81.9398"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="125.661,220.018 124.661,220.018 124.161,219.152 124.661,218.286 125.661,218.286 126.161,219.152 126.161,219.152"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="127.992,222.553 126.992,222.553 126.492,221.687 126.992,220.821 127.992,220.821 128.492,221.687 128.492,221.687"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="309.563,85.3522 308.563,85.3522 308.063,84.4862 308.563,83.6202 309.563,83.6202 310.063,84.4862 310.063,84.4862"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="307.228,83.0039 306.228,83.0039 305.728,82.1378 306.228,81.2718 307.228,81.2718 307.728,82.1378 307.728,82.1378"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="125.88,220.038 124.88,220.038 124.38,219.172 124.88,218.306 125.88,218.306 126.38,219.172 126.38,219.172"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="128.038,222.358 127.038,222.358 126.538,221.492 127.038,220.626 128.038,220.626 128.538,221.492 128.538,221.492"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="309.345,85.3404 308.345,85.3404 307.845,84.4743 308.345,83.6083 309.345,83.6083 309.845,84.4743 309.845,84.4743"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="307.184,83.1962 306.184,83.1962 305.684,82.3302 306.184,81.4642 307.184,81.4642 307.684,82.3302 307.684,82.3302"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="126.095,220.051 125.095,220.051 124.595,219.185 125.095,218.319 126.095,218.319 126.595,219.185 126.595,219.185"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="128.087,222.169 127.087,222.169 126.587,221.303 127.087,220.437 128.087,220.437 128.587,221.303 128.587,221.303"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="309.132,85.3339 308.132,85.3339 307.632,84.4678 308.132,83.6018 309.132,83.6018 309.632,84.4678 309.632,84.4678"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="307.138,83.3822 306.138,83.3822 305.638,82.5162 306.138,81.6501 307.138,81.6501 307.638,82.5162 307.638,82.5162"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="126.304,220.06 125.304,220.06 124.804,219.194 125.304,218.327 126.304,218.327 126.804,219.194"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="128.139,221.987 127.139,221.987 126.639,221.121 127.139,220.254 128.139,220.254 128.639,221.121 128.639,221.121"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="308.924,85.332 307.924,85.332 307.424,84.466 307.924,83.6 308.924,83.6 309.424,84.466 309.424,84.466"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="307.09,83.5613 306.09,83.5613 305.59,82.6952 306.09,81.8292 307.09,81.8292 307.59,82.6952 307.59,82.6952"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="126.507,220.064 125.507,220.064 125.007,219.198 125.507,218.332 126.507,218.332 127.007,219.198"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="128.192,221.811 127.192,221.811 126.692,220.945 127.192,220.079 128.192,220.079 128.692,220.945 128.692,220.945"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="308.724,85.3341 307.724,85.3341 307.224,84.4681 307.724,83.6021 308.724,83.6021 309.224,84.4681 309.224,84.4681"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="307.041,83.7329 306.041,83.7329 305.541,82.8669 306.041,82.0009 307.041,82.0009 307.541,82.8669 307.541,82.8669"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="126.703,220.064 125.703,220.064 125.203,219.198 125.703,218.332 126.703,218.332 127.203,219.198"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="128.245,221.644 127.245,221.644 126.745,220.778 127.245,219.912 128.245,219.912 128.745,220.778 128.745,220.778"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="308.53,85.3395 307.53,85.3395 307.03,84.4734 307.53,83.6074 308.53,83.6074 309.03,84.4734 309.03,84.4734"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="306.992,83.8968 305.992,83.8968 305.492,83.0308 305.992,82.1647 306.992,82.1647 307.492,83.0308 307.492,83.0308"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="126.892,220.061 125.892,220.061 125.392,219.195 125.892,218.329 126.892,218.329 127.392,219.195"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="128.298,221.484 127.298,221.484 126.798,220.618 127.298,219.752 128.298,219.752 128.798,220.618 128.798,220.618"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="308.345,85.3473 307.345,85.3473 306.845,84.4813 307.345,83.6153 308.345,83.6153 308.845,84.4813 308.845,84.4813"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="306.943,84.0525 305.943,84.0525 305.443,83.1865 305.943,82.3204 306.943,82.3204 307.443,83.1865 307.443,83.1865"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="127.072,220.057 126.072,220.057 125.572,219.191 126.072,218.325 127.072,218.325 127.572,219.191"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="128.35,221.333 127.35,221.333 126.85,220.467 127.35,219.601 128.35,219.601 128.85,220.467 128.85,220.467"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="308.168,85.3571 307.168,85.3571 306.668,84.491 307.168,83.625 308.168,83.625 308.668,84.491 308.668,84.491"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="306.896,84.1998 305.896,84.1998 305.396,83.3338 305.896,82.4677 306.896,82.4677 307.396,83.3338 307.396,83.3338"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="127.244,220.05 126.244,220.05 125.744,219.184 126.244,218.318 127.244,218.318 127.744,219.184"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="128.4,221.19 127.4,221.19 126.9,220.324 127.4,219.458 128.4,219.458 128.9,220.324 128.9,220.324"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="308,85.3679 307,85.3679 306.5,84.5019 307,83.6359 308,83.6359 308.5,84.5019 308.5,84.5019"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="306.85,84.3384 305.85,84.3384 305.35,83.4724 305.85,82.6064 306.85,82.6064 307.35,83.4724 307.35,83.4724"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="127.407,220.043 126.407,220.043 125.907,219.177 126.407,218.311 127.407,218.311 127.907,219.177"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="128.447,221.055 127.447,221.055 126.947,220.189 127.447,219.323 128.447,219.323 128.947,220.189 128.947,220.189"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="307.84,85.3793 306.84,85.3793 306.34,84.5133 306.84,83.6472 307.84,83.6472 308.34,84.5133 308.34,84.5133"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="306.808,84.4682 305.808,84.4682 305.308,83.6022 305.808,82.7362 306.808,82.7362 307.308,83.6022 307.308,83.6022"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="127.56,220.035 126.56,220.035 126.06,219.169 126.56,218.303 127.56,218.303 128.06,219.169"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="128.491,220.93 127.491,220.93 126.991,220.064 127.491,219.198 128.491,219.198 128.991,220.064 128.991,220.064"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="307.691,85.3904 306.691,85.3904 306.191,84.5244 306.691,83.6584 307.691,83.6584 308.191,84.5244 308.191,84.5244"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="305.77,84.5892 305.27,83.7231 305.77,82.8571 306.77,82.8571 307.27,83.7231 307.27,83.7231"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="127.704,220.028 126.704,220.028 126.204,219.162 126.704,218.296 127.704,218.296 128.204,219.162"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="128.531,220.813 127.531,220.813 127.031,219.947 127.531,219.081 128.531,219.081 129.031,219.947 129.031,219.947"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="307.551,85.4007 306.551,85.4007 306.051,84.5347 306.551,83.6687 307.551,83.6687 308.051,84.5347 308.051,84.5347"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="305.735,84.7012 305.235,83.8351 305.735,82.9691 306.735,82.9691 307.235,83.8351 307.235,83.8351"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="127.837,220.022 126.837,220.022 126.337,219.156 126.837,218.289 127.837,218.289 128.337,219.156"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="128.566,220.705 127.566,220.705 127.066,219.839 127.566,218.973 128.566,218.973 129.066,219.839 129.066,219.839"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="307.422,85.4095 306.422,85.4095 305.922,84.5435 306.422,83.6775 307.422,83.6775 307.922,84.5435 307.922,84.5435"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="305.706,84.8042 305.206,83.9382 305.706,83.0722 306.706,83.0722 307.206,83.9382 307.206,83.9382"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="127.96,220.017 126.96,220.017 126.46,219.151 126.96,218.285 127.96,218.285 128.46,219.151"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="128.596,220.606 127.596,220.606 127.096,219.74 127.596,218.874 128.596,218.874 129.096,219.74 129.096,219.74"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="307.302,85.4162 306.302,85.4162 305.802,84.5502 306.302,83.6842 307.302,83.6842 307.802,84.5502 307.802,84.5502"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="305.682,84.8984 305.182,84.0324 305.682,83.1663 306.682,83.1663 307.182,84.0324 307.182,84.0324"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="128.073,220.015 127.073,220.015 126.573,219.149 127.073,218.283 128.073,218.283 128.573,219.149"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="128.62,220.516 127.62,220.516 127.12,219.65 127.62,218.784 128.62,218.784 129.12,219.65 129.12,219.65"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="307.193,85.4201 306.193,85.4201 305.693,84.5541 306.193,83.6881 307.193,83.6881 307.693,84.5541 307.693,84.5541"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="305.664,84.9838 305.164,84.1178 305.664,83.2518 306.664,83.2518 307.164,84.1178 307.164,84.1178"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="128.176,220.015 127.176,220.015 126.676,219.149 127.176,218.283 128.176,218.283 128.676,219.149"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="128.637,220.434 127.637,220.434 127.137,219.568 127.637,218.702 128.637,218.702 129.137,219.568 129.137,219.568"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="307.095,85.4207 306.095,85.4207 305.595,84.5547 306.095,83.6887 307.095,83.6887 307.595,84.5547 307.595,84.5547"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="305.653,85.0606 305.153,84.1946 305.653,83.3286 306.653,83.3286 307.153,84.1946 307.153,84.1946"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="128.268,220.019 127.268,220.019 126.768,219.153 127.268,218.287 128.268,218.287 128.768,219.153 128.768,219.153"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="128.647,220.36 127.647,220.36 127.147,219.494 127.647,218.628 128.647,218.628 129.147,219.494 129.147,219.494"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="307.006,85.4174 306.006,85.4174 305.506,84.5514 306.006,83.6854 307.006,83.6854 307.506,84.5514 307.506,84.5514"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="305.649,85.129 305.149,84.263 305.649,83.3969 306.649,83.3969 307.149,84.263 307.149,84.263"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="128.35,220.027 127.35,220.027 126.85,219.161 127.35,218.295 128.35,218.295 128.85,219.161 128.85,219.161"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="128.65,220.295 127.65,220.295 127.15,219.429 127.65,218.563 128.65,218.563 129.15,219.429 129.15,219.429"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="306.928,85.4097 305.928,85.4097 305.428,84.5436 305.928,83.6776 306.928,83.6776 307.428,84.5436 307.428,84.5436"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="305.653,85.1892 305.153,84.3232 305.653,83.4572 306.653,83.4572 307.153,84.3232 307.153,84.3232"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="128.422,220.04 127.422,220.04 126.922,219.174 127.422,218.308 128.422,218.308 128.922,219.174 128.922,219.174"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="128.644,220.238 127.644,220.238 127.144,219.372 127.644,218.506 128.644,218.506 129.144,219.372 129.144,219.372"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="306.86,85.3969 305.86,85.3969 305.36,84.5309 305.86,83.6648 306.86,83.6648 307.36,84.5309 307.36,84.5309"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="305.665,85.2415 305.165,84.3755 305.665,83.5095 306.665,83.5095 307.165,84.3755 307.165,84.3755"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="128.483,220.057 127.483,220.057 126.983,219.191 127.483,218.325 128.483,218.325 128.983,219.191 128.983,219.191"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="128.63,220.188 127.63,220.188 127.13,219.322 127.63,218.456 128.63,218.456 129.13,219.322 129.13,219.322"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="306.802,85.3786 305.802,85.3786 305.302,84.5126 305.802,83.6466 306.802,83.6466 307.302,84.5126 307.302,84.5126"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="305.686,85.2862 305.186,84.4202 305.686,83.5542 306.686,83.5542 307.186,84.4202 307.186,84.4202"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="128.534,220.08 127.534,220.08 127.034,219.214 127.534,218.348 128.534,218.348 129.034,219.214 129.034,219.214"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="128.608,220.145 127.608,220.145 127.108,219.279 127.608,218.413 128.608,218.413 129.108,219.279 129.108,219.279"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="306.754,85.3544 305.754,85.3544 305.254,84.4884 305.754,83.6223 306.754,83.6223 307.254,84.4884 307.254,84.4884"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="306.715,85.3237 305.715,85.3237 305.215,84.4577 305.715,83.5917 306.715,83.5917 307.215,84.4577 307.215,84.4577"/>
-   <polygon shape-rendering="crispEdges" fill="#0000ff" points="128.576,220.11 127.576,220.11 127.076,219.244 127.576,218.378 128.576,218.378 129.076,219.244 129.076,219.244"/>
+   <polygon shape-rendering="crispEdges" points="194.653,252.706 193.653,252.706 193.153,251.84 193.653,250.974 194.653,250.974 195.153,251.84 195.153,251.84" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="206.286,249.774 205.286,249.774 204.786,248.908 205.286,248.042 206.286,248.042 206.786,248.908 206.786,248.908" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="216.442,244.995 215.442,244.995 214.942,244.129 215.442,243.263 216.442,243.263 216.942,244.129 216.942,244.129" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="224.994,239.17 223.994,239.17 223.494,238.304 223.994,237.438 224.994,237.438 225.494,238.304 225.494,238.304" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="232.132,232.858 231.132,232.858 230.632,231.992 231.132,231.126 232.132,231.126 232.632,231.992 232.632,231.992" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="238.115,226.382 237.115,226.382 236.615,225.516 237.115,224.65 238.115,224.65 238.615,225.516 238.615,225.516" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="165.938,244.041 164.938,244.041 164.438,243.175 164.938,242.309 165.938,242.309 166.438,243.175 166.438,243.175" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="169.391,244.832 168.391,244.832 167.891,243.966 168.391,243.1 169.391,243.1 169.891,243.966 169.891,243.966" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="210.273,211.803 209.273,211.803 208.773,210.937 209.273,210.071 210.273,210.071 210.773,210.937 210.773,210.937" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="206.371,210.381 205.371,210.381 204.871,209.515 205.371,208.649 206.371,208.649 206.871,209.515 206.871,209.515" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="161.81,242.103 160.81,242.103 160.31,241.237 160.81,240.371 161.81,240.371 162.31,241.237 162.31,241.237" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="273.188,140.275 272.188,140.275 271.688,139.409 272.188,138.543 273.188,138.543 273.688,139.409 273.688,139.409" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="272.469,144.324 271.469,144.324 270.969,143.458 271.469,142.592 272.469,142.592 272.969,143.458 272.969,143.458" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="172.167,244.988 171.167,244.988 170.667,244.122 171.167,243.256 172.167,243.256 172.667,244.122 172.667,244.122" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="273.825,136.354 272.825,136.354 272.325,135.487 272.825,134.621 273.825,134.621 274.325,135.487 274.325,135.487" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="271.661,148.505 270.661,148.505 270.161,147.639 270.661,146.773 271.661,146.773 272.161,147.639 272.161,147.639" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="274.387,132.555 273.387,132.555 272.887,131.689 273.387,130.823 274.387,130.823 274.887,131.689 274.887,131.689" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="203.182,209.895 202.182,209.895 201.682,209.029 202.182,208.163 203.182,208.163 203.682,209.029 203.682,209.029" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="243.174,219.918 242.174,219.918 241.674,219.052 242.174,218.186 243.174,218.186 243.674,219.052 243.674,219.052" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="270.752,152.824 269.752,152.824 269.252,151.958 269.752,151.092 270.752,151.092 271.252,151.958 271.252,151.958" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="274.882,128.876 273.882,128.876 273.382,128.01 273.882,127.144 274.882,127.144 275.382,128.01 275.382,128.01" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="214.674,214.834 213.674,214.834 213.174,213.968 213.674,213.102 214.674,213.102 215.174,213.968 215.174,213.968" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="275.316,125.313 274.316,125.313 273.816,124.447 274.316,123.581 275.316,123.581 275.816,124.447 275.816,124.447" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="269.733,157.286 268.733,157.286 268.233,156.42 268.733,155.554 269.733,155.554 270.233,156.42 270.233,156.42" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="275.693,121.861 274.693,121.861 274.193,120.995 274.693,120.129 275.693,120.129 276.193,120.995 276.193,120.995" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="174.385,244.806 173.385,244.806 172.885,243.94 173.385,243.074 174.385,243.074 174.885,243.94 174.885,243.94" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="268.59,161.896 267.59,161.896 267.09,161.03 267.59,160.164 268.59,160.164 269.09,161.03 269.09,161.03" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="200.637,209.915 199.637,209.915 199.137,209.049 199.637,208.183 200.637,208.183 201.137,209.049 201.137,209.049" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="276.019,118.517 275.019,118.517 274.519,117.651 275.019,116.785 276.019,116.785 276.519,117.651 276.519,117.651" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="276.298,115.279 275.298,115.279 274.798,114.413 275.298,113.547 276.298,113.547 276.798,114.413 276.798,114.413" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="267.307,166.66 266.307,166.66 265.807,165.794 266.307,164.928 267.307,164.928 267.807,165.794 267.807,165.794" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="176.171,244.448 175.171,244.448 174.671,243.582 175.171,242.716 176.171,242.716 176.671,243.582 176.671,243.582" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="276.533,112.144 275.533,112.144 275.033,111.278 275.533,110.412 276.533,110.412 277.033,111.278 277.033,111.278" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="157.446,238.295 156.446,238.295 155.946,237.429 156.446,236.563 157.446,236.563 157.946,237.429 157.946,237.429" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="198.603,210.2 197.603,210.2 197.103,209.334 197.603,208.468 198.603,208.468 199.103,209.334 199.103,209.334" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="276.73,109.108 275.73,109.108 275.23,108.242 275.73,107.376 276.73,107.376 277.23,108.242 277.23,108.242" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="265.868,171.586 264.868,171.586 264.368,170.72 264.868,169.854 265.868,169.854 266.368,170.72 266.368,170.72" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="177.624,244.003 176.624,244.003 176.124,243.137 176.624,242.271 177.624,242.271 178.124,243.137" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="276.89,106.17 275.89,106.17 275.39,105.304 275.89,104.438 276.89,104.438 277.39,105.304 277.39,105.304" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="196.962,210.62 195.962,210.62 195.462,209.754 195.962,208.888 196.962,208.888 197.462,209.754 197.462,209.754" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="277.017,103.326 276.017,103.326 275.517,102.46 276.017,101.594 277.017,101.594 277.517,102.46 277.517,102.46" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="264.252,176.678 263.252,176.678 262.752,175.812 263.252,174.946 264.252,174.946 264.752,175.812 264.752,175.812" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="247.492,213.557 246.492,213.557 245.992,212.691 246.492,211.825 247.492,211.825 247.992,212.691 247.992,212.691" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="218.625,220.148 217.625,220.148 217.125,219.282 217.625,218.416 218.625,218.416 219.125,219.282 219.125,219.282" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="178.824,243.518 177.824,243.518 177.324,242.652 177.824,241.786 178.824,241.786 179.324,242.652" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="277.114,100.576 276.114,100.576 275.614,99.7096 276.114,98.8436 277.114,98.8436 277.614,99.7096 277.614,99.7096" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="195.621,211.104 194.621,211.104 194.121,210.238 194.621,209.372 195.621,209.372 196.121,210.238 196.121,210.238" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="277.183,97.9155 276.183,97.9155 275.683,97.0495 276.183,96.1835 277.183,96.1835 277.683,97.0495 277.683,97.0495" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="179.826,243.021 178.826,243.021 178.326,242.155 178.826,241.289 179.826,241.289 180.326,242.155" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="262.432,181.945 261.432,181.945 260.932,181.079 261.432,180.213 262.432,180.213 262.932,181.079 262.932,181.079" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="277.227,95.3441 276.227,95.3441 275.727,94.478 276.227,93.612 277.227,93.612 277.727,94.478 277.727,94.478" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="194.511,211.614 193.511,211.614 193.011,210.748 193.511,209.882 194.511,209.882 195.011,210.748 195.011,210.748" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="180.674,242.526 179.674,242.526 179.174,241.66 179.674,240.794 180.674,240.794 181.174,241.66" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="277.249,92.8594 276.249,92.8594 275.749,91.9934 276.249,91.1273 277.249,91.1273 277.749,91.9934 277.749,91.9934" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="193.58,212.128 192.58,212.128 192.08,211.262 192.58,210.396 193.58,210.396 194.08,211.262 194.08,211.262" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="277.25,90.4598 276.25,90.4598 275.75,89.5938 276.25,88.7278 277.25,88.7278 277.75,89.5938 277.75,89.5938" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="181.398,242.041 180.398,242.041 179.898,241.175 180.398,240.309 181.398,240.309 181.898,241.175" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="260.379,187.392 259.379,187.392 258.879,186.526 259.379,185.66 260.379,185.66 260.879,186.526 260.879,186.526" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="277.232,88.1438 276.232,88.1438 275.732,87.2777 276.232,86.4117 277.232,86.4117 277.732,87.2777 277.732,87.2777" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="192.791,212.634 191.791,212.634 191.291,211.768 191.791,210.902 192.791,210.902 193.291,211.768 193.291,211.768" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="182.023,241.57 181.023,241.57 180.523,240.704 181.023,239.838 182.023,239.838 182.523,240.704" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="251.21,207.348 250.21,207.348 249.71,206.482 250.21,205.616 251.21,205.616 251.71,206.482 251.71,206.482" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="154.16,232.168 153.16,232.168 152.66,231.302 153.16,230.436 154.16,230.436 154.66,231.302 154.66,231.302" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="277.198,85.9097 276.198,85.9097 275.698,85.0436 276.198,84.1776 277.198,84.1776 277.698,85.0436 277.698,85.0436" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="182.567,241.115 181.567,241.115 181.067,240.249 181.567,239.383 182.567,239.383 183.067,240.249" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="192.115,213.127 191.115,213.127 190.615,212.261 191.115,211.395 192.115,211.395 192.615,212.261 192.615,212.261" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="277.149,83.7561 276.149,83.7561 275.649,82.89 276.149,82.024 277.149,82.024 277.649,82.89 277.649,82.89" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="183.043,240.677 182.043,240.677 181.543,239.811 182.043,238.945 183.043,238.945 183.543,239.811" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="258.053,193.026 257.053,193.026 256.553,192.16 257.053,191.294 258.053,191.294 258.553,192.16 258.553,192.16" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="277.087,81.6816 276.087,81.6816 275.587,80.8156 276.087,79.9496 277.087,79.9496 277.587,80.8156 277.587,80.8156" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="191.53,213.604 190.53,213.604 190.03,212.738 190.53,211.872 191.53,211.872 192.03,212.738 192.03,212.738" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="183.465,240.255 182.465,240.255 181.965,239.389 182.465,238.523 183.465,238.523 183.965,239.389" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="277.014,79.6851 276.014,79.6851 275.514,78.8191 276.014,77.9531 277.014,77.9531 277.514,78.8191 277.514,78.8191" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="191.02,214.063 190.02,214.063 189.52,213.197 190.02,212.331 191.02,212.331 191.52,213.197 191.52,213.197" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="183.839,239.85 182.839,239.85 182.339,238.984 182.839,238.117 183.839,238.117 184.339,238.984" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="276.93,77.7653 275.93,77.7653 275.43,76.8993 275.93,76.0333 276.93,76.0333 277.43,76.8993 277.43,76.8993" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="220.35,227.449 219.35,227.449 218.85,226.583 219.35,225.716 220.35,225.716 220.85,226.583 220.85,226.583" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="190.572,214.505 189.572,214.505 189.072,213.639 189.572,212.773 190.572,212.773 191.072,213.639 191.072,213.639" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="184.173,239.459 183.173,239.459 182.672,238.593 183.173,237.727 184.173,237.727 184.672,238.593" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="276.838,75.9211 275.838,75.9211 275.338,75.0551 275.838,74.1891 276.838,74.1891 277.338,75.0551 277.338,75.0551" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="190.176,214.929 189.176,214.929 188.676,214.063 189.176,213.197 190.176,213.197 190.676,214.063 190.676,214.063" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="184.472,239.084 183.472,239.084 182.972,238.218 183.472,237.352 184.472,237.352 184.972,238.218" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="254.437,201.313 253.437,201.313 252.937,200.447 253.437,199.581 254.437,199.581 254.937,200.447 254.937,200.447" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="276.738,74.1514 275.738,74.1514 275.238,73.2854 275.738,72.4193 276.738,72.4193 277.238,73.2854 277.238,73.2854" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="189.823,215.336 188.823,215.336 188.323,214.47 188.823,213.604 189.823,213.604 190.323,214.47 190.323,214.47" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="184.742,238.722 183.742,238.722 183.242,237.856 183.742,236.99 184.742,236.99 185.242,237.856" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="255.409,198.849 254.409,198.849 253.909,197.983 254.409,197.117 255.409,197.117 255.909,197.983 255.909,197.983" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="184.986,238.373 183.986,238.373 183.486,237.507 183.986,236.641 184.986,236.641 185.486,237.507" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="276.632,72.4553 275.632,72.4553 275.132,71.5892 275.632,70.7232 276.632,70.7232 277.132,71.5892 277.132,71.5892" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="189.508,215.727 188.508,215.727 188.008,214.861 188.508,213.995 189.508,213.995 190.008,214.861 190.008,214.861" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="185.207,238.036 184.207,238.036 183.707,237.17 184.207,236.304 185.207,236.304 185.707,237.17" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="189.226,216.104 188.226,216.104 187.726,215.238 188.226,214.372 189.226,214.372 189.726,215.238 189.726,215.238" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="276.522,70.8317 275.522,70.8317 275.022,69.9657 275.522,69.0996 276.522,69.0996 277.022,69.9657 277.022,69.9657" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="185.408,237.71 184.408,237.71 183.908,236.844 184.408,235.978 185.908,236.844" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="188.971,216.466 187.971,216.466 187.471,215.6 187.971,214.734 188.971,214.734 189.471,215.6 189.471,215.6" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="185.592,237.394 184.592,237.394 184.092,236.528 184.592,235.662 185.592,235.662 186.092,236.528 186.092,236.528" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="185.759,237.089 184.759,237.089 184.259,236.223 184.759,235.357 185.759,235.357 186.259,236.223 186.259,236.223" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="276.408,69.2798 275.408,69.2798 274.908,68.4138 275.408,67.5478 276.408,67.5478 276.908,68.4138 276.908,68.4138" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="188.74,216.816 187.74,216.816 187.24,215.95 187.74,215.084 188.74,215.084 189.24,215.95 189.24,215.95" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="185.912,236.792 184.912,236.792 184.412,235.926 184.912,235.06 185.912,235.06 186.412,235.926 186.412,235.926" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.984,227.828 185.984,227.828 185.484,226.962 185.984,226.096 186.984,226.096 187.484,226.962 187.484,226.962" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="187.008,227.996 186.008,227.996 185.508,227.13 186.008,226.264 187.008,226.264 187.508,227.13 187.508,227.13" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.936,227.491 185.936,227.491 185.436,226.625 185.936,225.759 186.936,225.759 187.436,226.625 187.436,226.625" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.96,227.659 185.96,227.659 185.46,226.793 185.96,225.927 186.96,225.927 187.46,226.793 187.46,226.793" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="187.032,228.165 186.032,228.165 185.532,227.299 186.032,226.433 187.032,226.433 187.532,227.299 187.532,227.299" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="187.055,228.334 186.055,228.334 185.555,227.468 186.055,226.602 187.055,226.602 187.555,227.468 187.555,227.468" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.911,227.322 185.911,227.322 185.411,226.456 185.911,225.59 186.911,225.59 187.411,226.456 187.411,226.456" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="187.078,228.504 186.078,228.504 185.578,227.638 186.078,226.772 187.078,226.772 187.578,227.638 187.578,227.638" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="188.531,217.153 187.531,217.153 187.031,216.287 187.531,215.421 188.531,215.421 189.031,216.287 189.031,216.287" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.887,227.154 185.887,227.154 185.387,226.288 185.887,225.422 186.887,225.422 187.387,226.288 187.387,226.288" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="187.1,228.674 186.1,228.674 185.6,227.808 186.1,226.942 187.1,226.942 187.6,227.808 187.6,227.808" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.052,236.504 185.052,236.504 184.552,235.638 185.052,234.772 186.052,234.772 186.552,235.638 186.552,235.638" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.863,226.985 185.863,226.985 185.363,226.119 185.863,225.253 186.863,225.253 187.363,226.119 187.363,226.119" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="187.121,228.844 186.121,228.844 185.621,227.978 186.121,227.112 187.121,227.112 187.621,227.978 187.621,227.978" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="187.142,229.015 186.142,229.015 185.642,228.149 186.142,227.283 187.142,227.283 187.642,228.149 187.642,228.149" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.84,226.816 185.84,226.816 185.34,225.95 185.84,225.084 186.84,225.084 187.34,225.95 187.34,225.95" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="187.161,229.187 186.161,229.187 185.661,228.321 186.161,227.455 187.161,227.455 187.661,228.321 187.661,228.321" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.817,226.647 185.817,226.647 185.317,225.781 185.817,224.915 186.817,224.915 187.317,225.781 187.317,225.781" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="187.179,229.359 186.179,229.359 185.679,228.493 186.179,227.627 187.179,227.627 187.679,228.493 187.679,228.493" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.794,226.477 185.794,226.477 185.294,225.611 185.794,224.745 186.794,224.745 187.294,225.611 187.294,225.611" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="187.196,229.533 186.196,229.533 185.696,228.667 186.196,227.801 187.196,227.801 187.696,228.667 187.696,228.667" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="276.292,67.7989 275.292,67.7989 274.792,66.9328 275.292,66.0668 276.292,66.0668 276.792,66.9328 276.792,66.9328" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="186.772,226.307 185.772,226.307 185.272,225.441 185.772,224.575 186.772,224.575 187.272,225.441 187.272,225.441" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="187.212,229.707 186.212,229.707 185.712,228.841 186.212,227.975 187.212,227.975 187.712,228.841 187.712,228.841" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.181,236.224 185.181,236.224 184.681,235.358 185.181,234.492 186.181,234.492 186.681,235.358 186.681,235.358" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.751,226.137 185.751,226.137 185.251,225.271 185.751,224.405 186.751,224.405 187.251,225.271 187.251,225.271" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="187.226,229.882 186.226,229.882 185.726,229.016 186.226,228.15 187.226,228.15 187.726,229.016 187.726,229.016" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.731,225.965 185.731,225.965 185.231,225.099 185.731,224.233 186.731,224.233 187.231,225.099 187.231,225.099" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="187.239,230.058 186.239,230.058 185.739,229.192 186.239,228.326 187.239,228.326 187.739,229.192 187.739,229.192" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="187.25,230.236 186.25,230.236 185.75,229.37 186.25,228.504 187.25,228.504 187.75,229.37 187.75,229.37" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="188.341,217.479 187.341,217.479 186.841,216.613 187.341,215.747 188.341,215.747 188.841,216.613 188.841,216.613" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.712,225.794 185.712,225.794 185.212,224.928 185.712,224.062 186.712,224.062 187.212,224.928 187.212,224.928" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="187.259,230.415 186.259,230.415 185.759,229.549 186.259,228.683 187.259,228.683 187.759,229.549 187.759,229.549" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.298,235.951 185.298,235.951 184.798,235.085 185.298,234.219 186.298,234.219 186.798,235.085 186.798,235.085" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.694,225.621 185.694,225.621 185.194,224.755 185.694,223.889 186.694,223.889 187.194,224.755 187.194,224.755" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="187.266,230.595 186.266,230.595 185.766,229.729 186.266,228.863 187.266,228.863 187.766,229.729 187.766,229.729" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.677,225.447 185.677,225.447 185.177,224.581 185.677,223.715 186.677,223.715 187.177,224.581 187.177,224.581" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="187.271,230.777 186.271,230.777 185.771,229.911 186.271,229.044 187.271,229.044 187.771,229.911 187.771,229.911" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.662,225.273 185.662,225.273 185.162,224.407 185.662,223.541 186.662,223.541 187.162,224.407 187.162,224.407" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="187.274,230.96 186.274,230.96 185.774,230.094 186.274,229.228 187.274,229.228 187.774,230.094 187.774,230.094" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.406,235.685 185.406,235.685 184.906,234.819 185.406,233.953 186.406,233.953 186.906,234.819 186.906,234.819" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.648,225.097 185.648,225.097 185.148,224.231 185.648,223.365 186.648,223.365 187.148,224.231 187.148,224.231" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="187.275,231.145 186.275,231.145 185.775,230.279 186.275,229.413 187.275,229.413 187.775,230.279 187.775,230.279" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="188.168,217.794 187.168,217.794 186.668,216.928 187.168,216.062 188.168,216.062 188.668,216.928 188.668,216.928" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="187.273,231.331 186.273,231.331 185.773,230.465 186.273,229.599 187.273,229.599 187.773,230.465 187.773,230.465" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.505,235.426 185.505,235.426 185.005,234.56 185.505,233.694 186.505,233.694 187.005,234.56 187.005,234.56" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.636,224.921 185.636,224.921 185.136,224.055 185.636,223.189 186.636,223.189 187.136,224.055 187.136,224.055" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="187.268,231.52 186.268,231.52 185.768,230.654 186.268,229.788 187.268,229.788 187.768,230.654 187.768,230.654" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.625,224.743 185.625,224.743 185.125,223.877 185.625,223.011 186.625,223.011 187.125,223.877 187.125,223.877" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="187.261,231.711 186.261,231.711 185.761,230.845 186.261,229.979 187.261,229.979 187.761,230.845 187.761,230.845" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.595,235.173 185.595,235.173 185.095,234.307 185.595,233.441 186.595,233.441 187.095,234.307 187.095,234.307" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="276.174,66.388 275.174,66.388 274.674,65.522 275.174,64.6559 276.174,64.6559 276.674,65.522 276.674,65.522" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="186.617,224.563 185.617,224.563 185.117,223.697 185.617,222.831 186.617,222.831 187.117,223.697 187.117,223.697" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="187.25,231.904 186.25,231.904 185.75,231.038 186.25,230.172 187.25,230.172 187.75,231.038 187.75,231.038" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="187.237,232.099 186.237,232.099 185.737,231.233 186.237,230.367 187.237,230.367 187.737,231.233 187.737,231.233" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.678,234.925 185.678,234.925 185.178,234.059 185.678,233.193 186.678,233.193 187.178,234.059 187.178,234.059" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="188.009,218.099 187.009,218.099 186.509,217.233 187.009,216.367 188.009,216.367 188.509,217.233 188.509,217.233" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.61,224.383 185.61,224.383 185.11,223.517 185.61,222.651 186.61,222.651 187.11,223.517 187.11,223.517" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="187.22,232.296 186.22,232.296 185.72,231.43 186.22,230.564 187.22,230.564 187.72,231.43 187.72,231.43" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.753,234.683 185.753,234.683 185.253,233.817 185.753,232.951 186.753,232.951 187.253,233.817 187.253,233.817" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="187.199,232.497 186.199,232.497 185.699,231.631 186.199,230.765 187.199,230.765 187.699,231.631 187.699,231.631" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.605,224.201 185.605,224.201 185.105,223.334 185.605,222.468 186.605,222.468 187.105,223.334 187.105,223.334" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="187.175,232.7 186.175,232.7 185.675,231.834 186.175,230.968 187.175,230.968 187.675,231.834 187.675,231.834" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.822,234.446 185.822,234.446 185.322,233.58 185.822,232.714 186.822,232.714 187.322,233.58 187.322,233.58" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="187.147,232.906 186.147,232.906 185.647,232.04 186.147,231.174 187.147,231.174 187.647,232.04 187.647,232.04" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.884,234.214 185.884,234.214 185.384,233.348 185.884,232.482 186.884,232.482 187.384,233.348 187.384,233.348" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="187.115,233.115 186.115,233.115 185.615,232.249 186.115,231.383 187.115,231.383 187.615,232.249 187.615,232.249" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.941,233.986 185.941,233.986 185.441,233.12 185.941,232.254 186.941,232.254 187.441,233.12 187.441,233.12" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="187.079,233.327 186.079,233.327 185.579,232.461 186.079,231.595 187.079,231.595 187.579,232.461 187.579,232.461" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="187.038,233.543 186.038,233.543 185.538,232.677 186.038,231.811 187.038,231.811 187.538,232.677 187.538,232.677" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.992,233.763 185.992,233.763 185.492,232.897 185.992,232.031 186.992,232.031 187.492,232.897 187.492,232.897" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.603,224.017 185.603,224.017 185.103,223.151 185.603,222.285 186.603,222.285 187.103,223.151 187.103,223.151" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="187.865,218.396 186.865,218.396 186.365,217.53 186.865,216.664 187.865,216.664 188.365,217.53 188.365,217.53" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.603,223.831 185.603,223.831 185.103,222.965 185.603,222.099 186.603,222.099 187.103,222.965 187.103,222.965" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.606,223.643 185.606,223.643 185.106,222.777 185.606,221.911 186.606,221.911 187.106,222.777 187.106,222.777" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="187.733,218.683 186.733,218.683 186.233,217.817 186.733,216.951 187.733,216.951 188.233,217.817 188.233,217.817" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.611,223.454 185.611,223.454 185.111,222.588 185.611,221.722 186.611,221.722 187.111,222.588 187.111,222.588" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.62,223.262 185.62,223.262 185.12,222.396 185.62,221.53 186.62,221.53 187.12,222.396 187.12,222.396" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="276.056,65.0465 275.056,65.0465 274.556,64.1805 275.056,63.3145 276.056,63.3145 276.556,64.1805 276.556,64.1805" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="187.611,218.963 186.611,218.963 186.111,218.097 186.611,217.231 187.611,217.231 188.111,218.097 188.111,218.097" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.631,223.068 185.631,223.068 185.131,222.202 185.631,221.336 186.631,221.336 187.131,222.202 187.131,222.202" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.645,222.872 185.645,222.872 185.145,222.006 185.645,221.14 186.645,221.14 187.145,222.006 187.145,222.006" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="187.501,219.235 186.501,219.235 186.001,218.369 186.501,217.503 187.501,217.503 188.001,218.369 188.001,218.369" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.663,222.673 185.663,222.673 185.163,221.806 185.663,220.94 186.663,220.94 187.163,221.806 187.163,221.806" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.684,222.471 185.684,222.471 185.184,221.605 185.684,220.739 186.684,220.739 187.184,221.605 187.184,221.605" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="257.256,195.461 256.256,195.461 255.756,194.595 256.256,193.729 257.256,193.729 257.756,194.595 257.756,194.595" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="187.399,219.5 186.399,219.5 185.899,218.634 186.399,217.768 187.399,217.768 187.899,218.634 187.899,218.634" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.709,222.266 185.709,222.266 185.209,221.4 185.709,220.534 186.709,220.534 187.209,221.4 187.209,221.4" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="187.306,219.758 186.306,219.758 185.806,218.892 186.306,218.026 187.306,218.026 187.806,218.892 187.806,218.892" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.738,222.058 185.738,222.058 185.238,221.192 185.738,220.326 186.738,220.326 187.238,221.192 187.238,221.192" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="252.387,204.863 251.387,204.863 250.887,203.997 251.387,203.131 252.387,203.131 252.887,203.997 252.887,203.997" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="187.221,220.01 186.221,220.01 185.721,219.144 186.221,218.278 187.221,218.278 187.721,219.144 187.721,219.144" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.771,221.847 185.771,221.847 185.271,220.981 185.771,220.115 186.771,220.115 187.271,220.981 187.271,220.981" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.809,221.632 185.809,221.632 185.309,220.766 185.809,219.9 186.809,219.9 187.309,220.766 187.309,220.766" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="187.144,220.257 186.144,220.257 185.644,219.391 186.144,218.525 187.144,218.525 187.644,219.391 187.644,219.391" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.851,221.414 185.851,221.414 185.351,220.548 185.851,219.682 186.851,219.682 187.351,220.548 187.351,220.548" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="187.073,220.498 186.073,220.498 185.573,219.632 186.073,218.766 187.073,218.766 187.573,219.632 187.573,219.632" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="187.009,220.734 186.009,220.734 185.509,219.868 186.009,219.001 187.009,219.001 187.509,219.868 187.509,219.868" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.951,220.965 185.951,220.965 185.451,220.099 185.951,219.233 186.951,219.233 187.451,220.099 187.451,220.099" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="186.898,221.191 185.898,221.191 185.398,220.325 185.898,219.459 186.898,219.459 187.398,220.325 187.398,220.325" fill="#ff00ff"/>
+   <polygon shape-rendering="crispEdges" points="275.938,63.7738 274.938,63.7738 274.438,62.9077 274.938,62.0417 275.938,62.0417 276.438,62.9077 276.438,62.9077" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="275.821,62.5691 274.821,62.5691 274.321,61.7031 274.821,60.837 275.821,60.837 276.321,61.7031 276.321,61.7031" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="275.706,61.4319 274.706,61.4319 274.206,60.5658 274.706,59.6998 275.706,59.6998 276.206,60.5658 276.206,60.5658" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="275.594,60.3616 274.594,60.3616 274.094,59.4955 274.594,58.6295 275.594,58.6295 276.094,59.4955 276.094,59.4955" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="274.486,59.3577 273.986,58.4916 274.486,57.6256 275.486,57.6256 275.986,58.4916 275.986,58.4916" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="275.382,58.4197 274.382,58.4197 273.882,57.5536 274.382,56.6876 275.382,56.6876 275.882,57.5536 275.882,57.5536" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="274.283,57.5472 273.783,56.6812 274.283,55.8151 275.783,56.6812" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="275.283,55.8151 275.783,56.6812 275.783,56.6812" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="274.189,56.7397 273.689,55.8737 274.189,55.0077 275.689,55.8737" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="275.189,55.0077 275.689,55.8737 275.689,55.8737" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="274.101,55.997 273.601,55.131 274.101,54.265 275.601,55.131" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="275.101,54.265 275.601,55.131 275.601,55.131" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="259.733,189.794 258.733,189.794 258.233,188.928 258.733,188.062 259.733,188.062 260.233,188.928 260.233,188.928" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="274.02,55.3187 273.52,54.4527 274.02,53.5867 275.52,54.4527" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="275.02,53.5867 275.52,54.4527 275.52,54.4527" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="273.946,54.7044 273.446,53.8384 273.946,52.9724 275.446,53.8384" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="274.946,52.9724 275.446,53.8384 275.446,53.8384" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="273.879,54.1539 273.379,53.2879 273.879,52.4219 275.379,53.2879" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="274.879,52.4219 275.379,53.2879 275.379,53.2879" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="248.911,211.062 247.911,211.062 247.411,210.196 247.911,209.33 248.911,209.33 249.411,210.196 249.411,210.196" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="273.819,53.667 273.319,52.801 273.819,51.9349 275.319,52.801" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="274.819,51.9349 275.319,52.801 275.319,52.801" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="273.768,53.2433 273.268,52.3773 273.768,51.5113 275.268,52.3773" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="274.768,51.5113 275.268,52.3773 275.268,52.3773" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="273.725,52.8829 273.225,52.0168 273.725,51.1508 275.225,52.0168" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="274.725,51.1508 275.225,52.0168 275.225,52.0168" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="273.69,52.5854 273.19,51.7194 273.69,50.8533 275.19,51.7194" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="274.69,50.8533 275.19,51.7194 275.19,51.7194" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="273.664,52.3507 273.164,51.4847 273.664,50.6187 275.164,51.4847" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="274.664,50.6187 275.164,51.4847 275.164,51.4847" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="273.647,52.1789 273.147,51.3128 273.647,50.4468 275.147,51.3128" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="274.647,50.4468 275.147,51.3128 275.147,51.3128" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="273.638,52.0697 273.138,51.2036 273.638,50.3376 275.138,51.2036" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="274.638,50.3376 275.138,51.2036 275.138,51.2036" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="273.639,52.0231 273.139,51.1571 273.639,50.291 274.639,50.291 275.139,51.1571 275.139,51.1571" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="274.649,52.0392 273.649,52.0392 273.149,51.1732 273.649,50.3071 274.649,50.3071 275.149,51.1732 275.149,51.1732" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="274.668,52.1179 273.668,52.1179 273.168,51.2519 273.668,50.3859 274.668,50.3859 275.168,51.2519 275.168,51.2519" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="274.696,52.2593 273.696,52.2593 273.196,51.3933 273.696,50.5273 274.696,50.5273 275.196,51.3933 275.196,51.3933" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="274.732,52.4634 273.732,52.4634 273.232,51.5974 273.732,50.7314 274.732,50.7314 275.232,51.5974 275.232,51.5974" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="274.778,52.7304 273.778,52.7304 273.278,51.8644 273.778,50.9984 274.778,50.9984 275.278,51.8644 275.278,51.8644" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="261.918,184.309 260.918,184.309 260.418,183.443 260.918,182.577 261.918,182.577 262.418,183.443 262.418,183.443" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="274.832,53.0603 273.832,53.0603 273.332,52.1943 273.832,51.3283 274.832,51.3283 275.332,52.1943 275.332,52.1943" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="274.894,53.4534 273.894,53.4534 273.394,52.5873 273.894,51.7213 274.894,51.7213 275.394,52.5873 275.394,52.5873" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="274.965,53.9097 273.965,53.9097 273.465,53.0436 273.965,52.1776 274.965,52.1776 275.465,53.0436 275.465,53.0436" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="275.043,54.4295 274.043,54.4295 273.543,53.5634 274.043,52.6974 275.043,52.6974 275.543,53.5634 275.543,53.5634" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="275.128,55.013 274.128,55.013 273.628,54.147 274.128,53.2809 275.128,53.2809 275.628,54.147 275.628,54.147" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="275.221,55.6605 274.221,55.6605 273.721,54.7945 274.221,53.9285 275.221,53.9285 275.721,54.7945 275.721,54.7945" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="275.32,56.3723 274.32,56.3723 273.82,55.5063 274.32,54.6403 275.32,54.6403 275.82,55.5063 275.82,55.5063" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="275.425,57.1487 274.425,57.1487 273.925,56.2827 274.425,55.4167 275.425,55.4167 275.925,56.2827 275.925,56.2827" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="275.536,57.9901 274.536,57.9901 274.036,57.1241 274.536,56.2581 275.536,56.2581 276.036,57.1241 276.036,57.1241" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="275.652,58.8969 274.652,58.8969 274.152,58.0308 274.652,57.1648 275.652,57.1648 276.152,58.0308 276.152,58.0308" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="275.772,59.8694 274.772,59.8694 274.272,59.0034 274.772,58.1373 275.772,58.1373 276.272,59.0034 276.272,59.0034" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="275.896,60.9082 274.896,60.9082 274.396,60.0421 274.896,59.1761 275.896,59.1761 276.396,60.0421 276.396,60.0421" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="263.853,179.002 262.853,179.002 262.353,178.136 262.853,177.27 263.853,177.27 264.353,178.136 264.353,178.136" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="276.023,62.0136 275.023,62.0136 274.523,61.1476 275.023,60.2816 276.023,60.2816 276.523,61.1476 276.523,61.1476" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="244.883,217.432 243.883,217.432 243.383,216.566 243.883,215.7 244.883,215.7 245.383,216.566 245.383,216.566" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="276.152,63.1864 275.152,63.1864 274.652,62.3204 275.152,61.4543 276.152,61.4543 276.652,62.3204 276.652,62.3204" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="276.283,64.427 275.283,64.427 274.783,63.561 275.283,62.6949 276.283,62.6949 276.783,63.561 276.783,63.561" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="276.414,65.736 275.414,65.736 274.914,64.87 275.414,64.004 276.414,64.004 276.914,64.87 276.914,64.87" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="276.545,67.1141 275.545,67.1141 275.045,66.2481 275.545,65.3821 276.545,65.3821 277.045,66.2481 277.045,66.2481" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="276.675,68.562 275.675,68.562 275.175,67.696 275.675,66.83 276.675,66.83 277.175,67.696 277.175,67.696" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="276.803,70.0804 275.803,70.0804 275.303,69.2144 275.803,68.3484 276.803,68.3484 277.303,69.2144 277.303,69.2144" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="265.571,173.867 264.571,173.867 264.071,173.001 264.571,172.135 265.571,172.135 266.071,173.001 266.071,173.001" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="276.927,71.6702 275.927,71.6702 275.427,70.8041 275.927,69.9381 276.927,69.9381 277.427,70.8041 277.427,70.8041" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="277.047,73.332 276.047,73.332 275.547,72.466 276.047,71.6 277.047,71.6 277.547,72.466 277.547,72.466" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="277.161,75.0669 276.161,75.0669 275.661,74.2009 276.161,73.3348 277.161,73.3348 277.661,74.2009 277.661,74.2009" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="277.268,76.8757 276.268,76.8757 275.768,76.0097 276.268,75.1437 277.268,75.1437 277.768,76.0097 277.768,76.0097" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="267.1,168.898 266.1,168.898 265.6,168.032 266.1,167.166 267.1,167.166 267.6,168.032 267.6,168.032" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="277.367,78.7596 276.367,78.7596 275.867,77.8935 276.367,77.0275 277.367,77.0275 277.867,77.8935 277.867,77.8935" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="277.457,80.7194 276.457,80.7194 275.957,79.8534 276.457,78.9874 277.457,78.9874 277.957,79.8534 277.957,79.8534" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="277.535,82.7564 276.535,82.7564 276.035,81.8904 276.535,81.0244 277.535,81.0244 278.035,81.8904 278.035,81.8904" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="240.175,223.935 239.175,223.935 238.675,223.069 239.175,222.203 240.175,222.203 240.675,223.069 240.675,223.069" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="268.462,164.09 267.462,164.09 266.962,163.224 267.462,162.358 268.462,162.358 268.962,163.224 268.962,163.224" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="277.6,84.8718 276.6,84.8718 276.1,84.0058 276.6,83.1397 277.6,83.1397 278.1,84.0058 278.1,84.0058" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="277.651,87.0667 276.651,87.0667 276.151,86.2007 276.651,85.3347 277.651,85.3347 278.151,86.2007 278.151,86.2007" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="277.686,89.3427 276.686,89.3427 276.186,88.4767 276.686,87.6106 277.686,87.6106 278.186,88.4767 278.186,88.4767" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="269.676,159.434 268.676,159.434 268.176,158.568 268.676,157.702 269.676,157.702 270.176,158.568 270.176,158.568" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="277.703,91.701 276.703,91.701 276.203,90.835 276.703,89.969 277.703,89.969 278.203,90.835 278.203,90.835" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="277.7,94.1433 276.7,94.1433 276.2,93.2772 276.7,92.4112 277.7,92.4112 278.2,93.2772 278.2,93.2772" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="270.759,154.927 269.759,154.927 269.259,154.061 269.759,153.195 270.759,153.195 271.259,154.061 271.259,154.061" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="277.675,96.671 276.675,96.671 276.175,95.805 276.675,94.939 277.675,94.939 278.175,95.805 278.175,95.805" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="277.625,99.286 276.625,99.286 276.125,98.42 276.625,97.554 277.625,97.554 278.125,98.42 278.125,98.42" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="271.725,150.562 270.725,150.562 270.225,149.696 270.725,148.83 271.725,148.83 272.225,149.696 272.225,149.696" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="277.549,101.99 276.549,101.99 276.049,101.124 276.549,100.258 277.549,100.258 278.049,101.124 278.049,101.124" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="277.443,104.785 276.443,104.785 275.943,103.919 276.443,103.053 277.443,103.053 277.943,103.919 277.943,103.919" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="272.585,146.335 271.585,146.335 271.085,145.469 271.585,144.603 272.585,144.603 273.085,145.469 273.085,145.469" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="277.305,107.673 276.305,107.673 275.805,106.807 276.305,105.941 277.305,105.941 277.805,106.807 277.805,106.807" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="277.132,110.657 276.132,110.657 275.632,109.791 276.132,108.925 277.132,108.925 277.632,109.791 277.632,109.791" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="273.349,142.239 272.349,142.239 271.849,141.373 272.349,140.507 273.349,140.507 273.849,141.373 273.849,141.373" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="276.921,113.738 275.921,113.738 275.421,112.872 275.921,112.006 276.921,112.006 277.421,112.872 277.421,112.872" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="274.027,138.271 273.027,138.271 272.527,137.405 273.027,136.539 274.027,136.539 274.527,137.405 274.527,137.405" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="276.668,116.919 275.668,116.919 275.168,116.053 275.668,115.187 276.668,115.187 277.168,116.053 277.168,116.053" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="274.626,134.426 273.626,134.426 273.126,133.56 273.626,132.694 274.626,132.694 275.126,133.56 275.126,133.56" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="276.369,120.203 275.369,120.203 274.869,119.336 275.369,118.47 276.369,118.47 276.869,119.336 276.869,119.336" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="276.02,123.592 275.02,123.592 274.52,122.726 275.02,121.86 276.02,121.86 276.52,122.726 276.52,122.726" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="275.154,130.7 274.154,130.7 273.654,129.834 274.154,128.968 275.154,128.968 275.654,129.834 275.654,129.834" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="275.617,127.09 274.617,127.09 274.117,126.224 274.617,125.358 275.617,125.358 276.117,126.224 276.117,126.224" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="234.62,230.5 233.62,230.5 233.12,229.634 233.62,228.768 234.62,228.768 235.12,229.634 235.12,229.634" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="228.003,236.989 227.003,236.989 226.503,236.123 227.003,235.257 228.003,235.257 228.503,236.123 228.503,236.123" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="220.067,243.14 219.067,243.14 218.567,242.274 219.067,241.408 220.067,241.408 220.567,242.274 220.567,242.274" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="210.572,248.487 209.572,248.487 209.072,247.621 209.572,246.755 210.572,246.755 211.072,247.621 211.072,247.621" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="199.479,252.296 198.479,252.296 197.979,251.43 198.479,250.564 199.479,250.564 199.979,251.43 199.979,251.43" fill="#0000ff"/>
+   <polygon shape-rendering="crispEdges" points="187.273,253.723 186.273,253.723 185.773,252.857 186.273,251.991 187.273,251.991 187.773,252.857 187.773,252.857" fill="#0000ff"/>
   </g>
  </g>
 </svg>

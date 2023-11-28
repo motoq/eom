@@ -36,10 +36,9 @@ public:
    *
    * @param  ephemerides  Ephemeris source list
    */
-  EomCommandBuilder(
-    const std::shared_ptr<
-        std::unordered_map<std::string,
-                           std::shared_ptr<eom::Ephemeris>>>& ephemerides);
+  EomCommandBuilder(std::shared_ptr<
+                    std::unordered_map<
+                    std::string, std::shared_ptr<eom::Ephemeris>>> ephemerides);
 
   /**
    * Builds a command given tokens, stored resources, and the simulation
