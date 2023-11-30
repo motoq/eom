@@ -14,6 +14,7 @@
 #include <memory>
 #include <string>
 #include <deque>
+#include <unordered_map>
 #include <stdexcept>
 
 #include <Eigen/Dense>
@@ -66,7 +67,8 @@ EomRangePrinter(std::deque<std::string>& tokens,
 /*
  * Set ephemeris pointers using orbit_names from initialization
  */
-void EomRangePrinter::validate()
+void EomRangePrinter::validate(const std::unordered_map<
+std::string, std::shared_ptr<eom::Ephemeris>>&)
 {
   using namespace std::string_literals;
   for (int ii=0; ii<2; ++ii) {

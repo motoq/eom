@@ -13,6 +13,7 @@
 #include <memory>
 #include <string>
 #include <deque>
+#include <unordered_map>
 #include <stdexcept>
 
 #include <Eigen/Dense>
@@ -63,7 +64,8 @@ EomRtcPrinter::EomRtcPrinter(
 /*
  * Set ephemeris pointers using orbit_names from initialization
  */
-void EomRtcPrinter::validate()
+void EomRtcPrinter::validate(const std::unordered_map<
+    std::string, std::shared_ptr<eom::Ephemeris>>&)
 {
   using namespace std::string_literals;
   for (int ii=0; ii<2; ++ii) {

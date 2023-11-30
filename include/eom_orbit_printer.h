@@ -12,8 +12,10 @@
 #include <memory>
 #include <string>
 #include <deque>
+#include <unordered_map>
 
 #include <cal_julian_date.h>
+#include <astro_orbit_def.h>
 #include <astro_ephemeris.h>
 
 #include <eom_command.h>
@@ -39,28 +41,30 @@ public:
   /**
    * Converts string tokens into a command
    *
-   * @param  tokens        Tokenized parameters with the orbit name,
-   *                       reference frame to use, and the output filename
-   *                       prefix.
-   * @param  jdEphStart    Time of first 3D position and velocity output
-   * @param  jdEphStop     Time of final 3D position and velocity output
-   * @param  ephemerides   List of ephemeris sources
+   * @param  tokens      Tokenized parameters with the orbit name,
+   *                     reference frame to use, and the output filename
+   *                     prefix.
+   * @param  cfg         Scenario configuration
+   * @param  orbit_defs  Current orbit definitions for token validation
    *
    * @throws  invalid_argument if exactly 3 tokens are not present or 
    *          the indicated reference frame is not valid.  Orbit names
    *          will be checked during the validate step.
    */
-  EomOrbitPrinter(std::deque<std::string>& tokens, const EomConfig& cfg,
-                  const std::shared_ptr<std::unordered_map<std::string,
-                  std::shared_ptr<eom::Ephemeris>>>& ephemerides);
+  EomOrbitPrinter(std::deque<std::string>& tokens,
+                  const EomConfig& cfg,
+                  const std::vector<eom::OrbitDef>& orbit_defs);
 
   /**
    * Checks that listed ephemeris sources are valid.
    *
+   * @param  ephemerides  All  available ephemeris resources
+   *
    * @throws  CmdValidateException if validation fails (desired orbit
    *          name is not valid).
    */
-  void validate() override;
+  void validate(const std::unordered_map<
+      std::string, std::shared_ptr<eom::Ephemeris>>& ephemerides) override;
 
   /**
    * Writes .m function
@@ -68,16 +72,15 @@ public:
   void execute() const override;
 
 private:
-  std::string orbit_name;                   // Name of orbit to print
-  std::string func_name;                    // Function name (file prefix)
-  std::string file_name;                    // func_name.m
-  eom::JulianDate jdStart;
-  eom::JulianDate jdStop;
-  eom::Duration dtOut;
-  eom::EphemFrame frame;
-  std::shared_ptr<eom::Ephemeris> eph;
-  std::shared_ptr<std::unordered_map<std::string,
-                  std::shared_ptr<eom::Ephemeris>>> m_ephemerides;
+  std::string m_orbit_name;                 // Name of orbit to print
+  std::string m_func_name;                  // Function name (file prefix)
+  std::string m_file_name;                  // func_name.m
+  eom::JulianDate m_jdStart;
+  eom::JulianDate m_jdStop;
+  eom::Duration m_dtOut;
+  eom::EphemFrame m_frame;
+
+  std::shared_ptr<eom::Ephemeris> m_eph;
 };
 
 

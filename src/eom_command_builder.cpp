@@ -22,6 +22,7 @@
 #include <eom_range_printer.h>
 #include <eom_rtc_printer.h>
 
+#include <astro_orbit_def.h>
 #include <astro_ephemeris.h>
 
 namespace eom_app {
@@ -37,7 +38,8 @@ EomCommandBuilder(std::shared_ptr<
 
 std::unique_ptr<EomCommand>
 EomCommandBuilder::buildCommand(std::deque<std::string>& tokens,
-                                const EomConfig& cfg)
+                                const EomConfig& cfg,
+                                const std::vector<eom::OrbitDef>& orbit_defs)
 {
   if (tokens.size() < 1) {
     throw std::invalid_argument("EomCommandBuilder::buildCommand() No tokens");
@@ -46,13 +48,11 @@ EomCommandBuilder::buildCommand(std::deque<std::string>& tokens,
   tokens.pop_front();
   if (command_str == "PrintEphemeris") {
     std::unique_ptr<EomCommand> command =
-        std::make_unique<EomEphemPrinter>(tokens,
-                                          cfg.getStartTime(), cfg.getStopTime(),
-                                          m_ephemerides);
+        std::make_unique<EomEphemPrinter>(tokens, cfg, orbit_defs);
     return command;
   } else if (command_str == "PrintOrbit") {
     std::unique_ptr<EomCommand> command =
-        std::make_unique<EomOrbitPrinter>(tokens, cfg, m_ephemerides);
+        std::make_unique<EomOrbitPrinter>(tokens, cfg, orbit_defs);
     return command;
   } else if (command_str == "PrintRange") {
     std::unique_ptr<EomCommand> command =

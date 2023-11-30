@@ -9,8 +9,12 @@
 #ifndef EOM_COMMAND_H
 #define EOM_COMMAND_H
 
-#include <stdexcept>
 #include <string>
+#include <memory>
+#include <unordered_map>
+#include <stdexcept>
+
+#include <astro_ephemeris.h>
 
 namespace eom_app {
 
@@ -41,9 +45,15 @@ public:
 
   /**
    * Perform final validation of command before potentially
-   * computationally intensive processing takes place.
+   * computationally intensive processing takes place along
+   * with obtaining required resources that have already been
+   * generated.
+   *
+   * @param  List of ephemeris sources
    */
-  virtual void validate() = 0;
+  virtual void validate(
+      const std::unordered_map<
+          std::string, std::shared_ptr<eom::Ephemeris>>& ephemerides) = 0;
 
   /**
    * Carry out the functionality of the implementing class

@@ -12,6 +12,7 @@
 #include <memory>
 #include <string>
 #include <deque>
+#include <unordered_map>
 #include <array>
 
 #include <cal_julian_date.h>
@@ -70,7 +71,8 @@ public:
    * @throws  CmdValidateException if validation fails (invalid orbit
    *          name encountered).
    */
-  void validate() override;
+  void validate(const std::unordered_map<
+      std::string, std::shared_ptr<eom::Ephemeris>>&) override;
 
   /**
    * Writes .m function plotting the range between two ephemeris sources

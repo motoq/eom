@@ -12,11 +12,14 @@
 #include <memory>
 #include <string>
 #include <deque>
+#include <unordered_map>
 
 #include <cal_julian_date.h>
+#include <astro_orbit_def.h>
 #include <astro_ephemeris.h>
 
 #include <eom_command.h>
+#include <eom_config.h>
 
 namespace eom_app {
 
@@ -38,31 +41,32 @@ public:
   /**
    * Converts string tokens into an ephemeris print command.
    *
-   * @param  tokens        Tokenized parameters with the orbit name, output
-   *                       reference frame type (ITRF or GCRF), and output
-   *                       filename.  Tokens are consumed as they are
-   *                       used.
-   * @param  jdEphStart    Time of first ephemeris output
-   * @param  jdEphStop     Time of final ephemeris output
-   * @param  ephemerides   Ordered list of ephemeris sources
+   * @param  tokens      Tokenized parameters with the orbit name, output
+   *                     reference frame type (ITRF or GCRF), and output
+   *                     filename.  Tokens are consumed as they are
+   *                     used.
+   * @param  cfg         Scenario configuration
+   * @param  orbit_defs  Current orbit definitions for token validation
    *
    * @throws  invalid_argument if exactly 3 tokens are not present or 
    *          the indicated reference frame is not valid.  Orbit names
    *          will be checked during the validate step.
    */
   EomEphemPrinter(std::deque<std::string>& tokens,
-      const eom::JulianDate& jdEphStart, const eom::JulianDate& jdEphStop,
-      const std::shared_ptr<std::unordered_map<std::string,
-                            std::shared_ptr<eom::Ephemeris>>>& ephemerides);
+                  const EomConfig& cfg,
+                  const std::vector<eom::OrbitDef>& orbit_defs);
 
 
   /**
    * Checks that input ephemeris source is valid
    *
-   * @throws  CmdValidateException if validation ails (desired orbit
+   * @param  ephemerides  All  available ephemeris resources
+   *
+   * @throws  CmdValidateException if validation fails (desired orbit
    *          name is not valid).
    */
-  void validate() override;
+  void validate(const std::unordered_map<
+      std::string, std::shared_ptr<eom::Ephemeris>>& ephemerides) override;
 
   /**
    * Writes .e format ephemeris to the previously specified file.
@@ -70,15 +74,12 @@ public:
   void execute() const override;
 
 private:
-  int endx;                                 // Index into ephemerides
-  eom::EphemFrame frame;
-  std::string orbit_name;
-  std::string file_name;
-  eom::JulianDate jdStart;
-  eom::JulianDate jdStop;
-  std::shared_ptr<eom::Ephemeris> eph;
-  std::shared_ptr<std::unordered_map<std::string,
-                  std::shared_ptr<eom::Ephemeris>>> m_ephemerides;
+  eom::EphemFrame m_frame;
+  std::string m_orbit_name;
+  std::string m_file_name;
+  eom::JulianDate m_jdStart;
+  eom::JulianDate m_jdStop;
+  std::shared_ptr<eom::Ephemeris> m_eph;
 };
 
 

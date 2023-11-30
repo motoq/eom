@@ -17,6 +17,7 @@
 #include <eom_config.h>
 #include <eom_command.h>
 
+#include <astro_orbit_def.h>
 #include <astro_ephemeris.h>
 
 namespace eom_app {
@@ -48,8 +49,10 @@ public:
    *                 created and executed
    * @param  cfg     EOM simulation configuration
    */
-  std::unique_ptr<EomCommand> buildCommand(std::deque<std::string>& tokens,
-                                           const EomConfig& cfg);
+  std::unique_ptr<EomCommand>
+  buildCommand(std::deque<std::string>& tokens,
+               const EomConfig& cfg,
+               const std::vector<eom::OrbitDef>& orbit_defs);
 
 private:
   std::shared_ptr<std::unordered_map<std::string,

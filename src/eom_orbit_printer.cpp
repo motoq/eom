@@ -13,12 +13,14 @@
 #include <memory>
 #include <string>
 #include <deque>
+#include <unordered_map>
 #include <stdexcept>
 
 #include <Eigen/Dense>
 
 #include <phy_const.h>
 #include <cal_julian_date.h>
+#include <astro_orbit_def.h>
 #include <astro_ephemeris.h>
 
 #include <eom_command.h>
@@ -27,69 +29,80 @@
 namespace eom_app {
 
 
-EomOrbitPrinter::EomOrbitPrinter(
-    std::deque<std::string>& tokens, const EomConfig& cfg,
-    const std::shared_ptr<std::unordered_map<std::string,
-                          std::shared_ptr<eom::Ephemeris>>>& ephemerides)
+EomOrbitPrinter::EomOrbitPrinter(std::deque<std::string>& tokens,
+                                 const EomConfig& cfg,
+                                 const std::vector<eom::OrbitDef>& orbit_defs)
 {
-  m_ephemerides = ephemerides;
-
     // Read orbit name, output frame, and output filename
   using namespace std::string_literals;
   if (tokens.size() != 3) {
     throw std::invalid_argument("EomOrbitPrinter::EomOrbitPrinter() "s +
-                                "PrintOrbit requires 3 arguments "s +
-                                "vs. input "s +
+                                "PrintOrbit requires 3 arguments " +
+                                "vs. input " +
                                 std::to_string(tokens.size()));
   }
-  orbit_name = tokens[0];
+
+  m_orbit_name = tokens[0];
   tokens.pop_front();
+  bool found_orbit {false};
+  for (const auto& orbit : orbit_defs) {
+    if (m_orbit_name == orbit.getOrbitName()) {
+      found_orbit = true;
+      break;
+    }
+  }
+  if (!found_orbit) {
+    throw std::invalid_argument("EomOrbitPrinter::EomOrbitPrinter() "s +
+                                "Invalid orbit name " + m_orbit_name);
+  }
+
   if (tokens[0] == "ECI") {
-    frame = eom::EphemFrame::eci;
+    m_frame = eom::EphemFrame::eci;
     tokens.pop_front();
   } else if (tokens[0] == "ECF") {
-    frame = eom::EphemFrame::ecf;
+    m_frame = eom::EphemFrame::ecf;
     tokens.pop_front();
   } else {
     throw std::invalid_argument("EomOrbitPrinter::EomOrbitPrinter() "s +
-                                "Invalid reference frame "s + tokens[0]);
+                                "Invalid reference frame " + tokens[0]);
   }
-  func_name = tokens[0];
+  m_func_name = tokens[0];
   tokens.pop_front();
-  file_name = func_name + ".m"s;
-  jdStart = cfg.getStartTime();
-  jdStop = cfg.getStopTime();
-  dtOut = cfg.getOutputRate();
+  m_file_name = m_func_name + ".m";
+  m_jdStart = cfg.getStartTime();
+  m_jdStop = cfg.getStopTime();
+  m_dtOut = cfg.getOutputRate();
 }
 
 
 /*
- * Set ephemeris pointer using orbit_name from initialization
+ * Set ephemeris pointer using m_orbit_name from initialization
  */
-void EomOrbitPrinter::validate()
+void EomOrbitPrinter::validate(const std::unordered_map<
+    std::string, std::shared_ptr<eom::Ephemeris>>& ephemerides)
 {
   using namespace std::string_literals;
   try {
-    eph = m_ephemerides->at(orbit_name);
+    m_eph = ephemerides.at(m_orbit_name);
   } catch (const std::out_of_range& oor) {
     throw CmdValidateException("EomOrbitPrinter::validate() "s +
-                               "Invalid orbit name in PrintRange: "s +
-                               orbit_name);
+                               "Invalid orbit name in PrintRange: " +
+                                m_orbit_name);
   }
 }
 
 void EomOrbitPrinter::execute() const
 {
-  std::ofstream fout(file_name);
+  std::ofstream fout(m_file_name);
 
   if (fout.is_open()) {
-    double tot_time {phy_const::tu_per_day*(jdStop - jdStart)};
-    double dt {dtOut.getTu()};
+    double tot_time {phy_const::tu_per_day*(m_jdStop - m_jdStart)};
+    double dt {m_dtOut.getTu()};
     unsigned long int nrec {static_cast<unsigned long int>(tot_time/dt)};
     nrec++;
 
       // Function header
-    fout << "function [gxh, tpv] = " << func_name;
+    fout << "function [gxh, tpv] = " << m_func_name;
     fout << "\n% Orbit is an EOM generated Matlab/Octave function that";
     fout << "\n% plots a 3D orbit trace in ECI or ECF coordinates";
     fout << "\n%";
@@ -109,9 +122,9 @@ void EomOrbitPrinter::execute() const
       }
       double dtnow {ii*dt};
       fout << "\n  " << dtnow << " ";
-      eom::JulianDate jdNow {jdStart + phy_const::day_per_tu*dtnow};
+      eom::JulianDate jdNow {m_jdStart + phy_const::day_per_tu*dtnow};
       Eigen::Matrix<double, 6, 1> pv =
-          eph->getStateVector(jdNow, frame);
+          m_eph->getStateVector(jdNow, m_frame);
       for (int jj=0; jj<6; ++jj) {
         fout << " " << pv(jj);
       }
@@ -119,7 +132,7 @@ void EomOrbitPrinter::execute() const
 
       // Make the plot and annotate
     std::string coords = "ECI";
-    if (frame == eom::EphemFrame::ecf) {
+    if (m_frame == eom::EphemFrame::ecf) {
       coords = "ECF";
     }
     fout << "\n];";
@@ -135,13 +148,13 @@ void EomOrbitPrinter::execute() const
     fout << "\nxlabel('X, dX/dT');";
     fout << "\nylabel('Y, dY/dT');";
     fout << "\nzlabel('Z, dZ/dT');";
-    fout << "\ntitle('" << coords << " " << orbit_name <<
-            " on " << jdStart.to_dmy_str() << "');";
+    fout << "\ntitle('" << coords << " " << m_orbit_name <<
+            " on " << m_jdStart.to_dmy_str() << "');";
     fout << "\naxis equal;";
     fout << "\nend\n";
     fout.close();
   } else {
-    std::cerr << "\nCan't open " << file_name << '\n';
+    std::cerr << "\nCan't open " << m_file_name << '\n';
   }
 
 

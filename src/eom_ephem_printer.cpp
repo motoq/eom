@@ -11,61 +11,74 @@
 #include <memory>
 #include <string>
 #include <deque>
+#include <unordered_map>
 #include <stdexcept>
 
 #include <phy_const.h>
 #include <cal_julian_date.h>
+#include <astro_orbit_def.h>
 #include <astro_ephemeris.h>
 #include <astro_print.h>
 
 #include <eom_command.h>
+#include <eom_config.h>
 
 namespace eom_app {
 
 
 EomEphemPrinter::EomEphemPrinter(std::deque<std::string>& tokens,
-    const eom::JulianDate& jdEphStart, const eom::JulianDate& jdEphStop,
-    const std::shared_ptr<std::unordered_map<std::string,
-                          std::shared_ptr<eom::Ephemeris>>>& ephemerides)
+                                 const EomConfig& cfg,
+                                 const std::vector<eom::OrbitDef>& orbit_defs)
 {
-  m_ephemerides = ephemerides;
-
     // Read orbit name, output frame, and output filename
   using namespace std::string_literals;
   if (tokens.size() != 3) {
     throw std::invalid_argument("EomEphemPrinter::EomEphemPrinter() "s +
-                                "PrintEphemeris requires 3 arguments "s +
-                                "vs. input "s +
+                                "PrintEphemeris requires 3 arguments " +
+                                "vs. input " +
                                 std::to_string(tokens.size()));
   }
-  orbit_name = tokens[0];
+  m_orbit_name = tokens[0];
   tokens.pop_front();
+  bool found_orbit {false};
+  for (const auto& orbit : orbit_defs) {
+    if (m_orbit_name == orbit.getOrbitName()) {
+      found_orbit = true;
+      break;
+    }
+  } 
+  if (!found_orbit) {
+    throw std::invalid_argument("EomEphemerisPrinter::EomEphemerisPrinter() "s +
+                                "Invalid orbit name " + m_orbit_name);
+  }
+
   auto frame_name = tokens[0];
   tokens.pop_front();
   if (frame_name == "GCRF") {
-    frame = eom::EphemFrame::eci;
+    m_frame = eom::EphemFrame::eci;
   } else if (frame_name == "ITRF") {
-    frame = eom::EphemFrame::ecf;
+    m_frame = eom::EphemFrame::ecf;
   } else {
     throw std::invalid_argument("EomEphemPrinter::EomEphemPrinter() "s +
-                                "Invalid frame type in PrintEphemeris: "s +
+                                "Invalid frame type in PrintEphemeris: " +
                                 frame_name);
   }
-  file_name = tokens[0];
+  m_file_name = tokens[0];
   tokens.pop_front();
-  jdStart = jdEphStart;
-  jdStop = jdEphStop;
+  m_jdStart = cfg.getStartTime();
+  m_jdStop = cfg.getStopTime();
 }
 
-void EomEphemPrinter::validate()
+void EomEphemPrinter::validate(const std::unordered_map<
+    std::string, std::shared_ptr<eom::Ephemeris>>& ephemerides)
 {
   using namespace std::string_literals;
   try {
-    eph = m_ephemerides->at(orbit_name);
+    m_eph = ephemerides.at(m_orbit_name);
   } catch (const std::out_of_range& oor) {
     throw CmdValidateException("EomEphemPrinter::validate() "s +
-                               "Invalid orbit name in PrintEphemeris: "s +
-                               orbit_name);
+                               "Invalid orbit name in PrintEphemeris: " +
+                               m_orbit_name);
   }
 }
 
@@ -73,8 +86,8 @@ void EomEphemPrinter::validate()
 // Currently defaulting to a 60 second output rate
 void EomEphemPrinter::execute() const
 {
-  eom::print_ephemeris(file_name, jdStart, jdStop,
-                       {60.0, phy_const::tu_per_sec}, frame, eph);
+  eom::print_ephemeris(m_file_name, m_jdStart, m_jdStop,
+                       {60.0, phy_const::tu_per_sec}, m_frame, m_eph);
 }
 
 }

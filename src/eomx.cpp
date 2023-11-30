@@ -219,7 +219,9 @@ int main(int argc, char* argv[])
               }
             } else if (make == "Command") {
               try {
-                commands.push_back(cmdBuilder.buildCommand(tokens, cfg));
+                commands.push_back(cmdBuilder.buildCommand(tokens,
+                                                           cfg,
+                                                           orbit_defs));
                 input_error = false;
               } catch (const std::invalid_argument& ia) {
                 std::string xerror = ia.what();
@@ -458,7 +460,7 @@ int main(int argc, char* argv[])
 
   for (auto& cmd : commands) {
     try {
-      cmd->validate();
+      cmd->validate(*ephemerides);
     } catch (const eom_app::CmdValidateException& cve) {
       std::cerr << "\n\nError Validating Command: " << cve.what() << '\n';
       return 0;
