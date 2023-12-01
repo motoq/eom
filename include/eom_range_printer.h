@@ -16,6 +16,7 @@
 #include <array>
 
 #include <cal_julian_date.h>
+#include <astro_orbit_def.h>
 #include <astro_ephemeris.h>
 
 #include <eom_command.h>
@@ -44,35 +45,36 @@ public:
    * Converts string tokens into a command computing the range between
    * two ephemeris sources as a function of time.
    *
-   * @param  tokens        Tokenized parameters with the orbit name, output
-   *                       reference frame type (ITRF or GCRF), and output
-   *                       filename.  Tokens are consumed as they are
-   *                       used.
-   * @param  jdEphStart    Time of first range output
-   * @param  jdEphStop     Time of final range output
-   * @param  ephemerides   List of ephemeris sources
-   * @param  do_spectrum   Also create range amplitude spectrum plot.
-   *                       This option is geared towards comparison
-   *                       of the same orbit propagated via methods
-   *                       capturing different perturbation effects.
+   * @param  tokens       Tokenized parameters with the orbit name, output
+   *                      reference frame type (ITRF or GCRF), and output
+   *                      filename.  Tokens are consumed as they are
+   *                      used.
+   * @param  jdEphStart   Time of first range output
+   * @param  jdEphStop    Time of final range output
+   * @param  orbit_defs   Current orbit definitions for token validation
+   * @param  do_spectrum  Also create range amplitude spectrum plot.
+   *                      This option is geared towards comparison
+   *                      of the same orbit propagated via methods
+   *                      capturing different perturbation effects.
    *
    * @throws  invalid_argument if exactly 3 tokens are not present.
    *          Orbit names will be checked during the validate step.
    */
   EomRangePrinter(std::deque<std::string>& tokens,
                   const EomConfig& cfg,
-                  const std::shared_ptr<std::unordered_map<std::string,
-                  std::shared_ptr<eom::Ephemeris>>>& ephemerides,
+                  const std::vector<eom::OrbitDef>& orbit_defs,
                   bool do_spectrum = false);
 
   /**
    * Checks that listed ephemeris sources are valid.
    *
+   * @param  ephemerides  All  available ephemeris resources
+   *
    * @throws  CmdValidateException if validation fails (invalid orbit
    *          name encountered).
    */
   void validate(const std::unordered_map<
-      std::string, std::shared_ptr<eom::Ephemeris>>&) override;
+      std::string, std::shared_ptr<eom::Ephemeris>>& ephemerides) override;
 
   /**
    * Writes .m function plotting the range between two ephemeris sources
@@ -80,21 +82,19 @@ public:
   void execute() const override;
 
 private:
-  std::array<std::string, 2> orbit_names;
-  eom::EphemFrame frame;
-  std::string func_name;
-  std::string file_name;
-  eom::JulianDate jdStart;
-  eom::JulianDate jdStop;
-  eom::Duration dtOut;
-  std::string timeUnitsLbl;
-  std::string distanceUnitsLbl;
+  std::array<std::string, 2> m_orbit_names;
+  std::string m_func_name;
+  std::string m_file_name;
+  eom::JulianDate m_jdStart;
+  eom::JulianDate m_jdStop;
+  eom::Duration m_dtOut;
+  std::string m_timeUnitsLbl;
+  std::string m_distanceUnitsLbl;
   bool m_spectrum;
-  double to_time_units;
-  double to_distance_units;
-  std::array<std::shared_ptr<eom::Ephemeris>, 2> eph;
-  std::shared_ptr<std::unordered_map<std::string,
-                  std::shared_ptr<eom::Ephemeris>>> m_ephemerides;
+  double m_to_time_units;
+  double m_to_distance_units;
+
+  std::array<std::shared_ptr<eom::Ephemeris>, 2> m_eph;
 };
 
 

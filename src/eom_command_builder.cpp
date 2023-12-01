@@ -56,11 +56,11 @@ EomCommandBuilder::buildCommand(std::deque<std::string>& tokens,
     return command;
   } else if (command_str == "PrintRange") {
     std::unique_ptr<EomCommand> command =
-        std::make_unique<EomRangePrinter>(tokens, cfg, m_ephemerides);
+        std::make_unique<EomRangePrinter>(tokens, cfg, orbit_defs);
     return command;
   } else if (command_str == "PrintRangeSpectrum") {
     std::unique_ptr<EomCommand> command =
-        std::make_unique<EomRangePrinter>(tokens, cfg, m_ephemerides, true);
+        std::make_unique<EomRangePrinter>(tokens, cfg, orbit_defs, true);
     return command;
   } else if (command_str == "PrintRTC") {
     std::unique_ptr<EomCommand> command =
