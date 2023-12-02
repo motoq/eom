@@ -39,8 +39,7 @@ public:
    * @param  grav    Gravity model to take possesion of
    * @param  ecfeci  ECF/ECI conversion resource
    */
-  Deq(std::unique_ptr<Gravity> grav,
-      const std::shared_ptr<const EcfEciSys>& ecfeci);
+  Deq(std::unique_ptr<Gravity> grav, std::shared_ptr<const EcfEciSys> ecfeci);
 
   /**
    * Return derivative of state vector

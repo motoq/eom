@@ -8,6 +8,7 @@
 
 #include <astro_deq.h>
 
+#include <utility>
 #include <memory>
 #include <vector>
 
@@ -20,10 +21,9 @@
 namespace eom {
 
 
-Deq::Deq(std::unique_ptr<Gravity> grav,
-         const std::shared_ptr<const EcfEciSys>& ecfeci)
+Deq::Deq(std::unique_ptr<Gravity> grav, std::shared_ptr<const EcfEciSys> ecfeci)
 {
-  m_ecfeci = ecfeci;
+  m_ecfeci = std::move(ecfeci);
   m_grav = std::move(grav);
 }
 
