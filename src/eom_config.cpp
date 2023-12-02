@@ -11,6 +11,7 @@
 #include <ostream>
 #include <string>
 #include <deque>
+#include <set>
 #include <stdexcept>
 
 #include <phy_const.h>
@@ -177,6 +178,12 @@ void EomConfig::setOutputRate(std::deque<std::string>& tokens)
     error_string = ia.what();
     error_string += "  EomConfig::setOutputRate";
   }
+}
+
+
+void EomConfig::addPendingOrbit(const std::string& orbit_name)
+{
+  m_orbit_names.insert(orbit_name);
 }
 
 

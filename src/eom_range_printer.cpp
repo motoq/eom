@@ -21,7 +21,6 @@
 
 #include <phy_const.h>
 #include <cal_julian_date.h>
-#include <astro_orbit_def.h>
 #include <astro_ephemeris.h>
 #include <astro_keplerian.h>
 
@@ -33,12 +32,11 @@ namespace eom_app {
 EomRangePrinter::
 EomRangePrinter(std::deque<std::string>& tokens,
                 const EomConfig& cfg,
-                const std::vector<eom::OrbitDef>& orbit_defs,
                 bool do_spectrum)
 {
   m_spectrum = do_spectrum;
 
-    // Read orbit name, output frame, and output filename
+    // Read orbit name, etc.
   using namespace std::string_literals;
   if (tokens.size() != 3) {
     throw std::invalid_argument("EomRangePrinter::EomRangePrinter() "s +
@@ -49,6 +47,10 @@ EomRangePrinter(std::deque<std::string>& tokens,
   for (int ii=0; ii<2; ++ii) {
     m_orbit_names[ii] = tokens[0];
     tokens.pop_front();
+    if (!cfg.pendingOrbit(m_orbit_names[ii])) {
+      throw std::invalid_argument("EomRangePrinter::EomRangePrinter() "s +
+                                  "Invalid orbit name " + m_orbit_names[ii]);
+    }
   }
   m_func_name = tokens[0];
   tokens.pop_front();

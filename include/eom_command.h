@@ -11,10 +11,13 @@
 
 #include <string>
 #include <memory>
+#include <deque>
 #include <unordered_map>
 #include <stdexcept>
 
 #include <astro_ephemeris.h>
+
+#include <eom_config.h>
 
 namespace eom_app {
 
@@ -60,6 +63,17 @@ public:
    */
   virtual void execute() const = 0;
 };
+
+/**
+ * Builds a command given tokens, stored resources, and the simulation
+ * configuration.
+ *
+ * @param  tokens  List of strings describing a command that should be
+ *                 created and executed
+ * @param  cfg     EOM simulation configuration
+ */
+std::unique_ptr<EomCommand> buildCommand(std::deque<std::string>& tokens,
+                                         const EomConfig& cfg);
 
 
 }

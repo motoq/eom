@@ -16,7 +16,6 @@
 #include <array>
 
 #include <cal_julian_date.h>
-#include <astro_orbit_def.h>
 #include <astro_ephemeris.h>
 
 #include <eom_command.h>
@@ -45,13 +44,11 @@ public:
    * Converts string tokens into a command computing the range between
    * two ephemeris sources as a function of time.
    *
-   * @param  tokens       Tokenized parameters with the orbit name, output
-   *                      reference frame type (ITRF or GCRF), and output
-   *                      filename.  Tokens are consumed as they are
-   *                      used.
-   * @param  jdEphStart   Time of first range output
-   * @param  jdEphStop    Time of final range output
-   * @param  orbit_defs   Current orbit definitions for token validation
+   * @param  tokens      Tokenized parameters with the orbit name, output
+   *                     reference frame type (ITRF or GCRF), and output
+   *                     filename.  Tokens are consumed as they are
+   *                     used.
+   * @param  cfg         Scenario configuration
    * @param  do_spectrum  Also create range amplitude spectrum plot.
    *                      This option is geared towards comparison
    *                      of the same orbit propagated via methods
@@ -62,7 +59,6 @@ public:
    */
   EomRangePrinter(std::deque<std::string>& tokens,
                   const EomConfig& cfg,
-                  const std::vector<eom::OrbitDef>& orbit_defs,
                   bool do_spectrum = false);
 
   /**

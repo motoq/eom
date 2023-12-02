@@ -15,7 +15,6 @@
 #include <unordered_map>
 
 #include <cal_julian_date.h>
-#include <astro_orbit_def.h>
 #include <astro_ephemeris.h>
 
 #include <eom_command.h>
@@ -46,15 +45,12 @@ public:
    *                     filename.  Tokens are consumed as they are
    *                     used.
    * @param  cfg         Scenario configuration
-   * @param  orbit_defs  Current orbit definitions for token validation
    *
    * @throws  invalid_argument if exactly 3 tokens are not present or 
    *          the indicated reference frame is not valid.  Orbit names
    *          will be checked during the validate step.
    */
-  EomEphemPrinter(std::deque<std::string>& tokens,
-                  const EomConfig& cfg,
-                  const std::vector<eom::OrbitDef>& orbit_defs);
+  EomEphemPrinter(std::deque<std::string>& tokens, const EomConfig& cfg);
 
 
   /**

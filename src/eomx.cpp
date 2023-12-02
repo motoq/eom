@@ -22,7 +22,6 @@
 #include <eom_config.h>
 #include <eom_parse.h>
 #include <eom_command.h>
-#include <eom_command_builder.h>
 #include <eom_test.h>
 #include <astro_orbit_def.h>
 #include <astro_rel_orbit_def.h>
@@ -96,9 +95,6 @@ int main(int argc, char* argv[])
     // access analysis producers
   std::vector<eom::GpAccessDef> gp_access_defs;
   std::vector<eom::GpAccess> gp_accessors;
-    // A bucket of resources allowing for parsing and building of
-    // commands to be applied to models during the simulation
-  eom_app::EomCommandBuilder cmdBuilder(ephemerides);
     // The commands populated by cmdBuilder
   std::vector<std::shared_ptr<eom_app::EomCommand>> commands;
     // Read each line and pass to parser while tracking line number
@@ -165,6 +161,7 @@ int main(int argc, char* argv[])
             } else if (make == "Orbit") {
               try {
                 orbit_defs.push_back(eom_app::parse_orbit_def(tokens, cfg));
+                cfg.addPendingOrbit(orbit_defs.back().getOrbitName());
                 input_error = false;
               } catch (const std::invalid_argument& ia) {
                 std::string xerror = ia.what();
@@ -174,6 +171,7 @@ int main(int argc, char* argv[])
               try {
                 rel_orbit_defs.push_back(eom_app::parse_rel_orbit_def(tokens,
                                                                       cfg));
+                cfg.addPendingOrbit(rel_orbit_defs.back().getOrbitName());
                 input_error = false;
               } catch (const std::invalid_argument& ia) {
                 std::string xerror = ia.what();
@@ -182,6 +180,7 @@ int main(int argc, char* argv[])
             } else if (make == "EphemerisFile") {
               try {
                 eph_file_defs.push_back(eom_app::parse_eph_file_def(tokens));
+                cfg.addPendingOrbit(eph_file_defs.back().getName());
                 input_error = false;
               } catch (const std::invalid_argument& ia) {
                 std::string xerror = ia.what();
@@ -219,9 +218,7 @@ int main(int argc, char* argv[])
               }
             } else if (make == "Command") {
               try {
-                commands.push_back(cmdBuilder.buildCommand(tokens,
-                                                           cfg,
-                                                           orbit_defs));
+                commands.push_back(eom_app::buildCommand(tokens, cfg));
                 input_error = false;
               } catch (const std::invalid_argument& ia) {
                 std::string xerror = ia.what();

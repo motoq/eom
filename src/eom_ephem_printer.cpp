@@ -16,7 +16,6 @@
 
 #include <phy_const.h>
 #include <cal_julian_date.h>
-#include <astro_orbit_def.h>
 #include <astro_ephemeris.h>
 #include <astro_print.h>
 
@@ -27,8 +26,7 @@ namespace eom_app {
 
 
 EomEphemPrinter::EomEphemPrinter(std::deque<std::string>& tokens,
-                                 const EomConfig& cfg,
-                                 const std::vector<eom::OrbitDef>& orbit_defs)
+                                 const EomConfig& cfg)
 {
     // Read orbit name, output frame, and output filename
   using namespace std::string_literals;
@@ -40,18 +38,10 @@ EomEphemPrinter::EomEphemPrinter(std::deque<std::string>& tokens,
   }
   m_orbit_name = tokens[0];
   tokens.pop_front();
-  bool found_orbit {false};
-  for (const auto& orbit : orbit_defs) {
-    if (m_orbit_name == orbit.getOrbitName()) {
-      found_orbit = true;
-      break;
-    }
-  } 
-  if (!found_orbit) {
-    throw std::invalid_argument("EomEphemerisPrinter::EomEphemerisPrinter() "s +
+  if (!cfg.pendingOrbit(m_orbit_name)) {
+    throw std::invalid_argument("EomEphemPrinter::EomEphemPrinter() "s +
                                 "Invalid orbit name " + m_orbit_name);
   }
-
   auto frame_name = tokens[0];
   tokens.pop_front();
   if (frame_name == "GCRF") {

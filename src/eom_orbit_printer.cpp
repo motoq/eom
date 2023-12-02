@@ -20,7 +20,6 @@
 
 #include <phy_const.h>
 #include <cal_julian_date.h>
-#include <astro_orbit_def.h>
 #include <astro_ephemeris.h>
 
 #include <eom_command.h>
@@ -30,10 +29,9 @@ namespace eom_app {
 
 
 EomOrbitPrinter::EomOrbitPrinter(std::deque<std::string>& tokens,
-                                 const EomConfig& cfg,
-                                 const std::vector<eom::OrbitDef>& orbit_defs)
+                                 const EomConfig& cfg)
 {
-    // Read orbit name, output frame, and output filename
+    // Read orbit name, etc.
   using namespace std::string_literals;
   if (tokens.size() != 3) {
     throw std::invalid_argument("EomOrbitPrinter::EomOrbitPrinter() "s +
@@ -44,18 +42,10 @@ EomOrbitPrinter::EomOrbitPrinter(std::deque<std::string>& tokens,
 
   m_orbit_name = tokens[0];
   tokens.pop_front();
-  bool found_orbit {false};
-  for (const auto& orbit : orbit_defs) {
-    if (m_orbit_name == orbit.getOrbitName()) {
-      found_orbit = true;
-      break;
-    }
-  }
-  if (!found_orbit) {
+  if (!cfg.pendingOrbit(m_orbit_name)) {
     throw std::invalid_argument("EomOrbitPrinter::EomOrbitPrinter() "s +
                                 "Invalid orbit name " + m_orbit_name);
   }
-
   if (tokens[0] == "ECI") {
     m_frame = eom::EphemFrame::eci;
     tokens.pop_front();

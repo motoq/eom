@@ -12,6 +12,7 @@
 #include <ostream>
 #include <string>
 #include <deque>
+#include <set>
 
 #include <cal_julian_date.h>
 #include <cal_duration.h>
@@ -143,6 +144,22 @@ public:
   eom::Duration getOutputRate() const noexcept { return dtOut; }
 
   /**
+   * @param  orbit_name  Name of orbit to add to the list of orbits that
+   *                     are to be created
+   */
+  void addPendingOrbit(const std::string& orbit_name);
+
+  /**
+   * @param  orbit_name  Name of orbit to look up
+   *
+   * @return  true if orbit_name has been entered as an orbit to be
+   *          created
+   */
+  bool pendingOrbit(const std::string& orbit_name) const {
+    return m_orbit_names.count(orbit_name) > 0;
+  }
+
+  /**
    * @return  If an error was encountered while building the scenario,
    *          the return value is false.  Call getError().
    */
@@ -177,6 +194,8 @@ private:
   eom::JulianDate jdStop;
   eom::Duration dtEcfEci;
   eom::Duration dtOut;
+
+  std::set<std::string> m_orbit_names;
 };
 
 
