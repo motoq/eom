@@ -80,13 +80,9 @@ int main(int argc, char* argv[])
   std::vector<eom::RelOrbitDef> rel_orbit_defs;
     // Ephemeris file definitions - not necessarily an orbit
   std::vector<eom::EphemerisFile> eph_file_defs;
-    // Ephemeris objects.  Only the pointer is needed during parsing so
-    // the source can be added to objects requiring ephemerides.  Ephemeris
-    // objects are created after orbit_defs and rel_orbit_defs are
-    // generated.
-  const auto ephemerides =
-      std::make_shared<std::unordered_map<std::string,
-                                          std::shared_ptr<eom::Ephemeris>>>();
+    // Ephemeris objects.
+  std::unordered_map<std::string,
+                     std::shared_ptr<eom::Ephemeris>> ephemerides;
     // Earth fixed points (ground points)
   std::unordered_map<std::string,
                      std::shared_ptr<eom::GroundPoint>> ground_points;
@@ -324,7 +320,7 @@ int main(int argc, char* argv[])
     // Parse interpolated ephemeris from files and
     // process sequentially
   for (const auto& ephFileDef : eph_file_defs) {
-    (*ephemerides)[ephFileDef.getName()] = 
+    ephemerides[ephFileDef.getName()] = 
         eom::build_ephemeris(ephFileDef, cfg.getStartTime(),
                                          cfg.getStartTime(),
                                          f2iSys);
@@ -342,7 +338,7 @@ int main(int argc, char* argv[])
     // Move ephemerides from temporary vector to ephemeris map
   for (unsigned int ii=0; ii<ephvec.size(); ++ii) {
     auto name = ephvec[ii]->getName();
-    (*ephemerides)[name] = std::move(ephvec[ii]);
+    ephemerides[name] = std::move(ephvec[ii]);
   }
   }//<==
 
@@ -355,13 +351,13 @@ int main(int argc, char* argv[])
   std::vector<std::unique_ptr<eom::Ephemeris>> ephvec(rel_orbit_defs.size());
   std::transform(std::execution::par,
                  rel_orbit_defs.begin(), rel_orbit_defs.end(), ephvec.begin(),
-                 [f2iSys, ephemerides, &orbit_defs](const auto& relOrbit) {
+                 [f2iSys, &ephemerides, &orbit_defs](const auto& relOrbit) {
         // Find reference orbit - template names already validated
       std::unique_ptr<eom::Ephemeris> eph = nullptr;
       for (const auto& templateOrbit : orbit_defs) {
         if (templateOrbit.getOrbitName() == relOrbit.getTemplateOrbitName()) {
           std::shared_ptr<eom::Ephemeris> templateEph =
-                               ephemerides->at(templateOrbit.getOrbitName());
+                               ephemerides.at(templateOrbit.getOrbitName());
           eph = eom::build_orbit(relOrbit, templateOrbit, templateEph, f2iSys);
         }
       }
@@ -371,7 +367,7 @@ int main(int argc, char* argv[])
     // Move ephemerides from temporary vector to ephemeris map
   for (unsigned int ii=0; ii<ephvec.size(); ++ii) {
     auto name = ephvec[ii]->getName();
-    (*ephemerides)[name] = std::move(ephvec[ii]);
+    ephemerides[name] = std::move(ephvec[ii]);
   }
   }//<==
 
@@ -382,7 +378,7 @@ int main(int argc, char* argv[])
     try {
       auto gp_ptr = ground_points.at(axs.getGpName());
       first = false;
-      auto eph_ptr = (*ephemerides).at(axs.getOrbitName());
+      auto eph_ptr = ephemerides.at(axs.getOrbitName());
       gp_accessors.emplace_back(cfg.getStartTime(),
                                 cfg.getStopTime(),
                                 *gp_ptr,
@@ -420,7 +416,7 @@ int main(int argc, char* argv[])
   }
     // Print all orbits as orbital elements
   std::cout << '\n';
-  for (const auto& [name, eph] : *ephemerides) {
+  for (const auto& [name, eph] : ephemerides) {
     std::cout << "\n  " << name;
     std::cout << "\n  " << eph->getEpoch().to_str() << "    GCRF";
     eom::Keplerian oeCart(eph->getStateVector(eph->getEpoch(),
@@ -456,7 +452,7 @@ int main(int argc, char* argv[])
 
   for (auto& cmd : commands) {
     try {
-      cmd->validate(*ephemerides);
+      cmd->validate(ephemerides);
     } catch (const eom_app::CmdValidateException& cve) {
       std::cerr << "\n\nError Validating Command: " << cve.what() << '\n';
       return 0;
