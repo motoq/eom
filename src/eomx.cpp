@@ -88,9 +88,8 @@ int main(int argc, char* argv[])
       std::make_shared<std::unordered_map<std::string,
                                           std::shared_ptr<eom::Ephemeris>>>();
     // Earth fixed points (ground points)
-  const auto ground_points =
-      std::make_shared<std::unordered_map<
-          std::string, std::shared_ptr<eom::GroundPoint>>>();
+  std::unordered_map<std::string,
+                     std::shared_ptr<eom::GroundPoint>> ground_points;
     // Definitions of orbit to ground access analysis requests and
     // access analysis producers
   std::vector<eom::GpAccessDef> gp_access_defs;
@@ -189,7 +188,7 @@ int main(int argc, char* argv[])
             } else if (make == "GroundPoint") {
               try {
                 eom::GroundPoint gp = eom_app::parse_ground_point(tokens, cfg);
-                (*ground_points)[gp.getName()] =
+                ground_points[gp.getName()] =
                     std::make_shared<eom::GroundPoint>(gp);
                 input_error = false;
               } catch (const std::invalid_argument& ia) {
@@ -381,7 +380,7 @@ int main(int argc, char* argv[])
   for (auto& axs : gp_access_defs) {
     bool first {true};
     try {
-      auto gp_ptr = (*ground_points).at(axs.getGpName());
+      auto gp_ptr = ground_points.at(axs.getGpName());
       first = false;
       auto eph_ptr = (*ephemerides).at(axs.getOrbitName());
       gp_accessors.emplace_back(cfg.getStartTime(),
@@ -430,7 +429,7 @@ int main(int argc, char* argv[])
   }
 
     // Print ground points
-  for (const auto& [name, gp] : *ground_points) {
+  for (const auto& [name, gp] : ground_points) {
     std::cout << "\n  " << name;
     gp->print(std::cout);
   }

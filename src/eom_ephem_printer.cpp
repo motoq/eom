@@ -28,7 +28,7 @@ namespace eom_app {
 EomEphemPrinter::EomEphemPrinter(std::deque<std::string>& tokens,
                                  const EomConfig& cfg)
 {
-    // Read orbit name, output frame, and output filename
+    // Read orbit name, output frame, and output filename, etc.
   using namespace std::string_literals;
   if (tokens.size() != 3) {
     throw std::invalid_argument("EomEphemPrinter::EomEphemPrinter() "s +
