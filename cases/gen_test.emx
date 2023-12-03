@@ -1,0 +1,41 @@
+
+#
+# Checks some of the GENPL option libraries against eom libraries
+#
+# 2023/12/02
+#
+
+SimStart GD 2022  2  8  0  0  0.00;
+SimDuration Days 2;
+LeapSeconds 37;
+EcfEciRate Minutes 240;
+
+DistanceUnits  Kilometers;
+TimeUnits Seconds;
+Orbit  gj_sat  SP  GD 2022  2  8  0  0  0.00
+       CART  ITRF  -5742.304959   2727.319108   3934.171919
+                   0.1162318900 -5.6156839000  3.9837925000
+                   GravityModel  Gravt 40 40
+                   MoonGravity  Meeus
+                   SunGravity   Meeus
+                   Propagator  GJ Seconds 0;
+Orbit  gjs_sat  SP  GD 2022  2  8  0  0  0.00
+       CART  ITRF  -5742.304959   2727.319108   3934.171919
+                   0.1162318900 -5.6156839000  3.9837925000
+                   GravityModel  Gravt 40 40
+                   MoonGravity  Meeus
+                   SunGravity   Meeus
+                   Propagator  GJs Seconds 0;
+EphemerisFile slr_sat  SP3c Hermite nsgf.orb.starlette.220212.v00.sp3;
+Orbit  vinti_sat  VintiMod  GD 2022  2  8  0  0  0.00
+       CART  ITRF  -5742.304959   2727.319108   3934.171919
+                   0.1162318900 -5.6156839000  3.9837925000;
+Orbit  oscj2_sat  OscJ2  GD 2022  2  8  0  0  0.00
+       CART  ITRF  -5742.304959   2727.319108   3934.171919
+                   0.1162318900 -5.6156839000  3.9837925000;
+TimeUnits Minutes;
+OutputRate Minutes 5;
+Command PrintRange slr_sat gj_sat gj_rng;
+Command PrintRange slr_sat gjs_sat gjs_rng;
+Command PrintRange vinti_sat oscj2_sat oscj2_rng;
+

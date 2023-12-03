@@ -2,6 +2,7 @@
 #
 # Loads ephemeris for LAGEOS-2 from an SP3 format file and compare to
 # propagated ephemeris.
+# (requires GENPL option if using GJs propagator)
 #
 # 2023/01/16
 #
