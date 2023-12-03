@@ -13,7 +13,7 @@ project (eomx)
 # is appropriate, otherwise, leave the following "set" line commented
 # out:
 
-set(USE_GENPL FALSE)
+set(USE_GENPL TRUE)
 
 if (${USE_GENPL})
   add_definitions(-DGENPL)
@@ -80,6 +80,7 @@ set(SOURCES
   src/astro_vinti.cpp
   src/astro_vinti_prop.cpp
   src/axs_gp_access.cpp
+  src/eomx_parse_input_file.cpp
 )
 
 # Set path to SOFA library here
