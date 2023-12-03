@@ -8,6 +8,7 @@
 
 #include <astro_sun_meeus.h>
 
+#include <utility>
 #include <memory>
 #include <cmath>
 
@@ -23,10 +24,10 @@
 namespace eom {
 
 
-SunMeeus::SunMeeus(const std::shared_ptr<const EcfEciSys>& ecfeciSys,
+SunMeeus::SunMeeus(std::shared_ptr<const EcfEciSys> ecfeciSys,
                    const std::string& name)
 {
-  m_ecfeci = ecfeciSys;
+  m_ecfeci = std::move(ecfeciSys);
   m_name = name;
   m_jdStart = m_ecfeci->getBeginTime();
   m_jdStop = m_ecfeci->getEndTime();

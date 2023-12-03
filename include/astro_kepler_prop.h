@@ -61,7 +61,7 @@ public:
   KeplerProp(const std::string& orbit_name,
              const JulianDate& epoch,
              const Eigen::Matrix<double, 6, 1>& xeci,
-             const std::shared_ptr<const EcfEciSys>& ecfeciSys);
+             std::shared_ptr<const EcfEciSys> ecfeciSys);
 
   /**
    * @return  Unique ephemeris identifier

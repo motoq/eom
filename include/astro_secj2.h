@@ -46,14 +46,14 @@ public:
   SecJ2(const std::string& orbit_name,
         const JulianDate& epoch,
         const Eigen::Matrix<double, 6, 1>& xeci,
-        const std::shared_ptr<const EcfEciSys>& ecfeciSys);
+        std::shared_ptr<const EcfEciSys> ecfeciSys);
 
   /**
    * @return  Unique ephemeris identifier
    */
   std::string getName() const override
   {
-    return name;
+    return m_name;
   }
 
   /**
@@ -61,7 +61,7 @@ public:
    */
   JulianDate getEpoch() const override
   {
-    return jd0;
+    return m_jd0;
   }
 
   /**
@@ -69,7 +69,7 @@ public:
    */
   JulianDate getBeginTime() const override
   {
-    return ecfeci->getBeginTime();
+    return m_ecfeci->getBeginTime();
   }
 
   /**
@@ -77,7 +77,7 @@ public:
    */
   JulianDate getEndTime() const override
   {
-    return ecfeci->getEndTime();
+    return m_ecfeci->getEndTime();
   }
 
   /**
@@ -112,10 +112,11 @@ public:
                                           EphemFrame frame) const override;
 
 private:
-  std::string name {""};
-  std::shared_ptr<const EcfEciSys> ecfeci {nullptr};
-  JulianDate jd0;
-  std::array<double, 6> elmn;
+  std::string m_name;
+  std::shared_ptr<const EcfEciSys> m_ecfeci {nullptr};
+  JulianDate m_jd0;
+
+  std::array<double, 6> m_elmn;
 };
 
 

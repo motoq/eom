@@ -29,10 +29,10 @@ Sp3Chebyshev::Sp3Chebyshev(const std::string& name,
                            const std::vector<state_vector_rec>& sp3_records,
                            const JulianDate& jdStart,
                            const JulianDate& jdStop,
-                           const std::shared_ptr<const EcfEciSys>& ecfeciSys)
+                           std::shared_ptr<const EcfEciSys> ecfeciSys)
 {
   m_name = name;
-  m_ecfeciSys = ecfeciSys;
+  m_ecfeciSys = std::move(ecfeciSys);
 
   unsigned long npts {static_cast<unsigned long>(sp3::np)};
   if (sp3_records.size() >= npts) {

@@ -8,7 +8,6 @@
 
 #include <astro_print.h>
 
-#include <memory>
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -26,7 +25,7 @@ namespace eom {
 void print_ephemeris(std::string file_name,
                      const JulianDate& jdStart, const JulianDate& jdStop,
                      const Duration& dtout, EphemFrame frame,
-                     const std::shared_ptr<const Ephemeris>& orbit)
+                     const Ephemeris& orbit)
 {
   std::ofstream fout(file_name);
   if (fout.is_open()) {
@@ -61,7 +60,7 @@ void print_ephemeris(std::string file_name,
       double tsec {ii*dtsec};
       fout << "\n " << tsec << " ";
       JulianDate jdNow {jdStart + cal_const::day_per_sec*tsec};
-      Eigen::Matrix<double, 6, 1> pv = orbit->getStateVector(jdNow, frame);
+      Eigen::Matrix<double, 6, 1> pv = orbit.getStateVector(jdNow, frame);
       for (int jj=0; jj<3; ++jj) {
         fout << phy_const::m_per_du*pv(jj) << "  ";
       }

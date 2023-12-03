@@ -10,6 +10,7 @@
 
 #include <string>
 #include <vector>
+#include <utility>
 #include <memory>
 #include <utility>
 #include <stdexcept>
@@ -29,10 +30,10 @@ Sp3Hermite::Sp3Hermite(const std::string& name,
                        const std::vector<state_vector_rec>& sp3_records,
                        const JulianDate& jdStart,
                        const JulianDate& jdStop,
-                       const std::shared_ptr<const EcfEciSys>& ecfeciSys)
+                       std::shared_ptr<const EcfEciSys> ecfeciSys)
 {
   m_name = name;
-  m_ecfeciSys = ecfeciSys;
+  m_ecfeciSys = std::move(ecfeciSys);
 
   if (sp3_records.size() > 1) {
     m_jdEpoch = sp3_records.front().t;

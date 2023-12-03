@@ -85,7 +85,7 @@ public:
                const std::vector<state_vector_rec>& sp3_records,
                const JulianDate& jdStart,
                const JulianDate& jdStop,
-               const std::shared_ptr<const EcfEciSys>& ecfeciSys);
+               std::shared_ptr<const EcfEciSys> ecfeciSys);
 
   /**
    * @return  Unique ephemeris identifier

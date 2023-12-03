@@ -91,7 +91,7 @@ public:
   SpEphemeris(const std::string& name,
               const JulianDate& jdStart,
               const JulianDate& jdStop,
-              const std::shared_ptr<const EcfEciSys>& ecfeciSys,
+              std::shared_ptr<const EcfEciSys> ecfeciSys,
               std::unique_ptr<OdeSolver<JulianDate, double, 6>> sp);
 
   /**

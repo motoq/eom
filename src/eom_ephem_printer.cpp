@@ -77,7 +77,7 @@ void EomEphemPrinter::validate(const std::unordered_map<
 void EomEphemPrinter::execute() const
 {
   eom::print_ephemeris(m_file_name, m_jdStart, m_jdStop,
-                       {60.0, phy_const::tu_per_sec}, m_frame, m_eph);
+                       {60.0, phy_const::tu_per_sec}, m_frame, *m_eph);
 }
 
 }

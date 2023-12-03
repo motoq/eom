@@ -54,8 +54,8 @@ public:
    * @param  ecfeciSys  ECF/ECI conversion resource
    * @param  name       Optional unique ID if needed.
    */
-  MoonMeeus(const std::shared_ptr<const EcfEciSys>& ecfeciSys,
-           const std::string& name = "MoonMeeus");
+  MoonMeeus(std::shared_ptr<const EcfEciSys> ecfeciSys,
+            const std::string& name = "MoonMeeus");
 
   /**
    * @return  Identifier, with defalut value MoonMeeus unless set

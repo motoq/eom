@@ -69,6 +69,7 @@ public:
 private:
   std::shared_ptr<const EcfEciSys> m_ecfeci {nullptr};
   std::unique_ptr<Gravity> m_grav {nullptr};
+
   std::vector<std::unique_ptr<ForceModel>> m_fmodels;
 
 };

@@ -55,7 +55,7 @@ public:
    * @param  ecfeciSys  ECF/ECI conversion resource
    * @param  name       Optional unique ID if needed.
    */
-  SunMeeus(const std::shared_ptr<const EcfEciSys>& ecfeciSys,
+  SunMeeus(std::shared_ptr<const EcfEciSys> ecfeciSys,
            const std::string& name = "SunMeeus");
 
   /**

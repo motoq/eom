@@ -10,8 +10,8 @@
 
 #include <string>
 #include <vector>
-#include <memory>
 #include <utility>
+#include <memory>
 #include <stdexcept>
 
 #include <Eigen/Dense>
@@ -30,13 +30,13 @@ namespace eom {
 SpEphemeris::SpEphemeris(const std::string& name,
                          const JulianDate& jdStart,
                          const JulianDate& jdStop,
-                         const std::shared_ptr<const EcfEciSys>& ecfeciSys,
+                         std::shared_ptr<const EcfEciSys> ecfeciSys,
                          std::unique_ptr<OdeSolver<JulianDate, double, 6>> sp)
 {
   m_name = name;
   m_jdStart = jdStart;
   m_jdStop = jdStop;
-  m_ecfeciSys = ecfeciSys;
+  m_ecfeciSys = std::move(ecfeciSys);
 
     // SP propagator
   std::unique_ptr<OdeSolver<JulianDate, double, 6>> c_sp = std::move(sp);

@@ -9,7 +9,6 @@
 #ifndef ASTRO_PRINT_H
 #define ASTRO_PRINT_H
 
-#include <memory>
 #include <string>
 
 #include <cal_duration.h>
@@ -38,7 +37,7 @@ namespace eom {
 void print_ephemeris(std::string file_name, 
                      const JulianDate& jdStart, const JulianDate& jdStop, 
                      const Duration& dtout, EphemFrame frame,
-                     const std::shared_ptr<const Ephemeris>& orbit);
+                     const Ephemeris& orbit);
 
 }
 

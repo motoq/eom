@@ -54,7 +54,7 @@ void eom_test_moon()
 
   eom::Duration dtEph {1.25, phy_const::tu_per_day};
   eom::print_ephemeris("MoonMeeus.e", jdStart, jdStop, dtEph,
-                       eom::EphemFrame::eci, ephPtr);
+                       eom::EphemFrame::eci, *ephPtr);
 
 
   std::cout << "\n  === End Test:  Moon ===\n\n";

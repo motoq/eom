@@ -61,6 +61,7 @@
 
 #include <string>
 #include <array>
+#include <utility>
 #include <memory>
 #include <stdexcept>
 
@@ -82,11 +83,11 @@ namespace eom {
 VintiProp::VintiProp(const std::string& orbit_name,
                      const JulianDate& epoch,
                      const Eigen::Matrix<double, 6, 1>& xeci,
-                     const std::shared_ptr<const EcfEciSys>& ecfeciSys)
+                     std::shared_ptr<const EcfEciSys> ecfeciSys)
 {
    name = orbit_name;
    jd0 = epoch;
-   ecfeci = ecfeciSys;
+   ecfeci = std::move(ecfeciSys);
      // A true equator ECI frame is required for propagation
    Eigen::Matrix<double, 6, 1> xecf = ecfeci->eci2ecf(jd0,
                                                       xeci.block<3,1>(0,0),
@@ -99,7 +100,7 @@ VintiProp::VintiProp(const std::string& orbit_name,
      vin[ii] = xteme(ii+3);
    }
 
-   m_kep = std::make_unique<KeplerProp>("", epoch, xeci, ecfeciSys);
+   m_kep = std::make_unique<KeplerProp>("", epoch, xeci, ecfeci);
 
    /*
     *  Check Vinti's forbidden zone 

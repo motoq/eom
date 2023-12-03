@@ -62,7 +62,7 @@ public:
   Vinti(const std::string& orbit_name,
         const JulianDate& epoch,
         const Eigen::Matrix<double, 6, 1>& xeci,
-        const std::shared_ptr<const EcfEciSys>& ecfeciSys,
+        std::shared_ptr<const EcfEciSys> ecfeciSys,
         VintiPertModel pertModel = VintiPertModel::J2_J3);
 
   /**
@@ -70,7 +70,7 @@ public:
    */
   std::string getName() const override
   {
-    return name;
+    return m_name;
   }
 
   /**
@@ -78,7 +78,7 @@ public:
    */
   JulianDate getEpoch() const override
   {
-    return jd0;
+    return m_jd0;
   }
 
   /**
@@ -86,7 +86,7 @@ public:
    */
   JulianDate getBeginTime() const override
   {
-    return ecfeci->getBeginTime();
+    return m_ecfeci->getBeginTime();
   }
 
   /**
@@ -94,7 +94,7 @@ public:
    */
   JulianDate getEndTime() const override
   {
-    return ecfeci->getEndTime();
+    return m_ecfeci->getEndTime();
   }
 
   /**
@@ -128,13 +128,13 @@ public:
   Eigen::Matrix<double, 3, 1> getPosition(const JulianDate& jd,
                                           EphemFrame frame) const override;
 private:
-  std::string name {""};
-  std::shared_ptr<const EcfEciSys> ecfeci {nullptr};
-  std::array<double, 4> planet = {phy_const::km_per_du,
-                                  phy_const::gm_km3_sec2,
-                                  phy_const::j2, phy_const::j3};
-  JulianDate jd0;
-  std::array<double, 6> x0;
+  std::string m_name;
+  std::shared_ptr<const EcfEciSys> m_ecfeci {nullptr};
+  std::array<double, 4> m_planet = {phy_const::km_per_du,
+                                    phy_const::gm_km3_sec2,
+                                    phy_const::j2, phy_const::j3};
+  JulianDate m_jd0;
+  std::array<double, 6> m_x0;
 };
 
 

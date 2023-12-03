@@ -10,6 +10,7 @@
 
 #include <string>
 #include <array>
+#include <utility>
 #include <memory>
 
 #include <Eigen/Dense>
@@ -28,17 +29,17 @@ namespace eom {
 Kepler::Kepler(const std::string& orbit_name,
                const JulianDate& epoch,
                const Eigen::Matrix<double, 6, 1>& xeci,
-               const std::shared_ptr<const EcfEciSys>& ecfeciSys)
+               std::shared_ptr<const EcfEciSys> ecfeciSys)
 {
-  name = orbit_name;
-  jd0 = epoch;
-  ecfeci = ecfeciSys;
-  x0[0] = phy_const::km_per_du*xeci(0);
-  x0[1] = phy_const::km_per_du*xeci(1);
-  x0[2] = phy_const::km_per_du*xeci(2);
-  x0[3] = phy_const::km_per_du*xeci(3)*phy_const::tu_per_sec;
-  x0[4] = phy_const::km_per_du*xeci(4)*phy_const::tu_per_sec;
-  x0[5] = phy_const::km_per_du*xeci(5)*phy_const::tu_per_sec;
+  m_name = orbit_name;
+  m_jd0 = epoch;
+  m_ecfeci = std::move(ecfeciSys);
+  m_x0[0] = phy_const::km_per_du*xeci(0);
+  m_x0[1] = phy_const::km_per_du*xeci(1);
+  m_x0[2] = phy_const::km_per_du*xeci(2);
+  m_x0[3] = phy_const::km_per_du*xeci(3)*phy_const::tu_per_sec;
+  m_x0[4] = phy_const::km_per_du*xeci(4)*phy_const::tu_per_sec;
+  m_x0[5] = phy_const::km_per_du*xeci(5)*phy_const::tu_per_sec;
 }
 
 
@@ -47,8 +48,8 @@ Eigen::Matrix<double, 6, 1> Kepler::getStateVector(const JulianDate& jd,
 {
   double x {0.0};
   std::array<double, 6> x1;
-  double t1 {cal_const::sec_per_day*(jd - jd0)};
-  Kepler1(planet.data(), 0.0, x0.data(), t1, x1.data(), &x);
+  double t1 {cal_const::sec_per_day*(jd - m_jd0)};
+  Kepler1(m_planet.data(), 0.0, m_x0.data(), t1, x1.data(), &x);
 
   Eigen::Matrix<double, 6, 1> xeci;
   xeci(0) = phy_const::du_per_km*x1[0];
@@ -59,7 +60,7 @@ Eigen::Matrix<double, 6, 1> Kepler::getStateVector(const JulianDate& jd,
   xeci(5) = phy_const::du_per_km*x1[5]*phy_const::sec_per_tu;
 
   if (frame == EphemFrame::ecf) {
-    return ecfeci->eci2ecf(jd, xeci.block<3,1>(0,0), xeci.block<3,1>(3,0));
+    return m_ecfeci->eci2ecf(jd, xeci.block<3,1>(0,0), xeci.block<3,1>(3,0));
   }
   return xeci;
 }
@@ -70,8 +71,8 @@ Eigen::Matrix<double, 3, 1> Kepler::getPosition(const JulianDate& jd,
 {
   double x {0.0};
   std::array<double, 6> x1;
-  double t1 {cal_const::sec_per_day*(jd - jd0)};
-  Kepler1(planet.data(), 0.0, x0.data(), t1, x1.data(), &x);
+  double t1 {cal_const::sec_per_day*(jd - m_jd0)};
+  Kepler1(m_planet.data(), 0.0, m_x0.data(), t1, x1.data(), &x);
 
   Eigen::Matrix<double, 3, 1> xeci;
   xeci(0) = phy_const::du_per_km*x1[0];
@@ -79,7 +80,7 @@ Eigen::Matrix<double, 3, 1> Kepler::getPosition(const JulianDate& jd,
   xeci(2) = phy_const::du_per_km*x1[2];
 
   if (frame == EphemFrame::ecf) {
-    return ecfeci->eci2ecf(jd, xeci);
+    return m_ecfeci->eci2ecf(jd, xeci);
   }
   return xeci;
 }
