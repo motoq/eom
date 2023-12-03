@@ -11,15 +11,18 @@
 
 #include <string>
 #include <vector>
+#include <utility>
 #include <memory>
 #include <unordered_map>
 
-#include <eom_config.h>
+#include <cal_julian_date.h>
 #include <astro_orbit_def.h>
 #include <astro_rel_orbit_def.h>
 #include <astro_ephemeris_file.h>
 #include <astro_ground_point.h>
 #include <axs_gp_access_def.h>
+
+#include <eom_config.h>
 #include <eom_command.h>
 
 /**
@@ -35,6 +38,8 @@
  * @param  eph_file_defs   Ephemeris file definition
  * @param  gp_access_defs  Access definition to a ground point
  * @param  commands        Actions to take on above definitions
+ *
+ * @throws  eom_app::EomXException if there is an error parsing the file
  */
 void eomx_parse_input_file(const std::string& fname,
                            eom_app::EomConfig& cfg,
@@ -46,6 +51,22 @@ void eomx_parse_input_file(const std::string& fname,
                            std::vector<eom::GpAccessDef>& gp_access_defs,
                            std::vector<
                                std::shared_ptr<eom_app::EomCommand>>& commands);
+
+/*
+ * Determine the time span that must be supported by the simulation
+ * resources based on input scenario time and orbit epoch times.
+ *
+ * param  cfg             Scenario configuration
+ * @param  orbit_defs      Orbit definitions based on an initial state
+ *
+ * @return  [Minimum, Maximum] required Julian dates to support the
+ *          simulation.
+ * @throws  eom_app::EomXException if the simulation time can't be
+ *          supported
+ */
+std::pair<eom::JulianDate, eom::JulianDate>
+eomx_simulation_time(const eom_app::EomConfig& cfg,
+                     const std::vector<eom::OrbitDef>& orbit_defs);
 
 
 #endif

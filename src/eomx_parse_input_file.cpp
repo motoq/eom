@@ -1,12 +1,10 @@
 /*
- * Copyright 2021, 2022 Kurt Motekew
+ * Copyright 2023 Kurt Motekew
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-
-#include <eomx.h>
 
 #include <cstdlib>
 #include <iostream>
@@ -19,15 +17,18 @@
 #include <execution>
 #include <stdexcept>
 
-#include <eom_config.h>
-#include <eom_parse.h>
-#include <eom_command.h>
-#include <eom_test.h>
-#include <eomx_exception.h>
 #include <astro_orbit_def.h>
 #include <astro_rel_orbit_def.h>
 #include <astro_ephemeris_file.h>
 #include <axs_gp_access_def.h>
+
+#include <eom_config.h>
+#include <eom_parse.h>
+#include <eom_command.h>
+#include <eom_test.h>
+
+#include <eomx_exception.h>
+#include <eomx.h>
 
 /*
  * See eomx.h

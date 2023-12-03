@@ -81,6 +81,7 @@ set(SOURCES
   src/astro_vinti_prop.cpp
   src/axs_gp_access.cpp
   src/eomx_parse_input_file.cpp
+  src/eomx_simulation_time.cpp
 )
 
 # Set path to SOFA library here

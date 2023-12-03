@@ -1,3 +1,5 @@
+Misc
+----
 
 Add oe input type for orbits
 
@@ -6,3 +8,13 @@ Add radians support for inputting oe and ground points
 Add dd:mm:ss support for ground points
 
 List files generated
+
+Check if rel and eph orbits need to be added to eomx_simulation_time
+
+
+Access
+------
+
+Access interface with updates to input format
+
+Finish GpAccess set geometry based step size

@@ -6,8 +6,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <eomx.h>
-
 #include <iostream>
 #include <string>
 #include <utility>
@@ -17,9 +15,10 @@
 #include <execution>
 #include <stdexcept>
 
-#include <eom_config.h>
-#include <eom_command.h>
-#include <eomx_exception.h>
+#include <utl_const.h>
+#include <phy_const.h>
+#include <cal_julian_date.h>
+#include <astro_keplerian.h>
 #include <astro_orbit_def.h>
 #include <astro_rel_orbit_def.h>
 #include <astro_ephemeris_file.h>
@@ -31,9 +30,11 @@
 #include <axs_gp_access_def.h>
 #include <axs_gp_access.h>
 
-#include <utl_const.h>
-#include <phy_const.h>
-#include <astro_keplerian.h>
+#include <eom_config.h>
+#include <eom_command.h>
+
+#include <eomx_exception.h>
+#include <eomx.h>
 
 /**
  * Equations of Motion:  An application focused on astrodynamics related
@@ -83,42 +84,29 @@ int main(int argc, char* argv[])
     std::cerr << "\nError parsing input file:  " << exe.what() << '\n';
     return 0;
   }
+    // And print scenario
   cfg.print(std::cout);
 
     // Determine time span that must be supported by the simulation
     // based on the input scenario time and orbit epoch times.
-  eom::JulianDate minJd = cfg.getStartTime();
-  eom::JulianDate maxJd = cfg.getStopTime();
-  for (const auto& orbit : orbit_defs) {
-    if (orbit.getEpoch() < minJd) {
-      minJd = orbit.getEpoch();
-    }
-    if (maxJd < orbit.getEpoch()) {
-      maxJd = orbit.getEpoch();
-    }
-      // Backwards propagation for SP methods not currently supported
-    if (orbit.getPropagatorConfig().getPropagatorType() ==
-                                  eom::PropagatorType::sp) {
-      if (!(orbit.getEpoch() - cfg.getStartTime()  <  phy_const::epsdt_days)) {
-        std::cerr << "\n\nError:  SP orbit eopch for " <<
-                      orbit.getOrbitName() <<
-                     " must occur on or before the simulation start time.";
-        std::cerr << "\nExiting\n";
-        return 0;
-      }
-    }
-  }
+    // Then create earth fixed/inertial reference frame transformation
+    // service
+  std::shared_ptr<eom::EcfEciSys> f2iSys {nullptr};
+  try {
+    auto [minJd, maxJd] = eomx_simulation_time(cfg, orbit_defs);
 
-    // Ecf to Eci transformation service - immutable - pass as:
-    //   const std::shared_ptr<const EcfEciSys>&
-  std::shared_ptr<eom::EopSys> eopSys = nullptr;
-  if (argc > 2) {
-   eopSys = std::make_shared<eom::EopSys>(argv[2], minJd, maxJd);
+    std::shared_ptr<eom::EopSys> eopSys = nullptr;
+    if (argc > 2) {
+     eopSys = std::make_shared<eom::EopSys>(argv[2], minJd, maxJd);
+    }
+    f2iSys = std::make_shared<eom::EcfEciSys>(minJd,
+                                              maxJd,
+                                              cfg.getEcfEciRate(),
+                                              eopSys);
+  } catch (const eom_app::EomXException& exe) {
+    std::cerr << "\nSimulatio Time Error:  " << exe.what() << '\n';
+    return 0;
   }
-  auto f2iSys = std::make_shared<eom::EcfEciSys>(minJd,
-                                                 maxJd,
-                                                 cfg.getEcfEciRate(),
-                                                 eopSys);
 
     // Ephemeris objects - build file based, then initial state based,
     // then relative orbits
