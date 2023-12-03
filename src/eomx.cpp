@@ -108,64 +108,12 @@ int main(int argc, char* argv[])
     return 0;
   }
 
-    // Ephemeris objects - build file based, then initial state based,
-    // then relative orbits
-  std::unordered_map<std::string,
-                     std::shared_ptr<eom::Ephemeris>> ephemerides;
-
-    // Parse interpolated ephemeris from files and
-    // process sequentially
-  for (const auto& ephFileDef : eph_file_defs) {
-    ephemerides[ephFileDef.getName()] = 
-        eom::build_ephemeris(ephFileDef, cfg.getStartTime(),
-                                         cfg.getStartTime(),
-                                         f2iSys);
-  }
-
-  {//==>
-    // Generate orbit definitions in parallel 
-  std::vector<std::unique_ptr<eom::Ephemeris>> ephvec(orbit_defs.size());
-  std::transform(std::execution::par,
-                 orbit_defs.begin(), orbit_defs.end(), ephvec.begin(),
-                 [f2iSys](const auto& orbit) {
-                   return eom::build_orbit(orbit, f2iSys);
-                 }
-  );
-    // Move ephemerides from temporary vector to ephemeris map
-  for (unsigned int ii=0; ii<ephvec.size(); ++ii) {
-    auto name = ephvec[ii]->getName();
-    ephemerides[name] = std::move(ephvec[ii]);
-  }
-  }//<==
-
-
-  {//==>
-    // Construct relative orbits - generate and append ephemerides.
-    // Relative orbit definitions are based on primary orbit
-    // definitions, not other relative orbit definitions (only
-    // orbit_defs, not other rel_orbit_defs).
-  std::vector<std::unique_ptr<eom::Ephemeris>> ephvec(rel_orbit_defs.size());
-  std::transform(std::execution::par,
-                 rel_orbit_defs.begin(), rel_orbit_defs.end(), ephvec.begin(),
-                 [f2iSys, &ephemerides, &orbit_defs](const auto& relOrbit) {
-        // Find reference orbit - template names already validated
-      std::unique_ptr<eom::Ephemeris> eph = nullptr;
-      for (const auto& templateOrbit : orbit_defs) {
-        if (templateOrbit.getOrbitName() == relOrbit.getTemplateOrbitName()) {
-          std::shared_ptr<eom::Ephemeris> templateEph =
-                               ephemerides.at(templateOrbit.getOrbitName());
-          eph = eom::build_orbit(relOrbit, templateOrbit, templateEph, f2iSys);
-        }
-      }
-      return eph;
-    }
-  );
-    // Move ephemerides from temporary vector to ephemeris map
-  for (unsigned int ii=0; ii<ephvec.size(); ++ii) {
-    auto name = ephvec[ii]->getName();
-    ephemerides[name] = std::move(ephvec[ii]);
-  }
-  }//<==
+    // Generate ephemerides
+  auto ephemerides = eomx_gen_ephemerides(cfg,
+                                          orbit_defs,
+                                          rel_orbit_defs,
+                                          eph_file_defs,
+                                          f2iSys);
 
     // Create access analysis objects with resources
     // Error if resource name is not available in existing containers

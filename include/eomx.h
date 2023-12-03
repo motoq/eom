@@ -19,6 +19,7 @@
 #include <astro_orbit_def.h>
 #include <astro_rel_orbit_def.h>
 #include <astro_ephemeris_file.h>
+#include <astro_ecfeci_sys.h>
 #include <astro_ground_point.h>
 #include <axs_gp_access_def.h>
 
@@ -52,7 +53,7 @@ void eomx_parse_input_file(const std::string& fname,
                            std::vector<
                                std::shared_ptr<eom_app::EomCommand>>& commands);
 
-/*
+/**
  * Determine the time span that must be supported by the simulation
  * resources based on input scenario time and orbit epoch times.
  *
@@ -68,5 +69,26 @@ std::pair<eom::JulianDate, eom::JulianDate>
 eomx_simulation_time(const eom_app::EomConfig& cfg,
                      const std::vector<eom::OrbitDef>& orbit_defs);
 
+/**
+ * Generate orbital ephemeris objects.  This is done either by reading
+ * in an ephemeris file to be interpolated, initializing a general
+ * perturbations method, or propagating and storing ephemeris via
+ * special perturbation methods.
+ *
+ * @param  cfg             Scenario configuration
+ * @param  orbit_defs      Orbit definitions based on an initial state
+ * @param  rel_orbit_defs  Orbit definitions based on another orbit
+ * @param  eph_file_defs   Ephemeris file definition
+ * @param  f2iSys          ECF/ECI transformation service that will be
+ *                         copied into each ephemeris type created.
+ *
+ * @return  Map of ephemerides indexed by orbit name
+ */
+std::unordered_map<std::string,std::shared_ptr<eom::Ephemeris>>
+eomx_gen_ephemerides(const eom_app::EomConfig& cfg,
+                     const std::vector<eom::OrbitDef>& orbit_defs,
+                     const std::vector<eom::RelOrbitDef>& rel_orbit_defs,
+                     const std::vector<eom::EphemerisFile>& eph_file_defs,
+                     const std::shared_ptr<eom::EcfEciSys>& f2iSys);
 
 #endif
