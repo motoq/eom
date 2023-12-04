@@ -28,7 +28,6 @@
 #include <astro_build.h>
 #include <astro_ground_point.h>
 #include <axs_gp_access_def.h>
-#include <axs_gp_access.h>
 
 #include <eom_config.h>
 #include <eom_command.h>
@@ -84,13 +83,11 @@ int main(int argc, char* argv[])
     std::cerr << "\nError parsing input file:  " << exe.what() << '\n';
     return 0;
   }
-    // And print scenario
+    // ...and print scenario
   cfg.print(std::cout);
 
-    // Determine time span that must be supported by the simulation
-    // based on the input scenario time and orbit epoch times.
-    // Then create earth fixed/inertial reference frame transformation
-    // service
+    // Determine time span that must be supported by the simulation,
+    // and generate ECF/ECI service
   std::shared_ptr<eom::EcfEciSys> f2iSys {nullptr};
   try {
     auto [minJd, maxJd] = eomx_simulation_time(cfg, orbit_defs);
@@ -115,38 +112,10 @@ int main(int argc, char* argv[])
                                           eph_file_defs,
                                           f2iSys);
 
-    // Create access analysis objects with resources
-    // Error if resource name is not available in existing containers
-  std::vector<eom::GpAccess> gp_accessors;
-  for (auto& axs : gp_access_defs) {
-    bool first {true};
-    try {
-      auto gp_ptr = ground_points.at(axs.getGpName());
-      first = false;
-      auto eph_ptr = ephemerides.at(axs.getOrbitName());
-      gp_accessors.emplace_back(cfg.getStartTime(),
-                                cfg.getStopTime(),
-                                *gp_ptr,
-                                axs.getConstraints(),
-                                eph_ptr);
-    } catch (const std::out_of_range& oor) {
-      if (first) {
-        std::cerr << "\n\nError Assigning GP Access Ground Point: ";
-      } else {
-        std::cerr << "\n\nError Assigning GP Access Ephemeris: ";
-      }
-      std::cerr << oor.what() << '\n';
-      return 0;
-    }
-  }
-
-  //==>
-    // Generate access times in parallel 
-  std::for_each(std::execution::par,
-                gp_accessors.begin(),
-                gp_accessors.end(),
-                [](auto& accessor) { accessor.findAllAccesses(); });
-  //<==
+  auto gp_accessors = eomx_gen_gp_accesses(cfg,
+                                           ground_points,
+                                           ephemerides,
+                                           gp_access_defs);
 
   //
   // Print inputs

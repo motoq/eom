@@ -22,6 +22,7 @@
 #include <astro_ecfeci_sys.h>
 #include <astro_ground_point.h>
 #include <axs_gp_access_def.h>
+#include <axs_gp_access.h>
 
 #include <eom_config.h>
 #include <eom_command.h>
@@ -90,5 +91,24 @@ eomx_gen_ephemerides(const eom_app::EomConfig& cfg,
                      const std::vector<eom::RelOrbitDef>& rel_orbit_defs,
                      const std::vector<eom::EphemerisFile>& eph_file_defs,
                      const std::shared_ptr<eom::EcfEciSys>& f2iSys);
+
+/**
+ * Given access analysis definitions, assign resources and run analysis.
+ *
+ * @param  cfg             Scenario configuration
+ * @param  ground_points   Available ground point definitions
+ * @param  ephemerides     Available ephemeris resources
+ * @param  gp_access_defs  Access analysis requests to process
+ *
+ * @throws  eom_app::EomXException if the simulation time can't be
+ *          supported
+ */
+std::vector<eom::GpAccess> eomx_gen_gp_accesses(
+    const eom_app::EomConfig& cfg,
+    const std::unordered_map<std::string,
+                             std::shared_ptr<eom::GroundPoint>>& ground_points,
+    const std::unordered_map<std::string,
+                             std::shared_ptr<eom::Ephemeris>>& ephemerides,
+    const std::vector<eom::GpAccessDef>& gp_access_defs);
 
 #endif

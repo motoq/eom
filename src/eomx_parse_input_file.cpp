@@ -15,7 +15,6 @@
 #include <deque>
 #include <unordered_map>
 #include <execution>
-#include <stdexcept>
 
 #include <astro_orbit_def.h>
 #include <astro_rel_orbit_def.h>
