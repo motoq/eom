@@ -100,8 +100,8 @@ eomx_gen_ephemerides(const eom_app::EomConfig& cfg,
  * @param  ephemerides     Available ephemeris resources
  * @param  gp_access_defs  Access analysis requests to process
  *
- * @throws  eom_app::EomXException if the simulation time can't be
- *          supported
+ * @throws  eom_app::EomXException if necessary resources are not
+ *          available
  */
 std::vector<eom::GpAccess> eomx_gen_gp_accesses(
     const eom_app::EomConfig& cfg,
