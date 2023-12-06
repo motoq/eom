@@ -111,7 +111,7 @@ void GpAccess::findAllAccesses()
 }
 
 
-std::string GpAccess::getGpName() const noexcept
+std::string GpAccess::getGpName() const
 {
   return m_gp.getName();
 }

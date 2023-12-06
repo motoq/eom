@@ -22,7 +22,7 @@
 #include <astro_ecfeci_sys.h>
 #include <astro_ground_point.h>
 #include <axs_gp_access_def.h>
-#include <axs_gp_access.h>
+#include <axs_gp_visibility.h>
 
 #include <eom_config.h>
 #include <eom_command.h>
@@ -100,10 +100,13 @@ eomx_gen_ephemerides(const eom_app::EomConfig& cfg,
  * @param  ephemerides     Available ephemeris resources
  * @param  gp_access_defs  Access analysis requests to process
  *
+ * @return  GroundPointEphemeris key with GpVisibility value
+ *
  * @throws  eom_app::EomXException if necessary resources are not
  *          available
  */
-std::vector<eom::GpAccess> eomx_gen_gp_accesses(
+std::unordered_map<std::string,std::shared_ptr<eom::GpVisibility>>
+eomx_gen_gp_accesses(
     const eom_app::EomConfig& cfg,
     const std::unordered_map<std::string,
                              std::shared_ptr<eom::GroundPoint>>& ground_points,

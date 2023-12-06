@@ -146,9 +146,9 @@ int main(int argc, char* argv[])
 
     // Print Access Requests - print access here for now also
   for (const auto& axses : gp_accessors) {
-    std::cout << "\n  Computing access for " << axses.getOrbitName() <<
-                 " against " << axses.getGpName();
-    for (const auto& axs : axses) {
+    std::cout << "\n  Access for " << axses.second->getOrbitName() <<
+                       " against " << axses.second->getGpName();
+    for (const auto& axs : *(axses.second)) {
       std::cout << '\n' << axs.rise.to_str() <<
                    "  " << axs.set.to_str() <<
                    "    {" <<

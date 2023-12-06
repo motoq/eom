@@ -18,6 +18,7 @@
 #include <astro_ephemeris.h>
 #include <axs_gp_constraints.h>
 #include <axs_interval.h>
+#include <axs_gp_visibility.h>
 
 namespace eom {
 
@@ -29,7 +30,7 @@ namespace eom {
  * @author  Kurt Motekew
  * @date    20231027
  */
-class GpAccess {
+class GpAccess : public GpVisibility {
 public:
   /**
    * Initialize with ground point, ephemeris, and static constraints
@@ -45,33 +46,38 @@ public:
            const GroundPoint& gp,
            const GpConstraints& xcs,
            std::shared_ptr<const Ephemeris> eph);
+  ~GpAccess() = default;
+  GpAccess(const GpAccess&) = default;
+  GpAccess& operator=(const GpAccess&) = default;
+  GpAccess(GpAccess&&) = default;
+  GpAccess& operator=(GpAccess&&) = default;
 
   /**
    * Computes access analysis over entire duration.
    */
-  bool findNextAccess();
+  bool findNextAccess() override;
 
   /**
    * Computes access analysis over entire duration.
    */
-  void findAllAccesses();
+  void findAllAccesses() override;
 
   /**
-   * @return  Name (string identifieer) associated with ground point
+   * @return  Name (string identifier) associated with ground point
    */
-  std::string getGpName() const noexcept;
+  std::string getGpName() const override;
 
   /**
-   * @return  Name (string identifieer) associated with orbit
+   * @return  Name (string identifier) associated with orbit
    */
-  std::string getOrbitName() const;
+  std::string getOrbitName() const override;
 
   /**
    * Provides constant iterator access to access interval structures
    *
    * @return  Beginning of range iterator for axs_interval structure
    */
-  std::vector<axs_interval>::const_iterator cbegin() const {
+  std::vector<axs_interval>::const_iterator cbegin() const override {
     return m_intervals.cbegin();
   }
 
@@ -80,7 +86,7 @@ public:
    *
    * @return  End of range iterator for axs_interval structure
    */
-  std::vector<axs_interval>::const_iterator cend() const {
+  std::vector<axs_interval>::const_iterator cend() const override {
     return m_intervals.cend();
   }
 
@@ -90,7 +96,7 @@ public:
    *
    * @return  Beginning of range iterator for axs_interval structure
    */
-  std::vector<axs_interval>::const_iterator begin() const {
+  std::vector<axs_interval>::const_iterator begin() const override {
     return m_intervals.cbegin();
   }
 
@@ -100,7 +106,7 @@ public:
    *
    * @return  End of range iterator for axs_interval structure
    */
-  std::vector<axs_interval>::const_iterator end() const {
+  std::vector<axs_interval>::const_iterator end() const override {
     return m_intervals.cend();
   }
 
