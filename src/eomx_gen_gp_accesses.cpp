@@ -15,7 +15,9 @@
 
 #include <axs_gp_access_def.h>
 #include <axs_gp_visibility.h>
+#include <axs_gp_access_def.h>
 #include <axs_gp_access.h>
+#include <axs_gp_access_debug.h>
 
 #include <eom_config.h>
 
@@ -39,18 +41,28 @@ eomx_gen_gp_accesses(
     // Error if resource name is not available in existing containers
   std::unordered_map<std::string,
                      std::shared_ptr<eom::GpVisibility>> gp_accessors;
-  for (auto& axs : gp_access_defs) {
+  for (const eom::GpAccessDef& axs : gp_access_defs) {
     bool first {true};
     try {
       auto gp_ptr = ground_points.at(axs.getGpName());
       first = false;
       auto eph_ptr = ephemerides.at(axs.getOrbitName());
-      gp_accessors[gp_ptr->getName() + eph_ptr->getName()] =
-          std::make_shared<eom::GpAccess>(cfg.getStartTime(),
-                                          cfg.getStopTime(),
-                                          *gp_ptr,
-                                          axs.getConstraints(),
-                                          eph_ptr);
+        // Select access determination algorithm
+      if (axs.getAccessModel() == eom::AccessModel::dbg) {
+        gp_accessors[gp_ptr->getName() + eph_ptr->getName()] =
+            std::make_shared<eom::GpAccessDebug>(cfg.getStartTime(),
+                                                 cfg.getStopTime(),
+                                                 *gp_ptr,
+                                                 axs.getConstraints(),
+                                                 eph_ptr);
+      } else {
+        gp_accessors[gp_ptr->getName() + eph_ptr->getName()] =
+            std::make_shared<eom::GpAccess>(cfg.getStartTime(),
+                                            cfg.getStopTime(),
+                                            *gp_ptr,
+                                            axs.getConstraints(),
+                                            eph_ptr);
+      }
     } catch (const std::out_of_range& oor) {
       using namespace std::string_literals;
       if (first) {

@@ -31,11 +31,22 @@ parse_gp_access_def(std::deque<std::string>& tokens, const EomConfig& cfg)
 {
 
   using namespace std::string_literals;
-    // Need at least the name, coord type, and coordinates
-  if (tokens.size() < 2) {
+    // Need at least the orbit name, ground point name, and access model
+  if (tokens.size() < 3) {
     throw std::invalid_argument("eom_app::parse_gp_access_def() "s +
-                                "Minimum  of 2 tokens required vs. "s +
+                                "Minimum  of 3 tokens required vs. " +
                                 std::to_string(tokens.size()));
+  }
+  auto method_name = tokens[0];
+  tokens.pop_front();
+  eom::AccessModel method = eom::AccessModel::std;
+  if (method_name == "Standard") {
+    method = eom::AccessModel::std;
+  } else if (method_name == "Debug") {
+    method = eom::AccessModel::dbg;
+  } else {
+    throw std::invalid_argument("eom_app::parse_gp_access_def() "s +
+                                "Invalid Access Algorithm:  " + method_name);
   }
   auto orbit_name = tokens[0];
   tokens.pop_front();
@@ -51,7 +62,7 @@ parse_gp_access_def(std::deque<std::string>& tokens, const EomConfig& cfg)
     }
   }
 
-  eom::GpAccessDef gpDef(orbit_name, gp_name, xcs);
+  eom::GpAccessDef gpDef(orbit_name, gp_name, xcs, method);
   return gpDef;
 }
 

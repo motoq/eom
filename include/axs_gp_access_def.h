@@ -15,6 +15,10 @@
 
 namespace eom {
 
+enum class AccessModel {
+  std,                            ///< Standard model (robust, fairly quick)
+  dbg                             ///< Debug model (very robust, slooow)
+};
 
 /**
  * Holds parameters defining an access analysis request between an orbit
@@ -33,12 +37,16 @@ public:
    * @param  gp_name     Name of ground point for which access is to be
    *                     generated
    * @param  xcs         Access constraints
+   * @param  mdl         Optional specifier of which algorithm to use
+   *                     when locating and refining access intervals
    */
   GpAccessDef(const std::string& orbit_name,
               const std::string& gp_name,
-              const GpConstraints& xcs) : m_orbit_name {orbit_name},
-                                          m_gp_name {gp_name},
-                                          m_xcs {xcs}
+              const GpConstraints& xcs,
+              AccessModel  mdl = AccessModel::std) : m_orbit_name {orbit_name},
+                                                     m_gp_name {gp_name},
+                                                     m_xcs {xcs},
+                                                     m_model {mdl}
   {
   }
 
@@ -53,6 +61,11 @@ public:
   std::string getGpName() const noexcept { return m_gp_name; }
 
   /**
+   * @return  The access model algorithm type to use
+   */
+  AccessModel getAccessModel() const noexcept { return m_model; }
+
+  /**
    * @return  Static (not dynamic) access constraints
    */
   GpConstraints getConstraints() const noexcept { return m_xcs; }
@@ -61,6 +74,7 @@ private:
   std::string m_orbit_name;
   std::string m_gp_name;
   GpConstraints m_xcs;
+  AccessModel m_model;
 };
 
 
