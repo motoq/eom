@@ -189,7 +189,7 @@ private:
   std::shared_ptr<const Ephemeris> m_eph;
 
   JulianDate m_jd;
-  double dt_days {20.0*utl_const::day_per_sec};
+  double m_dt_days {20.0*utl_const::day_per_sec};
 
   std::vector<axs_interval> m_intervals;
 };

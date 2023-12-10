@@ -137,15 +137,28 @@ public:
   /**
    * @return  Perigee radial distance, DU
    */
-  double getPerigeeRadius() const
+  double getPerigeeRadius() const noexcept
   {
     return m_rp;
   }
 
   /**
-   * @return  Inertial velocity elocity magnitude at perigee, DU/TU
+   * @return  Inertial velocity velocity magnitude at perigee, DU/TU
    */
   double getPerigeeSpeed() const;
+
+  /**
+   * @return  Apogee radial distance, DU
+   */
+  double getApogeeRadius() const noexcept
+  {
+    return m_ra;
+  }
+
+  /**
+   * @return  Inertial velocity velocity magnitude at apogee, DU/TU
+   */
+  double getApogeeSpeed() const;
 
   /*
    * Updates the true anomaly given the input mean anomaly.  Only the
@@ -165,6 +178,7 @@ private:
   double m_sme {};
   double m_hmag {};
   double m_rp {};
+  double m_ra {};
   std::array<double, 6> m_oe;
   Eigen::Matrix<double, 6, 1> m_cart;
 };

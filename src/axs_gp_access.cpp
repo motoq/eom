@@ -58,9 +58,9 @@ GpAccess::GpAccess(const JulianDate& jdStart,
     double max_vel {oe.getPerigeeSpeed()};
     double theta_dot {max_vel/oe.getPerigeeRadius()};
     //double theta_dot {oe.getMeanMotion()};
-    dt_days = phy_const::day_per_tu*search_stepsize(theta_dot);
+    m_dt_days = phy_const::day_per_tu*search_stepsize(theta_dot);
 
-    std::cout << "\nDt Sec:  " << utl_const::sec_per_day*dt_days <<
+    std::cout << "\nDt Sec:  " << utl_const::sec_per_day*m_dt_days <<
                  "  Perigee Alt:  " << 6378*(oe.getPerigeeRadius() - 1.0) <<
                  " km  Angular velocity:  "  <<
                  theta_dot*utl_const::deg_per_rad*phy_const::tu_per_min <<
@@ -143,6 +143,7 @@ bool GpAccess::is_visible(const JulianDate& jd) const
 
 bool GpAccess::findRise(axs_interval& axs)
 {
+  double dt_days {m_dt_days};
   bool found_rise {false};
   while (!(found_rise = is_visible(m_jd))) {
     m_jd += dt_days;
@@ -181,6 +182,7 @@ bool GpAccess::findRise(axs_interval& axs)
 
 void GpAccess::findSet(axs_interval& axs)
 {
+  double dt_days {m_dt_days};
   bool found_set {true};
   while (is_visible(m_jd)) {
     m_jd += dt_days;

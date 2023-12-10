@@ -93,6 +93,7 @@ Keplerian::Keplerian(const Eigen::Matrix<double, 6, 1>& cart)
     // Semimajor axis, perigee radius, final error check
   double sma {-0.5*gm/m_sme};
   m_rp = sma*(1.0 - emag);
+  m_ra = sma*(1.0 + emag);
   if (m_rp < phy_const::re) {
     throw std::invalid_argument(
         "Keplerian::set(): Perigee distance less than 1 DU");
@@ -161,6 +162,7 @@ void Keplerian::set(const std::array<double, 6>& oe)
   double w {oe[4]};
   double v {oe[5]};
   m_rp = a*(1.0 - e);
+  m_ra = a*(1.0 + e);
 
     // Error checking.  Gravity models not valid below scaling radius.
     // Etc...
@@ -251,6 +253,12 @@ double Keplerian::getPeriod() const
 double Keplerian::getPerigeeSpeed() const
 {
   return std::sqrt(gm*(2.0/m_rp - 1.0/m_oe[ia]));
+}
+
+
+double Keplerian::getApogeeSpeed() const
+{
+  return std::sqrt(gm*(2.0/m_ra - 1.0/m_oe[ia]));
 }
 
 /*
