@@ -7,6 +7,7 @@
  */
 
 #include <iostream>
+#include <iomanip>
 #include <string>
 #include <utility>
 #include <memory>
@@ -28,6 +29,8 @@
 #include <astro_build.h>
 #include <astro_ground_point.h>
 #include <axs_gp_access_def.h>
+#include <axs_interval.h>
+#include <axs_gp_visibility.h>
 
 #include <eom_config.h>
 #include <eom_command.h>
@@ -83,8 +86,18 @@ int main(int argc, char* argv[])
     std::cerr << "\nError parsing input file:  " << exe.what() << '\n';
     return 0;
   }
-    // ...and print scenario
+    // ...and print scenario - print simulation components as created
   cfg.print(std::cout);
+  std::cout << '\n';
+
+    // Print ground points
+  if (ground_points.size() > 0) {
+    std::cout << "\nGround point Definitions";
+  }
+  for (const auto& [name, gp] : ground_points) {
+    std::cout << "\n  " << name << ":  ";
+    gp->print(std::cout);
+  }
 
     // Determine time span that must be supported by the simulation,
     // and generate ECF/ECI service
@@ -112,24 +125,17 @@ int main(int argc, char* argv[])
                                           eph_file_defs,
                                           f2iSys);
 
-  auto gp_accessors = eomx_gen_gp_accesses(cfg,
-                                           ground_points,
-                                           ephemerides,
-                                           gp_access_defs);
-
-  //
-  // Print inputs
-  //
-
-    // Print derived orbits
-  std::cout << '\n';
-  for (const auto& relOrbit : rel_orbit_defs) {
+    // Print derived orbit names
+  if (rel_orbit_defs.size() > 0) {
+    std::cout << "\nDerived Orbits";
+  }
+  for (const eom::RelOrbitDef& relOrbit : rel_orbit_defs) {
     std::cout << "\n  " << relOrbit.getOrbitName() <<
                  "  derived from:  " <<
                  relOrbit.getTemplateOrbitName();
   }
     // Print all orbits as orbital elements
-  std::cout << '\n';
+  std::cout << "\nGenerated Orbits";
   for (const auto& [name, eph] : ephemerides) {
     std::cout << "\n  " << name;
     std::cout << "\n  " << eph->getEpoch().to_str() << "    GCRF";
@@ -138,24 +144,33 @@ int main(int argc, char* argv[])
     oeCart.print(std::cout);
   }
 
-    // Print ground points
-  for (const auto& [name, gp] : ground_points) {
-    std::cout << "\n  " << name;
-    gp->print(std::cout);
-  }
+    // Generate access analysis
+  auto gp_accessors = eomx_gen_gp_accesses(cfg,
+                                           ground_points,
+                                           ephemerides,
+                                           gp_access_defs);
 
-    // Print Access Requests - print access here for now also
-  for (const auto& axses : gp_accessors) {
-    std::cout << "\n  Access for " << axses.second->getOrbitName() <<
-                       " against " << axses.second->getGpName();
-    for (const auto& axs : *(axses.second)) {
-      std::cout << '\n' << axs.rise.to_str() <<
-                   "  " << axs.set.to_str() <<
-                   "    {" <<
-                   utl_const::deg_per_rad*std::asin(axs.sinel_rise) <<
-                   ", " <<
-                   utl_const::deg_per_rad*std::asin(axs.sinel_set) <<
-                   "} deg Elevation";
+    // Print access results here for now
+  if (gp_access_defs.size() > 0) {
+    std::cout << std::setprecision(3);
+  }
+  for (const eom::GpAccessDef& axses : gp_access_defs) {
+    std::string key {axses.getGpName() + axses.getOrbitName()};
+    try {
+      std::shared_ptr<eom::GpVisibility> axs = gp_accessors.at(key);
+      std::cout << "\n  Access for " << axs->getOrbitName() <<
+                         " against " << axs->getGpName();
+      for (const eom::axs_interval& rise_set : (*axs)) {
+        std::cout << '\n' << rise_set.rise.to_str() <<
+                     "  " << rise_set.set.to_str() << "    {" <<
+                     utl_const::deg_per_rad*std::asin(rise_set.sinel_rise) <<
+                     ", " <<
+                     utl_const::deg_per_rad*std::asin(rise_set.sinel_set) <<
+                     "} deg Elevation";
+      }
+    } catch (const std::out_of_range& oor) {
+      std::cerr << "\nCould not locate " << key <<
+                   " for access analysis\n";
     }
   }
 

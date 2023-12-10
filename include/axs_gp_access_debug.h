@@ -29,21 +29,30 @@ namespace eom {
  * This debug version sticks to using a robuts (but slower) method
  * that should be handy when validating more aggressive algorithms.
  * A bisection method is used to narrow in on the final time, but a
- * fixed step size is used to locate the interval.
+ * relatively small fixed step size is used to locate the interval
+ * for all orbit types.
+ *
+ * Initialization currently requires the orbit to be bounded, but the
+ * algorithm would handle unbounded orbits.
  *
  * @author  Kurt Motekew
- * @date    20231027
+ * @date    2023/12/05
  */
 class GpAccessDebug : public GpVisibility {
 public:
   /**
-   * Initialize with ground point, ephemeris, and static constraints
+   * Initialize but don't compute any access intervals
    *
-   * @param  gp   Ground point definition
-   * @param  eph  Ephemeris source
-   * @param  xcs  Access constraints
+   * @param  jdStart  Start time over which to search for access
+   *                  intervals
+   * @param  jdSEnd   End time over which to search for access
+   *                  intervals
+   * @param  gp       Ground point definition
+   * @param  xcs      Access constraints
+   * @param  eph      Orbital ephemeris source, valid over duration of
+   *                  interest.
    *
-   * @throws  invalid_argument if not orbital ephemeris
+   * @throws  invalid_argument if not bounded orbital ephemeris
    */
   GpAccessDebug(const JulianDate& jdStart,
                 const JulianDate& jdStop,
@@ -57,12 +66,16 @@ public:
   GpAccessDebug& operator=(GpAccessDebug&&) = default;
 
   /**
-   * Computes access analysis over entire duration.
+   * Locates and stores the next access interval
+   *
+   * @return  true if an interval was located.  False if no other
+   *          intervals are present over the simulation time.
    */
   bool findNextAccess() override;
 
   /**
-   * Computes access analysis over entire duration.
+   * Computes all remaining access over the entire simulation time and
+   * stores them
    */
   void findAllAccesses() override;
 

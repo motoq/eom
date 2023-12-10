@@ -164,9 +164,9 @@ void GroundPoint::print(std::ostream& stream) const
 {
   stream << std::fixed;
   stream << std::setprecision(3);
-  stream << "\n  lat: " << utl_const::deg_per_rad*m_lat << " deg";
-  stream << "  lon: " << utl_const::deg_per_rad*m_lon << " deg";
-  stream << "  alt: " << phy_const::m_per_du*m_alt << " m";
+  stream << "(" << utl_const::deg_per_rad*m_lat <<
+            ", " << utl_const::deg_per_rad*m_lon <<
+            ", " << phy_const::m_per_du*m_alt << ") (deg, deg, m)";
 }
 
 

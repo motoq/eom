@@ -6,7 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <axs_gp_access.h>
+#include <axs_gp_access_debug.h>
 
 #include <string>
 #include <utility>
@@ -28,6 +28,8 @@ namespace {
     // One second increment after end of access window to start
     // searching for the next access window
   constexpr double jd_inc {1.0*utl_const::day_per_sec};
+    // Search increment
+  constexpr double dt_days {8.0*utl_const::day_per_sec};
     // Access convergence
   constexpr double tol_dt_day {0.1*utl_const::day_per_sec};
   constexpr int max_itr {42};
@@ -35,38 +37,29 @@ namespace {
 
 namespace eom {
 
-GpAccess::GpAccess(const JulianDate& jdStart,
-                   const JulianDate& jdStop,
-                   const GroundPoint& gp,
-                   const GpConstraints& xcs,
-                   std::shared_ptr<const Ephemeris> eph) : m_jdStart {jdStart},
-                                                           m_jdStop {jdStop},
-                                                           m_gp {gp},
-                                                           m_xcs {xcs},
-                                                           m_eph {
-                                                             std::move(eph)
-                                                           }
+GpAccessDebug::
+GpAccessDebug(const JulianDate& jdStart,
+              const JulianDate& jdStop,
+              const GroundPoint& gp,
+              const GpConstraints& xcs,
+              std::shared_ptr<const Ephemeris> eph) : m_jdStart {jdStart},
+                                                      m_jdStop {jdStop},
+                                                      m_gp {gp},
+                                                      m_xcs {xcs},
+                                                      m_eph { std::move(eph) }
 {
   m_jd = jdStart;
 
   try {
     Keplerian oe(m_eph->getStateVector(m_jd, EphemFrame::eci));
-    m_rp = oe.getPerigeeRadius();
-    m_ra = oe.getApogeeRadius();
-    m_ecc = oe.getEccentricity();
-    double theta_dot_p {oe.getPerigeeSpeed()/m_rp};
-    m_dt_days_p = phy_const::day_per_tu*search_stepsize(theta_dot_p);
-      //
-    double theta_dot_a {oe.getApogeeSpeed()/m_ra};
-    m_dt_days_a = phy_const::day_per_tu*search_stepsize(theta_dot_a);
   } catch (const std::invalid_argument& ia) {
-    throw std::invalid_argument("Non-orbital Ephemeris Sent to GpAccess: " +
+    throw std::invalid_argument("Non-orbital Ephemeris in GpAccessDebug: " +
                                 m_eph->getName());
   }
 }
 
 
-bool GpAccess::findNextAccess()
+bool GpAccessDebug::findNextAccess()
 {
     // Don't search if current time is past stop time
   if (m_jdStop <= m_jd) {
@@ -77,7 +70,7 @@ bool GpAccess::findNextAccess()
   bool in_interval {false};
 
     // Either already in an access window, or need to locate start time
-  if (is_visible(m_jd, nullptr)) {
+  if (is_visible(m_jd)) {
     in_interval = true;
     riseset.rise = m_jd;
     // Set elevation too
@@ -96,7 +89,7 @@ bool GpAccess::findNextAccess()
 }
 
 
-void GpAccess::findAllAccesses()
+void GpAccessDebug::findAllAccesses()
 {
     // Locate next interval and store
   while (findNextAccess())
@@ -107,19 +100,19 @@ void GpAccess::findAllAccesses()
 }
 
 
-std::string GpAccess::getGpName() const
+std::string GpAccessDebug::getGpName() const
 {
   return m_gp.getName();
 }
 
 
-std::string GpAccess::getOrbitName() const
+std::string GpAccessDebug::getOrbitName() const
 {
   return (*m_eph).getName();
 }
 
 
-bool GpAccess::is_visible(const JulianDate& jd, double* new_dt_days) const
+bool GpAccessDebug::is_visible(const JulianDate& jd)
 {
     // Ensure ephemeris past availability is not requested
   if (m_jdStop < m_jd  ||  m_jd < m_jdStart) {
@@ -127,15 +120,6 @@ bool GpAccess::is_visible(const JulianDate& jd, double* new_dt_days) const
   }
 
   Eigen::Matrix<double, 3, 1> pos = m_eph->getPosition(jd, EphemFrame::ecf);
-  if (m_ecc > 0.07  &&  new_dt_days != nullptr) {
-    double r {pos.norm()};
-    double factor {(r - m_rp)/(m_ra - m_rp)};
-      // Could be negative if orbit degrades since epoch
-    if (factor > 0) {
-      *new_dt_days = m_dt_days_p + factor*(m_dt_days_a - m_dt_days_p);
-    }
-  }
-
   if (m_gp.getSinElevation(pos) >= m_xcs.getSineMinEl()) {
     return true;
   }
@@ -144,11 +128,10 @@ bool GpAccess::is_visible(const JulianDate& jd, double* new_dt_days) const
 }
 
 
-bool GpAccess::findRise(axs_interval& axs)
+bool GpAccessDebug::findRise(axs_interval& axs)
 {
-  double dt_days {m_dt_days_p};
   bool found_rise {false};
-  while (!(found_rise = is_visible(m_jd, &dt_days))) {
+  while (!(found_rise = is_visible(m_jd))) {
     m_jd += dt_days;
       // If past stop time, access was not found - done
     if (m_jdStop <= m_jd) {
@@ -163,7 +146,7 @@ bool GpAccess::findRise(axs_interval& axs)
     auto jd2 = jd1 + -dt_days;              // Behind access
     auto jd3 = jd2 + 0.5*(jd1 - jd2);
     for (int ii=0; (jd1 - jd2)>tol_dt_day  &&  ii<max_itr; ++ii) {
-      if (is_visible(jd3, nullptr)) {
+      if (is_visible(jd3)) {
         jd1 = jd3;
       } else {
         jd2 = jd3;
@@ -183,11 +166,10 @@ bool GpAccess::findRise(axs_interval& axs)
 }
 
 
-void GpAccess::findSet(axs_interval& axs)
+void GpAccessDebug::findSet(axs_interval& axs)
 {
-  double dt_days {m_dt_days_p};
   bool found_set {true};
-  while (is_visible(m_jd, &dt_days)) {
+  while (is_visible(m_jd)) {
     m_jd += dt_days;
     if (m_jdStop <= m_jd) {
       m_jd = m_jdStop;
@@ -202,7 +184,7 @@ void GpAccess::findSet(axs_interval& axs)
     auto jd2 = jd1 + -dt_days;              // Behind access
     auto jd3 = jd2 + 0.5*(jd1 - jd2);
     for (int ii=0; (jd1 - jd2)>tol_dt_day  &&  ii<max_itr; ++ii) {
-      if (!is_visible(jd3, nullptr)) {
+      if (!is_visible(jd3)) {
         jd1 = jd3;
       } else {
         jd2 = jd3;
@@ -218,7 +200,7 @@ void GpAccess::findSet(axs_interval& axs)
   }
 }
 
-void GpAccess::setRiseSetStatus(axs_interval& axs)
+void GpAccessDebug::setRiseSetStatus(axs_interval& axs)
 {
   axs.sinel_rise = m_gp.getSinElevation(m_eph->getPosition(axs.rise,
                                                            EphemFrame::ecf));

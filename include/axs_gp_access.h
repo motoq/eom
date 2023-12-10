@@ -47,7 +47,8 @@ namespace eom {
 
 /**
  * Performs access analysis between a ground point and ephemeris
- * resource.  The ephemeris resource is assumed to be a valid orbit.
+ * resource.  The ephemeris resource is assumed to be a valid and
+ * bounded orbit.
  *
  * @author  Kurt Motekew
  * @date    20231027
@@ -55,13 +56,18 @@ namespace eom {
 class GpAccess : public GpVisibility {
 public:
   /**
-   * Initialize with ground point, ephemeris, and static constraints
+   * Initialize but don't compute any access intervals
    *
-   * @param  gp   Ground point definition
-   * @param  eph  Ephemeris source
-   * @param  xcs  Access constraints
+   * @param  jdStart  Start time over which to search for access
+   *                  intervals
+   * @param  jdSEnd   End time over which to search for access
+   *                  intervals
+   * @param  gp       Ground point definition
+   * @param  xcs      Access constraints
+   * @param  eph      Orbital ephemeris source, valid over duration of
+   *                  interest.
    *
-   * @throws  invalid_argument if not orbital ephemeris
+   * @throws  invalid_argument if not bounded orbital ephemeris
    */
   GpAccess(const JulianDate& jdStart,
            const JulianDate& jdStop,
@@ -75,12 +81,16 @@ public:
   GpAccess& operator=(GpAccess&&) = default;
 
   /**
-   * Computes access analysis over entire duration.
+   * Locates and stores the next access interval
+   *
+   * @return  true if an interval was located.  False if no other
+   *          intervals are present over the simulation time.
    */
   bool findNextAccess() override;
 
   /**
-   * Computes access analysis over entire duration.
+   * Computes all remaining access over the entire simulation time and
+   * stores them
    */
   void findAllAccesses() override;
 
@@ -139,8 +149,9 @@ private:
    * the open interval defined by m_jdStart and m_jdStop.
    *
    * @param  jd           Time to evaluate if access constraints are met
-   * @param  new_dt_days  Time increment to use for next time increment
-   *                      in search.  If nullptr, then ignored.
+   * @param  new_dt_days  Suggested time increment to use for locating
+   *                      the next access interval.  If nullptr, then
+   *                      ignored.
    */
   bool is_visible(const JulianDate& jd, double* new_dt_days) const; 
 

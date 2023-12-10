@@ -18,8 +18,8 @@
 namespace eom {
 
 /**
- * Interface defining as set of orbital elements with conversions to and
- * from Cartesian state vectors.
+ * Interface defining ground point to orbit visibility analysis
+ * functionality.
  *
  * @author  Kurt Motekew
  * @date    2023/12/05
@@ -34,12 +34,16 @@ public:
   GpVisibility& operator=(GpVisibility&&) = delete;
 
   /**
-   * Computes access analysis over entire duration.
+   * Locates and stores the next access interval
+   *
+   * @return  true if an interval was located.  False if no other
+   *          intervals are present over the simulation time.
    */
   virtual bool findNextAccess() = 0;
 
   /**
-   * Computes access analysis over entire duration.
+   * Computes all remaining access over the entire simulation time and
+   * stores them
    */
   virtual void findAllAccesses() = 0;
 
