@@ -12,13 +12,35 @@
 #include <string>
 #include <memory>
 #include <vector>
+#include <algorithm>
 
+#include <utl_const.h>
+#include <phy_const.h>
 #include <cal_julian_date.h>
 #include <astro_ground_point.h>
 #include <astro_ephemeris.h>
 #include <axs_gp_constraints.h>
 #include <axs_interval.h>
 #include <axs_gp_visibility.h>
+
+namespace {
+  constexpr double k {0.99547*utl_const::rad_per_deg};
+  constexpr double c {-0.1481*phy_const::tu_per_min};
+  constexpr double lb {8.0*phy_const::tu_per_sec};
+  constexpr double ub {2.0*phy_const::tu_per_min};
+  /**
+   * Given the angular velocity of the satellite w.r.t. the center of
+   * the earth (rate of change in true anomaly), compute the time
+   * increment used when searching for access interval bounds.
+   *
+   * @param  theta_dot  True anomaly rate, rad/TU
+   *
+   * @return  Time increment, TU
+   */
+  constexpr double search_stepsize(double theta_dot) {
+    return std::min(std::max(k/theta_dot + c, lb), ub);
+  }
+}
 
 namespace eom {
 
@@ -118,7 +140,7 @@ private:
    *
    * @param  jd  Time to evaluate if access constraints are met
    */
-  bool is_visible(const JulianDate& jd); 
+  bool is_visible(const JulianDate& jd) const; 
 
   /*
    * Locate the start of an access window based on the assumption that
@@ -167,8 +189,7 @@ private:
   std::shared_ptr<const Ephemeris> m_eph;
 
   JulianDate m_jd;
-  double m_theta_dot {};
-  double m_max_dt_days {};
+  double dt_days {20.0*utl_const::day_per_sec};
 
   std::vector<axs_interval> m_intervals;
 };

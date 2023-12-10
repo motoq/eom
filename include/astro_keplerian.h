@@ -125,6 +125,11 @@ public:
   double getMeanAnomaly() const;
 
   /*
+   * @return the mean motion, radians/TU
+   */
+  double getMeanMotion() const;
+
+  /*
    * @return the orbit period, TU
    */
   double getPeriod() const;

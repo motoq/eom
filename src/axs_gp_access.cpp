@@ -24,14 +24,14 @@
 #include <astro_keplerian.h>
 #include <axs_gp_constraints.h>
 
+#include <iostream>
+
 namespace {
     // One second increment after end of access window to start
     // searching for the next access window
   constexpr double jd_inc {1.0*utl_const::day_per_sec};
-    // Search increment
-  constexpr double dt_days {20.0*utl_const::day_per_sec};
-    // Factor to cut max search time by
-  constexpr double dt_max_sf {0.25};
+//    // Search increment
+//  constexpr double dt_days {20.0*utl_const::day_per_sec};
     // Access convergence
   constexpr double tol_dt_day {0.1*utl_const::day_per_sec};
   constexpr int max_itr {42};
@@ -55,14 +55,16 @@ GpAccess::GpAccess(const JulianDate& jdStart,
 
   try {
     Keplerian oe(m_eph->getStateVector(m_jd, EphemFrame::eci));
-    double max_vel {phy_const::earth_equatorial_speed() + oe.getPerigeeSpeed()};
-    m_theta_dot = max_vel/oe.getPerigeeRadius();
+    double max_vel {oe.getPerigeeSpeed()};
+    double theta_dot {max_vel/oe.getPerigeeRadius()};
+    //double theta_dot {oe.getMeanMotion()};
+    dt_days = phy_const::day_per_tu*search_stepsize(theta_dot);
 
-    double alpha {utl_const::pio2 + m_xcs.getMinEl()};
-    double phi {std::sin(alpha)*
-                std::asin(phy_const::earth_smaj/oe.getPerigeeRadius())};
-    double theta {utl_const::pi - (alpha + phi)};
-    m_max_dt_days = dt_max_sf*phy_const::day_per_tu*(theta/m_theta_dot);
+    std::cout << "\nDt Sec:  " << utl_const::sec_per_day*dt_days <<
+                 "  Perigee Alt:  " << 6378*(oe.getPerigeeRadius() - 1.0) <<
+                 " km  Angular velocity:  "  <<
+                 theta_dot*utl_const::deg_per_rad*phy_const::tu_per_min <<
+                 " deg/min\n";
   } catch (const std::invalid_argument& ia) {
     throw std::invalid_argument("Non-orbital Ephemeris Sent to GpAccess: " +
                                 m_eph->getName());
@@ -123,7 +125,7 @@ std::string GpAccess::getOrbitName() const
 }
 
 
-bool GpAccess::is_visible(const JulianDate& jd)
+bool GpAccess::is_visible(const JulianDate& jd) const
 {
     // Ensure ephemeris past availability is not requested
   if (m_jdStop < m_jd  ||  m_jd < m_jdStart) {

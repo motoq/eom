@@ -235,6 +235,12 @@ double Keplerian::getMeanAnomaly() const
 }
 
 
+double Keplerian::getMeanMotion() const
+{
+  return  std::sqrt(gm/(m_oe[ia]*m_oe[ia]*m_oe[ia]));
+}
+
+
 double Keplerian::getPeriod() const
 {
   double a {m_oe[ia]};
