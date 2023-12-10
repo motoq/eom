@@ -138,9 +138,11 @@ private:
    * on stored constraints.  Returns false if requested time is outside
    * the open interval defined by m_jdStart and m_jdStop.
    *
-   * @param  jd  Time to evaluate if access constraints are met
+   * @param  jd           Time to evaluate if access constraints are met
+   * @param  new_dt_days  Time increment to use for next time increment
+   *                      in search.  If nullptr, then ignored.
    */
-  bool is_visible(const JulianDate& jd) const; 
+  bool is_visible(const JulianDate& jd, double* new_dt_days) const; 
 
   /*
    * Locate the start of an access window based on the assumption that
@@ -189,7 +191,11 @@ private:
   std::shared_ptr<const Ephemeris> m_eph;
 
   JulianDate m_jd;
-  double m_dt_days {20.0*utl_const::day_per_sec};
+  double m_dt_days_p {20.0*utl_const::day_per_sec};
+  double m_dt_days_a {20.0*utl_const::day_per_sec};
+  double m_rp {1.0};
+  double m_ra {1.0};
+  double m_ecc {0.0};
 
   std::vector<axs_interval> m_intervals;
 };

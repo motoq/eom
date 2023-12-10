@@ -30,8 +30,6 @@ namespace {
     // One second increment after end of access window to start
     // searching for the next access window
   constexpr double jd_inc {1.0*utl_const::day_per_sec};
-//    // Search increment
-//  constexpr double dt_days {20.0*utl_const::day_per_sec};
     // Access convergence
   constexpr double tol_dt_day {0.1*utl_const::day_per_sec};
   constexpr int max_itr {42};
@@ -55,15 +53,24 @@ GpAccess::GpAccess(const JulianDate& jdStart,
 
   try {
     Keplerian oe(m_eph->getStateVector(m_jd, EphemFrame::eci));
-    double max_vel {oe.getPerigeeSpeed()};
-    double theta_dot {max_vel/oe.getPerigeeRadius()};
-    //double theta_dot {oe.getMeanMotion()};
-    m_dt_days = phy_const::day_per_tu*search_stepsize(theta_dot);
+    m_rp = oe.getPerigeeRadius();
+    m_ra = oe.getApogeeRadius();
+    m_ecc = oe.getEccentricity();
+    double theta_dot_p {oe.getPerigeeSpeed()/m_rp};
+    m_dt_days_p = phy_const::day_per_tu*search_stepsize(theta_dot_p);
+      //
+    double theta_dot_a {oe.getApogeeSpeed()/m_ra};
+    m_dt_days_a = phy_const::day_per_tu*search_stepsize(theta_dot_a);
 
-    std::cout << "\nDt Sec:  " << utl_const::sec_per_day*m_dt_days <<
+    std::cout << "\nDt Sec:  " << utl_const::sec_per_day*m_dt_days_p <<
                  "  Perigee Alt:  " << 6378*(oe.getPerigeeRadius() - 1.0) <<
                  " km  Angular velocity:  "  <<
-                 theta_dot*utl_const::deg_per_rad*phy_const::tu_per_min <<
+                 theta_dot_p*utl_const::deg_per_rad*phy_const::tu_per_min <<
+                 " deg/min";
+    std::cout << "\nDt Sec:  " << utl_const::sec_per_day*m_dt_days_a <<
+                 "  Apogee Alt:  " << 6378*(oe.getApogeeRadius() - 1.0) <<
+                 " km  Angular velocity:  "  <<
+                 theta_dot_a*utl_const::deg_per_rad*phy_const::tu_per_min <<
                  " deg/min\n";
   } catch (const std::invalid_argument& ia) {
     throw std::invalid_argument("Non-orbital Ephemeris Sent to GpAccess: " +
@@ -83,7 +90,7 @@ bool GpAccess::findNextAccess()
   bool in_interval {false};
 
     // Either already in an access window, or need to locate start time
-  if (is_visible(m_jd)) {
+  if (is_visible(m_jd, nullptr)) {
     in_interval = true;
     riseset.rise = m_jd;
     // Set elevation too
@@ -125,7 +132,7 @@ std::string GpAccess::getOrbitName() const
 }
 
 
-bool GpAccess::is_visible(const JulianDate& jd) const
+bool GpAccess::is_visible(const JulianDate& jd, double* new_dt_days) const
 {
     // Ensure ephemeris past availability is not requested
   if (m_jdStop < m_jd  ||  m_jd < m_jdStart) {
@@ -133,6 +140,15 @@ bool GpAccess::is_visible(const JulianDate& jd) const
   }
 
   Eigen::Matrix<double, 3, 1> pos = m_eph->getPosition(jd, EphemFrame::ecf);
+  if (m_ecc > 0.07  &&  new_dt_days != nullptr) {
+    double r {pos.norm()};
+    double factor {(r - m_rp)/(m_ra - m_rp)};
+      // Could be negative if orbit degrades since epoch
+    if (factor > 0) {
+      *new_dt_days = m_dt_days_p + factor*(m_dt_days_a - m_dt_days_p);
+    }
+  }
+
   if (m_gp.getSinElevation(pos) >= m_xcs.getSineMinEl()) {
     return true;
   }
@@ -143,9 +159,9 @@ bool GpAccess::is_visible(const JulianDate& jd) const
 
 bool GpAccess::findRise(axs_interval& axs)
 {
-  double dt_days {m_dt_days};
+  double dt_days {m_dt_days_p};
   bool found_rise {false};
-  while (!(found_rise = is_visible(m_jd))) {
+  while (!(found_rise = is_visible(m_jd, &dt_days))) {
     m_jd += dt_days;
       // If past stop time, access was not found - done
     if (m_jdStop <= m_jd) {
@@ -160,7 +176,7 @@ bool GpAccess::findRise(axs_interval& axs)
     auto jd2 = jd1 + -dt_days;              // Behind access
     auto jd3 = jd2 + 0.5*(jd1 - jd2);
     for (int ii=0; (jd1 - jd2)>tol_dt_day  &&  ii<max_itr; ++ii) {
-      if (is_visible(jd3)) {
+      if (is_visible(jd3, nullptr)) {
         jd1 = jd3;
       } else {
         jd2 = jd3;
@@ -182,9 +198,9 @@ bool GpAccess::findRise(axs_interval& axs)
 
 void GpAccess::findSet(axs_interval& axs)
 {
-  double dt_days {m_dt_days};
+  double dt_days {m_dt_days_p};
   bool found_set {true};
-  while (is_visible(m_jd)) {
+  while (is_visible(m_jd, &dt_days)) {
     m_jd += dt_days;
     if (m_jdStop <= m_jd) {
       m_jd = m_jdStop;
@@ -199,7 +215,7 @@ void GpAccess::findSet(axs_interval& axs)
     auto jd2 = jd1 + -dt_days;              // Behind access
     auto jd3 = jd2 + 0.5*(jd1 - jd2);
     for (int ii=0; (jd1 - jd2)>tol_dt_day  &&  ii<max_itr; ++ii) {
-      if (!is_visible(jd3)) {
+      if (!is_visible(jd3, nullptr)) {
         jd1 = jd3;
       } else {
         jd2 = jd3;
