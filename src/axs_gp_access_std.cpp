@@ -6,7 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <axs_gp_access.h>
+#include <axs_gp_access_std.h>
 
 #include <string>
 #include <utility>
@@ -35,17 +35,16 @@ namespace {
 
 namespace eom {
 
-GpAccess::GpAccess(const JulianDate& jdStart,
-                   const JulianDate& jdStop,
-                   const GroundPoint& gp,
-                   const GpConstraints& xcs,
-                   std::shared_ptr<const Ephemeris> eph) : m_jdStart {jdStart},
-                                                           m_jdStop {jdStop},
-                                                           m_gp {gp},
-                                                           m_xcs {xcs},
-                                                           m_eph {
-                                                             std::move(eph)
-                                                           }
+GpAccessStd::GpAccessStd(const JulianDate& jdStart,
+                         const JulianDate& jdStop,
+                         const GroundPoint& gp,
+                         const GpConstraints& xcs,
+                         std::shared_ptr<const Ephemeris> eph) :
+                             m_jdStart {jdStart},
+                             m_jdStop {jdStop},
+                             m_gp {gp},
+                             m_xcs {xcs},
+                             m_eph {std::move(eph)}
 {
   m_jd = jdStart;
 
@@ -60,13 +59,13 @@ GpAccess::GpAccess(const JulianDate& jdStart,
     double theta_dot_a {oe.getApogeeSpeed()/m_ra};
     m_dt_days_a = phy_const::day_per_tu*search_stepsize(theta_dot_a);
   } catch (const std::invalid_argument& ia) {
-    throw std::invalid_argument("Non-orbital Ephemeris Sent to GpAccess: " +
+    throw std::invalid_argument("Non-orbital Ephemeris Sent to GpAccessStd: " +
                                 m_eph->getName());
   }
 }
 
 
-bool GpAccess::findNextAccess()
+bool GpAccessStd::findNextAccess()
 {
     // Don't search if current time is past stop time
   if (m_jdStop <= m_jd) {
@@ -96,7 +95,7 @@ bool GpAccess::findNextAccess()
 }
 
 
-void GpAccess::findAllAccesses()
+void GpAccessStd::findAllAccesses()
 {
     // Locate next interval and store
   while (findNextAccess())
@@ -107,19 +106,19 @@ void GpAccess::findAllAccesses()
 }
 
 
-std::string GpAccess::getGpName() const
+std::string GpAccessStd::getGpName() const
 {
   return m_gp.getName();
 }
 
 
-std::string GpAccess::getOrbitName() const
+std::string GpAccessStd::getOrbitName() const
 {
   return (*m_eph).getName();
 }
 
 
-bool GpAccess::is_visible(const JulianDate& jd, double* new_dt_days) const
+bool GpAccessStd::is_visible(const JulianDate& jd, double* new_dt_days) const
 {
     // Ensure ephemeris past availability is not requested
   if (m_jdStop < m_jd  ||  m_jd < m_jdStart) {
@@ -144,7 +143,7 @@ bool GpAccess::is_visible(const JulianDate& jd, double* new_dt_days) const
 }
 
 
-bool GpAccess::findRise(axs_interval& axs)
+bool GpAccessStd::findRise(axs_interval& axs)
 {
   double dt_days {m_dt_days_p};
   bool found_rise {false};
@@ -183,7 +182,7 @@ bool GpAccess::findRise(axs_interval& axs)
 }
 
 
-void GpAccess::findSet(axs_interval& axs)
+void GpAccessStd::findSet(axs_interval& axs)
 {
   double dt_days {m_dt_days_p};
   bool found_set {true};
@@ -218,7 +217,7 @@ void GpAccess::findSet(axs_interval& axs)
   }
 }
 
-void GpAccess::setRiseSetStatus(axs_interval& axs)
+void GpAccessStd::setRiseSetStatus(axs_interval& axs)
 {
   axs.sinel_rise = m_gp.getSinElevation(m_eph->getPosition(axs.rise,
                                                            EphemFrame::ecf));

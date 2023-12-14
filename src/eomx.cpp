@@ -30,7 +30,7 @@
 #include <astro_ground_point.h>
 #include <axs_gp_access_def.h>
 #include <axs_interval.h>
-#include <axs_gp_visibility.h>
+#include <axs_gp_access.h>
 
 #include <eom_config.h>
 #include <eom_command.h>
@@ -157,7 +157,7 @@ int main(int argc, char* argv[])
   for (const eom::GpAccessDef& axses : gp_access_defs) {
     std::string key {axses.getGpName() + axses.getOrbitName()};
     try {
-      std::shared_ptr<eom::GpVisibility> axs = gp_accessors.at(key);
+      std::shared_ptr<eom::GpAccess> axs = gp_accessors.at(key);
       std::cout << "\n  Access for " << axs->getOrbitName() <<
                          " against " << axs->getGpName();
       for (const eom::axs_interval& rise_set : (*axs)) {

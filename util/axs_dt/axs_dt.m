@@ -1,4 +1,7 @@
 function y = axs_dt(x)
+% AXS_DT computes a reasonable time increment to use when searching for
+% an orbit to ground point access window given the rate of change in
+% true anomaly.
 %
 % Input:
 %   x  angular velocity, deg/minute
@@ -6,7 +9,10 @@ function y = axs_dt(x)
 % Return:
 %   Time step, minutes
 %
+% Kurt Motekew  2023/12/12
+%
 
+  % 8 seconds at low LEO, 2 minutes at Geo
 dt_minutes = [8 16 120 240]/60;
 p_minutes = [90 150 720 1440];
 

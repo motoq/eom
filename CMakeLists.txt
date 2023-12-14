@@ -79,8 +79,8 @@ set(SOURCES
   src/astro_third_body_gravity.cpp
   src/astro_vinti.cpp
   src/astro_vinti_prop.cpp
-  src/axs_gp_access.cpp
   src/axs_gp_access_debug.cpp
+  src/axs_gp_access_std.cpp
   src/eomx_gen_gp_accesses.cpp
   src/eomx_gen_ephemerides.cpp
   src/eomx_parse_input_file.cpp

@@ -6,13 +6,16 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef AXS_GP_ACCESS_DEBUG_H
-#define AXS_GP_ACCESS_DEBUG_H
+#ifndef AXS_GP_ACCESS_STD_H
+#define AXS_GP_ACCESS_STD_H
 
 #include <string>
 #include <memory>
 #include <vector>
+#include <algorithm>
 
+#include <utl_const.h>
+#include <phy_const.h>
 #include <cal_julian_date.h>
 #include <astro_ground_point.h>
 #include <astro_ephemeris.h>
@@ -20,25 +23,37 @@
 #include <axs_interval.h>
 #include <axs_gp_access.h>
 
+namespace {
+  constexpr double k {0.99547*utl_const::rad_per_deg};
+  constexpr double c {-0.1481*phy_const::tu_per_min};
+  constexpr double lb {8.0*phy_const::tu_per_sec};
+  constexpr double ub {2.0*phy_const::tu_per_min};
+  /**
+   * Given the angular velocity of the satellite w.r.t. the center of
+   * the earth (rate of change in true anomaly), compute the time
+   * increment used when searching for access interval bounds.
+   *
+   * @param  theta_dot  True anomaly rate, rad/TU
+   *
+   * @return  Time increment, TU
+   */
+  constexpr double search_stepsize(double theta_dot) {
+    return std::min(std::max(k/theta_dot + c, lb), ub);
+  }
+}
+
 namespace eom {
 
 
 /**
  * Performs access analysis between a ground point and ephemeris
- * resource.  The ephemeris resource is assumed to be a valid orbit.
- * This debug version sticks to using a robuts (but slower) method
- * that should be handy when validating more aggressive algorithms.
- * A bisection method is used to narrow in on the final time, but a
- * relatively small fixed step size is used to locate the interval
- * for all orbit types.
- *
- * Initialization currently requires the orbit to be bounded, but the
- * algorithm would handle unbounded orbits.
+ * resource using the "Standard" algorithm for the eom library.
+ * The ephemeris resource is assumed to be a valid and bounded orbit.
  *
  * @author  Kurt Motekew
- * @date    2023/12/05
+ * @date    20231027
  */
-class GpAccessDebug : public GpAccess {
+class GpAccessStd : public GpAccess {
 public:
   /**
    * Initialize but don't compute any access intervals
@@ -54,16 +69,16 @@ public:
    *
    * @throws  invalid_argument if not bounded orbital ephemeris
    */
-  GpAccessDebug(const JulianDate& jdStart,
-                const JulianDate& jdStop,
-                const GroundPoint& gp,
-                const GpConstraints& xcs,
-                std::shared_ptr<const Ephemeris> eph);
-  ~GpAccessDebug() = default;
-  GpAccessDebug(const GpAccessDebug&) = default;
-  GpAccessDebug& operator=(const GpAccessDebug&) = default;
-  GpAccessDebug(GpAccessDebug&&) = default;
-  GpAccessDebug& operator=(GpAccessDebug&&) = default;
+  GpAccessStd(const JulianDate& jdStart,
+              const JulianDate& jdStop,
+              const GroundPoint& gp,
+              const GpConstraints& xcs,
+              std::shared_ptr<const Ephemeris> eph);
+  ~GpAccessStd() = default;
+  GpAccessStd(const GpAccessStd&) = default;
+  GpAccessStd& operator=(const GpAccessStd&) = default;
+  GpAccessStd(GpAccessStd&&) = default;
+  GpAccessStd& operator=(GpAccessStd&&) = default;
 
   /**
    * Locates and stores the next access interval
@@ -133,9 +148,12 @@ private:
    * on stored constraints.  Returns false if requested time is outside
    * the open interval defined by m_jdStart and m_jdStop.
    *
-   * @param  jd  Time to evaluate if access constraints are met
+   * @param  jd           Time to evaluate if access constraints are met
+   * @param  new_dt_days  Suggested time increment to use for locating
+   *                      the next access interval.  If nullptr, then
+   *                      ignored.
    */
-  bool is_visible(const JulianDate& jd); 
+  bool is_visible(const JulianDate& jd, double* new_dt_days) const; 
 
   /*
    * Locate the start of an access window based on the assumption that
@@ -184,6 +202,11 @@ private:
   std::shared_ptr<const Ephemeris> m_eph;
 
   JulianDate m_jd;
+  double m_dt_days_p {20.0*utl_const::day_per_sec};
+  double m_dt_days_a {20.0*utl_const::day_per_sec};
+  double m_rp {1.0};
+  double m_ra {1.0};
+  double m_ecc {0.0};
 
   std::vector<axs_interval> m_intervals;
 };
