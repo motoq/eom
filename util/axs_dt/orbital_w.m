@@ -62,11 +62,24 @@ function orbital_w(a, e)
     % Full algorithm based dt
   dt = min(max(k./theta_dot_s + c, lb), ub);
 
-    % Interpolation based dt
+    % Linear interpolation based dt
   dt_a = min(max(k./theta_dot_a + c, lb), ub);
   dt_p = min(max(k./theta_dot_p + c, lb), ub);
   sf = (r_s - rp)/(ra - rp);
   dt_approx = dt_p + sf*(dt_a - dt_p);
+
+    % Get semilatus rectum theta_dot
+  fpa_slr = atan2(e/sqrt(1 + e*e), 1/sqrt(1 + e*e));
+  r_slr = p;
+  v_slr = sqrt(gm*(2/r_slr - 1/a));
+  v_slr_t = v_slr*cos(fpa_slr);
+  theta_dot_slr = v_slr_t/r_slr;
+  dt_slr = min(max(k/theta_dot_slr + c, lb), ub);
+  Ap = [1 rp 10^rp; 1 r_slr 10^r_slr ; 1 ra 10^ra];
+  y = [dt_p ; dt_slr ; dt_a];
+  W = [1 0 0 ; 0 1 0 ; 0 0 1];
+  phat = (Ap'*W*Ap)^-1*(Ap'*y);
+  dt_approx_2 = min(max(phat(1) + phat(2).*r_s + phat(3).*(10.^r_s), lb), ub);
 
     % Plot orbit shape
   figure;  hold on;
@@ -90,6 +103,8 @@ function orbital_w(a, e)
   scatter(0, tu_per_sec*180*theta_dot_p/pi, 'b');
   scatter(180, tu_per_sec*180*theta_dot_a/pi, 'b');
   scatter(360, tu_per_sec*180*theta_dot_p/pi, 'b');
+  scatter(90, tu_per_sec*180*theta_dot_slr/pi, 'm');
+  scatter(270, tu_per_sec*180*theta_dot_slr/pi, 'm');
   xlabel('(deg)');
   ylabel('(deg/sec)');
   title('True Anomaly Dot vs. True Anomaly');
@@ -99,9 +114,10 @@ function orbital_w(a, e)
   figure;  hold on;
   plot(180*nu_s/pi, sec_per_tu*dt, 'b-');
   plot(180*nu_s/pi, sec_per_tu*dt_approx, 'r-');
+  plot(180*nu_s/pi, sec_per_tu*dt_approx_2, 'm-');
   xlabel('(deg)');
   ylabel('(sec)');
   title('Search interval Increment vs. True Anomaly');
   xlim([0 360]);
-  legend('Full Algorithm', 'Interpolation');
+  legend('Full Algorithm', 'Interpolation', '10^x Interpolation');
 

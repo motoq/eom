@@ -261,6 +261,19 @@ double Keplerian::getApogeeSpeed() const
   return std::sqrt(gm*(2.0/m_ra - 1.0/m_oe[ia]));
 }
 
+
+double Keplerian::getSemilatusRectum() const noexcept
+{
+  return m_oe[ia]*(1.0 - m_oe[ie]*m_oe[ie]);
+}
+
+
+double Keplerian::getSpeed(double r) const
+{
+  return std::sqrt(gm*(2.0/r - 1.0/m_oe[ia]));
+}
+
+
 /*
  * Based on Vallado's "Fundamentals of Astrodynamics and Applications",
  * 4th edition, Algorithms 2 KepEqtnE and 6 Anomaly to

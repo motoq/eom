@@ -172,6 +172,19 @@ public:
    */
   void setWithMeanAnomaly(double ma);
 
+  /**
+   * @return  Semilatus rectum, DU
+   */
+  double getSemilatusRectum() const noexcept;
+
+  /**
+   * @param  r  Radius for which to compute the speed of this orbit
+   *
+   * @return  Inertial velocity velocity magnitude at the given
+   *          radius, DU/TU
+   */
+  double getSpeed(double r) const;
+
 private:
   void set(const std::array<double, 6>& oe);
 

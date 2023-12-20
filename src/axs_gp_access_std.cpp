@@ -28,6 +28,9 @@ namespace {
     // One second increment after end of access window to start
     // searching for the next access window
   constexpr double jd_inc {1.0*utl_const::day_per_sec};
+    // Eccentricity switchpoints for interpolation
+  constexpr double ecc_t {0.07};
+  constexpr double ecc_t2 {0.3};
     // Access convergence
   constexpr double tol_dt_day {0.1*utl_const::day_per_sec};
   constexpr int max_itr {42};
@@ -52,12 +55,45 @@ GpAccessStd::GpAccessStd(const JulianDate& jdStart,
     Keplerian oe(m_eph->getStateVector(m_jd, EphemFrame::eci));
     m_rp = oe.getPerigeeRadius();
     m_ra = oe.getApogeeRadius();
-    m_ecc = oe.getEccentricity();
+    double ecc {oe.getEccentricity()};
+    if (ecc > ecc_t2) {
+      m_exp_dt = true;
+    } else if (ecc > ecc_t) {
+      m_linear_dt = true;
+    }
+      // Perigee
     double theta_dot_p {oe.getPerigeeSpeed()/m_rp};
     m_dt_days_p = phy_const::day_per_tu*search_stepsize(theta_dot_p);
-      //
+      // Apogee
     double theta_dot_a {oe.getApogeeSpeed()/m_ra};
     m_dt_days_a = phy_const::day_per_tu*search_stepsize(theta_dot_a);
+    if (m_exp_dt) {
+        // Semilatus Rectum, get flight path angle for v = 90
+      double fpa_slr {std::atan2(ecc/sqrt(1.0 + ecc*ecc),
+                                 1.0/sqrt(1.0 + ecc*ecc))};
+      double a {0.5*(m_ra + m_rp)};
+      double r_slr {oe.getSemilatusRectum()};
+      double v_slr {std::sqrt(phy_const::gm*(2.0/r_slr - 1.0/a))};
+      double v_slr_t {v_slr*std::cos(fpa_slr)};
+      double theta_dot_slr {v_slr_t/r_slr};
+      m_dt_days_slr = phy_const::day_per_tu*search_stepsize(theta_dot_slr);
+      Eigen::Matrix<double, 3, 1> y = {m_dt_days_p, m_dt_days_a, m_dt_days_slr};
+      Eigen::Matrix<double, 3, 3> ap;
+      ap(0,0) = 1;
+      ap(1,0) = 1;
+      ap(2,0) = 1;
+      ap(0,1) = m_rp;
+      ap(1,1) = r_slr;
+      ap(2,1) = m_ra;
+      ap(0,2) = std::pow(10, m_rp);
+      ap(1,2) = std::pow(10, r_slr);
+      ap(2,2) = std::pow(10, m_ra);
+      Eigen::ColPivHouseholderQR<Eigen::Matrix<double, 3, 3>> qr(ap);
+      Eigen::Matrix<double, 3, 1> phat = qr.solve(y);
+      m_exp_a0 = phat(0);
+      m_exp_a1 = phat(1);
+      m_exp_a10 = phat(2);
+    }
   } catch (const std::invalid_argument& ia) {
     throw std::invalid_argument("Non-orbital Ephemeris Sent to GpAccessStd: " +
                                 m_eph->getName());
@@ -126,13 +162,18 @@ bool GpAccessStd::is_visible(const JulianDate& jd, double* new_dt_days) const
   }
 
   Eigen::Matrix<double, 3, 1> pos = m_eph->getPosition(jd, EphemFrame::ecf);
-  if (m_ecc > 0.07  &&  new_dt_days != nullptr) {
+  if (m_linear_dt  &&  new_dt_days != nullptr) {
     double r {pos.norm()};
     double factor {(r - m_rp)/(m_ra - m_rp)};
       // Could be negative if orbit degrades since epoch
     if (factor > 0) {
       *new_dt_days = m_dt_days_p + factor*(m_dt_days_a - m_dt_days_p);
     }
+  } else if (m_exp_dt  &&  new_dt_days != nullptr) {
+    double r {pos.norm()};
+    *new_dt_days = std::min(std::max(m_exp_a0 +
+                                     m_exp_a1*r +
+                                     m_exp_a10*r*std::pow(10, r), lb), ub);
   }
 
   if (m_gp.getSinElevation(pos) >= m_xcs.getSineMinEl()) {

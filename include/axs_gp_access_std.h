@@ -204,9 +204,14 @@ private:
   JulianDate m_jd;
   double m_dt_days_p {20.0*utl_const::day_per_sec};
   double m_dt_days_a {20.0*utl_const::day_per_sec};
+  double m_dt_days_slr {20.0*utl_const::day_per_sec};
   double m_rp {1.0};
   double m_ra {1.0};
-  double m_ecc {0.0};
+  double m_exp_a0 {m_dt_days_slr};
+  double m_exp_a1 {0.0};
+  double m_exp_a10 {0.0};
+  bool m_linear_dt {false};
+  bool m_exp_dt {false};
 
   std::vector<axs_interval> m_intervals;
 };

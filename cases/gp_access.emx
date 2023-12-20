@@ -25,7 +25,7 @@ Orbit  leosat   VintiMod GD 2021 11 12 17 00 00.0
 GroundPoint gp01 LLA  43.0  30.0  0.0;
 
 Access  GroundPointAccess  Standard  leosat gp01
-                           MinimumElevation  5.0;
+                           MinimumElevation -5.0;
 Access  GroundPointAccess  Standard  heosat gp01
                            MinimumElevation  5.0;
 Access  GroundPointAccess  Standard  geosat gp01
