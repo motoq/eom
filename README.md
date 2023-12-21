@@ -24,11 +24,12 @@ attitude dynamics.  It is a command line program driven by a simple text
 based modeling language.  The library allows rapid development of custom
 applications.
 
-Current functionality includes orbit propagation via general
-perturbation (GP, "analytic") and special perturbation (SP, numerical
-integration) techniques.  Externally generated SP3 formatted ephemerides
-(CDDIS) can also be ingested.  Ephemerides can be saved in STK
-compatible **.e** file formats.  Other outputs are written as Matlab
+Current functionality includes orbit propagation and access analysis to
+earth fixed ground points.  General perturbation (GP, "analytic") and
+special perturbation (SP, numerical integration) orbit propagation
+techniques are supported.  Externally generated SP3 formatted
+ephemerides (CDDIS) can also be ingested.  Ephemerides can be saved in
+STK compatible **.e** file formats.  Other outputs are written as Matlab
 (Octave compatible) functions.  When run, these **.m** files will plot
 the data with appropriate formatting while optionally returning the
 handle to the figure along with the raw data.  For example, the range as
@@ -45,8 +46,9 @@ SGP based theories).
 
 The library is designed with thread safety in mind.  Shared resources
 (ECF/ECI transformation services, ephemerides, etc.) are available as
-immutable objects.  SP based ephemerides are generated taking advantage
-of parallel loop processing available since C++17.
+immutable objects.  SP based ephemerides and access analysis are
+generated taking advantage of parallel loop processing available since
+C++17.
 
 **eom** utilizes two mature libraries upon which built-in models
 rely and external libraries may leverage.  The first is the

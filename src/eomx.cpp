@@ -39,8 +39,8 @@
 #include <eomx.h>
 
 /**
- * Equations of Motion:  An application focused on astrodynamics related
- * problems.  This program parses an input file building models and
+ * Equations of Motion Executable:  An application focused on astrodynamics
+ * related problems.  This program parses an input file building models and
  * commands to be applied to those models.
  *
  * @author  Kurt Motekew
