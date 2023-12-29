@@ -1,0 +1,40 @@
+
+#
+# From Jacob Williams
+#
+
+Ephemeris files
+
+To use the ephemeris_module, a copy of one of the JPL binary ephemeris files must be present in the eph directory. This can be built from the instructions at: ftp://ssd.jpl.nasa.gov/pub/eph/planets/fortran/userguide.txt. For example (on Linux):
+
+wget ftp://ssd.jpl.nasa.gov/pub/eph/planets/fortran/*
+wget ftp://ssd.jpl.nasa.gov/pub/eph/planets/ascii/de405/*
+#edit asc2eph.f file to set NRECL = 4:
+sed -i '_original' '/^C.*PARAMETER ( NRECL = 4 )/s/^C//' asc2eph.f
+gfortran asc2eph.f -o asc2eph
+cat header.405 ascp*.405 | ./asc2eph
+mkdir Fortran-Astrodynamics-Toolkit/eph
+mv JPLEPH Fortran-Astrodynamics-Toolkit/eph/JPLEPH.405
+
+#
+# end from Jacob Williams
+#
+
+
+
+  # Modify asc2eph.f to set NRECL = 4
+  # and build
+$ gfortran asc2eph.f -o asc2eph
+
+  # Convert ephemerides for 2020-2040 to binary JPLEPH file
+$ cat header.405 ascp2020.405 | ./asc2eph 
+
+  # Build testeph after updating multiple NRECL=4 and
+  # uncomment FSIZER3 to use KSIZE = 2036
+$ gfortran testeph.f -o testeph
+
+  # and test
+$ cat testpo.405 | ./testeph 
+
+
+$ gfortran geteph.f -o geteph
