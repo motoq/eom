@@ -32,6 +32,15 @@ eomx_gen_ephemerides(const eom_app::EomConfig& cfg,
                      const std::vector<eom::EphemerisFile>& eph_file_defs,
                      const std::shared_ptr<eom::EcfEciSys>& f2iSys)
 {
+    // Celestial Ephemeris objects - read ephemerides from files
+  std::unordered_map<std::string,
+                     std::shared_ptr<eom::Ephemeris>> celestials;
+  std::vector<std::string> celestial_names = cfg.getCelestials();
+  for (const auto& name : celestial_names) {
+    celestials[name] = eom::build_celestial(name, cfg.getStartTime(),
+                                                  cfg.getStartTime(),
+                                                  f2iSys);
+  }
 
     // Ephemeris objects - build file based, then initial state based,
     // then relative orbits

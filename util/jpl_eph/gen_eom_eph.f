@@ -1,4 +1,4 @@
-      program make_eom_eph
+      program gen_eom_eph
 C
 C     This program reads a binary format file of ploynomial coefficients
 C     fit to the JPL/Calech Planetary and Lunar Ephemerides,
@@ -86,21 +86,37 @@ C
        PARAMETER (NMAX = 1000)
 
        CHARACTER*6  NAMS(NMAX)
+       CHARACTER*8  EPH_FNAME
 
        DOUBLE PRECISION  ET(2)
        DOUBLE PRECISION  R(6)
        DOUBLE PRECISION  SS(3)
        DOUBLE PRECISION  VALS(NMAX)
        DOUBLE PRECISION  JDEPOC
+       DOUBLE PRECISION  JD_START
+       DOUBLE PRECISION  JD_STOP
+       DOUBLE PRECISION  JD_NOW(2)
+       DOUBLE PRECISION  KM_PER_AU
+       DOUBLE PRECISION  DT_DAYS
   
        INTEGER  NVS,NTARG,NCTR
+       INTEGER  IT00
 
 C      Load ephemeris and constants
        CALL  CONST (NAMS, VALS, SS, NVS)
 
        JDEPOC = 2440400.5d0
+       KM_PER_AU = 0.1495978707000000D+09
+       DO I=1,NVS
+         IF(NAMS(I) .EQ. 'JDEPOC')JDEPOC = VALS(I)
+         IF(NAMS(I) .EQ. 'AU')KM_PER_AU = VALS(I)
+       ENDDO
 
-       WRITE (*,'(/3F14.2)') SS
+       WRITE(*,'(A12,3F14.2)')'JDEPOC',JDEPOC
+       WRITE (*,'(A12,3F14.2)') 'JD_START:', SS(1)
+       WRITE (*,'(A12,3F14.2)') 'JD_STOP:', SS(2)
+       WRITE (*,'(A12,3F14.2)') 'DT:', SS(3)
+       WRITE(*,'(A12,D24.16)')'KM_PER_AU:',KM_PER_AU
        
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
@@ -119,7 +135,32 @@ C      IF(ET .GT. SS(2)) GO TO 2
       NCTR = 3
       CALL  PLEPH ( ET, NTARG, NCTR, R )
 
-      WRITE (*,*) R
+C     Use non-F77 'stream' access to eliminate record buffers
+      JD_START = 2458849.5
+      JD_NOW(1) = JD_START
+      JD_STOP =  2462502.5
+      EPH_FNAME = "ERR.EMB"
+      DT_DAYS = 1.0;
+      DO IEPH = 10,11
+        IF (IEPH .EQ. 10) THEN
+          EPH_FNAME = 'MOON.EMB'
+          DT_DAYS = 0.08
+        ELSE IF (IEPH .EQ. 11) THEN
+          EPH_FNAME = 'SUN.EMB'
+          DT_DAYS = 1.0;
+        ENDIF
+        OPEN (87,FILE=EPH_FNAME,FORM='UNFORMATTED',access='stream')
+        WRITE(87) JDEPOC, KM_PER_AU
+        JD_NOW(2) = 0.0
+        DO WHILE ((JD_NOW(1) + JD_NOW(2)) .LT. JD_STOP)
+          CALL  PLEPH(JD_NOW, IEPH, NCTR, R)
+          WRITE(87) JD_NOW(1), JD_NOW(2), (R(IT00),IT00=1,6)
+          JD_NOW(2) = JD_NOW(2) + DT_DAYS
+        ENDDO
+        CLOSE (87)
+      ENDDO
+
+      WRITE (*,'(/6E14.4)') R
 
    9  STOP
       END

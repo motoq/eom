@@ -67,7 +67,8 @@ enum class SunGravityModel {
  */
 enum class MoonGravityModel {
   none,
-  meeus                           ///< Analytic Astronomical Algorithms
+  meeus,                          ///< Analytic Astronomical Algorithms
+  eph                             ///< MOON.EMB file
 };
 
 

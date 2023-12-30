@@ -49,11 +49,6 @@ struct sp3_granule {
 };
 
 /**
- * Parse NGS SP3-c compatible ephemeris.  'V' format ECF position and
- * velocity format is expected - position only will thrown an exception.
- * "EP" and "EV" fields are skipped.  Each "ID" must be the same
- * throughout the file or an exception will be trown.
- *
  * Chebyshev interpolation using 8th order polynomials with 8 fit points
  * is employed, separate coefficients for position and velocity.
  *
@@ -79,7 +74,7 @@ public:
    * @param  jdStop       End time for which ephemeris must be available
    * @param  ecfeciSys    ECF/ECI conversion resource
    *
-   * @throws  runtime_error for parsing and processing errors
+   * @throws  runtime_error for initialization error
    */
   Sp3Chebyshev(const std::string& name,
                const std::vector<state_vector_rec>& sp3_records,

@@ -6,8 +6,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef ASTRO_SUN_MEEUS
-#define ASTRO_SUN_MEEUS
+#ifndef ASTRO_SUN_MEEUS_H
+#define ASTRO_SUN_MEEUS_H
 
 #include <string>
 #include <memory>

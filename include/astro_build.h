@@ -61,7 +61,7 @@ build_orbit(const RelOrbitDef& relOrbit,
             const std::shared_ptr<const EcfEciSys>& ecfeciSys);
 
 /**
- * Create and ephemeris "service" based on externally generated
+ * Create an ephemeris "service" based on externally generated
  * ephemeris data.
  *
  * @param  efd        Ephemeris file definition
@@ -69,9 +69,35 @@ build_orbit(const RelOrbitDef& relOrbit,
  *                    be present in file.
  * @param  stopTime   Latest time for which ephemeris needs to be
  *                    present in file.
+ * @param  ecfeciSys  Ecf/Eci utility service pointer that will be
+ *                    copied into the Ephemeris object.
  */
 std::unique_ptr<Ephemeris>
 build_ephemeris(const EphemerisFile& efd,
+                const JulianDate& startTime,
+                const JulianDate& stopTime,
+                const std::shared_ptr<const EcfEciSys>& ecfeciSys);
+
+/**
+ * Create an ephemeris "service" for a celestial object based on
+ * an .emb (eom binary/unformatted) ephemeris file.
+ *
+ * @param  name_prefix  Name of the celestial body (Moon, Sun, Mercury,
+ *                      Venus, Mars, Jupiter, Saturn, Uranus, Neptune,
+ *                      and yes, the planet Pluto.  The filename to be
+ *                      loaded is 'name_prefix.emb'.
+ * @param  startTime    Earliest time for which ephemeris needs to
+ *                      be present in file.
+ * @param  stopTime     Latest time for which ephemeris needs to be
+ *                      present in file.
+ * @param  ecfeciSys    Ecf/Eci utility service pointer that will be
+ *                      copied into the Ephemeris object.
+ *
+ * @throws  runtime_error if 'name.emb' can't be opened or the format is
+ *          invalid.
+ */
+std::unique_ptr<Ephemeris>
+build_celestial(const std::string& name_prefix,
                 const JulianDate& startTime,
                 const JulianDate& stopTime,
                 const std::shared_ptr<const EcfEciSys>& ecfeciSys);
@@ -87,6 +113,9 @@ build_ephemeris(const EphemerisFile& efd,
  * @param  jdStop     End time for which to store ephemeris records
  *
  * @return  Position and velocity records, ECF, DU and DU/TU
+ *
+ * @throws  runtime_error if file_name can't be opened or the format is
+ *          invalid.
  */
 std::vector<state_vector_rec> parse_sp3_file(const std::string& file_name,
                                              const JulianDate& jdStart,

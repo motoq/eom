@@ -11,6 +11,7 @@
 
 #include <ostream>
 #include <string>
+#include <vector>
 #include <deque>
 #include <set>
 
@@ -159,6 +160,18 @@ public:
     return m_orbit_names.count(orbit_name) > 0;
   }
 
+
+  /**
+   * @param  name  Name of celestial object for which ephemeris should
+   *               be loaded
+   */
+  void addCelestial(const std::string& name);
+
+  /*
+   * @return  Names of all celestial objects to load
+   */
+  std::vector<std::string> getCelestials() const;
+
   /**
    * @return  If an error was encountered while building the scenario,
    *          the return value is false.  Call getError().
@@ -196,6 +209,8 @@ private:
   eom::Duration dtOut;
 
   std::set<std::string> m_orbit_names;
+  std::vector<std::string> m_celestial_names;
+  
 };
 
 

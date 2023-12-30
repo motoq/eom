@@ -241,6 +241,9 @@ static void parse_moon_model(std::deque<std::string>& moon_toks,
     if (moon_toks[0] == "Meeus") {
       moon_toks.pop_front();
       pCfg.setMoonGravityModel(eom::MoonGravityModel::meeus);
+    } else if (moon_toks[0] == "Ephemeris") {
+      moon_toks.pop_front();
+      pCfg.setMoonGravityModel(eom::MoonGravityModel::eph);
     }
   }
 }

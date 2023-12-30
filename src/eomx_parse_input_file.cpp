@@ -112,6 +112,16 @@ void eomx_parse_input_file(const std::string& fname,
             } else if (make == "OutputRate") {
               cfg.setOutputRate(tokens);
               input_error = !cfg.isValid();
+            } else if (make == "CelestialEphemerides") {
+              while (!tokens.empty()) {
+                cfg.addCelestial(tokens[0]);
+                tokens.pop_front();
+                input_error = false;
+              }
+              if (input_error) {
+                other_error =
+                    "CelestialEphemerides:  No Celestial Bodies Listed";
+              }
             } else if (make == "Orbit") {
               try {
                 orbit_defs.push_back(eom_app::parse_orbit_def(tokens, cfg));

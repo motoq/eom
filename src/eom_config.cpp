@@ -187,6 +187,17 @@ void EomConfig::addPendingOrbit(const std::string& orbit_name)
 }
 
 
+void EomConfig::addCelestial(const std::string& name)
+{
+  m_celestial_names.push_back(name);
+}
+
+
+std::vector<std::string>EomConfig::getCelestials() const
+{
+  return m_celestial_names;
+}
+
 void EomConfig::print(std::ostream& stream) const
 {
   stream << "\nSimulation Start Time: " << jdStart.to_str();

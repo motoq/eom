@@ -38,3 +38,7 @@ $ cat testpo.405 | ./testeph
 
 
 $ gfortran geteph.f -o geteph
+
+
+$ gfortran gen_eom_eph.f -o gen_eom_eph
+

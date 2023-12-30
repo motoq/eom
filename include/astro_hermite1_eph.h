@@ -6,8 +6,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef ASTRO_SP3_HERMITE_H
-#define ASTRO_SP3_HERMITE_H
+#ifndef ASTRO_HERMITE1_EPH_H
+#define ASTRO_HERMITE1_EPH_H
 
 #include <string>
 #include <vector>
@@ -16,7 +16,7 @@
 #include <Eigen/Dense>
 
 #include <cal_julian_date.h>
-#include <mth_hermite2.h>
+#include <mth_hermite1.h>
 #include <astro_ephemeris.h>
 #include <astro_ecfeci_sys.h>
 #include <mth_index_mapper.h>
@@ -26,60 +26,57 @@ namespace eom {
 /**
  * Interpolation records generated from ephemeris
  */
-struct sp3_hermite {
+struct hermite1_eph_rec {
   JulianDate jd1;                           ///< Interpolator start time
   JulianDate jd2;                           ///< Interpolator stop time
-  Hermite2<double, 3> hItp;                 ///< Interpolator
+  Hermite1<double, 3> hItp;                 ///< Interpolator
 
-  sp3_hermite(const JulianDate& jdStart,
-              const JulianDate& jdEnd,
-              const Hermite2<double, 3>& hInterp) : jd1(jdStart),
-                                                    jd2(jdEnd),
-                                                    hItp(hInterp)
+  hermite1_eph_rec(const JulianDate& jdStart,
+                   const JulianDate& jdEnd,
+                   const Hermite1<double, 3>& hInterp) : jd1(jdStart),
+                                                         jd2(jdEnd),
+                                                         hItp(hInterp)
   {
   }
 };
 
 /**
- * Hermite interpolation using two position and velocity pairs is
- * employed, augmented with a J4 gravity model to create acceleration.
- * This method was chosen because the spacing for a 2 rev/day orbit was
- * 15 minutes, causing significant error with position-velocity only
- * Hermite interpolation.  Hermite interpolation does limit this class
- * to ephemeris where velocity is the derivative of position, and the J4
- * acceleration model is a sufficient representation of acceleration.
- * For a 2 rev/day orbit with 15 minute state vector spacing, results in
- * an oscillation of about 5 cm.
+ * Hermite interpolation using two position and velocity pairs
+ * is employed to generate a state vector from a set of ECI
+ * ephemeris given a time.  No augmentation via the use of an
+ * external gravity model is employed making this class useful
+ * for non-earth centered objects provided the state vectors are
+ * appropriately spaced.
  *
- * @author  Kurt Motekew  2023/01/10
+ * @author  Kurt Motekew  2023/12/30
  */
-class Sp3Hermite : public Ephemeris {
+class Hermite1Eph : public Ephemeris {
 public:
-  ~Sp3Hermite() = default;
-  Sp3Hermite(const Sp3Hermite&) = delete;
-  Sp3Hermite& operator=(const Sp3Hermite&) = delete;
-  Sp3Hermite(Sp3Hermite&&) = default;
-  Sp3Hermite& operator=(Sp3Hermite&&) = default;
+  ~Hermite1Eph() = default;
+  Hermite1Eph(const Hermite1Eph&) = delete;
+  Hermite1Eph& operator=(const Hermite1Eph&) = delete;
+  Hermite1Eph(Hermite1Eph&&) = default;
+  Hermite1Eph& operator=(Hermite1Eph&&) = default;
 
   /**
-   * Initialize with SP3 compatible format ephemeris.
+   * Initialize with ECI position/velocity based ephemeris records.
    *
    * @param  name         Unique ephemeris identifier
-   * @param  sp3_records  Position and velocity records to form Hermite
+   * @param  eph_records  Position and velocity records to form Hermite
    *                      interpolation polynomials.  At least two must
    *                      be present and must cover jdStart and jdStop.
-   *                      ECF, DU and DU/TU
+   *                      ECI, DU and DU/TU
    * @param  jdStart      Start time for which ephemeris must be available
    * @param  jdStop       End time for which ephemeris must be available
    * @param  ecfeciSys    ECF/ECI conversion resource
    *
    * @throws  runtime_error for initialization error
    */
-  Sp3Hermite(const std::string& name,
-             const std::vector<state_vector_rec>& sp3_records,
-             const JulianDate& jdStart,
-             const JulianDate& jdStop,
-             std::shared_ptr<const EcfEciSys> ecfeciSys);
+  Hermite1Eph(const std::string& name,
+              const std::vector<state_vector_rec>& pv_records,
+              const JulianDate& jdStart,
+              const JulianDate& jdStop,
+              std::shared_ptr<const EcfEciSys> ecfeciSys);
 
   /**
    * @return  Unique ephemeris identifier
@@ -146,7 +143,7 @@ private:
   std::shared_ptr<const EcfEciSys> m_ecfeciSys {nullptr};
 
   std::unique_ptr<IndexMapper<JulianDate>> m_ndxr {nullptr};
-  std::vector<sp3_hermite> m_eph_interpolators;
+  std::vector<hermite1_eph_rec> m_eph_interpolators;
 };
 
 

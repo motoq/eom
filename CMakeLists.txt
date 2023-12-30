@@ -51,6 +51,7 @@ set(SOURCES
   src/cal_julian_date.cpp
   src/mth_legendre_af.cpp
   src/astro_adams_4th.cpp
+  src/astro_build_celestial.cpp
   src/astro_build_ephemeris.cpp
   src/astro_build_orbit.cpp
   src/astro_deq.cpp
@@ -61,9 +62,11 @@ set(SOURCES
   src/astro_gravity_jn.cpp
   src/astro_gravity_std.cpp
   src/astro_ground_point.cpp
+  src/astro_hermite1_eph.cpp
   src/astro_kepler.cpp
   src/astro_kepler_prop.cpp
   src/astro_keplerian.cpp
+  src/astro_moon_eph.cpp
   src/astro_moon_meeus.cpp
   src/astro_orbit_def.cpp
   src/astro_print_ephemeris.cpp
