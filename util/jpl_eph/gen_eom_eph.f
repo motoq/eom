@@ -150,7 +150,7 @@ C     Use non-F77 'stream' access to eliminate record buffers
           DT_DAYS = 1.0;
         ENDIF
         OPEN (87,FILE=EPH_FNAME,FORM='UNFORMATTED',access='stream')
-        WRITE(87) JDEPOC, KM_PER_AU
+        WRITE(87) DT_DAYS, KM_PER_AU
         JD_NOW(2) = 0.0
         DO WHILE ((JD_NOW(1) + JD_NOW(2)) .LT. JD_STOP)
           CALL  PLEPH(JD_NOW, IEPH, NCTR, R)

@@ -35,7 +35,6 @@
 #include <astro_vinti.h>
 #include <astro_vinti_prop.h>
 #include <astro_sun_meeus.h>
-#include <astro_moon_eph.h>
 #include <astro_moon_meeus.h>
 #include <astro_third_body_gravity.h>
 #ifdef GENPL
@@ -110,8 +109,10 @@ build_orbit(const OrbitDef& orbitParams,
                                                  std::move(moonEph));
       deq->addForceModel(std::move(moonGrav));
     } else if (pCfg.getMoonGravityModel() == MoonGravityModel::eph) {
-      std::unique_ptr<Ephemeris> moonEph =
-              std::make_unique<MoonEph>(ecfeciSys);
+      std::unique_ptr<Ephemeris> moonEph = build_celestial("moon",
+                                                           pCfg.getStartTime(),
+                                                           pCfg.getStopTime(),
+                                                           ecfeciSys);
       std::unique_ptr<ForceModel> moonGrav =
               std::make_unique<ThirdBodyGravity>(phy_const::gm_moon,
                                                  std::move(moonEph));

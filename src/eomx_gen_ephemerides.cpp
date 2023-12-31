@@ -38,7 +38,7 @@ eomx_gen_ephemerides(const eom_app::EomConfig& cfg,
   std::vector<std::string> celestial_names = cfg.getCelestials();
   for (const auto& name : celestial_names) {
     celestials[name] = eom::build_celestial(name, cfg.getStartTime(),
-                                                  cfg.getStartTime(),
+                                                  cfg.getStopTime(),
                                                   f2iSys);
   }
 

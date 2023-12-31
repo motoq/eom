@@ -11,7 +11,7 @@ SimDuration Days 2;
 LeapSeconds 37;
 EcfEciRate Minutes 240;
 
-CelestialEphemerides Moon;
+CelestialEphemerides moon;
 
 DistanceUnits  Kilometers;
 TimeUnits Seconds;
@@ -20,7 +20,7 @@ Orbit  starlette  SP  GD 2022  2  8  0  0  0.00
                    0.1162318900 -5.6156839000  3.9837925000
 #                  GravityModel  Gravt 40 40
                    GravityModel  Standard 40 40
-#                   MoonGravity  Meeus
+#                  MoonGravity  Meeus
                    MoonGravity  Ephemeris
                    SunGravity   Meeus
 #                  Propagator  GJ Seconds 0;
