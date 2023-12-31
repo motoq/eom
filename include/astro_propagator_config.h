@@ -59,7 +59,8 @@ enum class GravityModel {
  */
 enum class SunGravityModel {
   none,
-  meeus                           ///< Analytic Astronomical Algorithms
+  meeus,                          ///< Analytic Astronomical Algorithms
+  eph                             ///< sun.emb file
 };
 
 /**
@@ -68,7 +69,7 @@ enum class SunGravityModel {
 enum class MoonGravityModel {
   none,
   meeus,                          ///< Analytic Astronomical Algorithms
-  eph                             ///< MOON.EMB file
+  eph                             ///< moon.emb file
 };
 
 
@@ -198,6 +199,20 @@ public:
   }
 
   /**
+   * When called, enables other gravity models based on celestial bodies
+   * initialized via external ephemerides
+   */
+  void enableOtherGravityModels() noexcept;
+
+  /**
+   * @return  true if planetary, etc., gravity models are enabled
+   */
+  bool otherGravityModelsEnabled() const noexcept
+  {
+    return m_other_gravity;
+  }
+
+  /**
    * Order <= Degree
    *
    * @param  Degree of gravitational coefficients to consider
@@ -234,6 +249,7 @@ private:
   GravityModel m_gravity_model {GravityModel::jn};
   SunGravityModel m_sun_gravity {SunGravityModel::none};
   MoonGravityModel m_moon_gravity {MoonGravityModel::none};
+  bool m_other_gravity {false};
 
   int m_degree {0};
   int m_order {0};

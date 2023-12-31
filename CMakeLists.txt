@@ -66,7 +66,6 @@ set(SOURCES
   src/astro_kepler.cpp
   src/astro_kepler_prop.cpp
   src/astro_keplerian.cpp
-  src/astro_moon_eph.cpp
   src/astro_moon_meeus.cpp
   src/astro_orbit_def.cpp
   src/astro_print_ephemeris.cpp

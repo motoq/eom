@@ -17,17 +17,15 @@
 #include <phy_const.h>
 #include <cal_julian_date.h>
 #include <astro_ephemeris.h>
-#include <astro_hermite1_eph.h>
 
 #include <astro_build.h>
 
 namespace eom {
 
-std::unique_ptr<Ephemeris>
+std::vector<state_vector_rec>
 build_celestial(const std::string& name_prefix,
                 const JulianDate& startTime,
-                const JulianDate& stopTime,
-                const std::shared_ptr<const EcfEciSys>& ecfeciSys)
+                const JulianDate& stopTime)
 {
     // Read binary .emb file
   std::string fname = name_prefix + ".emb";
@@ -70,14 +68,7 @@ build_celestial(const std::string& name_prefix,
     throw std::runtime_error("build_celestial() Ephemeris not covered" +
                               fname);
   }
-
-  std::unique_ptr<Ephemeris> eph =
-      std::make_unique<Hermite1Eph>(name_prefix,
-                                    sv_recs,
-                                    startTime,
-                                    stopTime,
-                                    ecfeciSys);
-  return eph;
+  return sv_recs;
 }
 
 

@@ -44,6 +44,12 @@ void PropagatorConfig::setMoonGravityModel(MoonGravityModel moon_gravity)
 }
 
 
+void  PropagatorConfig::enableOtherGravityModels() noexcept
+{
+  m_other_gravity = true;
+}
+
+
 void PropagatorConfig::setDegreeOrder(int degree, int order)
 {
   m_degree = degree;

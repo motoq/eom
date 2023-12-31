@@ -34,12 +34,11 @@ eomx_gen_ephemerides(const eom_app::EomConfig& cfg,
 {
     // Celestial Ephemeris objects - read ephemerides from files
   std::unordered_map<std::string,
-                     std::shared_ptr<eom::Ephemeris>> celestials;
+                     std::vector<eom::state_vector_rec>> celestials;
   std::vector<std::string> celestial_names = cfg.getCelestials();
   for (const auto& name : celestial_names) {
     celestials[name] = eom::build_celestial(name, cfg.getStartTime(),
-                                                  cfg.getStopTime(),
-                                                  f2iSys);
+                                                  cfg.getStopTime());
   }
 
     // Ephemeris objects - build file based, then initial state based,
@@ -61,8 +60,8 @@ eomx_gen_ephemerides(const eom_app::EomConfig& cfg,
   std::vector<std::unique_ptr<eom::Ephemeris>> ephvec(orbit_defs.size());
   std::transform(std::execution::par,
                  orbit_defs.begin(), orbit_defs.end(), ephvec.begin(),
-                 [f2iSys](const auto& orbit) {
-                   return eom::build_orbit(orbit, f2iSys);
+                 [f2iSys, &celestials](const auto& orbit) {
+                   return eom::build_orbit(orbit, f2iSys, celestials);
                  }
   );
     // Move ephemerides from temporary vector to ephemeris map
@@ -80,14 +79,20 @@ eomx_gen_ephemerides(const eom_app::EomConfig& cfg,
   std::vector<std::unique_ptr<eom::Ephemeris>> ephvec(rel_orbit_defs.size());
   std::transform(std::execution::par,
                  rel_orbit_defs.begin(), rel_orbit_defs.end(), ephvec.begin(),
-                 [f2iSys, &ephemerides, &orbit_defs](const auto& relOrbit) {
+                 [f2iSys,
+                  &ephemerides,
+                  &orbit_defs,
+                  &celestials](const auto& relOrbit) {
         // Find reference orbit - template names already validated
       std::unique_ptr<eom::Ephemeris> eph = nullptr;
       for (const auto& templateOrbit : orbit_defs) {
         if (templateOrbit.getOrbitName() == relOrbit.getTemplateOrbitName()) {
           std::shared_ptr<eom::Ephemeris> templateEph =
                                ephemerides.at(templateOrbit.getOrbitName());
-          eph = eom::build_orbit(relOrbit, templateOrbit, templateEph, f2iSys);
+          eph = eom::build_orbit(relOrbit,
+                                 templateOrbit,
+                                 templateEph,
+                                 f2iSys, celestials);
         }
       }
       return eph;

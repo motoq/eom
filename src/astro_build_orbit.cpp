@@ -7,6 +7,8 @@
  */
 
 #include <utility>
+#include <vector>
+#include <unordered_map>
 #include <memory>
 #include <array>
 #include <algorithm>
@@ -20,6 +22,7 @@
 #include <astro_ecfeci_sys.h>
 #include <astro_deq.h>
 #include <mth_ode_solver.h>
+#include <astro_hermite1_eph.h>
 #include <astro_rk4.h>
 #include <astro_rk4s.h>
 #include <astro_adams_4th.h>
@@ -51,7 +54,9 @@ namespace eom {
 
 std::unique_ptr<Ephemeris> 
 build_orbit(const OrbitDef& orbitParams,
-            const std::shared_ptr<const EcfEciSys>& ecfeciSys)
+            const std::shared_ptr<const EcfEciSys>& ecfeciSys,
+            const std::unordered_map<std::string,
+                                     std::vector<eom::state_vector_rec>>& ceph)
 {
   std::array<double, 6> xeci_array = orbitParams.getInitialState();
   Eigen::Matrix<double, 6, 1> xeciVec;
@@ -100,6 +105,17 @@ build_orbit(const OrbitDef& orbitParams,
               std::make_unique<ThirdBodyGravity>(phy_const::gm_sun,
                                                  std::move(sunEph));
       deq->addForceModel(std::move(sunGrav));
+    } else if (pCfg.getSunGravityModel() == SunGravityModel::eph) {
+      std::unique_ptr<Ephemeris> sunEph =
+          std::make_unique<Hermite1Eph>("sun",
+                                        ceph.at("sun"),
+                                        pCfg.getStartTime(),
+                                        pCfg.getStopTime(),
+                                        ecfeciSys);
+      std::unique_ptr<ForceModel> sunGrav =
+              std::make_unique<ThirdBodyGravity>(phy_const::gm_sun,
+                                                 std::move(sunEph));
+      deq->addForceModel(std::move(sunGrav));
     }
     if (pCfg.getMoonGravityModel() == MoonGravityModel::meeus) {
       std::unique_ptr<Ephemeris> moonEph =
@@ -109,10 +125,12 @@ build_orbit(const OrbitDef& orbitParams,
                                                  std::move(moonEph));
       deq->addForceModel(std::move(moonGrav));
     } else if (pCfg.getMoonGravityModel() == MoonGravityModel::eph) {
-      std::unique_ptr<Ephemeris> moonEph = build_celestial("moon",
-                                                           pCfg.getStartTime(),
-                                                           pCfg.getStopTime(),
-                                                           ecfeciSys);
+      std::unique_ptr<Ephemeris> moonEph =
+          std::make_unique<Hermite1Eph>("moon",
+                                        ceph.at("moon"),
+                                        pCfg.getStartTime(),
+                                        pCfg.getStopTime(),
+                                        ecfeciSys);
       std::unique_ptr<ForceModel> moonGrav =
               std::make_unique<ThirdBodyGravity>(phy_const::gm_moon,
                                                  std::move(moonEph));
@@ -227,7 +245,9 @@ std::unique_ptr<Ephemeris>
 build_orbit(const RelOrbitDef& relOrbit,
             const OrbitDef& refOrbit,
             const std::shared_ptr<eom::Ephemeris>& refEph,
-            const std::shared_ptr<const EcfEciSys>& ecfeciSys)
+            const std::shared_ptr<const EcfEciSys>& ecfeciSys,
+            const std::unordered_map<std::string,
+                                     std::vector<eom::state_vector_rec>>& ceph)
 {
     // Only a single relative orbit definition in RelCoordType exists so
     // no decisions to make.
@@ -264,7 +284,7 @@ build_orbit(const RelOrbitDef& relOrbit,
                     refEph->getEpoch(),
                     xarr,
                     eom::CoordType::cartesian, eom::FrameType::gcrf);
-  return build_orbit(newOrbit, ecfeciSys);
+  return build_orbit(newOrbit, ecfeciSys, ceph);
 }
 
 

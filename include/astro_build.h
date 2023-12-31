@@ -11,6 +11,7 @@
 
 #include <string>
 #include <vector>
+#include <unordered_map>
 #include <memory>
 
 #include <astro_orbit_def.h>
@@ -35,12 +36,15 @@ namespace eom {
  * @param  orbitParams  Orbit definition
  * @param  ecfeciSys    Ecf/Eci utility service pointer that will be
  *                      copied into the Ephemeris object.
+ * @param  ceph         Celestial ephemerides
  *
  * @return  Orbit implementation
  */
 std::unique_ptr<Ephemeris>
 build_orbit(const OrbitDef& orbitParams,
-            const std::shared_ptr<const EcfEciSys>& ecfeciSys);
+            const std::shared_ptr<const EcfEciSys>& ecfeciSys,
+            const std::unordered_map<std::string,
+                                     std::vector<eom::state_vector_rec>>& ceph);
 
 /**
  * Creates an ephemeris "service" based on a reference orbit and a
@@ -51,6 +55,7 @@ build_orbit(const OrbitDef& orbitParams,
  * @param  refEph     Reference orbit ephemeris
  * @param  ecfeciSys  Ecf/Eci utility service pointer that will be
  *                    copied into the Ephemeris object.
+ * @param  ceph       Celestial ephemerides
  *
  * @return  Orbit implementation
  */
@@ -58,7 +63,9 @@ std::unique_ptr<Ephemeris>
 build_orbit(const RelOrbitDef& relOrbit,
             const OrbitDef& refOrbit,
             const std::shared_ptr<eom::Ephemeris>& refEph,
-            const std::shared_ptr<const EcfEciSys>& ecfeciSys);
+            const std::shared_ptr<const EcfEciSys>& ecfeciSys,
+            const std::unordered_map<std::string,
+                                     std::vector<eom::state_vector_rec>>& ceph);
 
 /**
  * Create an ephemeris "service" based on externally generated
@@ -79,7 +86,7 @@ build_ephemeris(const EphemerisFile& efd,
                 const std::shared_ptr<const EcfEciSys>& ecfeciSys);
 
 /**
- * Create an ephemeris "service" for a celestial object based on
+ * Create a set of ephemeris records for celestial objects given
  * an .emb (eom binary/unformatted) ephemeris file.
  *
  * @param  name_prefix  Name of the celestial body (Moon, Sun, Mercury,
@@ -96,11 +103,10 @@ build_ephemeris(const EphemerisFile& efd,
  * @throws  runtime_error if 'name.emb' can't be opened or the format is
  *          invalid.
  */
-std::unique_ptr<Ephemeris>
+std::vector<state_vector_rec>
 build_celestial(const std::string& name_prefix,
                 const JulianDate& startTime,
-                const JulianDate& stopTime,
-                const std::shared_ptr<const EcfEciSys>& ecfeciSys);
+                const JulianDate& stopTime);
 
 /**
  * Parse NGS SP3-c compatible ephemeris.  'V' format ECF position and
