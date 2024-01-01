@@ -11,7 +11,7 @@ SimDuration Days 2;
 LeapSeconds 37;
 EcfEciRate Minutes 240;
 
-CelestialEphemerides moon sun;
+CelestialEphemerides moon sun venus jupiter;
 
 DistanceUnits  Kilometers;
 TimeUnits Seconds;

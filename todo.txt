@@ -16,6 +16,8 @@ Check if rel and eph orbits need to be added to eomx_simulation_time
 Create orbital elements factory for different edge case orbits (e.g.,
 zero eccentricity, etc).
 
+Indicate directory to locate .emb files
+
 Access
 ------
 

@@ -63,6 +63,7 @@ set(SOURCES
   src/astro_gravity_std.cpp
   src/astro_ground_point.cpp
   src/astro_hermite1_eph.cpp
+  src/astro_hermite1_tc_eph.cpp
   src/astro_kepler.cpp
   src/astro_kepler_prop.cpp
   src/astro_keplerian.cpp

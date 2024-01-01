@@ -6,6 +6,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+#include <iostream>
+
 #include <utility>
 #include <vector>
 #include <unordered_map>
@@ -23,6 +25,7 @@
 #include <astro_deq.h>
 #include <mth_ode_solver.h>
 #include <astro_hermite1_eph.h>
+#include <astro_hermite1_tc_eph.h>
 #include <astro_rk4.h>
 #include <astro_rk4s.h>
 #include <astro_adams_4th.h>
@@ -135,6 +138,42 @@ build_orbit(const OrbitDef& orbitParams,
               std::make_unique<ThirdBodyGravity>(phy_const::gm_moon,
                                                  std::move(moonEph));
       deq->addForceModel(std::move(moonGrav));
+    }
+    if (pCfg.otherGravityModelsEnabled()) {
+      for (const auto& planet : ceph) {
+        if (planet.first == "moon"  ||  planet.first == "sun") {
+          continue;
+        }
+        double gm_planet {0.0};
+        if (planet.first == "mercury") {
+          gm_planet = phy_const::gm_mercury;
+        } else if (planet.first == "venus") {
+          gm_planet = phy_const::gm_venus;
+        } else if (planet.first == "mars") {
+          gm_planet = phy_const::gm_mars;
+        } else if (planet.first == "jupiter") {
+          gm_planet = phy_const::gm_jupiter;
+        } else if (planet.first == "saturn") {
+          gm_planet = phy_const::gm_saturn;
+        } else if (planet.first == "uranus") {
+          gm_planet = phy_const::gm_uranus;
+        } else if (planet.first == "neptune") {
+          gm_planet = phy_const::gm_neptune;
+        } else if (planet.first == "pluto") {
+          gm_planet = phy_const::gm_pluto;
+        }
+        std::unique_ptr<Ephemeris> planetEph =
+            std::make_unique<Hermite1TcEph>(planet.first,
+                                            ceph.at(planet.first),
+                                            ceph.at("sun"),
+                                            pCfg.getStartTime(),
+                                            pCfg.getStopTime(),
+                                            ecfeciSys);
+        std::unique_ptr<ForceModel> planetGrav =
+            std::make_unique<ThirdBodyGravity>(gm_planet,
+                                               std::move(planetEph));
+        deq->addForceModel(std::move(planetGrav));
+      }
     }
       // Integrator
     std::unique_ptr<OdeSolver<JulianDate, double, 6>> sp {nullptr};

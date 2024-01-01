@@ -87,9 +87,36 @@ namespace phy_const {
   constexpr double au {1.49597870700e11*du_per_m};
 
   /** TN36 moon/earth mass ratio */
-  constexpr double moon_per_earth_mass {0.0123000371};
+  constexpr double moon_per_earth_mass {1.0/81.3005690699};
   /** Lunar gravitational parameter, TT-compatible value, DU^3/TU^2 */
   constexpr double gm_moon {moon_per_earth_mass*gm};
+
+  /** Planetary mass, TN36 */
+  constexpr double sun_per_earth_mass {332946.048166};
+    //
+  constexpr double mercury_per_earth_mass {sun_per_earth_mass/6023597.400017};
+  constexpr double gm_mercury {mercury_per_earth_mass*gm};
+    //
+  constexpr double venus_per_earth_mass {sun_per_earth_mass/408523.718655};
+  constexpr double gm_venus {venus_per_earth_mass*gm};
+    //
+  constexpr double mars_per_earth_mass {sun_per_earth_mass/3098703.590267};
+  constexpr double gm_mars {mars_per_earth_mass*gm};
+    //
+  constexpr double jupiter_per_earth_mass {sun_per_earth_mass/1047.348625};
+  constexpr double gm_jupiter {jupiter_per_earth_mass*gm};
+    //
+  constexpr double saturn_per_earth_mass {sun_per_earth_mass/3497.901768};
+  constexpr double gm_saturn {saturn_per_earth_mass*gm};
+    //
+  constexpr double uranus_per_earth_mass {sun_per_earth_mass/22902.981613};
+  constexpr double gm_uranus {uranus_per_earth_mass*gm};
+    //
+  constexpr double neptune_per_earth_mass {sun_per_earth_mass/19412.237346};
+  constexpr double gm_neptune {neptune_per_earth_mass*gm};
+    //
+  constexpr double pluto_per_earth_mass {sun_per_earth_mass/135836683.767599};
+  constexpr double gm_pluto {pluto_per_earth_mass*gm};
 
   /** 1 mm movement at a sea level orbital altitude */
   constexpr double epsdt {1.0e-6*du_per_km};

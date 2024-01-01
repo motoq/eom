@@ -86,9 +86,8 @@ C
        PARAMETER (NMAX = 1000)
 
        CHARACTER*6  NAMS(NMAX)
-       CHARACTER*8  EPH_FNAME
+       CHARACTER*16 EPH_FNAME
 
-       DOUBLE PRECISION  ET(2)
        DOUBLE PRECISION  R(6)
        DOUBLE PRECISION  SS(3)
        DOUBLE PRECISION  VALS(NMAX)
@@ -118,35 +117,61 @@ C      Load ephemeris and constants
        WRITE (*,'(A12,3F14.2)') 'DT:', SS(3)
        WRITE(*,'(A12,D24.16)')'KM_PER_AU:',KM_PER_AU
        
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-
-C  NOTE : Over the years, different versions of PLEPH have had a fifth argument:
-C  sometimes, an error return statement number; sometimes, a logical denoting
-C  whether or not the requested date is covered by the ephemeris.  We apologize
-C  for this inconsistency; in this version, we use only the four necessary 
-C  arguments and do the testing outside of the subroutine.
-
-C      IF(ET .LT. SS(1)) GO TO 2
-C      IF(ET .GT. SS(2)) GO TO 2
-
-      ET(1) = 2459618.5
-      ET(2) = 0.0
-      NTARG = 11
-      NCTR = 3
-      CALL  PLEPH ( ET, NTARG, NCTR, R )
-
 C     Use non-F77 'stream' access to eliminate record buffers
-      JD_START = 2458849.5
+      JD_START = 2457755.0
       JD_NOW(1) = JD_START
       JD_STOP =  2462502.5
       EPH_FNAME = "ERR.EMB"
       DT_DAYS = 1.0;
+C     Sun/Moon, earth centered
+      NCTR = 3
       DO IEPH = 10,11
         IF (IEPH .EQ. 10) THEN
-          EPH_FNAME = 'MOON.EMB'
+          EPH_FNAME = 'moon.emb'
           DT_DAYS = 0.08
         ELSE IF (IEPH .EQ. 11) THEN
-          EPH_FNAME = 'SUN.EMB'
+          EPH_FNAME = 'sun.emb'
+          DT_DAYS = 1.0;
+        ENDIF
+        OPEN (87,FILE=EPH_FNAME,FORM='UNFORMATTED',access='stream')
+        WRITE(87) DT_DAYS, KM_PER_AU
+        JD_NOW(2) = 0.0
+        DO WHILE ((JD_NOW(1) + JD_NOW(2)) .LT. JD_STOP)
+          CALL  PLEPH(JD_NOW, IEPH, NCTR, R)
+          WRITE(87) JD_NOW(1), JD_NOW(2), (R(IT00),IT00=1,6)
+          JD_NOW(2) = JD_NOW(2) + DT_DAYS
+        ENDDO
+        CLOSE (87)
+      ENDDO
+C     Planets are sun centered
+      NCTR = 11
+      DO IEPH = 1,9
+        IF (IEPH .EQ. 1) THEN
+          EPH_FNAME = 'mercury.emb'
+          DT_DAYS = 0.5
+        ELSE IF (IEPH .EQ. 2) THEN
+          EPH_FNAME = 'venus.emb'
+          DT_DAYS = 0.5;
+        ELSE IF (IEPH .EQ. 3) THEN
+          EPH_FNAME = 'earth.emb'
+          DT_DAYS = 1.0;
+        ELSE IF (IEPH .EQ. 4) THEN
+          EPH_FNAME = 'mars.emb'
+          DT_DAYS = 1.0;
+        ELSE IF (IEPH .EQ. 5) THEN
+          EPH_FNAME = 'jupiter.emb'
+          DT_DAYS = 1.0;
+        ELSE IF (IEPH .EQ. 6) THEN
+          EPH_FNAME = 'saturn.emb'
+          DT_DAYS = 1.0;
+        ELSE IF (IEPH .EQ. 7) THEN
+          EPH_FNAME = 'uranus.emb'
+          DT_DAYS = 1.0;
+        ELSE IF (IEPH .EQ. 8) THEN
+          EPH_FNAME = 'neptune.emb'
+          DT_DAYS = 1.0;
+        ELSE IF (IEPH .EQ. 9) THEN
+          EPH_FNAME = 'pluto.emb'
           DT_DAYS = 1.0;
         ENDIF
         OPEN (87,FILE=EPH_FNAME,FORM='UNFORMATTED',access='stream')
