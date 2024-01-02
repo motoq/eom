@@ -1,5 +1,8 @@
       PROGRAM ASC2EPH
 C
+C      2024/01/01:  Modified version of asc2eph.f setting NRECL = 4 for
+C      use on a Linux/PC architecture.  Modified version follows:
+C
 C      ASC2EPH creates a binary format JPL Planetary Ephemeris file from
 C      one or more ascii text files.
 C

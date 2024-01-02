@@ -15,6 +15,7 @@
 #include <Eigen/Dense>
 
 #include <phy_const.h>
+#include <cal_leap_seconds.h>
 #include <cal_julian_date.h>
 #include <astro_ephemeris.h>
 
@@ -33,6 +34,9 @@ build_celestial(const std::string& name_prefix,
   if (!ifs.is_open()) {
     throw std::runtime_error("build_celestial() Can't open " + fname);
   }
+
+    // Ephemerides time needs to be converted to UTC
+  LeapSeconds& ls = LeapSeconds::getInstance();
 
   double dt_days;
   ifs.read(reinterpret_cast<char*>(&dt_days), sizeof(double));
@@ -53,7 +57,7 @@ build_celestial(const std::string& name_prefix,
         // Stored in units of AU and days.  Leave in J2000 frame
       pos *= phy_const::du_per_km*km_per_au;
       vel *= phy_const::du_per_km*km_per_au*phy_const::day_per_tu;
-      sv_recs.emplace_back(jd, pos, vel);
+      sv_recs.emplace_back(ls.tt2utc(jd), pos, vel);
     }
     if (jd2 <= jd) {
       covered_set = true;

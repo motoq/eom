@@ -72,6 +72,17 @@ public:
     return utc + (taimutc + cal_const::ttmtai)*cal_const::day_per_sec;
   }
 
+  /**
+   * Convert TT to UTC
+   *
+   * @param  tt  TT time
+   *
+   * @return  UTC time
+   */
+  JulianDate tt2utc(const JulianDate& tt) const noexcept {
+    return tt + -1.0*(taimutc + cal_const::ttmtai)*cal_const::day_per_sec;
+  }
+
 private:
     // Disallow construction
   LeapSeconds() {}

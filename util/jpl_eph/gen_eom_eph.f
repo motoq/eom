@@ -1,5 +1,17 @@
       program gen_eom_eph
 C
+C     2024/01/01:  Modified version of testeph.f generates Earth
+C     centered Moon/Sun ephemerides and Sun centered planetary
+C     ephemerides.  One 'stream' 'unformatted' (binary, no record
+C     prefix/postfix bytes) is generated per object.  Records
+C     are:
+C       DT_DAYS KM_PER_AU
+C       JD_HI JD_LOW X Y Z DX DY DZ
+C     DT_DAYS is the time increment between records.  The time increment
+C     is set to be small enough to allow for two point position/velocity
+C     Hermite interpolation.  KM_PER_AU is AU from NAMS.  Position and
+C     velocity are in units of AU and days.  Modified program follows:
+C
 C     This program reads a binary format file of ploynomial coefficients
 C     fit to the JPL/Calech Planetary and Lunar Ephemerides,
 C     interpolates the coefficients to a set of input times to
@@ -128,7 +140,7 @@ C     Sun/Moon, earth centered
       DO IEPH = 10,11
         IF (IEPH .EQ. 10) THEN
           EPH_FNAME = 'moon.emb'
-          DT_DAYS = 0.08
+          DT_DAYS = 0.07
         ELSE IF (IEPH .EQ. 11) THEN
           EPH_FNAME = 'sun.emb'
           DT_DAYS = 1.0;
@@ -148,7 +160,7 @@ C     Planets are sun centered
       DO IEPH = 1,9
         IF (IEPH .EQ. 1) THEN
           EPH_FNAME = 'mercury.emb'
-          DT_DAYS = 0.5
+          DT_DAYS = 0.2
         ELSE IF (IEPH .EQ. 2) THEN
           EPH_FNAME = 'venus.emb'
           DT_DAYS = 0.5;
@@ -160,19 +172,19 @@ C     Planets are sun centered
           DT_DAYS = 1.0;
         ELSE IF (IEPH .EQ. 5) THEN
           EPH_FNAME = 'jupiter.emb'
-          DT_DAYS = 1.0;
+          DT_DAYS = 10.0;
         ELSE IF (IEPH .EQ. 6) THEN
           EPH_FNAME = 'saturn.emb'
-          DT_DAYS = 1.0;
+          DT_DAYS = 10.0;
         ELSE IF (IEPH .EQ. 7) THEN
           EPH_FNAME = 'uranus.emb'
-          DT_DAYS = 1.0;
+          DT_DAYS = 10.0;
         ELSE IF (IEPH .EQ. 8) THEN
           EPH_FNAME = 'neptune.emb'
-          DT_DAYS = 1.0;
+          DT_DAYS = 10.0;
         ELSE IF (IEPH .EQ. 9) THEN
           EPH_FNAME = 'pluto.emb'
-          DT_DAYS = 1.0;
+          DT_DAYS = 10.0;
         ENDIF
         OPEN (87,FILE=EPH_FNAME,FORM='UNFORMATTED',access='stream')
         WRITE(87) DT_DAYS, KM_PER_AU

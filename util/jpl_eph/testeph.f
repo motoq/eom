@@ -1,5 +1,9 @@
       program testeph
 C
+C     2024/01/01:  Modified version of asc2eph.f setting NRECL = 4,
+C     KSIZE = 2036, and enabling FSIZER3 for use on a Linux/PC
+C     architecture.  Modified version follows:
+C
 C     This program reads a binary format file of ploynomial coefficients
 C     fit to the JPL/Calech Planetary and Lunar Ephemerides,
 C     interpolates the coefficients to a set of input times to
