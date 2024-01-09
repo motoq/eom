@@ -11,35 +11,51 @@
 
 #include <cmath>
 
+#include <Eigen/Dense>
+
+#include <utl_const.h>
+#include <cal_julian_date.h>
+#include <astro_ground_point.h>
+
 namespace eom {
 
 /**
- * Ground Point access constraint class.
+ * Ground Point access constraint class.  Azimuth is defined to be
+ * clockwise from north, from 0 to 360 degrees.
  *
- * @author  Kurt Motekew
- * @date    20230915
+ * @author  Kurt Motekew 2023/09/15  initial, min elevation only
+ * @date    Kurt Motekew 2024/01/07  Added max el and min/max az
  */
 class GpConstraints {
 public:
 
   /**
-   * Initialize with a minimum elevation angle, measured from the ground
-   * point up from the plane tangent to the surface of the central body
-   * Default to zero if not supplied.
-   *
-   * @param  min_el  Minimum elevation constraint, radians
+   * Initialize with a minimum elevation angle of zero and no other
+   * constraints.
    */
-  GpConstraints(double min_el = 0) : m_sin_min_el {std::sin(min_el)}
+  GpConstraints()
   {
   }
 
   /**
-   * @param  Update the minimum elevation, radians.
+   * @return  If false, then only the minimum elevation is to be used as
+   *          a constraint and all others do not need to be checked.
+   *          Becomes true once a constraint other than the minimum
+   *          elevation is set.
    */
-  void setMinEl(double min_el)
-  {
-    m_sin_min_el = std::sin(min_el);
+  bool onlyUseMinEl() const noexcept {
+    return m_only_min_el;
   }
+
+  /**
+   * Set minimum elevation angle, measured from the ground point up from
+   * the plane tangent to the surface of the central body.
+   *
+   * @param  min_el  Minimum elevation constraint, radians
+   *
+   * @throws  invalid_argument if not: -PI/2 <= el <= PI/2
+   */
+  void setMinEl(double min_el);
 
   /**
    * @return  Minimum elevation, radians
@@ -57,9 +73,87 @@ public:
     return m_sin_min_el;
   }
 
+  /**
+   * Set maximum elevation angle, measured from the ground point up from
+   * the plane tangent to the surface of the central body.
+   *
+   * @param  max_el  Maximum elevation constraint, radians
+   *
+   * @throws  invalid_argument if not: -PI/2 <= el <= PI/2
+   */
+  void setMaxEl(double max_el);
+
+  /**
+   * @return  Maximum elevation, radians
+   */
+  double getMaxEl() const
+  {
+    return std::asin(m_sin_max_el);
+  }
+
+  /**
+   * @return  Sine of maximum elevation constraint
+   */
+  double getSineMaxEl() const noexcept
+  {
+    return m_sin_max_el;
+  }
+
+  /**
+   * Set minimum azimuth angle, measured clockwise from north
+   *
+   * @param  min_az  Minimum azimuth constraint, radians
+   *
+   * @throws  invalid_argument if not:  0 <= az <= 2*pi
+   */
+  void setMinAz(double min_az);
+
+  /**
+   * @return  Minimum azimuth, radians
+   */
+  double getMinAz() const noexcept
+  {
+    return m_min_az;
+  }
+
+  /**
+   * Set maximum azimuth angle, measured clockwise from north
+   *
+   * @param  max_az  Maximum azimuth constraint, radians
+   *
+   * @throws  invalid_argument if not:  0 <= az <= 2*pi
+   */
+  void setMaxAz(double max_az);
+
+  /**
+   * @return  Maximum azimuth, radians
+   */
+  double getMaxAz() const noexcept
+  {
+    return m_max_az;
+  }
+
+  /**
+   * Check for satisfaction of all geometric and time dependent constraints.
+   *
+   * @param  jd   Time of interest
+   * @param  gp   Ground poin
+   * @param  pos  Satellite position
+   *
+   * @return  If visible, return true
+   */
+  bool isVisible(const JulianDate& jd,
+                 const GroundPoint& gp,
+                 const Eigen::Matrix<double, 3, 1>& pos) const;
   
 private:
-  double m_sin_min_el;
+  double m_sin_min_el {0.0};
+  double m_sin_max_el {1.0};
+  double m_min_az {0.0};
+  double m_max_az {utl_const::tpi};
+
+  bool m_only_min_el {true};
+  bool m_check_az {false};
 };
 
 

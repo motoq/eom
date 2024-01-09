@@ -20,9 +20,9 @@
 
 #include <eom_config.h>
 
-static void parse_elevation_constraint(std::deque<std::string>& cnst_toks,
-                                       const eom_app::EomConfig& cfg, 
-                                       eom::GpConstraints& constraints);
+static void parse_constraints(std::deque<std::string>& cnst_toks,
+                              const eom_app::EomConfig& cfg, 
+                              eom::GpConstraints& constraints);
 
 namespace eom_app {
 
@@ -53,10 +53,12 @@ parse_gp_access_def(std::deque<std::string>& tokens, const EomConfig& cfg)
   auto gp_name = tokens[0];
   tokens.pop_front();
 
-  int n_constraints {1};
+    // 1: Minimum elevation
+    // 2: Maximum elevation
+  int n_constraints {2};
   eom::GpConstraints xcs;
   for (int ii=0; ii<n_constraints; ++ii) {
-    parse_elevation_constraint(tokens, cfg, xcs);
+    parse_constraints(tokens, cfg, xcs);
     if (tokens.size() == 0) {
         break;
     }
@@ -71,20 +73,32 @@ parse_gp_access_def(std::deque<std::string>& tokens, const EomConfig& cfg)
 
 
 // Add return of constraints structure
-static void parse_elevation_constraint(std::deque<std::string>& cnst_toks,
-                                       const eom_app::EomConfig& cfg, 
-                                       eom::GpConstraints& constraints)
+static void parse_constraints(std::deque<std::string>& cnst_toks,
+                              const eom_app::EomConfig& cfg, 
+                              eom::GpConstraints& constraints)
 {
   using namespace std::string_literals;
+
+  double rad_per_io {1.0/cfg.getIoPerRad()};
   if (cnst_toks.size() > 1  &&  cnst_toks[0] == "MinimumElevation") {
     cnst_toks.pop_front();
     try {
-      double rad_per_io {1.0/cfg.getIoPerRad()};
       constraints.setMinEl(rad_per_io*std::stod(cnst_toks[0]));
       cnst_toks.pop_front();
     } catch (const std::invalid_argument& ia) {
       throw std::invalid_argument("eom_app::parse_access_def() "s +
-                                  "invalid Minimum Elevation"s);
+                                  "invalid Minimum Elevation: "s +
+                                  ia.what());
+    }
+  } else if (cnst_toks.size() > 1  &&  cnst_toks[0] == "MaximumElevation") {
+    cnst_toks.pop_front();
+    try {
+      constraints.setMaxEl(rad_per_io*std::stod(cnst_toks[0]));
+      cnst_toks.pop_front();
+    } catch (const std::invalid_argument& ia) {
+      throw std::invalid_argument("eom_app::parse_access_def() "s +
+                                  "invalid Maximum Elevation: "s +
+                                  ia.what());
     }
   }
 }
