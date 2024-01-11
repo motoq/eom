@@ -100,13 +100,15 @@ public:
   }
 
   /**
-   * Set minimum azimuth angle, measured clockwise from north
+   * Set the minimum and maximum azimuth angles, measured clockwise
+   * from north
    *
    * @param  min_az  Minimum azimuth constraint, radians
+   * @param  max_az  Maximum azimuth constraint, radians
    *
    * @throws  invalid_argument if not:  0 <= az <= 2*pi
    */
-  void setMinAz(double min_az);
+  void setMinMaxAz(double min_az, double max_az);
 
   /**
    * @return  Minimum azimuth, radians
@@ -115,15 +117,6 @@ public:
   {
     return m_min_az;
   }
-
-  /**
-   * Set maximum azimuth angle, measured clockwise from north
-   *
-   * @param  max_az  Maximum azimuth constraint, radians
-   *
-   * @throws  invalid_argument if not:  0 <= az <= 2*pi
-   */
-  void setMaxAz(double max_az);
 
   /**
    * @return  Maximum azimuth, radians
@@ -151,6 +144,9 @@ private:
   double m_sin_max_el {1.0};
   double m_min_az {0.0};
   double m_max_az {utl_const::tpi};
+  double m_az_shift {0.0};
+  double m_min_az_shifted {m_min_az};
+  double m_max_az_shifted {m_max_az};
 
   bool m_only_min_el {true};
   bool m_check_az {false};

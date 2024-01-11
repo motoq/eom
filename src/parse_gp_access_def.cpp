@@ -55,7 +55,8 @@ parse_gp_access_def(std::deque<std::string>& tokens, const EomConfig& cfg)
 
     // 1: Minimum elevation
     // 2: Maximum elevation
-  int n_constraints {2};
+    // 3: Minimum and maximum azimuth
+  int n_constraints {3};
   eom::GpConstraints xcs;
   for (int ii=0; ii<n_constraints; ++ii) {
     parse_constraints(tokens, cfg, xcs);
@@ -98,6 +99,19 @@ static void parse_constraints(std::deque<std::string>& cnst_toks,
     } catch (const std::invalid_argument& ia) {
       throw std::invalid_argument("eom_app::parse_access_def() "s +
                                   "invalid Maximum Elevation: "s +
+                                  ia.what());
+    }
+  } else if (cnst_toks.size() > 2  &&
+             cnst_toks[0] == "MinimumMaximumAzimuth") {
+    cnst_toks.pop_front();
+    try {
+      constraints.setMinMaxAz(rad_per_io*std::stod(cnst_toks[0]),
+                              rad_per_io*std::stod(cnst_toks[1]));
+      cnst_toks.pop_front();
+      cnst_toks.pop_front();
+    } catch (const std::invalid_argument& ia) {
+      throw std::invalid_argument("eom_app::parse_access_def() "s +
+                                  "invalid Min or Max Azimuth: "s +
                                   ia.what());
     }
   }

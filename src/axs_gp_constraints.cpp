@@ -45,31 +45,33 @@ void GpConstraints::setMaxEl(double max_el)
 }
 
 
-void GpConstraints::setMinAz(double min_az)
+void GpConstraints::setMinMaxAz(double min_az, double max_az)
 {
   using namespace std::string_literals;
   if (min_az < 0.0  ||  min_az > utl_const::tpi) {
-    throw std::invalid_argument("(GpConstraints::setMinAz() "s +
+    throw std::invalid_argument("(GpConstraints::setMinMaxAz() "s +
                                 "invalid Minimum Azimuth "s +
                                 std::to_string(min_az) + " radians"s);
   }
-  m_min_az = min_az;
-  m_only_min_el = false;
-  m_check_az = true;
-}
-
-
-void GpConstraints::setMaxAz(double max_az)
-{
-  using namespace std::string_literals;
   if (max_az < 0.0  ||  max_az > utl_const::tpi) {
-    throw std::invalid_argument("(GpConstraints::setMaxAz() "s +
+    throw std::invalid_argument("(GpConstraints::setMinMaxAz() "s +
                                 "invalid Maximum Azimuth "s +
                                 std::to_string(max_az) + " radians"s);
   }
+  m_min_az = min_az;
   m_max_az = max_az;
   m_only_min_el = false;
   m_check_az = true;
+
+  if (m_min_az < m_max_az) {
+    m_az_shift = 0.0;
+    m_min_az_shifted = m_min_az;
+    m_max_az_shifted = m_max_az;
+  } else {
+    m_az_shift =  m_max_az;
+    m_max_az_shifted = utl_const::tpi;
+    m_min_az_shifted = m_min_az - m_az_shift;
+  }
 }
 
 
@@ -77,7 +79,9 @@ bool GpConstraints::isVisible(const JulianDate& jd,
                               const GroundPoint& gp,
                               const Eigen::Matrix<double, 3, 1>& pos) const
 {
-  return gp.getSinElevation(pos) >= m_sin_min_el;
+  double sel {gp.getSinElevation(pos)};
+
+  return sel >= m_sin_min_el  &&  sel <= m_sin_max_el;
 }
 
 
