@@ -8,15 +8,16 @@
 
 #include <axs_gp_constraints.h>
 
-#include <string>
-#include <cmath>
-#include <stdexcept>
+#include <utl_const.h>
+#include <cal_julian_date.h>
+#include <obs_rng_az_sinel.h>
+#include <astro_ground_point.h>
 
 #include <Eigen/Dense>
 
-#include <utl_const.h>
-#include <cal_julian_date.h>
-#include <astro_ground_point.h>
+#include <cmath>
+#include <string>
+#include <stdexcept>
 
 namespace eom {
 
@@ -79,9 +80,12 @@ bool GpConstraints::isVisible(const JulianDate& jd,
                               const GroundPoint& gp,
                               const Eigen::Matrix<double, 3, 1>& pos) const
 {
-  double sel {gp.getSinElevation(pos)};
+  rng_az_sinel rae = gp.getRngAzSinEl(pos);
 
-  return sel >= m_sin_min_el  &&  sel <= m_sin_max_el;
+  bool el_good = rae.sinel >= m_sin_min_el  &&  rae.sinel <= m_sin_max_el;
+  bool az_good = rae.azimuth >= m_min_az  &&  rae.azimuth <= m_max_az;
+
+  return el_good && az_good;
 }
 
 

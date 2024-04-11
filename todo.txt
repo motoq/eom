@@ -18,6 +18,17 @@ zero eccentricity, etc).
 
 Indicate directory to locate .emb files
 
+Move as much functionality outside of classes (when internals to a class
+are not needed).
+
+Review use of initialization at declaration and within constructor
+
+Order of init = order of declaration
+
+Add default constructors
+
+Remove Printable and move to traditional ostream friend operator
+
 Access
 ------
 

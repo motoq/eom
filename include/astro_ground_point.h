@@ -15,6 +15,7 @@
 #include <Eigen/Dense>
 
 #include <utl_printable.h>
+#include <obs_rng_az_sinel.h>
 
 namespace eom {
 
@@ -114,13 +115,24 @@ public:
 
   /**
    * Computes the sine of the elevation of an object w.r.t. the tangent
-   * plane of the oblate spheroid at the location of the groud point.
+   * plane of the oblate spheroid at the location of this groud point.
    *
    * @param  pos  ECEF position, DU
    *
    * @return  Sine of elevation of pos w.r.t. this ground point
    */
   double getSinElevation(const Eigen::Matrix<double, 3, 1>& posF) const;
+
+  /**
+   * Computes the range, azimuth, and sine of the elevation of an object
+   * w.r.t. the location of this groud point.
+   *
+   * @param  pos  ECEF position, DU
+   *
+   * @return  Range, az, el, DU, radians, and ND
+   */
+  rng_az_sinel<double>
+  getRngAzSinEl(const Eigen::Matrix<double, 3, 1>& posF) const;
 
   /**
    * @return  Number of iterations required to solve for geodetic

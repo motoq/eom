@@ -161,6 +161,7 @@ bool GpAccessStd::is_visible(const JulianDate& jd, double* new_dt_days) const
     return false;
   }
 
+    // Update time step size for access boundary search
   Eigen::Matrix<double, 3, 1> pos = m_eph->getPosition(jd, EphemFrame::ecf);
   if (m_linear_dt  &&  new_dt_days != nullptr) {
     double r {pos.norm()};

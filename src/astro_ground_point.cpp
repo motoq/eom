@@ -19,6 +19,7 @@
 #include <mth_util.h>
 #include <phy_const.h>
 #include <utl_nonconvergence_exception.h>
+#include <obs_rng_az_sinel.h>
 
 namespace {
   constexpr int max_itr {10};
@@ -157,6 +158,32 @@ GroundPoint::getSinElevation(const Eigen::Matrix<double, 3, 1>& posF) const
     // Since this is a unti vector, the sine of the elevation w.r.t. the
     // tangent plane is simply the z component:  opposite/hypotenuse = z/1
   return m_clat*(pntHat(0)*m_clon + pntHat(1)*m_slon) + pntHat(2)*m_slat;
+}
+
+
+rng_az_sinel<double>
+GroundPoint::getRngAzSinEl(const Eigen::Matrix<double, 3, 1>& posF) const
+{
+  rng_az_sinel<double> rae;
+    // Pointing vector from ground to posF
+  Eigen::Matrix<double, 3, 1> pnt = posF - m_xyz;
+  rae.range = pnt.norm();
+
+    // Rotate frame by (90 + lon) about the z-axis.  Then by (90 - lat)
+    // about the x-axis.  Components are now in the ENU reference frame.
+  Eigen::Matrix<double, 3, 3> c_nf;
+  c_nf <<        -m_slon,         m_clon,    0.0,
+          -m_slat*m_clon, -m_slat*m_slon, m_clat,
+           m_clat*m_clon,  m_clat*m_slon, m_slat;
+  pnt = c_nf*pnt;
+  pnt /= rae.range;
+  rae.sinel = pnt(2);
+  rae.azimuth = std::atan2(pnt(0), pnt(1));
+  if (rae.azimuth < 0.0) {
+    rae.azimuth += utl_const::tpi;
+  }
+
+  return rae;
 }
 
 
