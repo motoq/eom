@@ -16,9 +16,9 @@ namespace eom {
  */
 template<typename T>
 struct rng_az_sinel {
-  double range {static_cast<T>(0.0)};
-  double azimuth {static_cast<T>(0.0)};
-  double sinel {static_cast<T>(0.0)};
+  T range {static_cast<T>(0.0)};
+  T azimuth {static_cast<T>(0.0)};
+  T sinel {static_cast<T>(0.0)};
 };
 
 }

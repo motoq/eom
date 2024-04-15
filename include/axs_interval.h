@@ -10,6 +10,7 @@
 #define AXS_INTERVAL_H
 
 #include <cal_julian_date.h>
+#include <obs_rng_az_sinel.h>
 
 namespace eom {
 
@@ -19,8 +20,8 @@ namespace eom {
 struct axs_interval {
   JulianDate rise;
   JulianDate set;
-  double sinel_rise {};
-  double sinel_set {};
+  rng_az_sinel<double> rasel_rise;
+  rng_az_sinel<double> rasel_set;
 };
 
 }

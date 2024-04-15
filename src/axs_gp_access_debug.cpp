@@ -202,10 +202,10 @@ void GpAccessDebug::findSet(axs_interval& axs)
 
 void GpAccessDebug::setRiseSetStatus(axs_interval& axs)
 {
-  axs.sinel_rise = m_gp.getSinElevation(m_eph->getPosition(axs.rise,
-                                                           EphemFrame::ecf));
-  axs.sinel_set = m_gp.getSinElevation(m_eph->getPosition(axs.set,
-                                                          EphemFrame::ecf));
+  axs.rasel_rise = m_gp.getRngAzSinEl(m_eph->getPosition(axs.rise,
+                                                         EphemFrame::ecf));
+  axs.rasel_set = m_gp.getRngAzSinEl(m_eph->getPosition(axs.set,
+                                                        EphemFrame::ecf));
 }
 
 }

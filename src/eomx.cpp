@@ -162,11 +162,16 @@ int main(int argc, char* argv[])
                          " against " << axs->getGpName();
       for (const eom::axs_interval& rise_set : (*axs)) {
         std::cout << '\n' << rise_set.rise.to_str() <<
-                     "  " << rise_set.set.to_str() << "    {" <<
-                     utl_const::deg_per_rad*std::asin(rise_set.sinel_rise) <<
-                     ", " <<
-                     utl_const::deg_per_rad*std::asin(rise_set.sinel_set) <<
-                     "} deg Elevation";
+            "  " << rise_set.set.to_str() << "    {" <<
+            utl_const::deg_per_rad*std::asin(rise_set.rasel_rise.sinel) <<
+            ", " <<
+            utl_const::deg_per_rad*std::asin(rise_set.rasel_set.sinel) <<
+            "} deg Elevation" <<
+            "    {" <<
+            utl_const::deg_per_rad*rise_set.rasel_rise.azimuth <<
+            ", " <<
+            utl_const::deg_per_rad*rise_set.rasel_set.azimuth <<
+            "} deg Azimuth";
       }
     } catch (const std::out_of_range& oor) {
       std::cerr << "\nCould not locate " << key <<
