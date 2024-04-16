@@ -177,14 +177,7 @@ bool GpAccessStd::is_visible(const JulianDate& jd, double* new_dt_days) const
                                      m_exp_a10*r*std::pow(10, r), lb), ub);
   }
 
-  if (m_xcs.onlyUseMinEl()  &&
-      m_gp.getSinElevation(pos) >= m_xcs.getSineMinEl()) {
-    return true;
-  } else {
-    return m_xcs.isVisible(jd, m_gp, pos);
-  }
-
-  return false;
+  return m_xcs.isVisible(jd, m_gp, pos);
 }
 
 

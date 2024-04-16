@@ -42,7 +42,6 @@ void GpConstraints::setMaxEl(double max_el)
                                 std::to_string(max_el) + " radians"s);
   }
   m_sin_max_el = std::sin(max_el);
-  m_only_min_el = false;
 }
 
 
@@ -61,7 +60,6 @@ void GpConstraints::setMinMaxAz(double min_az, double max_az)
   }
   m_min_az = min_az;
   m_max_az = max_az;
-  m_only_min_el = false;
   m_check_az = true;
 
   if (m_min_az < m_max_az) {

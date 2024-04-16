@@ -120,11 +120,8 @@ bool GpAccessDebug::is_visible(const JulianDate& jd)
   }
 
   Eigen::Matrix<double, 3, 1> pos = m_eph->getPosition(jd, EphemFrame::ecf);
-  if (m_gp.getSinElevation(pos) >= m_xcs.getSineMinEl()) {
-    return true;
-  }
 
-  return false;
+  return m_xcs.isVisible(jd, m_gp, pos);
 }
 
 

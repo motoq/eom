@@ -38,16 +38,6 @@ public:
   }
 
   /**
-   * @return  If false, then only the minimum elevation is to be used as
-   *          a constraint and all others do not need to be checked.
-   *          Becomes true once a constraint other than the minimum
-   *          elevation is set.
-   */
-  bool onlyUseMinEl() const noexcept {
-    return m_only_min_el;
-  }
-
-  /**
    * Set minimum elevation angle, measured from the ground point up from
    * the plane tangent to the surface of the central body.
    *
@@ -148,7 +138,6 @@ private:
   double m_min_az_shifted {m_min_az};
   double m_max_az_shifted {m_max_az};
 
-  bool m_only_min_el {true};
   bool m_check_az {false};
 };
 
