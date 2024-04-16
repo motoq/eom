@@ -61,16 +61,6 @@ void GpConstraints::setMinMaxAz(double min_az, double max_az)
   m_min_az = min_az;
   m_max_az = max_az;
   m_check_az = true;
-
-  if (m_min_az < m_max_az) {
-    m_az_shift = 0.0;
-    m_min_az_shifted = m_min_az;
-    m_max_az_shifted = m_max_az;
-  } else {
-    m_az_shift =  m_max_az;
-    m_max_az_shifted = utl_const::tpi;
-    m_min_az_shifted = m_min_az - m_az_shift;
-  }
 }
 
 
@@ -80,10 +70,21 @@ bool GpConstraints::isVisible(const JulianDate& jd,
 {
   rng_az_sinel rae = gp.getRngAzSinEl(pos);
 
-  bool el_good = rae.sinel >= m_sin_min_el  &&  rae.sinel <= m_sin_max_el;
-  bool az_good = rae.azimuth >= m_min_az  &&  rae.azimuth <= m_max_az;
+  bool axs_good = rae.sinel >= m_sin_min_el  &&  rae.sinel <= m_sin_max_el;
 
-  return el_good && az_good;
+  bool az_good {true};
+  if (m_check_az) {
+    bool az_good {true};
+    if (m_min_az < m_max_az) {
+      az_good = rae.azimuth >= m_min_az  &&  rae.azimuth <= m_max_az;
+    } else {
+      az_good = rae.azimuth >= m_min_az  ||  rae.azimuth <= m_max_az;
+    }
+    axs_good = axs_good && az_good;
+  }
+
+
+  return axs_good;
 }
 
 

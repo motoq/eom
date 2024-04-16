@@ -134,9 +134,6 @@ private:
   double m_sin_max_el {1.0};
   double m_min_az {0.0};
   double m_max_az {utl_const::tpi};
-  double m_az_shift {0.0};
-  double m_min_az_shifted {m_min_az};
-  double m_max_az_shifted {m_max_az};
 
   bool m_check_az {false};
 };
