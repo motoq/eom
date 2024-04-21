@@ -152,7 +152,7 @@ int main(int argc, char* argv[])
 
     // Print access results here for now
   if (gp_access_defs.size() > 0) {
-    std::cout << std::setprecision(3);
+    std::cout << std::setprecision(1);
   }
   for (const eom::GpAccessDef& axses : gp_access_defs) {
     std::string key {axses.getGpName() + axses.getOrbitName()};
