@@ -8,18 +8,19 @@
 
 #include <astro_ground_point.h>
 
-#include <ostream>
-#include <iomanip>
-#include <cmath>
-#include <stdexcept>
+#include <utl_const.h>
+#include <utl_nonconvergence_exception.h>
+#include <mth_util.h>
+#include <phy_const.h>
+#include <obs_rng_az_sinel.h>
 
 #include <Eigen/Dense>
 
-#include <utl_const.h>
-#include <mth_util.h>
-#include <phy_const.h>
-#include <utl_nonconvergence_exception.h>
-#include <obs_rng_az_sinel.h>
+#include <cmath>
+#include <iomanip>
+#include <ostream>
+#include <stdexcept>
+#include <string>
 
 namespace {
   constexpr int max_itr {10};
@@ -187,22 +188,23 @@ GroundPoint::getRngAzSinEl(const Eigen::Matrix<double, 3, 1>& posF) const
 }
 
 
-void GroundPoint::print(std::ostream& stream) const
-{
-  stream << std::fixed;
-  stream << std::setprecision(3);
-  stream << "(" << utl_const::deg_per_rad*m_lat <<
-            ", " << utl_const::deg_per_rad*m_lon <<
-            ", " << phy_const::m_per_du*m_alt << ") (deg, deg, m)";
-}
-
-
 void GroundPoint::finish()
 {
   m_clat = std::cos(m_lat);
   m_clon = std::cos(m_lon);
   m_slat = std::sin(m_lat);
   m_slon = std::sin(m_lon);
+}
+
+
+std::ostream& operator<<(std::ostream& out, const GroundPoint& gp)
+{
+  return out << std::fixed << std::setprecision(3) <<
+                "(" << utl_const::deg_per_rad*gp.getLatitude() <<
+                ", " << utl_const::deg_per_rad*gp.getLongitude() <<
+                ", " << phy_const::m_per_du*gp.getAltitude() <<
+                ") (deg, deg, m)";
+
 }
 
 

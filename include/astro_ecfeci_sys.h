@@ -9,17 +9,15 @@
 #ifndef ASTRO_ECFECI_SYS_H
 #define ASTRO_ECFECI_SYS_H
 
-#include <vector>
-#include <ostream>
-#include <memory>
+#include <cal_duration.h>
+#include <cal_julian_date.h>
+#include <astro_eop_sys.h>
 
 #include <Eigen/Dense>
 #include <Eigen/Geometry>
 
-#include <cal_julian_date.h>
-#include <cal_duration.h>
-#include <astro_eop_sys.h>
-#include <utl_printable.h>
+#include <memory>
+#include <vector>
 
 namespace eom {
 
@@ -42,14 +40,8 @@ struct ecf_eci {
  * @author  Kurt Motekew
  * @date    20211020
  */
-class EcfEciSys : public Printable {
+class EcfEciSys {
 public:
-  ~EcfEciSys() = default;
-  EcfEciSys(const EcfEciSys&) = default;
-  EcfEciSys& operator=(const EcfEciSys&) = default;
-  EcfEciSys(EcfEciSys&&) = default;
-  EcfEciSys& operator=(EcfEciSys&&) = default;
-
   /**
    * This constructor creates an ECF to ECI conversion utility that
    * makes use of a list of generated precession and nutation data.  It
@@ -246,13 +238,6 @@ public:
   Eigen::Matrix<double, 3, 1>
   mod2eci(const JulianDate& utc,
          const Eigen::Matrix<double, 3, 1>& mod) const;
-
-  /**
-   * Print stored ECF2ECI data to the supplied stream.
-   *
-   * @out  Output stream
-   */
-  void print(std::ostream& out) const override;
 
 private:
   JulianDate jdStart;

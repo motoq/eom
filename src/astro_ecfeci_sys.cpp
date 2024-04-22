@@ -8,22 +8,21 @@
 
 #include <astro_ecfeci_sys.h>
 
-#include <ostream>
-#include <memory>
-#include <stdexcept>
+#include <utl_const.h>
+#include <phy_const.h>
+#include <cal_duration.h>
+#include <cal_greg_date.h>
+#include <cal_julian_date.h>
+#include <cal_leap_seconds.h>
+#include <astro_eop_sys.h>
+
+#include <sofa.h>
 
 #include <Eigen/Dense>
 #include <Eigen/Geometry>
 
-#include <sofa.h>
-
-#include <utl_const.h>
-#include <phy_const.h>
-#include <cal_julian_date.h>
-#include <cal_greg_date.h>
-#include <cal_duration.h>
-#include <cal_leap_seconds.h>
-#include <astro_eop_sys.h>
+#include <memory>
+#include <stdexcept>
 
 /*
  * Local utility for converting a C double[3][3] to an Eigen Matrix3d.
@@ -337,16 +336,6 @@ EcfEciSys::mod2eci(const JulianDate& utc,
 {
   ecf_eci f2i {this->getEcfEciData(utc)};
   return f2i.p76*mod;
-}
-
-
-void EcfEciSys::print(std::ostream& out) const
-{
-  for (auto& f2i : f2iData) {
-    JulianDate jd;
-    jd.setMjd2000(f2i.mjd2000);
-    out << "\nMJD: " << jd.to_str();
-  }
 }
 
 

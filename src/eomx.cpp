@@ -96,7 +96,7 @@ int main(int argc, char* argv[])
   }
   for (const auto& [name, gp] : ground_points) {
     std::cout << "\n  " << name << ":  ";
-    gp->print(std::cout);
+    std::cout << *gp;
   }
 
     // Determine time span that must be supported by the simulation,

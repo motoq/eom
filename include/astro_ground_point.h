@@ -9,13 +9,15 @@
 #ifndef ASTRO_GROUND_POINT_H
 #define ASTRO_GROUND_POINT_H
 
-#include <string>
-#include <cmath>
+#include <utl_const.h>
+#include <phy_const.h>
+#include <obs_rng_az_sinel.h>
 
 #include <Eigen/Dense>
 
-#include <utl_printable.h>
-#include <obs_rng_az_sinel.h>
+#include <cmath>
+#include <ostream>
+#include <string>
 
 namespace eom {
 
@@ -39,14 +41,8 @@ enum class FukStarter {
  * @author  Kurt Motekew
  * @date    2022/01/22
  */
-class GroundPoint : public Printable {
+class GroundPoint {
 public:
-  ~GroundPoint() = default;
-  GroundPoint(const GroundPoint&) = default;
-  GroundPoint& operator=(const GroundPoint&) = default;
-  GroundPoint(GroundPoint&&) = default;
-  GroundPoint& operator=(GroundPoint&&) = default;
-
   /**
    * Initialize with geodetic coordinates
    *
@@ -156,13 +152,6 @@ public:
     return m_fstarter;
   }
 
-  /**
-   * Output ground point definition to the supplied stream
-   *
-   * @param  stream  Output stream
-   */
-  void print(std::ostream& stream) const override;
-
 private:
     // Sets useful member variables after Cartesian and geodetic
   void finish();
@@ -184,8 +173,18 @@ private:
   FukStarter m_fstarter {FukStarter::none};
 };
 
+/**
+ * Output ground point definition to the supplied stream
+ *
+ * @param  stream  Output stream
+ * @param  gp      Groundpoint to stream
+ *
+ * @return  Stream representing the groundpoint
+ */
+std::ostream& operator<<(std::ostream& out, const GroundPoint& gp);
 
 }
+
 
 #endif
 
