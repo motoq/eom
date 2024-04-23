@@ -9,15 +9,14 @@
 #ifndef EOM_CONFIG_H
 #define EOM_CONFIG_H
 
+#include <cal_duration.h>
+#include <cal_julian_date.h>
+
+#include <deque>
 #include <ostream>
+#include <set>
 #include <string>
 #include <vector>
-#include <deque>
-#include <set>
-
-#include <cal_julian_date.h>
-#include <cal_duration.h>
-#include <utl_printable.h>
 
 namespace eom_app {
 
@@ -29,14 +28,8 @@ namespace eom_app {
  * @author  Kurt Motekew
  * @date    20210922
  */
-class EomConfig : public eom::Printable {
+class EomConfig {
 public:
-  ~EomConfig() = default;
-  EomConfig(const EomConfig&) = default;
-  EomConfig& operator=(const EomConfig&) = default;
-  EomConfig(EomConfig&&) = default;
-  EomConfig& operator=(EomConfig&&) = default;
-
   /**
    * Initialize with default values.  The default settings are valid,
    * but not very useful.
@@ -184,13 +177,6 @@ public:
    */
   std::string getError() { return error_string; }
 
-  /**
-   * Output configuration settings to the supplied stream
-   *
-   * @param  stream  The stream to output the scenario setting to
-   */
-  void print(std::ostream& stream) const override;
-
 private:
   std::string units_angle {"Radians"};
   std::string units_distance {"DU"};
@@ -213,6 +199,11 @@ private:
   
 };
 
+
+/**
+ * Override output stream as non-member function.
+ */
+std::ostream& operator<<(std::ostream& out, const EomConfig& cfg);
 
 }
 

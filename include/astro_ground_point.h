@@ -173,13 +173,9 @@ private:
   FukStarter m_fstarter {FukStarter::none};
 };
 
+
 /**
- * Output ground point definition to the supplied stream
- *
- * @param  stream  Output stream
- * @param  gp      Groundpoint to stream
- *
- * @return  Stream representing the groundpoint
+ * Override output stream as non-member function.
  */
 std::ostream& operator<<(std::ostream& out, const GroundPoint& gp);
 

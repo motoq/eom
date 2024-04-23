@@ -87,16 +87,14 @@ int main(int argc, char* argv[])
     return 0;
   }
     // ...and print scenario - print simulation components as created
-  cfg.print(std::cout);
-  std::cout << '\n';
+  std::cout << cfg << '\n';
 
     // Print ground points
   if (ground_points.size() > 0) {
     std::cout << "\nGround point Definitions";
   }
   for (const auto& [name, gp] : ground_points) {
-    std::cout << "\n  " << name << ":  ";
-    std::cout << *gp;
+    std::cout << "\n  " << name << ":  " << *gp;
   }
 
     // Determine time span that must be supported by the simulation,

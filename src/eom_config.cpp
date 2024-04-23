@@ -8,17 +8,17 @@
 
 #include <eom_config.h>
 
-#include <ostream>
-#include <string>
-#include <deque>
-#include <set>
-#include <stdexcept>
+#include <eom_parse.h>
 
-#include <phy_const.h>
 #include <utl_units.h>
+#include <phy_const.h>
 #include <cal_leap_seconds.h>
 
-#include <eom_parse.h>
+#include <deque>
+#include <ostream>
+#include <set>
+#include <stdexcept>
+#include <string>
 
 /*
  * The parsing functions here should generally indicate an error
@@ -198,21 +198,24 @@ std::vector<std::string>EomConfig::getCelestials() const
   return m_celestial_names;
 }
 
-void EomConfig::print(std::ostream& stream) const
+std::ostream& operator<<(std::ostream& out, const EomConfig& cfg)
 {
-  stream << "\nSimulation Start Time: " << jdStart.to_str();
-  stream << "\nSimulation Stop Time:  " << jdStop.to_str();
-  stream << "\nEcfEci Output Rate is " << 
-             cal_const::min_per_day*dtEcfEci.getDays() << " minutes";
   eom::LeapSeconds& ls = eom::LeapSeconds::getInstance();
-  stream << "\nLeap Seconds (TAI - UTC): " << ls.getTai_Utc();
-  stream << "\nUsing dt eps: " <<
-             phy_const::epsdt*phy_const::sec_per_tu << " seconds";
-  stream << "\nOne ER is " <<
-            static_cast<long>(phy_const::m_per_er) << " meters";
-  stream << "\nOne DU is " <<
-            static_cast<long>(phy_const::m_per_du) << " meters";
-  stream << "\nOne TU is " << phy_const::sec_per_tu << " seconds";
+  return out << "\nSimulation Start Time: " <<
+                cfg.getStartTime().to_str() <<
+                "\nSimulation Stop Time:  " <<
+                cfg.getStopTime().to_str() <<
+                "\nEcfEci Output Rate is " << 
+                cal_const::min_per_day*cfg.getEcfEciRate().getDays() <<
+                " minutes" <<
+                "\nLeap Seconds (TAI - UTC): " << ls.getTai_Utc() <<
+                "\nUsing dt eps: " <<
+                phy_const::epsdt*phy_const::sec_per_tu << " seconds" <<
+                "\nOne ER is " <<
+                static_cast<long>(phy_const::m_per_er) << " meters" <<
+                "\nOne DU is " <<
+                static_cast<long>(phy_const::m_per_du) << " meters" <<
+                "\nOne TU is " << phy_const::sec_per_tu << " seconds";
 }
 
 
