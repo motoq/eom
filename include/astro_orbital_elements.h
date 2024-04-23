@@ -9,12 +9,10 @@
 #ifndef ASTRO_ORBITAL_ELEMENTS_H
 #define ASTRO_ORBITAL_ELEMENTS_H
 
-#include <ostream>
-#include <array>
-
 #include <Eigen/Dense>
 
-#include <utl_printable.h>
+#include <ostream>
+#include <array>
 
 namespace eom {
 
@@ -25,7 +23,7 @@ namespace eom {
  * @author  Kurt Motekew
  * @date    2022/01/01
  */
-class OrbitalElements : public Printable {
+class OrbitalElements {
 public:
   virtual ~OrbitalElements() = default;
   OrbitalElements() = default;

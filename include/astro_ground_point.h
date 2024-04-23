@@ -176,6 +176,7 @@ private:
 
 /**
  * Override output stream as non-member function.
+ * Units of degrees and meters are used.
  */
 std::ostream& operator<<(std::ostream& out, const GroundPoint& gp);
 

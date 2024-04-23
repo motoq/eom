@@ -139,7 +139,7 @@ int main(int argc, char* argv[])
     std::cout << "\n  " << eph->getEpoch().to_str() << "    GCRF";
     eom::Keplerian oeCart(eph->getStateVector(eph->getEpoch(),
                                               eom::EphemFrame::eci));
-    oeCart.print(std::cout);
+    std::cout << oeCart;
   }
 
     // Generate access analysis

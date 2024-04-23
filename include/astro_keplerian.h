@@ -9,12 +9,12 @@
 #ifndef ASTRO_KEPLERIAN_H
 #define ASTRO_KEPLERIAN_H
 
-#include <ostream>
-#include <array>
+#include <astro_orbital_elements.h>
 
 #include <Eigen/Dense>
 
-#include <astro_orbital_elements.h>
+#include <array>
+#include <ostream>
 
 namespace eom {
 
@@ -100,14 +100,6 @@ public:
   {
     return m_hmag;
   }
-
-  /**
-   * Output orbital elements and state vector to the supplied stream.
-   * Units of kilometers, seconds, and degrees are used.
-   *
-   * @param  stream  The stream to output the scenario setting to
-   */
-  void print(std::ostream& stream) const override;
 
   /*
    * @return orbit eccentricity
@@ -195,6 +187,13 @@ private:
   std::array<double, 6> m_oe;
   Eigen::Matrix<double, 6, 1> m_cart;
 };
+
+
+/**
+ * Override output stream as non-member function.
+ * Units of kilometers, seconds, and degrees are used.
+ */
+std::ostream& operator<<(std::ostream& out, const Keplerian& kep);
 
 
 }

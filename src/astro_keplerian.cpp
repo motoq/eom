@@ -8,19 +8,19 @@
 
 #include <astro_keplerian.h>
 
-#include <ostream>
-#include <iomanip>
-#include <cmath>
-#include <array>
-#include <stdexcept>
+#include <utl_const.h>
+#include <utl_nonconvergence_exception.h>
+#include <mth_angle.h>
+#include <phy_const.h>
 
 #include <Eigen/Dense>
 #include <Eigen/Geometry>
 
-#include <utl_nonconvergence_exception.h>
-#include <utl_const.h>
-#include <phy_const.h>
-#include <mth_angle.h>
+#include <array>
+#include <cmath>
+#include <iomanip>
+#include <ostream>
+#include <stdexcept>
 
 namespace {
     // Gravitational parameter
@@ -314,32 +314,36 @@ void Keplerian::setWithMeanAnomaly(double ma)
 }
 
 
-void Keplerian::print(std::ostream& stream) const
+std::ostream& operator<<(std::ostream& out, const Keplerian& kep)
 {
-  stream << std::fixed;
-  stream << std::setprecision(2);
-  stream << "    (" << phy_const::tu_per_day/getPeriod() << " rev/day)";
-  stream << std::setprecision(3);
-  stream << "\n  a: " << phy_const::km_per_du*m_oe[0] << " km";
-  stream << std::setprecision(6);
-  stream << "  e: " << m_oe[1];
-  stream << "  i: " << utl_const::deg_per_rad*m_oe[2] << "\u00B0";
-  stream << "  o: " << utl_const::deg_per_rad*m_oe[3] << "\u00B0";
-  stream << "  w: " << utl_const::deg_per_rad*m_oe[4] << "\u00B0";
-  stream << "\n  v: " << utl_const::deg_per_rad*m_oe[5] << "\u00B0";
-  stream << "  M: " <<
-            utl_const::deg_per_rad*getMeanAnomaly() << "\u00B0";
-  stream << "  E: " <<
-            utl_const::deg_per_rad*getEccentricAnomaly() << "\u00B0";
-  stream << std::setprecision(3);
-  stream << "\n    {" << phy_const::km_per_du*m_cart(0) << "  " <<
-                         phy_const::km_per_du*m_cart(1) << "  " <<
-                         phy_const::km_per_du*m_cart(2) << "} km";
-  stream << std::setprecision(6);
-  stream << "\n    {" <<
-            phy_const::km_per_du*m_cart(3)*phy_const::tu_per_sec << "  " <<
-            phy_const::km_per_du*m_cart(4)*phy_const::tu_per_sec << "  " <<
-            phy_const::km_per_du*m_cart(5)*phy_const::tu_per_sec << "} km/sec";
+  std::array<double, 6> oe = kep.getOrbitalElements();
+  Eigen::Matrix<double, 6, 1> cart = kep.getCartesian();
+  return out << std::fixed <<
+                std::setprecision(2) <<
+                "    (" <<
+                phy_const::tu_per_day/kep.getPeriod() << " rev/day)" <<
+                std::setprecision(3) <<
+                "\n  a: " << phy_const::km_per_du*oe[0] << " km" <<
+               std::setprecision(6) <<
+               "  e: " << oe[1] <<
+               "  i: " << utl_const::deg_per_rad*oe[2] << "\u00B0" <<
+               "  o: " << utl_const::deg_per_rad*oe[3] << "\u00B0" <<
+               "  w: " << utl_const::deg_per_rad*oe[4] << "\u00B0" <<
+               "\n  v: " << utl_const::deg_per_rad*oe[5] << "\u00B0" <<
+               "  M: " <<
+               utl_const::deg_per_rad*kep.getMeanAnomaly() << "\u00B0" <<
+               "  E: " <<
+               utl_const::deg_per_rad*kep.getEccentricAnomaly() << "\u00B0" <<
+               std::setprecision(3) <<
+               "\n    {" << phy_const::km_per_du*cart(0) << "  " <<
+                            phy_const::km_per_du*cart(1) << "  " <<
+                            phy_const::km_per_du*cart(2) << "} km" <<
+               std::setprecision(6) <<
+               "\n    {" <<
+               phy_const::km_per_du*cart(3)*phy_const::tu_per_sec << "  " <<
+               phy_const::km_per_du*cart(4)*phy_const::tu_per_sec << "  " <<
+               phy_const::km_per_du*cart(5)*phy_const::tu_per_sec <<
+               "} km/sec";
 }
 
 
