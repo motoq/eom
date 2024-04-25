@@ -1,0 +1,44 @@
+#
+# Orbit determination
+#
+# 2024/01/06
+#
+
+SimStart GD 2021 11 12 17 00 00.0;
+SimDuration Days 2;
+LeapSeconds 37;
+EcfEciRate Minutes 240;
+
+DistanceUnits Kilometers;
+TimeUnits Seconds;
+# 3022 x 550 km alt (0.151), 3 deg/minute mean motion
+#Orbit  leosat   VintiMod GD 2021 11 12 17 00 00.0
+#       CART   GCRF  -5552.0  -2563.0  3258.0   2.149  -7.539  -2.186;
+Orbit  leosat   SP  GD 2021 11 12 17 00 00.0
+       CART   GCRF  -5552.0  -2563.0  3258.0   2.149  -7.539  -2.186
+       Propagator  RK4 Minutes 0.0
+       GravityModel Jn 2;
+
+# From Vallado, 3rd edition
+AngleUnits  Degrees;
+DistanceUnits Meters;
+GroundPoint Eglin LLA  30.57 -86.21 34.7;
+
+Access  GroundPointAccess  Standard  leosat  Eglin
+                           MinimumElevation 1.0
+                           MaximumElevation 90.0
+                           MinimumMaximumAzimuth 145.0 215.0;
+
+end;
+#        tkr     attitude rate  tracked
+#                       random  bias
+Tracker  Eglin  Attitude  10.0  leosat
+         MaximumRange   13210000.0
+         MinimumAzimuth 145.0
+         MaximumAzimuth 215.0
+         MinimumElevation 1.0
+         MaximumElevation 90.0
+         SigmaRange     32.1      4.3
+         SigmaAzimuth    0.0154  0.001
+         SigmaElevation  0.0147  0.0094
+
