@@ -6,20 +6,26 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <string>
+#include <astro_build.h>
+
 #include <fstream>
 #include <memory>
-#include <vector>
 #include <stdexcept>
+#include <string>
+#include <vector>
 
 #include <Eigen/Dense>
 
+#include <utl_const.h>
 #include <phy_const.h>
-#include <cal_leap_seconds.h>
 #include <cal_julian_date.h>
+#include <cal_leap_seconds.h>
 #include <astro_ephemeris.h>
 
-#include <astro_build.h>
+namespace {
+  constexpr double min_dt_days {utl_const::day_per_sec*25.0};
+  constexpr double max_dt_days {36.0};
+}
 
 namespace eom {
 
@@ -40,6 +46,10 @@ build_celestial(const std::string& name_prefix,
 
   double dt_days;
   ifs.read(reinterpret_cast<char*>(&dt_days), sizeof(double));
+  if (dt_days < min_dt_days  ||  dt_days > max_dt_days) {
+    throw std::runtime_error("build_celestial() Bad DT_DAYS" +
+                              std::to_string(dt_days));
+  }
   double km_per_au;
   ifs.read(reinterpret_cast<char*>(&km_per_au), sizeof(double));
   const int rec_size {8};

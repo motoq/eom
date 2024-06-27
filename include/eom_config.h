@@ -9,14 +9,14 @@
 #ifndef EOM_CONFIG_H
 #define EOM_CONFIG_H
 
-#include <cal_duration.h>
-#include <cal_julian_date.h>
-
 #include <deque>
 #include <ostream>
 #include <set>
 #include <string>
 #include <vector>
+
+#include <cal_duration.h>
+#include <cal_julian_date.h>
 
 namespace eom_app {
 

@@ -10,15 +10,15 @@
 #define EOM_PARSE_H
 
 #include <array>
-#include <string>
 #include <deque>
+#include <string>
 
-#include <cal_julian_date.h>
 #include <cal_duration.h>
-#include <astro_orbit_def.h>
-#include <astro_rel_orbit_def.h>
+#include <cal_julian_date.h>
 #include <astro_ephemeris_file.h>
 #include <astro_ground_point.h>
+#include <astro_orbit_def.h>
+#include <astro_rel_orbit_def.h>
 #include <axs_gp_access_def.h>
 
 #include <eom_config.h>

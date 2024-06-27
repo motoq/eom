@@ -48,16 +48,18 @@ addition, set KSIZE to be equal to 2036 for use with enabling the
 FSIZER3 option with DE404 or DE440 ephemerides.  The original JPL code
 is well documented.  The code here has been modified to work on a PC:
 
-  # Build testeph after updating multiple NRECL=4 and
-  # uncomment FSIZER3 to use KSIZE = 2036
+  # Test converted ephemerides
+Build testeph after updating multiple NRECL=4 and uncommenting FSIZER3
+to use KSIZE = 2036
+
 $ gfortran testeph.f -o testeph
 
 Note IEEE underflow errors occuring when running testeph are considered
 normal...
 
-  # test
 $ cat testpo.405 | ./testeph
 
+  # Generate eom compatible files
 To generate the eom compatible sun, moon, and planetary .emb files:
 
 $ gfortran gen_eom_eph.f -o gen_eom_eph

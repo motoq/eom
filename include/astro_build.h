@@ -9,16 +9,16 @@
 #ifndef ASTRO_BUILD_H
 #define ASTRO_BUILD_H
 
-#include <string>
-#include <vector>
-#include <unordered_map>
 #include <memory>
+#include <string>
+#include <unordered_map>
+#include <vector>
 
+#include <astro_ecfeci_sys.h>
+#include <astro_ephemeris.h>
+#include <astro_ephemeris_file.h>
 #include <astro_orbit_def.h>
 #include <astro_rel_orbit_def.h>
-#include <astro_ephemeris_file.h>
-#include <astro_ephemeris.h>
-#include <astro_ecfeci_sys.h>
 
 namespace eom {
 

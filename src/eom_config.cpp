@@ -8,17 +8,17 @@
 
 #include <eom_config.h>
 
-#include <eom_parse.h>
-
-#include <utl_units.h>
-#include <phy_const.h>
-#include <cal_leap_seconds.h>
-
 #include <deque>
 #include <ostream>
 #include <set>
 #include <stdexcept>
 #include <string>
+
+#include <utl_units.h>
+#include <phy_const.h>
+#include <cal_leap_seconds.h>
+
+#include <eom_parse.h>
 
 /*
  * The parsing functions here should generally indicate an error
