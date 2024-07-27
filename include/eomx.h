@@ -28,7 +28,7 @@
 #include <eom_command.h>
 
 /**
- * Parses an eomx input file.  All areguments except fname are modified.
+ * Parses an eomx input file.  All arguments except fname are modified.
  * Generates the simulation configuration parameters along with modeling
  * component definitions (that will be used to create the actual modeling
  * components) and commands to be applied to those models.
@@ -38,6 +38,7 @@
  * @param  orbit_defs      Orbit definitions based on an initial state
  * @param  rel_orbit_defs  Orbit definitions based on another orbit
  * @param  eph_file_defs   Ephemeris file definition
+ * @param  ground_points   Ground points
  * @param  gp_access_defs  Access definition to a ground point
  * @param  commands        Actions to take on above definitions
  *

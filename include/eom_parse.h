@@ -11,7 +11,9 @@
 
 #include <array>
 #include <deque>
+#include <memory>
 #include <string>
+#include <unordered_map>
 
 #include <cal_duration.h>
 #include <cal_julian_date.h>
@@ -140,6 +142,20 @@ std::array<double, 6> parse_state_vector(std::deque<std::string>& tokens,
  */
 eom::GroundPoint
 parse_ground_point(std::deque<std::string>& tokens, const EomConfig& cfg);
+
+/**
+ * Parse SNX formatted file of SLR (satellite laser ranging) stations.
+ *
+ * @param  tokens          Single token indicating the filename to be parsed.
+ * @param  ground_points   Ground points
+ *
+ * @throws  An invalid_argument exception if parsing fails.  No error is
+ *          thrown if the list of tokens is not empty upon completion.
+ */
+void parse_slr_snx_stations(
+    std::deque<std::string>& tokens,
+    std::unordered_map<std::string,
+                       std::shared_ptr<eom::GroundPoint>>& ground_points);
 
 /**
  * Parses an orbit to ground point access definition.

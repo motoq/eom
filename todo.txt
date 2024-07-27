@@ -1,6 +1,14 @@
 Misc
 ----
 
+When creating ecfeci_sys in eomx.cpp, pull ecfeci_sys out of bracket
+
+Return number of messages from ecfeci_sys that were atually created
+
+Does a zero Duration break ECFECI generation?
+
+Rename LeapSecond.setUtc_Ut1 to setUtcMinuxUt1
+
 Check defaults for derived
 
 Add oe input type for orbits

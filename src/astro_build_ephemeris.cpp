@@ -6,21 +6,21 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <string>
 #include <fstream>
 #include <memory>
-#include <vector>
 #include <stdexcept>
+#include <string>
+#include <vector>
 
 #include <Eigen/Dense>
 
 #include <phy_const.h>
 #include <cal_greg_date.h>
 #include <cal_julian_date.h>
+#include <astro_ephemeris.h>
 #include <astro_ephemeris_file.h>
 #include <astro_sp3_chebyshev.h>
 #include <astro_sp3_hermite.h>
-#include <astro_ephemeris.h>
 
 #include <astro_build.h>
 
@@ -213,7 +213,6 @@ std::vector<state_vector_rec> parse_sp3_file(const std::string& file_name,
         break;
     }
   }
-  ifs.close();
 
   return sp3_records;
 }

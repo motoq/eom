@@ -8,7 +8,6 @@
 
 #include <eom_parse.h>
 
-#include <array>
 #include <string>
 #include <deque>
 #include <stdexcept>

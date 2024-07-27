@@ -46,6 +46,7 @@ set(SOURCES
   src/parse_ground_point.cpp
   src/parse_orbit_def.cpp
   src/parse_rel_orbit_def.cpp
+  src/parse_slr_snx_stations.cpp
   src/parse_state_vector.cpp
   src/cal_greg_date.cpp
   src/cal_julian_date.cpp
@@ -80,6 +81,7 @@ set(SOURCES
   src/astro_sp_ephemeris.cpp
   src/astro_sun_meeus.cpp
   src/astro_third_body_gravity.cpp
+  src/astro_tle.cpp
   src/astro_vinti.cpp
   src/astro_vinti_prop.cpp
   src/axs_gp_access_debug.cpp

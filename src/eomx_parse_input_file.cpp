@@ -160,6 +160,15 @@ void eomx_parse_input_file(const std::string& fname,
                 std::string xerror = ia.what();
                 other_error = "Invalid Ground Point definition: " + xerror;
               }
+            } else if (make == "SlrSnxStations") {
+              try {
+                  // Insert multiple sites
+                eom_app::parse_slr_snx_stations(tokens, ground_points);
+                input_error = false;
+              } catch (const std::invalid_argument& ia) {
+                std::string xerror = ia.what();
+                other_error = "Invalid SLR SNX file format: " + xerror;
+              }
             } else if (make == "Access") {
               if (tokens.size() > 0) {
                 auto model = tokens[0];
