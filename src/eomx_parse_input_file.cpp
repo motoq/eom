@@ -131,6 +131,28 @@ void eomx_parse_input_file(const std::string& fname,
                 std::string xerror = ia.what();
                 other_error = "Invalid Orbit definition: " + xerror;
               }
+            } else if (make == "TLE") {
+              if (tokens.size() > 0) {
+                auto name = tokens[0];
+                tokens.pop_front();
+                std::string tle1;
+                std::string tle2;
+                bool read_two_lines {false};
+                if (std::getline(ifs, tle1)) {
+                  line_number++;
+                  if (std::getline(ifs, tle2)) {
+                    line_number++;
+                    read_two_lines = true;
+                  }
+                }
+                if (read_two_lines) {
+                  orbit_defs.emplace_back(name, tle1, tle2);
+                  cfg.addPendingOrbit(orbit_defs.back().getOrbitName());
+                  input_error = false;
+                }
+              } else {
+                other_error = "TLE command provided with no arguments";
+              }
             } else if (make == "RelativeOrbit") {
               try {
                 rel_orbit_defs.push_back(eom_app::parse_rel_orbit_def(tokens,

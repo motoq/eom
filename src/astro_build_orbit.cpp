@@ -6,49 +6,50 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <iostream>
 
+#include <algorithm>
+#include <array>
+#include <memory>
+#include <stdexcept>
+#include <unordered_map>
 #include <utility>
 #include <vector>
-#include <unordered_map>
-#include <memory>
-#include <array>
-#include <algorithm>
 
 #include <Eigen/Dense>
 
 #include <phy_const.h>
 #include <cal_julian_date.h>
-#include <astro_propagator_config.h>
-#include <astro_orbit_def.h>
-#include <astro_ecfeci_sys.h>
-#include <astro_deq.h>
 #include <mth_ode_solver.h>
-#include <astro_hermite1_eph.h>
-#include <astro_hermite1_tc_eph.h>
-#include <astro_rk4.h>
-#include <astro_rk4s.h>
 #include <astro_adams_4th.h>
+#include <astro_deq.h>
+#include <astro_ecfeci_sys.h>
+#include <astro_ephemeris.h>
+#include <astro_force_model.h>
 #include <astro_gravity.h>
 #include <astro_gravity_jn.h>
 #include <astro_gravity_std.h>
-#include <astro_force_model.h>
-#include <astro_keplerian.h>
-#include <astro_ephemeris.h>
-#include <astro_sp_ephemeris.h>
+#include <astro_hermite1_eph.h>
+#include <astro_hermite1_tc_eph.h>
 #include <astro_kepler.h>
+#include <astro_keplerian.h>
 #include <astro_kepler_prop.h>
+#include <astro_moon_meeus.h>
+#include <astro_orbit_def.h>
+#include <astro_propagator_config.h>
+#include <astro_rk4.h>
+#include <astro_rk4s.h>
+#include <astro_sgp4.h>
+#include <astro_sp_ephemeris.h>
+#include <astro_sun_meeus.h>
+#include <astro_third_body_gravity.h>
 #include <astro_vinti.h>
 #include <astro_vinti_prop.h>
-#include <astro_sun_meeus.h>
-#include <astro_moon_meeus.h>
-#include <astro_third_body_gravity.h>
 #ifdef GENPL
+#include <astro_gauss_jackson.h>
+#include <astro_gj_lite.h>
 #include <astro_gravt.h>
 #include <astro_oscj2.h>
 #include <astro_secj2.h>
-#include <astro_gauss_jackson.h>
-#include <astro_gj_lite.h>
 #endif
 
 #include <astro_build.h>
@@ -61,10 +62,15 @@ build_orbit(const OrbitDef& orbitParams,
             const std::unordered_map<std::string,
                                      std::vector<eom::state_vector_rec>>& ceph)
 {
+    // Use of NAVSPASUR element sets would change this but they
+    // should be restricted to OLEs (as SGP4 is to TLEs)
+  if (orbitParams.getCoordinateType() == CoordType::keplerian  &&
+      orbitParams.getReferenceFrameType() == FrameType::itrf) {
+    throw std::invalid_argument("Orbital elements not compatible with ITRF");
+  }
   std::array<double, 6> xeci_array = orbitParams.getInitialState();
   Eigen::Matrix<double, 6, 1> xeciVec;
-    // Once more reference frame besides GCRF is added for Keplerian
-    // elements, the transformation to GCRF should be done here.
+    // Keplerian to Cartesian - ensured not ITRF above...
   if (orbitParams.getCoordinateType() == CoordType::keplerian) {
     Keplerian kep(xeci_array);
     xeciVec = kep.getCartesian();
@@ -73,8 +79,18 @@ build_orbit(const OrbitDef& orbitParams,
       xeciVec(ii) = xeci_array[ii];
     }
   }
-    // ITRF to GCRF for Cartesian
-  if (orbitParams.getCoordinateType() == CoordType::cartesian  &&
+    // TEME to ITRF (then to GCRF)
+  bool teme2itrf {false};
+  if (orbitParams.getReferenceFrameType() == FrameType::teme) {
+    teme2itrf = true;
+    xeciVec = ecfeciSys->teme2ecf(orbitParams.getEpoch(),
+                                  xeciVec.block<3, 1>(0, 0),
+                                  xeciVec.block<3, 1>(3, 0));
+  }
+    // ITRF to GCRF - everything is Cartesian by this point unless
+    // working with some form of xLE (e.g., a TLE that will be parsed
+    // and sent to a specialized propagator.
+  if (teme2itrf  ||
       orbitParams.getReferenceFrameType() == FrameType::itrf) {
     xeciVec = ecfeciSys->ecf2eci(orbitParams.getEpoch(),
                                  xeciVec.block<3, 1>(0, 0),
@@ -251,6 +267,12 @@ build_orbit(const OrbitDef& orbitParams,
                                        xeciVec,
                                        ecfeciSys);
     return orbit;
+  } else if (pCfg.getPropagatorType() == PropagatorType::sgp4) {
+    std::unique_ptr<Ephemeris> orbit =
+           std::make_unique<Sgp4>(orbitParams.getOrbitName(),
+                                  orbitParams.getTle(),
+                                  ecfeciSys);
+    return orbit;
 #ifdef GENPL
   } else if (pCfg.getPropagatorType() == PropagatorType::sec_j2) {
     std::unique_ptr<Ephemeris> orbit =
@@ -268,12 +290,7 @@ build_orbit(const OrbitDef& orbitParams,
     return orbit;
 #endif
   } else {
-    std::unique_ptr<Ephemeris> orbit =
-           std::make_unique<Kepler>(orbitParams.getOrbitName(),
-                                    orbitParams.getEpoch(),
-                                    xeciVec,
-                                    ecfeciSys);
-    return orbit;
+    throw std::invalid_argument("Invalid Propagator Type");
   }
 
 }

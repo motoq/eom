@@ -38,6 +38,10 @@ namespace eom {
  *                      copied into the Ephemeris object.
  * @param  ceph         Celestial ephemerides
  *
+ * @throws  std::invalid_argument  With observed inconsistency that
+ *                                 escaped error checking during
+ *                                 parsing.
+ *
  * @return  Orbit implementation
  */
 std::unique_ptr<Ephemeris>
@@ -99,6 +103,8 @@ build_ephemeris(const EphemerisFile& efd,
  *                      present in file.
  * @param  ecfeciSys    Ecf/Eci utility service pointer that will be
  *                      copied into the Ephemeris object.
+ *
+ * @return  State vector records
  *
  * @throws  runtime_error if 'name.emb' can't be opened or the format is
  *          invalid.

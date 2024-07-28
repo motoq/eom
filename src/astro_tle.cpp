@@ -6,6 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+#include <cstring>
 #include <iomanip>
 #include <ostream>
 #include <stdexcept>
@@ -29,6 +30,11 @@ static double get_tle_double(int ndx1, int ndx2, const std::string& tle_str);
 namespace eom {
 
 Tle::Tle(const std::string& tle1, const std::string& tle2)
+{
+  set(tle1, tle2);
+}
+
+void Tle::set(const std::string& tle1, const std::string& tle2)
 {
   if (tle1.length() < 63) {
     throw std::invalid_argument("Tle::Tle(): Invalid TLE line 1 length: " +
@@ -163,6 +169,12 @@ Tle::Tle(const std::string& tle1, const std::string& tle2)
   } catch (const std::invalid_argument& ex) {
     throw std::invalid_argument("Tle::Tle(): B*: " + oe_str);
   }
+    // Argument of Perigee
+  try { 
+    m_argpo = get_tle_double(35, 42, tle2);
+  } catch (const std::invalid_argument& ex) {
+    throw std::invalid_argument("Tle::Tle(): Argument of Perigee: " + tle2);
+  }
     // Mean anomaly
   try { 
     m_m0 = get_tle_double(44, 51, tle2);
@@ -175,7 +187,14 @@ Tle::Tle(const std::string& tle1, const std::string& tle2)
   } catch (const std::invalid_argument& ex) {
     throw std::invalid_argument("Tle::Tle(): Mean Motion: " + tle2);
   }
+}
 
+
+JulianDate Tle::getSgpEpoch() const
+{
+  GregDate gd0 {1950, 1, 1};
+
+  return JulianDate {gd0};
 }
 
 
@@ -196,6 +215,13 @@ std::string Tle::getSatName() const
   return m_satn;
 }
 
+std::array<char, 6> Tle::getSatN() const
+{
+  std::array<char, 6> satn;
+  strncpy(satn.data(), m_satn.c_str(), 5);
+
+  return satn;
+}
 
 JulianDate Tle::getEpoch() const
 {
@@ -212,6 +238,12 @@ int Tle::getEpochYear() const
 double Tle::getEpochDayOfYear() const
 {
   return m_epoch_doy;
+}
+
+
+double Tle::getTleSgpEpoch() const
+{
+  return m_epoch - getSgpEpoch();
 }
 
 
@@ -257,6 +289,12 @@ double Tle::getEccentricity() const
 }
 
 
+double Tle::getArgumentOfPerigee() const
+{
+  return m_argpo;
+}
+
+
 double Tle::getMeanAnomaly() const
 {
   return m_m0;
@@ -278,26 +316,31 @@ std::ostream& operator<<(std::ostream& out, const Tle& tle)
   }
   return out << tle.getEpoch().to_str() << '\n' <<
                 tle.getLineOne() << '\n' << tle.getLineTwo() << '\n' <<
-                "  Designator:   " << tle.getSatName() << '\n' <<
-                "  Year:DOY:     " << year << ':' <<
-                                      std::fixed <<
-                                      std::setprecision(8) <<
-                                      tle.getEpochDayOfYear() << '\n' <<
+                "  Designator:    " << tle.getSatName() << '\n' <<
+                "  Year:DOY:      " << year << ':' <<
+                                       std::fixed <<
+                                       std::setprecision(8) <<
+                                       tle.getEpochDayOfYear() << '\n' <<
                 std::scientific <<
                 std::setprecision(7) <<
-                "  ndot/2:       " << tle.getMeanMotionRate() <<
-                                      " rev/day^2\n" <<
+                "  ndot/2:        " << tle.getMeanMotionRate() <<
+                                       " rev/day^2\n" <<
                 std::setprecision(4) <<
-                "  nddot/6:      " << tle.getMeanMotionSecondRate() <<
-                                 "  rev/day^3\n" <<
-                "  B*:           " << tle.getBstar() << " 1/ER\n" <<
-                "  Element Type: " << tle.getElementType() << '\n' <<
+                "  nddot/6:       " << tle.getMeanMotionSecondRate() <<
+                                  "  rev/day^3\n" <<
+                "  B*:            " << tle.getBstar() << " 1/ER\n" <<
+                "  Element Type:  " << tle.getElementType() << '\n' <<
                 std::fixed <<
-                "  Inclination:  " << tle.getInclination() << "\u00B0\n" <<
-                "  RAAN:         " << tle.getRaan() << "\u00B0\n" <<
-                "  Eccentricity: " << tle.getEccentricity() << "\u00B0\n" <<
-                "  Mean Anomaly: " << tle.getMeanAnomaly() << "\u00B0\n" <<
-                "  Mean Motion:  " << tle.getMeanMotion() << "\u00B0\n";
+                "  Inclination:   " << tle.getInclination() << "\u00B0\n" <<
+                "  RAAN:          " << tle.getRaan() << "\u00B0\n" <<
+                std::setprecision(7) <<
+                "  Eccentricity:  " << tle.getEccentricity() << '\n' <<
+                std::setprecision(4) <<
+                "  Arg of Perigee: " << tle.getArgumentOfPerigee() <<
+                                       "\u00B0\n" <<
+                "  Mean Anomaly:  " << tle.getMeanAnomaly() << "\u00B0\n" <<
+                std::setprecision(8) <<
+                "  Mean Motion:   " << tle.getMeanMotion() << " rev/day";
 }
 
 

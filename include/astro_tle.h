@@ -9,6 +9,7 @@
 #ifndef ASTRO_TLE_H
 #define ASTRO_TLE_H
 
+#include <array>
 #include <ostream>
 #include <string>
 
@@ -42,6 +43,19 @@ public:
   Tle(const std::string& tle1, const std::string& tle2);
 
   /**
+   * Same as constructor, but with an existing TLE object.
+   */
+  void set(const std::string& tle1, const std::string& tle2);
+
+  /**
+   * The SGP4 epoch is used to compute the independent variable used for
+   * orbit propagation given a Julian date.
+   *
+   * @return  SGP4 epoch, Jan 1 1950 00:00:00, UTC
+   */
+  JulianDate getSgpEpoch() const;
+
+  /**
    * @return  TLE line 1, as was used for initialization.
    */
   std::string getLineOne() const;
@@ -57,6 +71,12 @@ public:
   std::string getSatName() const;
 
   /**
+   * @return  Alphanumeric satellite designator in form more compatible
+   *          with legacy SGP related codebases.
+   */
+  std::array<char, 6> getSatN() const;
+
+  /**
    * @return  TLE epoch
    */
   JulianDate getEpoch() const;
@@ -70,6 +90,11 @@ public:
    * @return  TLE epoch day of year and fraction
    */
   double getEpochDayOfYear() const;
+
+  /**
+   * @return  TLE epoch, days from SGP4 epoch
+   */
+  double getTleSgpEpoch() const;
 
   /**
    * @return  First time derivative of mean motion fudge factor,
@@ -112,6 +137,11 @@ public:
   double getEccentricity() const;
 
   /**
+   * @return  Argument of perigee, deg
+   */
+  double getArgumentOfPerigee() const;
+
+  /**
    * @return  Mean anomaly, deg
    */
   double getMeanAnomaly() const;
@@ -136,7 +166,7 @@ private:
   double m_ecco {0.0001};    // Eccentricity
   double m_argpo {0.0};      // Argument of perigee, deg
   double m_m0 {0.0};         // Mean anomaly, deg
-  double m_n0 {2.0};         // Rev/day
+  double m_n0 {2.0};         // Mean motion, rev/day
     //
   JulianDate m_epoch;
   

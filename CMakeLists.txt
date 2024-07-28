@@ -28,6 +28,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(SOURCES
+  src/SGP4.cpp
   src/Vinti6.c
   src/eom_config.cpp
   src/eom_command_builder.cpp
@@ -78,6 +79,7 @@ set(SOURCES
   src/astro_rk4s.cpp
   src/astro_sp3_chebyshev.cpp
   src/astro_sp3_hermite.cpp
+  src/astro_sgp4.cpp
   src/astro_sp_ephemeris.cpp
   src/astro_sun_meeus.cpp
   src/astro_third_body_gravity.cpp

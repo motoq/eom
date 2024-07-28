@@ -14,6 +14,7 @@
 
 #include <cal_julian_date.h>
 #include <astro_propagator_config.h>
+#include <astro_tle.h>
 
 namespace eom {
 
@@ -23,7 +24,8 @@ namespace eom {
  */
 enum class CoordType {
   cartesian,                      ///< position (DU), velocity (DU/TU)
-  keplerian                       ///< Orbital elements with true anomaly
+  keplerian,                      ///< Orbital elements with true anomaly
+  tle                             ///< SGP compatible
 };
 
 /**
@@ -31,7 +33,8 @@ enum class CoordType {
  */
 enum class FrameType {
   itrf,                           ///< WGS 84 compatible
-  gcrf                            ///< GCRF (IAU 2000A/2006)
+  gcrf,                           ///< GCRF (IAU 2000A/2006)
+  teme                            ///< True Equator, Mean Equinox
 };
 
 
@@ -65,43 +68,61 @@ public:
            FrameType frame_type);
 
   /**
+   * Create orbit definition based on an SGP4 TLE
+   *
+   * @param  orbit_name  Name (string identifieer) associated with orbit
+   * @param  tle1        TLE line 1
+   * @param  tle2        TLE line 2
+   */
+  OrbitDef(const std::string& orbit_name,
+           const std::string& tle1,
+           const std::string& tle2);
+
+  /**
    * @return  Name (string identifieer) associated with orbit
    */
-  std::string getOrbitName() const noexcept { return name; }
+  std::string getOrbitName() const noexcept { return m_name; }
 
   /**
    * @return  Orbit propagator configuration
    */
-  PropagatorConfig getPropagatorConfig() const noexcept { return propCfg; }
+  PropagatorConfig getPropagatorConfig() const noexcept { return m_propCfg; }
 
   /**
    * @return  Time of orbit state vector
    */
-  JulianDate getEpoch() const noexcept { return jd0; }
+  JulianDate getEpoch() const noexcept { return m_jd0; }
 
   /**
    * @return  State vector, initial conditions at epoch time.  Units of
    *          DU, TU, and/or radians
    */
-  std::array<double, 6> getInitialState() const noexcept { return x0; }
+  std::array<double, 6> getInitialState() const noexcept { return m_x0; }
 
   /**
    * @return  State vector coordinate system type
    */
-  CoordType getCoordinateType() const noexcept { return coord; }
+  CoordType getCoordinateType() const noexcept { return m_coord; }
 
   /**
    * @return  State vector eference frame
    */
-  FrameType getReferenceFrameType() const noexcept { return frame; }
+  FrameType getReferenceFrameType() const noexcept { return m_frame; }
+
+  /**
+   * @return TLE if an SGP4 propagator
+   */
+  Tle getTle() const noexcept;
 
 private:
-  std::string name {""};
-  PropagatorConfig propCfg;
-  CoordType coord;
-  FrameType frame;
-  JulianDate jd0;
-  std::array<double, 6> x0;
+  std::string m_name {""};
+  PropagatorConfig m_propCfg;
+  CoordType m_coord;
+  FrameType m_frame;
+  JulianDate m_jd0;
+  std::array<double, 6> m_x0;
+    // SGP4/TLE only
+  Tle m_tle;
 };
 
 
