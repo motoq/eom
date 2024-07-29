@@ -1,0 +1,22 @@
+
+#
+# Loads ephemeris for Starlette from an SP3 format file and compare to
+# propagated ephemeris.
+#
+# 2023/01/16
+#
+
+SimStart GD 2022  2  8  0  0  0.00;
+SimDuration Days 2;
+LeapSeconds 37;
+EcfEciRate Minutes 240;
+
+DistanceUnits  Kilometers;
+TimeUnits Seconds;
+TLE  starlette;
+1 07646U 75010A   22038.91861585 -.00000134  00000-0  53389-5 0  9996
+2 07646  49.8229 261.4733 0205735 209.7169 149.1906 13.82310827374561
+EphemerisFile nsgf_starlette  SP3c Hermite nsgf.orb.starlette.220212.v00.sp3;
+TimeUnits Minutes;
+OutputRate Minutes 5;
+Command PrintRangeSpectrum nsgf_starlette starlette starlette_rngfft;

@@ -1,0 +1,23 @@
+
+#
+# Loads ephemeris for LAGEOS-2 from an SP3 format file and compare to
+# propagated ephemeris.
+# (requires GENPL option if using GJs propagator)
+#
+# 2023/01/16
+#
+
+SimStart GD 2021  6 20  0  0  0.00;
+SimDuration Days 2;
+LeapSeconds 37;
+EcfEciRate Minutes 240;
+
+DistanceUnits  Kilometers;
+TimeUnits Seconds;
+TLE  lageos2;
+1 22195U 92070B   21170.84920837 -.00000009  00000-0  00000-0 0  9999
+2 22195  52.6733 338.9761 0137690 109.9866 135.1556  6.47293579677490
+EphemerisFile nsgf_lageos2 SP3c Hermite nsgf.orb.lageos2.210626.v70.sp3;
+TimeUnits Minutes;
+OutputRate Minutes 5;
+Command PrintRange lageos2 nsgf_lageos2 lageos2_rng;
