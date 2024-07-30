@@ -68,9 +68,7 @@ void Tle::set(const std::string& tle1, const std::string& tle2)
   auto oe_str = tle1.substr(offset, len);
   try {
     m_epoch_yr = std::stoi(oe_str);
-      // Fucking Y2K nonsense 1/4 century late!? - seriously USSF!
-      // Everyone has to change "Satellite Number" to be "Satellite Name".
-      // Seems like a primo time to update the TLE format.
+      // Y2K nonsense 1/4 century late!.
     GregDate gd;
     if (m_epoch_yr < 0  ||  m_epoch_yr > 99) {
       throw std::invalid_argument("");

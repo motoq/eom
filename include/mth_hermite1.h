@@ -137,7 +137,6 @@ Hermite1<T,N>::Hermite1(T dt,
 {
     // Cast constants to proper type
   constexpr T t0p5 {static_cast<T>(0.5)};
-  constexpr T t002 {static_cast<T>(2)};
   constexpr T t006 {static_cast<T>(6)};
 
     // Computed polynomial coefficients

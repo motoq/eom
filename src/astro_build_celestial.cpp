@@ -54,7 +54,6 @@ build_celestial(const std::string& name_prefix,
   ifs.read(reinterpret_cast<char*>(&km_per_au), sizeof(double));
   const int rec_size {8};
   double sv_rec[rec_size];                  // jdhi, jdlo, x, y, z, dx, dy, dz
-  int nrec {0};
   std::vector<state_vector_rec> sv_recs;
   JulianDate jd1 = startTime + -2.0*dt_days;
   JulianDate jd2 = stopTime  +  2.0*dt_days;

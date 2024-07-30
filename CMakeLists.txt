@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.17)
+cmake_minimum_required(VERSION 3.20)
 
 # "make" creates both the libeom library and eomx applications.
 # "make eom" creates just libeom
@@ -121,10 +121,7 @@ if (MSVC)
     # warning level 4 and all warnings as errors
   add_compile_options(/W4 /WX)
 else()
-    # lots of warnings and all warnings as errors
-  message(STATUS "Defaulting to gcc compatible warning flags")
-  #add_compile_options(-Wall -Wextra -pedantic -Wno-parentheses)
-  add_compile_options(-Wall -Wextra -pedantic -Werror -Wunused)
+  add_compile_options(-Wall -Wextra -pedantic -Wunused)
 endif()
 
 # SOFA headers are in "~/include" - update path as needed

@@ -20,4 +20,4 @@ TLE  lageos2;
 EphemerisFile nsgf_lageos2 SP3c Hermite nsgf.orb.lageos2.210626.v70.sp3;
 TimeUnits Minutes;
 OutputRate Minutes 5;
-Command PrintRange lageos2 nsgf_lageos2 lageos2_rng;
+Command PrintRangeSpectrum lageos2 nsgf_lageos2 lageos2_rng;

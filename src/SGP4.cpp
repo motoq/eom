@@ -64,12 +64,16 @@
 
 #include "SGP4.h"
 
+namespace {
+
 #define pi 3.14159265358979323846
 
-// define global variables here, not in .h
-// use extern in main
-char help = 'n';
-FILE *dbgfile;
+}
+
+
+// Declaration within namespace
+namespace SGP4Funcs
+{
 
 /* ----------- local functions - only ever used internally by sgp4 ---------- */
 static void dpper
@@ -159,6 +163,9 @@ double& cosio2, double& eccsq, double& omeosq, double& posq,
 double& rp, double& rteosq, double& sinio, double& gsto, char opsmode
 );
 
+}
+
+// Define all functions, including static
 namespace SGP4Funcs
 {
 
@@ -1019,7 +1026,7 @@ namespace SGP4Funcs
 		)
 	{
 		const double twopi = 2.0 * pi;
-		int iretn, iret;
+		int iretn;
 		double delt, ft, theta, x2li, x2omi, xl, xldot, xnddt, xndt, xomi, g22, g32,
 			g44, g52, g54, fasx2, fasx4, fasx6, rptim, step2, stepn, stepp;
 
@@ -1079,7 +1086,6 @@ namespace SGP4Funcs
 				delt = stepn;
 
 			iretn = 381; // added for do loop
-			iret = 0; // added for loop
 			while (iretn == 381)
 			{
 				/* ------------------- dot terms calculated ------------- */
@@ -1119,7 +1125,6 @@ namespace SGP4Funcs
 				// sgp4fix move end checks to end of routine
 				if (fabs(t - atime) >= stepp)
 				{
-					iret = 0;
 					iretn = 381;
 				}
 				else // exit here
@@ -2136,317 +2141,6 @@ namespace SGP4Funcs
 
 	}   // getgravconst
 
-	// older sgp4io methods
-	/* -----------------------------------------------------------------------------
-	*
-	*                           function twoline2rv
-	*
-	*  this function converts the two line element set character string data to
-	*    variables and initializes the sgp4 variables. several intermediate varaibles
-	*    and quantities are determined. note that the result is a structure so multiple
-	*    satellites can be processed simaltaneously without having to reinitialize. the
-	*    verification mode is an important option that permits quick checks of any
-	*    changes to the underlying technical theory. this option works using a
-	*    modified tle file in which the start, stop, and delta time values are
-	*    included at the end of the second line of data. this only works with the
-	*    verification mode. the catalog mode simply propagates from -1440 to 1440 min
-	*    from epoch and is useful when performing entire catalog runs.
-	*    update for alpha 5 numbering system. 4 mar 2021.
-	*
-	*  author        : david vallado                  719-573-2600    1 mar 2001
-	*
-	*  inputs        :
-	*    longstr1    - first line of the tle
-	*    longstr2    - second line of the tle
-	*    typerun     - type of run                    verification 'v', catalog 'c',
-	*                                                 manual 'm'
-	*    typeinput   - type of manual input           mfe 'm', epoch 'e', dayofyr 'd'
-	*    opsmode     - mode of operation afspc or improved 'a', 'i'
-	*    whichconst  - which set of constants to use  72, 84
-	*
-	*  outputs       :
-	*    satrec      - structure containing all the sgp4 satellite information
-	*
-	*  coupling      :
-	*    getgravconst-
-	*    days2mdhms  - conversion of days to month, day, hour, minute, second
-	*    jday        - convert day month year hour minute second into julian date
-	*    sgp4init    - initialize the sgp4 variables
-	*
-	*  references    :
-	*    norad spacetrack report #3
-	*    vallado, crawford, hujsak, kelso  2006
-	--------------------------------------------------------------------------- */
-
-	void twoline2rv
-		(
-		char longstr1[130], char longstr2[130],
-		char typerun, char typeinput, char opsmode,
-		gravconsttype whichconst,
-		double& startmfe, double& stopmfe, double& deltamin,
-		elsetrec& satrec
-		)
-	{
-		const double deg2rad = pi / 180.0;         //   0.0174532925199433
-		const double xpdotp = 1440.0 / (2.0 *pi);  // 229.1831180523293
-
-		double sec;
-		double startsec, stopsec, startdayofyr, stopdayofyr, jdstart, jdstop, jdstartF, jdstopF;
-		int startyear, stopyear, startmon, stopmon, startday, stopday,
-			starthr, stophr, startmin, stopmin;
-		int cardnumb, j;
-		// sgp4fix include in satrec
-		// long revnum = 0, elnum = 0;
-		// char classification, intldesg[11];
-		int year = 0;
-		int mon, day, hr, minute, nexp, ibexp;
-
-		// sgp4fix no longer needed
-		// getgravconst( whichconst, tumin, mu, radiusearthkm, xke, j2, j3, j4, j3oj2 );
-
-		satrec.error = 0;
-
-		// set the implied decimal points since doing a formated read
-		// fixes for bad input data values (missing, ...)
-		for (j = 10; j <= 15; j++)
-			if (longstr1[j] == ' ')
-				longstr1[j] = '_';
-
-		if (longstr1[44] != ' ')
-			longstr1[43] = longstr1[44];
-		longstr1[44] = '.';
-		if (longstr1[7] == ' ')
-			longstr1[7] = 'U';
-		if (longstr1[9] == ' ')
-			longstr1[9] = '.';
-		for (j = 45; j <= 49; j++)
-			if (longstr1[j] == ' ')
-				longstr1[j] = '0';
-		if (longstr1[51] == ' ')
-			longstr1[51] = '0';
-		if (longstr1[53] != ' ')
-			longstr1[52] = longstr1[53];
-		longstr1[53] = '.';
-		longstr2[25] = '.';
-		for (j = 26; j <= 32; j++)
-			if (longstr2[j] == ' ')
-				longstr2[j] = '0';
-		if (longstr1[62] == ' ')
-			longstr1[62] = '0';
-		if (longstr1[68] == ' ')
-			longstr1[68] = '0';
-#ifdef _MSC_VER // chk if compiling in MSVS c++
-		sscanf_s(longstr1, "%2d %5s %1c %10s %2d %12lf %11lf %7lf %2d %7lf %2d %2d %6ld ",
-			&cardnumb, &satrec.satnum, 6 * sizeof(char), &satrec.classification, sizeof(char), &satrec.intldesg, 11 * sizeof(char), &satrec.epochyr,
-			&satrec.epochdays, &satrec.ndot, &satrec.nddot, &nexp, &satrec.bstar, &ibexp, &satrec.ephtype, &satrec.elnum);
-#else
-		sscanf(longstr1, "%2d %5s %1c %10s %2d %12lf %11lf %7lf %2d %7lf %2d %2d %6ld ",
-			&cardnumb, &satrec.satnum, &satrec.classification, &satrec.intldesg, &satrec.epochyr,
-			&satrec.epochdays, &satrec.ndot, &satrec.nddot, &nexp, &satrec.bstar,
-			&ibexp, &satrec.ephtype, &satrec.elnum);
-#endif
-		if (typerun == 'v')  // run for specified times from the file
-		{
-			if (longstr2[52] == ' ')
-			{
-#ifdef _MSC_VER
-				sscanf_s(longstr2, "%2d %5s %9lf %9lf %8lf %9lf %9lf %10lf %6ld %lf %lf %lf \n",
-					&cardnumb, &satrec.satnum, 6 * sizeof(char), &satrec.inclo,
-					&satrec.nodeo, &satrec.ecco, &satrec.argpo, &satrec.mo, &satrec.no_kozai,
-					&satrec.revnum, &startmfe, &stopmfe, &deltamin);
-#else
-				sscanf(longstr2, "%2d %5s %9lf %9lf %8lf %9lf %9lf %10lf %6ld %lf %lf %lf \n",
-					&cardnumb, &satrec.satnum, &satrec.inclo,
-					&satrec.nodeo, &satrec.ecco, &satrec.argpo, &satrec.mo, &satrec.no_kozai,
-					&satrec.revnum, &startmfe, &stopmfe, &deltamin);
-#endif
-			}
-			else
-			{
-#ifdef _MSC_VER
-				sscanf_s(longstr2, "%2d %5s %9lf %9lf %8lf %9lf %9lf %11lf %6ld %lf %lf %lf \n",
-					&cardnumb, &satrec.satnum, 6 * sizeof(char), &satrec.inclo,
-					&satrec.nodeo, &satrec.ecco, &satrec.argpo, &satrec.mo, &satrec.no_kozai,
-					&satrec.revnum, &startmfe, &stopmfe, &deltamin);
-#else
-				sscanf(longstr2, "%2d %5s %9lf %9lf %8lf %9lf %9lf %11lf %6ld %lf %lf %lf \n",
-					&cardnumb, &satrec.satnum, &satrec.inclo,
-					&satrec.nodeo, &satrec.ecco, &satrec.argpo, &satrec.mo, &satrec.no_kozai,
-					&satrec.revnum, &startmfe, &stopmfe, &deltamin);
-#endif
-			}
-		}
-		else  // simply run -1 day to +1 day or user input times
-		{
-			if (longstr2[52] == ' ')
-			{
-#ifdef _MSC_VER
-				sscanf_s(longstr2, "%2d %5s %9lf %9lf %8lf %9lf %9lf %10lf %6ld \n",
-					&cardnumb, &satrec.satnum, 6 * sizeof(char), &satrec.inclo,
-					&satrec.nodeo, &satrec.ecco, &satrec.argpo, &satrec.mo, &satrec.no_kozai,
-					&satrec.revnum);
-#else
-				sscanf(longstr2, "%2d %5s %9lf %9lf %8lf %9lf %9lf %10lf %6ld \n",
-					&cardnumb, &satrec.satnum, &satrec.inclo,
-					&satrec.nodeo, &satrec.ecco, &satrec.argpo, &satrec.mo, &satrec.no_kozai,
-					&satrec.revnum);
-#endif
-			}
-			else
-			{
-#ifdef _MSC_VER
-				sscanf_s(longstr2, "%2d %5s %9lf %9lf %8lf %9lf %9lf %11lf %6ld \n",
-					&cardnumb, &satrec.satnum, 6 * sizeof(char), &satrec.inclo,
-					&satrec.nodeo, &satrec.ecco, &satrec.argpo, &satrec.mo, &satrec.no_kozai,
-					&satrec.revnum);
-#else
-				sscanf(longstr2, "%2d %5s %9lf %9lf %8lf %9lf %9lf %11lf %6ld \n",
-					&cardnumb, &satrec.satnum, &satrec.inclo,
-					&satrec.nodeo, &satrec.ecco, &satrec.argpo, &satrec.mo, &satrec.no_kozai,
-					&satrec.revnum);
-#endif
-			}
-		}
-
-		// ---- find no, ndot, nddot ----
-		satrec.no_kozai = satrec.no_kozai / xpdotp; //* rad/min
-		satrec.nddot = satrec.nddot * pow(10.0, nexp);
-		// could multiply by 0.00001, but implied decimal is set in the longstr1 above
-		satrec.bstar = satrec.bstar * pow(10.0, ibexp);
-
-		// ---- convert to sgp4 units ----
-		// satrec.a    = pow( satrec.no_kozai*tumin , (-2.0/3.0) );
-		satrec.ndot = satrec.ndot / (xpdotp*1440.0);  //* ? * minperday
-		satrec.nddot = satrec.nddot / (xpdotp*1440.0 * 1440);
-
-		// ---- find standard orbital elements ----
-		satrec.inclo = satrec.inclo  * deg2rad;
-		satrec.nodeo = satrec.nodeo  * deg2rad;
-		satrec.argpo = satrec.argpo  * deg2rad;
-		satrec.mo = satrec.mo     * deg2rad;
-
-		// sgp4fix not needed here
-		// satrec.alta = satrec.a*(1.0 + satrec.ecco) - 1.0;
-		// satrec.altp = satrec.a*(1.0 - satrec.ecco) - 1.0;
-
-		// ----------------------------------------------------------------
-		// find sgp4epoch time of element set
-		// remember that sgp4 uses units of days from 0 jan 1950 (sgp4epoch)
-		// and minutes from the epoch (time)
-		// ----------------------------------------------------------------
-
-		// ---------------- temp fix for years from 1957-2056 -------------------
-		// --------- correct fix will occur when year is 4-digit in tle ---------
-		if (satrec.epochyr < 57)
-			year = satrec.epochyr + 2000;
-		else
-			year = satrec.epochyr + 1900;
-
-		days2mdhms_SGP4(year, satrec.epochdays, mon, day, hr, minute, sec);
-		jday_SGP4(year, mon, day, hr, minute, sec, satrec.jdsatepoch, satrec.jdsatepochF);
-
-		// ---- input start stop times manually
-		if ((typerun != 'v') && (typerun != 'c'))
-		{
-			// ------------- enter start/stop ymd hms values --------------------
-			if (typeinput == 'e')
-			{
-				printf("input start prop year mon day hr min sec \n");
-				// make sure there is no space at the end of the format specifiers in scanf!
-#ifdef _MSC_VER
-				scanf_s("%i %i %i %i %i %lf", &startyear, &startmon, &startday, &starthr, &startmin, &startsec);
-#else
-				scanf("%i %i %i %i %i %lf", &startyear, &startmon, &startday, &starthr, &startmin, &startsec);
-#endif
-				fflush(stdin);
-				jday_SGP4(startyear, startmon, startday, starthr, startmin, startsec, jdstart, jdstartF);
-
-				printf("input stop prop year mon day hr min sec \n");
-#ifdef _MSC_VER
-				scanf_s("%i %i %i %i %i %lf", &stopyear, &stopmon, &stopday, &stophr, &stopmin, &stopsec);
-#else
-				scanf("%i %i %i %i %i %lf", &stopyear, &stopmon, &stopday, &stophr, &stopmin, &stopsec);
-#endif
-				fflush(stdin);
-				jday_SGP4(stopyear, stopmon, stopday, stophr, stopmin, stopsec, jdstop, jdstopF);
-
-				startmfe = (jdstart - satrec.jdsatepoch) * 1440.0 + (jdstartF - satrec.jdsatepochF) * 1440.0;
-				stopmfe = (jdstop - satrec.jdsatepoch) * 1440.0 + (jdstopF - satrec.jdsatepochF) * 1440.0;
-
-				printf("input time step in minutes \n");
-#ifdef _MSC_VER
-				scanf_s("%lf", &deltamin);
-#else
-				scanf("%lf", &deltamin);
-#endif
-			}
-			// -------- enter start/stop year and days of year values -----------
-			if (typeinput == 'd')
-			{
-				printf("input start year dayofyr \n");
-#ifdef _MSC_VER
-				scanf_s("%i %lf", &startyear, &startdayofyr);
-#else
-				scanf("%i %lf", &startyear, &startdayofyr);
-#endif
-				printf("input stop year dayofyr \n");
-#ifdef _MSC_VER
-				scanf_s("%i %lf", &stopyear, &stopdayofyr);
-#else
-				scanf("%i %lf", &stopyear, &stopdayofyr);
-#endif
-
-				days2mdhms_SGP4(startyear, startdayofyr, mon, day, hr, minute, sec);
-				jday_SGP4(startyear, mon, day, hr, minute, sec, jdstart, jdstartF);
-				days2mdhms_SGP4(stopyear, stopdayofyr, mon, day, hr, minute, sec);
-				jday_SGP4(stopyear, mon, day, hr, minute, sec, jdstop, jdstopF);
-
-				startmfe = (jdstart - satrec.jdsatepoch) * 1440.0 + (jdstartF - satrec.jdsatepochF) * 1440.0;
-				stopmfe = (jdstop - satrec.jdsatepoch) * 1440.0 + (jdstopF - satrec.jdsatepochF) * 1440.0;
-
-				printf("input time step in minutes \n");
-#ifdef _MSC_VER
-				scanf_s("%lf", &deltamin);
-#else
-
-				scanf("%lf", &deltamin);
-#endif
-			}
-			// ------------------ enter start/stop mfe values -------------------
-			if (typeinput == 'm')
-			{
-#ifdef _MSC_VER
-				printf("input start min from epoch \n");
-				scanf_s("%lf", &startmfe);
-				printf("input stop min from epoch \n");
-				scanf_s("%lf", &stopmfe);
-				printf("input time step in minutes \n");
-				scanf_s("%lf", &deltamin);
-#else
-				printf("input start min from epoch \n");
-				scanf("%lf", &startmfe);
-				printf("input stop min from epoch \n");
-				scanf("%lf", &stopmfe);
-				printf("input time step in minutes \n");
-				scanf("%lf", &deltamin);
-#endif
-			}
-		}
-
-		// ------------ perform complete catalog evaluation, -+ 1 day ----------- 
-		if (typerun == 'c')
-		{
-			startmfe = -1440.0;
-			stopmfe = 1440.0;
-			deltamin = 10.0;
-		}
-
-		// ---------------- initialize the orbit at sgp4epoch -------------------
-		sgp4init(whichconst, opsmode, satrec.satnum, (satrec.jdsatepoch + satrec.jdsatepochF) - 2433281.5, satrec.bstar,
-			satrec.ndot, satrec.nddot, satrec.ecco, satrec.argpo, satrec.inclo, satrec.mo, satrec.no_kozai,
-			satrec.nodeo, satrec);
-	} // twoline2rv
-
 
 	// older sgp4ext methods
 	/* -----------------------------------------------------------------------------
@@ -3162,92 +2856,6 @@ namespace SGP4Funcs
 		minute = (int)floor(temp);
 		sec = (temp - minute) * 60.0;
 	}  // days2mdhms
-
-	/* -----------------------------------------------------------------------------
-	*
-	*                           procedure invjday_SGP4
-	*
-	*  this procedure finds the year, month, day, hour, minute and second
-	*  given the julian date. tu can be ut1, tdt, tdb, etc.
-	*
-	*  algorithm     : set up starting values
-	*                  find leap year - use 1900 because 2000 is a leap year
-	*                  find the elapsed days through the year in a loop
-	*                  call routine to find each individual value
-	*
-	*  author        : david vallado                  719-573-2600    1 mar 2001
-	*
-	*  inputs          description                    range / units
-	*    jd          - julian date                    days from 4713 bc
-	*    jdfrac      - julian date fraction into day  days from 4713 bc
-	*
-	*  outputs       :
-	*    year        - year                           1900 .. 2100
-	*    mon         - month                          1 .. 12
-	*    day         - day                            1 .. 28,29,30,31
-	*    hr          - hour                           0 .. 23
-	*    min         - minute                         0 .. 59
-	*    sec         - second                         0.0 .. 59.999
-	*
-	*  locals        :
-	*    days        - day of year plus fractional
-	*                  portion of a day               days
-	*    tu          - julian centuries from 0 h
-	*                  jan 0, 1900
-	*    temp        - temporary double values
-	*    leapyrs     - number of leap years from 1900
-	*
-	*  coupling      :
-	*    days2mdhms  - finds month, day, hour, minute and second given days and year
-	*
-	*  references    :
-	*    vallado       2013, 203, alg 22, ex 3-13
-	* --------------------------------------------------------------------------- */
-
-	void    invjday_SGP4
-		(
-		double jd, double jdfrac,
-		int& year, int& mon, int& day,
-		int& hr, int& minute, double& sec
-		)
-	{
-		int leapyrs;
-		double dt, days, tu, temp;
-
-		// check jdfrac for multiple days
-		if (fabs(jdfrac) >= 1.0)
-		{
-			jd = jd + floor(jdfrac);
-			jdfrac = jdfrac - floor(jdfrac);
-		}
-
-		// check for fraction of a day included in the jd
-		dt = jd - floor(jd) - 0.5;
-		if (fabs(dt) > 0.00000001)
-		{
-			jd = jd - dt;
-			jdfrac = jdfrac + dt;
-		}
-
-		/* --------------- find year and days of the year --------------- */
-		temp = jd - 2415019.5;
-		tu = temp / 365.25;
-		year = 1900 + (int)floor(tu);
-		leapyrs = (int)floor((year - 1901) * 0.25);
-
-		days = floor(temp - ((year - 1900) * 365.0 + leapyrs));
-
-		/* ------------ check for case of beginning of a year ----------- */
-		if (days + jdfrac < 1.0)
-		{
-			year = year - 1;
-			leapyrs = (int)floor((year - 1901) * 0.25);
-			days = floor(temp - ((year - 1900) * 365.0 + leapyrs));
-		}
-
-		/* ----------------- find remaining data  ------------------------- */
-		days2mdhms_SGP4(year, days + jdfrac, mon, day, hr, minute, sec);
-	}  // invjday
 
 
 } // namespace SGP4Funcs
