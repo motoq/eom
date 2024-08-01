@@ -614,7 +614,7 @@ VintiProp::VintiProp(const std::string& orbit_name,
 
    double snw = sin(tra);
    double cnw = cos(tra);
-   double ecccnw = ecc*cnw;
+   //double ecccnw = ecc*cnw;
 
    /*
     *  Is there such a thing call parabolic trajectory in the OSC system? 
@@ -640,15 +640,12 @@ VintiProp::VintiProp(const std::string& orbit_name,
    double w6 = x71*tra + x72*snw + x73*v3 + x74*v4 + x75*v5 + x76*v6 + x77*v7;
 
    double uhat {};
-   double chat {};
    if (fabs(gamma) >= 1.0e-14)              /* Circle, ellipse, hyperbloa */
    {  
-      chat = (cneca - 1.0)/gamma;
       uhat = (sneca - eca)/gams3;
    }
    else                                     /*  Parabola */
    {
-      chat = xhat0*xhat0/2.0;
       uhat = xhat0*xhat0*xhat0/6.0;
    }
 

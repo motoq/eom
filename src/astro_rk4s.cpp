@@ -45,7 +45,6 @@ JulianDate Rk4s::step()
 {
   using namespace utl_units;
 
-  OdeEvalMethod dx_method = OdeEvalMethod::predictor;
   const double ds {m_ds/16.0};
   const JulianDate jd0 {m_jd0};
 

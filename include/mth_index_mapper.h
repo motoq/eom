@@ -126,12 +126,14 @@ unsigned long IndexMapper<T>::getIndex(const T& val) const
   }
   auto ndx0 = ndx;
   bool found {false};
-  while (ndx >= 0  &&  !found) {
+  while (!found) {
     if (m_blocks[ndx].second < val) {
       break;
     }
     if (m_blocks[ndx].first <= val  &&  val <= m_blocks[ndx].second) {
       found = true;
+    } else if (ndx == 0) {
+      break;
     } else {
       ndx--;
     }

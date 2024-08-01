@@ -13,7 +13,7 @@ project (eomx)
 # is appropriate, otherwise, leave the following "set" line commented
 # out:
 
-set(USE_GENPL FALSE)
+set(USE_GENPL TRUE)
 
 if (${USE_GENPL})
   add_definitions(-DGENPL)
@@ -118,10 +118,9 @@ else()
 endif()
 
 if (MSVC)
-    # warning level 4 and all warnings as errors
-  add_compile_options(/W4 /WX)
+  target_compile_options(eom PRIVATE /W4)
 else()
-  add_compile_options(-Wall -Wextra -pedantic -Wunused)
+  target_compile_options(eom PRIVATE -Wall -Wextra -pedantic -Wunused)
 endif()
 
 # SOFA headers are in "~/include" - update path as needed

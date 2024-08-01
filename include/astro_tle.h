@@ -43,6 +43,11 @@ public:
   Tle(const std::string& tle1, const std::string& tle2);
 
   /**
+   * @return  Minimum length of each TLE line required by parser
+   */
+  static unsigned int minimumLineLength() { return 63; }
+
+  /**
    * Same as constructor, but with an existing TLE object.
    */
   void set(const std::string& tle1, const std::string& tle2);

@@ -64,7 +64,7 @@ void GpConstraints::setMinMaxAz(double min_az, double max_az)
 }
 
 
-bool GpConstraints::isVisible(const JulianDate& jd, 
+bool GpConstraints::isVisible(const JulianDate&, 
                               const GroundPoint& gp,
                               const Eigen::Matrix<double, 3, 1>& pos) const
 {
@@ -72,7 +72,6 @@ bool GpConstraints::isVisible(const JulianDate& jd,
 
   bool axs_good = rae.sinel >= m_sin_min_el  &&  rae.sinel <= m_sin_max_el;
 
-  bool az_good {true};
   if (m_check_az) {
     bool az_good {true};
     if (m_min_az < m_max_az) {

@@ -36,10 +36,10 @@ Tle::Tle(const std::string& tle1, const std::string& tle2)
 
 void Tle::set(const std::string& tle1, const std::string& tle2)
 {
-  if (tle1.length() < 63) {
+  if (tle1.length() < Tle::minimumLineLength()) {
     throw std::invalid_argument("Tle::Tle(): Invalid TLE line 1 length: " +
                                  std::to_string(tle1.length()));
-  } else if (tle2.length() < 63) {
+  } else if (tle2.length() < Tle::minimumLineLength()) {
     throw std::invalid_argument("Tle::Tle(): Invalid TLE line 2 length: " +
                                  std::to_string(tle2.length()));
   }

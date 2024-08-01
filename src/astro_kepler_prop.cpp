@@ -101,8 +101,6 @@ Eigen::Matrix<double, 6, 1> KeplerProp::getStateVector(const JulianDate& jd,
    double dt {phy_const::tu_per_day*(jd - jd0)};
      // Propagated state vector
    std::array<double, 6> x1;
-     // Universal variable for state transition
-   double x {0.0};
 
    if(std::fabs(dt) < phy_const::epsdt)
    {
@@ -113,7 +111,7 @@ Eigen::Matrix<double, 6, 1> KeplerProp::getStateVector(const JulianDate& jd,
       }
    } else {
       double dfx, u1, u2, u3;
-      x = f_and_g(dt, dfx, u1, u2, u3);
+      f_and_g(dt, dfx, u1, u2, u3);
       /*
        *  Kepler solution  converged
        *  Coefficients and constants associated with the partials

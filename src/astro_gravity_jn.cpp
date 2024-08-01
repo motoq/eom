@@ -70,6 +70,7 @@ Eigen::Matrix<double, 3, 1>
       acc(1) += c1*rj*(1.0 - c2*(2.0 - c3));
       acc(2) += c1*rk*(5.0 - c2*(10.0/3.0 - c3));
     }
+      [[fallthrough]];
     case 3:
     {
       double invr7 {invr2*invr5};
@@ -79,6 +80,7 @@ Eigen::Matrix<double, 3, 1>
       acc(1) -= c1*rj*rk*(3.0 - c2);
       acc(2) -= c1*(rk2*(6.0 - c2) - 3.0*rmag2/5.0);
     }
+      [[fallthrough]];
     case 2:
     {
       double c1 {1.5*phy_const::j2*invr5};

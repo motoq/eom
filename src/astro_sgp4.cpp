@@ -51,22 +51,22 @@ Sgp4::Sgp4(const std::string& orbit_name,
   }
 
     // radians/minute per rev/day = 2pi/1440
-  double mpr_per_dpd {utl_const::tpi*utl_const::day_per_min};
+  double rpm_per_rpd {utl_const::tpi*utl_const::day_per_min};
     // Initialize SATREC for orbit propagation
   SGP4Funcs::sgp4init(gctype,
                       opsmode,
                       m_tle.getSatN().data(),
                       m_tle.getTleSgpEpoch(),
                       m_tle.getBstar(),
-                      mpr_per_dpd*utl_const::day_per_min*
+                      rpm_per_rpd*utl_const::day_per_min*
                           m_tle.getMeanMotionRate(),
-                      mpr_per_dpd*utl_const::day_per_min*utl_const::day_per_min*
+                      rpm_per_rpd*utl_const::day_per_min*utl_const::day_per_min*
                           m_tle.getMeanMotionSecondRate(),
                       m_tle.getEccentricity(),
                       utl_const::rad_per_deg*m_tle.getArgumentOfPerigee(),
                       utl_const::rad_per_deg*m_tle.getInclination(),
                       utl_const::rad_per_deg*m_tle.getMeanAnomaly(),
-                      mpr_per_dpd*m_tle.getMeanMotion(),
+                      rpm_per_rpd*m_tle.getMeanMotion(),
                       utl_const::rad_per_deg*m_tle.getRaan(),
                       m_satrec);
 

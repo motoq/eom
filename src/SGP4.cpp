@@ -156,11 +156,10 @@ static void initl
 // sgp4fix assin xke and j2
 // gravconsttype whichconst,
 double xke, double j2,
-double ecco, double epoch, double inclo, double& no,
-char& method,
-double& ainv, double& ao, double& con41, double& con42, double& cosio,
+double ecco, double epoch, double inclo, double no_kozai, char opsmode,
+char& method, double& ainv, double& ao, double& con41, double& con42, double& cosio,
 double& cosio2, double& eccsq, double& omeosq, double& posq,
-double& rp, double& rteosq, double& sinio, double& gsto, char opsmode
+double& rp, double& rteosq, double& sinio, double& gsto, double& no_unkozai
 );
 
 }
@@ -244,7 +243,7 @@ namespace SGP4Funcs
 		double si3, double sl2, double sl3, double sl4, double t,
 		double xgh2, double xgh3, double xgh4, double xh2, double xh3,
 		double xi2, double xi3, double xl2, double xl3, double xl4,
-		double zmol, double zmos, double inclo,
+		double zmol, double zmos, double,
 		char init,
 		double& ep, double& inclp, double& nodep, double& argpp, double& mp,
 		char opsmode
@@ -1219,7 +1218,7 @@ namespace SGP4Funcs
 		// sgp4fix just pass in xke and j2
 		// gravconsttype whichconst, 
 		double xke, double j2,
-		double ecco, double epoch, double inclo, double no_kozai, char opsmode,
+		double ecco, double epoch, double inclo, double no_kozai, char,
 		char& method, double& ainv, double& ao, double& con41, double& con42, double& cosio,
 		double& cosio2, double& eccsq, double& omeosq, double& posq,
 		double& rp, double& rteosq, double& sinio, double& gsto, double& no_unkozai
