@@ -1,8 +1,13 @@
 #ifndef _SGP4h_
 #define _SGP4h_
+
 /*
  * Modified from Vallado's original version primarily to remove
- * warnings.
+ * warnings with the compile time flags in use for this project,
+ * along with taking out functions not directly needed by sgp4init()
+ * or sgp4().
+ *
+ * The original is available from CelesTrak ((celestrak.org).
  *
  * Kurt Motekew  2024/07/27
  */
@@ -54,13 +59,6 @@
 *                     80  norad
 *                           original baseline
 *       ----------------------------------------------------------------      */
-
-#pragma once
-
-#include <math.h>
-#include <stdio.h>
-#include <string.h>
-#include <iostream>
 
 #define SGP4Version  "SGP4 Version 2020-07-13"
 
@@ -123,9 +121,6 @@ typedef struct elsetrec
 namespace SGP4Funcs 
 {
 
-	//	public class SGP4Class
-	//	{
-
 	bool sgp4init
 		(
 		gravconsttype whichconst, char opsmode, const char satn[10], const double epoch,
@@ -155,82 +150,11 @@ namespace SGP4Funcs
 		);
 
 	// older sgp4io methods
-	void twoline2rv
-		(
-		char      longstr1[130], char longstr2[130],
-		char      typerun, char typeinput, char opsmode,
-		gravconsttype       whichconst,
-		double& startmfe, double& stopmfe, double& deltamin,
-		elsetrec& satrec
-		);
 
 	// older sgp4ext methods
 	double  gstime_SGP4
 		(
 		double jdut1
-		);
-
-	double  sgn_SGP4
-		(
-		double x
-		);
-
-	double  mag_SGP4
-		(
-		double x[3]
-		);
-
-	void    cross_SGP4
-		(
-		double vec1[3], double vec2[3], double outvec[3]
-		);
-
-	double  dot_SGP4
-		(
-		double x[3], double y[3]
-		);
-
-	double  angle_SGP4
-		(
-		double vec1[3],
-		double vec2[3]
-		);
-
-	void    newtonnu_SGP4
-		(
-		double ecc, double nu,
-		double& e0, double& m
-		);
-
-	double  asinh_SGP4
-		(
-		double xval
-		);
-
-	void    rv2coe_SGP4
-		(
-		double r[3], double v[3], double mus,
-		double& p, double& a, double& ecc, double& incl, double& omega, double& argp,
-		double& nu, double& m, double& arglat, double& truelon, double& lonper
-		);
-
-	void    jday_SGP4
-		(
-		int year, int mon, int day, int hr, int minute, double sec,
-		double& jd, double& jdFrac
-		);
-
-	void    days2mdhms_SGP4
-		(
-		int year, double days,
-		int& mon, int& day, int& hr, int& minute, double& sec
-		);
-
-	void    invjday_SGP4
-		(
-		double jd, double jdFrac,
-		int& year, int& mon, int& day,
-		int& hr, int& minute, double& sec
 		);
 
 

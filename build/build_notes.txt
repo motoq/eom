@@ -1,3 +1,5 @@
+This file has some helpful reminders while also forcing the build
+directory to stay put in the git repo.
 
 cmake ..
 make
