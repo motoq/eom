@@ -66,7 +66,6 @@
 
 #include <cmath>
 #include <cstring>
-#include <cstdio>
 
 #include "SGP4.h"
 
@@ -2107,7 +2106,7 @@ namespace SGP4Funcs
 		switch (whichconst)
 		{
 			// -- wgs-72 low precision str#3 constants --
-		case wgs72old:
+		case gravconsttype::wgs72old:
 			mus = 398600.79964;        // in km3 / s2
 			radiusearthkm = 6378.135;     // km
 			xke = 0.0743669161;        // reciprocal of tumin
@@ -2118,7 +2117,7 @@ namespace SGP4Funcs
 			j3oj2 = j3 / j2;
 			break;
 			// ------------ wgs-72 constants ------------
-		case wgs72:
+		case gravconsttype::wgs72:
 			mus = 398600.8;            // in km3 / s2
 			radiusearthkm = 6378.135;     // km
 			xke = 60.0 / sqrt(radiusearthkm*radiusearthkm*radiusearthkm / mus);
@@ -2128,7 +2127,7 @@ namespace SGP4Funcs
 			j4 = -0.00000165597;
 			j3oj2 = j3 / j2;
 			break;
-		case wgs84:
+		case gravconsttype::wgs84:
 			// ------------ wgs-84 constants ------------
 			mus = 398600.5;            // in km3 / s2
 			radiusearthkm = 6378.137;     // km
@@ -2138,9 +2137,6 @@ namespace SGP4Funcs
 			j3 = -0.00000253215306;
 			j4 = -0.00000161098761;
 			j3oj2 = j3 / j2;
-			break;
-		default:
-			fprintf(stderr, "unknown gravity option (%d)\n", whichconst);
 			break;
 		}
 

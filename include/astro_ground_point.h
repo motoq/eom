@@ -52,8 +52,8 @@ public:
    * @param  name  Name of ground point, optional, defaults to empty
    *               string
    */
-  GroundPoint(double lat, double lon, double alt,
-              const std::string& name = "");
+  explicit GroundPoint(double lat = 0.0, double lon = 0.0, double alt = 0.0,
+                       const std::string& name = "");
 
   /**
    * Initialize with Cartesian earth fixed vector

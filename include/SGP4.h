@@ -63,12 +63,11 @@
 #define SGP4Version  "SGP4 Version 2020-07-13"
 
 // -------------------------- structure declarations ----------------------------
-typedef enum
-{
+enum class gravconsttype {
   wgs72old,
   wgs72,
   wgs84
-} gravconsttype;
+};
 
 typedef struct elsetrec
 {
