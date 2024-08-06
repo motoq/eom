@@ -208,7 +208,7 @@ std::string Tle::getLineTwo() const
 }
 
 
-std::string Tle::getSatName() const
+std::string Tle::getName() const
 {
   return m_satn;
 }
@@ -314,7 +314,7 @@ std::ostream& operator<<(std::ostream& out, const Tle& tle)
   }
   return out << tle.getEpoch().to_str() << '\n' <<
                 tle.getLineOne() << '\n' << tle.getLineTwo() << '\n' <<
-                "  Designator:    " << tle.getSatName() << '\n' <<
+                "  Designator:    " << tle.getName() << '\n' <<
                 "  Year:DOY:      " << year << ':' <<
                                        std::fixed <<
                                        std::setprecision(8) <<

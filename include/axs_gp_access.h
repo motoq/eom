@@ -44,8 +44,11 @@ public:
   /**
    * Computes all remaining access over the entire simulation time and
    * stores them
+   *
+   * @return  true if at least one access interval (since the last
+   *          computed) was present.
    */
-  virtual void findAllAccesses() = 0;
+  virtual bool findAllAccesses() = 0;
 
   /**
    * @return  Name (string identifier) associated with ground point

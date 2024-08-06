@@ -89,14 +89,19 @@ bool GpAccessDebug::findNextAccess()
 }
 
 
-void GpAccessDebug::findAllAccesses()
+bool GpAccessDebug::findAllAccesses()
 {
+  bool found_interval {false};
+
     // Locate next interval and store
   while (findNextAccess())
   {
+    found_interval = true;
       // Set time to search for next access interval
     m_jd = m_intervals.back().set + jd_inc;
   }
+
+  return found_interval;
 }
 
 

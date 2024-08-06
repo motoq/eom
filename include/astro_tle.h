@@ -73,7 +73,7 @@ public:
   /**
    * @return  Alphanumeric satellite designator
    */
-  std::string getSatName() const;
+  std::string getName() const;
 
   /**
    * @return  Alphanumeric satellite designator in form more compatible
