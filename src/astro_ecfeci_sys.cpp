@@ -17,6 +17,7 @@
 #include <astro_eop_sys.h>
 
 #include <sofa.h>
+#include <sofam.h>
 
 #include <Eigen/Dense>
 #include <Eigen/Geometry>
@@ -90,7 +91,9 @@ EcfEciSys::EcfEciSys(const JulianDate& startTime,
   }
   while (jd <= jdStop) {
     ecf_eci f2i;
+    meme_eci i2i;
     f2i.mjd2000 = jd.getMjd2000();
+    i2i.mjd2000 = f2i.mjd2000;
     eop_record eop;
     auto jdTT = ls.utc2tt(jd);
       // Pole locations for BPN
@@ -124,11 +127,26 @@ EcfEciSys::EcfEciSys(const JulianDate& startTime,
     iauTr(mod2j2000, mod2j2000);
     Eigen::Matrix3d mp76 = from3x3(mod2j2000);
     Eigen::Quaterniond qp76(mp76);
-    f2i.p76 = qp76;
-      // Store record
+    i2i.p76 = qp76;
+      // Store records
     f2iData.push_back(f2i);
+    memeData.push_back(i2i);
 
     jd += rate_days;
+  }
+    // Frame Bias - time independent
+  {
+    double gamb, phib, psib, eps;
+      // J2000 to GCRF
+    double rbt[3][3];
+      // Bias-precession - first compute GCRF to J2000
+    iauPfw06(DJM0, DJM00, &gamb, &phib, &psib, &eps);
+    iauFw2m(gamb, phib, psib, eps, rbt);
+      // Then the transpose for J2000 to GCRF
+    iauTr(rbt, rbt);
+    Eigen::Matrix3d mrbt = from3x3(rbt);
+    Eigen::Quaterniond qrbt(mrbt);
+    bt = qrbt;
   }
     // Size fixed after initialization
   nfi = static_cast<unsigned long>(f2iData.size());
@@ -161,8 +179,7 @@ ecf_eci EcfEciSys::getEcfEciData(const JulianDate& utc) const
     double lod {f2i1.lod + dt*(f2i2.lod - f2i1.lod)};
     Eigen::Quaterniond bpn {f2i1.bpn.slerp(dt, f2i2.bpn)};
     Eigen::Quaterniond pm {f2i1.pm.slerp(dt, f2i2.pm)};
-    Eigen::Quaterniond p76 {f2i1.p76.slerp(dt, f2i2.p76)};
-    ecf_eci f2i {mjd2000, ut1mutc, lod, pm, bpn, p76};
+    ecf_eci f2i {mjd2000, ut1mutc, lod, pm, bpn};
     return f2i;
   } else {
     return f2i1;
@@ -335,8 +352,45 @@ Eigen::Matrix<double, 3, 1>
 EcfEciSys::mod2eci(const JulianDate& utc,
                    const Eigen::Matrix<double, 3, 1>& mod) const
 {
-  ecf_eci f2i {this->getEcfEciData(utc)};
-  return f2i.p76*mod;
+    // Check for valid date
+  double days {utc - jdStart};
+  if (days < 0.0  ||  jdStop - utc < 0.0) {
+    throw std::out_of_range("EcfEciSys::mod2eci() Time out of range");
+  }
+
+    // Always need first index
+  unsigned long int ndx1 {static_cast<unsigned long int>(days/rate_days)};
+  const meme_eci& i2i1 = memeData[ndx1];
+
+    // Get second data set if interpolating - otherwise,
+    // return data less than or equal to requested time
+  if (nfi == 1UL) {
+    return bt*memeData[0UL].p76*mod;
+  } else if (interpolate_bpnpm) {
+    double mjd2000 {utc.getMjd2000()};
+    double dt_days {mjd2000 - i2i1.mjd2000};
+    double dt {dt_days/rate_days};
+    unsigned long int ndx2 {ndx1 + 1UL};
+    const meme_eci& i2i2 = memeData[ndx2];
+    Eigen::Quaterniond p76 {i2i1.p76.slerp(dt, i2i2.p76)};
+    return bt*p76*mod;
+  } else {
+    return bt*i2i1.p76*mod;
+  }
+}
+
+
+Eigen::Matrix<double, 3, 1>
+EcfEciSys::j20002gcrf(const Eigen::Matrix<double, 3, 1>& j2000) const
+{
+  return bt*j2000;
+}
+
+
+Eigen::Matrix<double, 3, 1>
+EcfEciSys::gcrf2j2000(const Eigen::Matrix<double, 3, 1>& gcrf) const
+{
+  return bt.conjugate()*gcrf;
 }
 
 

@@ -31,6 +31,13 @@ struct ecf_eci {
   double lod {0.0};          ///< Length of day, TU (for TIRF to CIRF)
   Eigen::Quaterniond pm;     ///< Polar motion; ITRF to TIRF
   Eigen::Quaterniond bpn;    ///< Frame bias, precession, nutation; CIRF to GCRF
+};
+
+/**
+ * Equinox based transformations
+ */
+struct meme_eci {
+  double mjd2000 {0.0};      ///< Modified Julian Date w.r.t. 2000, days
   Eigen::Quaterniond p76;    ///< Mean of date to IAU 76 J2000 precession
 };
 
@@ -223,12 +230,9 @@ public:
            const Eigen::Matrix<double, 3, 1>& posi) const;
 
   /**
-   * Convert a mean of date position or velocity vector to ECI.
-   * The conversion is actually to a J2000 vector given systems
-   * using MOD most likely are not accurate enough to need to account
-   * for the J2000/GCRF frame bias transformation.
+   * Convert a mean of date position or velocity vector to ECI (GCRF).
    *
-   * @param  utc  UTC time of position vector
+   * @param  utc  UTC time
    * @param  mod  Cartesian MOD vector
    *
    * @return  ECI vector
@@ -239,13 +243,40 @@ public:
   mod2eci(const JulianDate& utc,
          const Eigen::Matrix<double, 3, 1>& mod) const;
 
+  /**
+   * Convert a J2000 position or velocity vector to GCRF (ECI).
+   * This function simply applies the frame bias in the J2000 to GCRF
+   * direction.
+   *
+   * @param  j2000  Cartesian J2000 vector
+   *
+   * @return  GCRF (ECI) vector
+   */
+  Eigen::Matrix<double, 3, 1>
+  j20002gcrf(const Eigen::Matrix<double, 3, 1>& j2000) const;
+
+  /**
+   * Convert a GCRF (ECI) position or velocity vector to J2000.
+   *
+   * @param  GCRF (ECI) Cartesian J2000 vector
+   *
+   * @return  j2000  GCRF (ECI) Cartesian vector
+   */
+  Eigen::Matrix<double, 3, 1>
+  gcrf2j2000(const Eigen::Matrix<double, 3, 1>& gcrf) const;
+
 private:
   JulianDate jdStart;
   JulianDate jdStop;
   double rate_days {0.0};
   unsigned long nfi {0UL};
   bool interpolate_bpnpm {true};
+
   std::vector<ecf_eci> f2iData;
+  std::vector<meme_eci> memeData;
+
+    // J2000 to GCRF (frame bias)
+  Eigen::Quaterniond bt;
 };
 
 

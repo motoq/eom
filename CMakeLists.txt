@@ -13,7 +13,7 @@ project (eomx)
 # is appropriate, otherwise, leave the following "set" line commented
 # out:
 
-set(USE_GENPL FALSE)
+set(USE_GENPL TRUE)
 
 if (${USE_GENPL})
   add_definitions(-DGENPL)
