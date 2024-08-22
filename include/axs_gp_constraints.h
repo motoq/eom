@@ -10,10 +10,13 @@
 #define AXS_GP_CONSTRAINTS_H
 
 #include <cmath>
+#include <memory>
+#include <vector>
 
 #include <Eigen/Dense>
 
 #include <utl_const.h>
+#include <utl_constraint_function.h>
 #include <cal_julian_date.h>
 #include <astro_ground_point.h>
 
@@ -117,6 +120,14 @@ public:
   }
 
   /**
+   * Add a time based constraint to be evaluated during access analysis.
+   *
+   * @param  constraint  Time dependent constraint function
+   */
+  void addConstraint(
+      std::shared_ptr<const ConstraintFunction<JulianDate>> constraint);
+
+  /**
    * Check for satisfaction of all geometric and time dependent constraints.
    *
    * @param  jd   Time of interest
@@ -136,6 +147,9 @@ private:
   double m_max_az {utl_const::tpi};
 
   bool m_check_az {false};
+
+  std::vector<
+      std::shared_ptr<const ConstraintFunction<JulianDate>>> m_constraints;
 };
 
 

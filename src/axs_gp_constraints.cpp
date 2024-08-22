@@ -8,16 +8,18 @@
 
 #include <axs_gp_constraints.h>
 
-#include <utl_const.h>
-#include <cal_julian_date.h>
-#include <obs_rng_az_sinel.h>
-#include <astro_ground_point.h>
+#include <cmath>
+#include <memory>
+#include <string>
+#include <stdexcept>
 
 #include <Eigen/Dense>
 
-#include <cmath>
-#include <string>
-#include <stdexcept>
+#include <utl_const.h>
+#include <utl_constraint_function.h>
+#include <cal_julian_date.h>
+#include <obs_rng_az_sinel.h>
+#include <astro_ground_point.h>
 
 namespace eom {
 
@@ -64,7 +66,14 @@ void GpConstraints::setMinMaxAz(double min_az, double max_az)
 }
 
 
-bool GpConstraints::isVisible(const JulianDate&, 
+void GpConstraints::addConstraint(
+    std::shared_ptr<const ConstraintFunction<JulianDate>> constraint)
+{
+  m_constraints.push_back(std::move(constraint));
+}
+
+
+bool GpConstraints::isVisible(const JulianDate& jd, 
                               const GroundPoint& gp,
                               const Eigen::Matrix<double, 3, 1>& pos) const
 {
@@ -82,6 +91,15 @@ bool GpConstraints::isVisible(const JulianDate&,
     axs_good = axs_good && az_good;
   }
 
+    // If visible, further refine access with time dependent
+    // constraints.  Exit on first failure
+  if (axs_good) {
+    for (const auto& cnst : m_constraints) {
+      if (!cnst->isSatisfied(jd)) {
+        return false;
+      }
+    }
+  }
 
   return axs_good;
 }
