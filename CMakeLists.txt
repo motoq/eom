@@ -87,8 +87,10 @@ set(SOURCES
   src/astro_vinti.cpp
   src/astro_vinti_prop.cpp
   src/axs_gp_access_debug.cpp
+  src/axs_gp_access_def.cpp
   src/axs_gp_access_std.cpp
   src/axs_gp_constraints.cpp
+  src/axs_sun_constraint.cpp
   src/eomx_gen_gp_accesses.cpp
   src/eomx_gen_ephemerides.cpp
   src/eomx_parse_input_file.cpp

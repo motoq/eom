@@ -17,6 +17,15 @@
 
 static double gd2jd(int iyear, int imonth, int iday);
 
+namespace {
+    // Limit on jd2gd recursion
+  constexpr int gd_max_itr {5};
+    // For conversions to Gregorian Date, use 1 nsec to push
+    // past truncation issues leading to 24 hours or 60 mintues
+    // (1d 24:60:60.0 vs. 2d 00:01:00)
+  constexpr double gd_tol {cal_const::day_per_sec*1.0e-9};
+}
+
 namespace eom {
 
 JulianDate::JulianDate(const GregDate& gd, int hr, int min, double sec)
@@ -192,13 +201,33 @@ void JulianDate::normalize()
  *   @param   hour     Hour of day, 0 <= hour < 24                     (output)
  *   @param   minutes  Minutes, 0 <= minutes < 60                      (output)
  *   @param   seconds  Seconds, 0 <= seconds <= 60 (60th for leapsec)  (output)
+ *   @param   iter     Used to prevent infinite recursion
  */
 void JulianDate::jd2gd(int& year, int& month, int& day,
-                       int& hour, int& minutes, double& seconds) const
+                       int& hour, int& minutes, double& seconds,
+                       int iter) const
 {
     // Must get jdHi and jdLo in proper form first
   JulianDate tmpJd = *this;
   tmpJd.normalize();
+
+    // Compute hours, minutes, and seconds first to check that
+    // truncation does not occur on 24 hours, 60 minutes, etc.
+  double hours_left {cal_const::hr_per_day*tmpJd.jdLo};
+  hour = static_cast<int>(hours_left);
+
+  double minutes_left {60.0*(hours_left - hour)};
+  minutes = static_cast<int>(minutes_left);
+
+  seconds = 60.0*(minutes_left - minutes);
+
+    // Recursion to handle bad hour, mintues, or seconds truncation
+  if (iter < gd_max_itr  &&
+      (hour == 24  ||  minutes == 60  ||  seconds >= 60.0)) {
+    tmpJd += gd_tol;
+    tmpJd.jd2gd(year, month, day, hour, minutes, seconds, ++iter);
+    return;
+  }
 
   long jd {1L + static_cast<long>(tmpJd.jdHi)};
   long i, j, k, m, n;
@@ -217,14 +246,6 @@ void JulianDate::jd2gd(int& year, int& month, int& day,
   year  = i;
   month = j;
   day   = k;
-
-  double hours_left {cal_const::hr_per_day*tmpJd.jdLo};
-  hour = static_cast<int>(hours_left);
-
-  double minutes_left {60.0*(hours_left - hour)};
-  minutes = static_cast<int>(minutes_left);
-
-  seconds = 60.0*(minutes_left - minutes);
 }
 
 

@@ -223,7 +223,8 @@ private:
    *   @param   seconds  Seconds, 0 <= seconds < 60                     (output)
    */
   void jd2gd(int& year, int& month, int& day,
-             int& hour, int& minutes, double& seconds) const;
+             int& hour, int& minutes, double& seconds,
+             int iter = 0) const;
 
   double jdHi {cal_const::j2000};           // Days
   double jdLo {0.0};                        // Fraction of a day

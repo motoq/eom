@@ -27,6 +27,7 @@ GroundPoint Eglin LLA  30.57 -86.21 34.7;
 Access  GroundPointAccess  Standard  leosat  Eglin
                            MinimumElevation 1.0
                            MaximumElevation 90.0
+                           SunConstraint MaximumElevation -5.0
                            MinimumMaximumAzimuth 145.0 215.0;
 
 end;

@@ -20,6 +20,11 @@ enum class AccessModel {
   dbg                             ///< Debug model (very robust, slooow)
 };
 
+struct aux_gp_constraints {
+  bool use_max_sun_el {false};
+  double max_sun_el {0.0};
+};
+
 /**
  * Holds parameters defining an access analysis request between an orbit
  * and a ground point.
@@ -37,15 +42,18 @@ public:
    * @param  gp_name     Name of ground point for which access is to be
    *                     generated
    * @param  xcs         Access constraints
+   * @param  axcs        Auxiliary access constraints
    * @param  mdl         Optional specifier of which algorithm to use
    *                     when locating and refining access intervals
    */
   GpAccessDef(const std::string& orbit_name,
               const std::string& gp_name,
               const GpConstraints& xcs,
+              const aux_gp_constraints& axcs,
               AccessModel  mdl = AccessModel::std) : m_orbit_name {orbit_name},
                                                      m_gp_name {gp_name},
                                                      m_xcs {xcs},
+                                                     m_axcs {axcs},
                                                      m_model {mdl}
   {
   }
@@ -53,28 +61,43 @@ public:
   /**
    * @return  Name of orbit for which access is to be generated
    */
-  std::string getOrbitName() const noexcept { return m_orbit_name; }
+  std::string getOrbitName() const noexcept;
 
   /**
    * @return  Name of ground point for which access is to be generated
    */
-  std::string getGpName() const noexcept { return m_gp_name; }
+  std::string getGpName() const noexcept;
 
   /**
    * @return  The access model algorithm type to use
    */
-  AccessModel getAccessModel() const noexcept { return m_model; }
+  AccessModel getAccessModel() const noexcept;
 
   /**
    * @return  Static (not dynamic) access constraints
    */
-  GpConstraints getConstraints() const noexcept { return m_xcs; }
+  GpConstraints getConstraints() const noexcept;
+
+  /**
+   * @return  True if auxiliary constraints need to be built
+   */
+  bool useAuxConstraints() const noexcept;
+
+  /**
+   * @return  Structure of auxiliary constraint settings
+   *          that will require furhter construction
+   */
+  aux_gp_constraints getAuxConstraints() const noexcept;
 
 private:
   std::string m_orbit_name;
   std::string m_gp_name;
   GpConstraints m_xcs;
+  aux_gp_constraints m_axcs;
   AccessModel m_model;
+
+    // Non-intrisic GpConstraint options
+  aux_gp_constraints m_aux_constraints;
 };
 
 

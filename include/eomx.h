@@ -100,6 +100,8 @@ eomx_gen_ephemerides(const eom_app::EomConfig& cfg,
  * @param  ground_points   Available ground point definitions
  * @param  ephemerides     Available ephemeris resources
  * @param  gp_access_defs  Access analysis requests to process
+ * @param  f2iSys          ECF/ECI transformation service that will be
+ *                         copied into each ephemeris type created.
  *
  * @return  GroundPointEphemeris key with GpAccess value
  *
@@ -113,6 +115,7 @@ eomx_gen_gp_accesses(
                              std::shared_ptr<eom::GroundPoint>>& ground_points,
     const std::unordered_map<std::string,
                              std::shared_ptr<eom::Ephemeris>>& ephemerides,
-    const std::vector<eom::GpAccessDef>& gp_access_defs);
+    const std::vector<eom::GpAccessDef>& gp_access_defs,
+    const std::shared_ptr<eom::EcfEciSys>& f2iSys);
 
 #endif

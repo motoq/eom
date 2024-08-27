@@ -1,6 +1,8 @@
 Misc
 ----
 
+Add doc on needing to update number of potential items to loop over
+
 Populate TLE in OrbitDef when initialized with non-tle
 
 Document access analysis.

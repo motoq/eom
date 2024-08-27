@@ -146,7 +146,8 @@ int main(int argc, char* argv[])
   auto gp_accessors = eomx_gen_gp_accesses(cfg,
                                            ground_points,
                                            ephemerides,
-                                           gp_access_defs);
+                                           gp_access_defs,
+                                           f2iSys);
 
     // Print access results here for now
   if (gp_access_defs.size() > 0) {
