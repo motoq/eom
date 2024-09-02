@@ -12,6 +12,20 @@
 
 namespace eom {
 
+GpAccessDef::GpAccessDef(const std::string& orbit_name,
+                         const std::string& gp_name,
+                         const GpConstraints& xcs,
+                         const aux_gp_constraints& axcs,
+                         AccessModel  mdl)
+{
+  m_orbit_name = orbit_name;
+  m_gp_name = gp_name;
+  m_xcs = xcs;
+  m_axcs = axcs;
+  m_model = mdl;
+}
+
+
 std::string GpAccessDef::getOrbitName() const noexcept
 {
   return m_orbit_name;
@@ -39,13 +53,13 @@ GpConstraints GpAccessDef::getConstraints() const noexcept
 // Bang together all constraint activation flags
 bool GpAccessDef::useAuxConstraints() const noexcept
 {
-  return m_aux_constraints.use_max_sun_el;
+  return m_axcs.use_max_sun_el;
 }
 
 
 aux_gp_constraints GpAccessDef::getAuxConstraints() const noexcept
 {
-  return m_aux_constraints;
+  return m_axcs;
 }
 
 

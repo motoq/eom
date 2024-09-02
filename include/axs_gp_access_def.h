@@ -50,13 +50,7 @@ public:
               const std::string& gp_name,
               const GpConstraints& xcs,
               const aux_gp_constraints& axcs,
-              AccessModel  mdl = AccessModel::std) : m_orbit_name {orbit_name},
-                                                     m_gp_name {gp_name},
-                                                     m_xcs {xcs},
-                                                     m_axcs {axcs},
-                                                     m_model {mdl}
-  {
-  }
+              AccessModel  mdl = AccessModel::std);
 
   /**
    * @return  Name of orbit for which access is to be generated
@@ -95,9 +89,6 @@ private:
   GpConstraints m_xcs;
   aux_gp_constraints m_axcs;
   AccessModel m_model;
-
-    // Non-intrisic GpConstraint options
-  aux_gp_constraints m_aux_constraints;
 };
 
 

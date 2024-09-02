@@ -15,12 +15,11 @@
 
 #include <astro_ecfeci_sys.h>
 #include <astro_ground_point.h>
-#include <astro_sun_meeus.h>
 #include <axs_gp_access_def.h>
 #include <axs_gp_access.h>
 #include <axs_gp_access_std.h>
 #include <axs_gp_access_debug.h>
-#include <axs_sun_constraint.h>
+#include <axs_gp_sun_constraint.h>
 
 #include <eom_config.h>
 
@@ -54,10 +53,12 @@ eomx_gen_gp_accesses(
       auto xcs = axs.getConstraints();
       if (axs.useAuxConstraints()) {
         eom::aux_gp_constraints axcs = axs.getAuxConstraints();
-        xcs.addConstraint(std::make_shared<eom::SunConstraint>(
-            eph_ptr,
-            std::make_shared<eom::SunMeeus>(f2iSys),
-            f2iSys));
+        if (axcs.use_max_sun_el) {
+          auto sunx = std::make_shared<eom::GpSunConstraint>(*gp_ptr,
+                                                             f2iSys);
+          sunx->setMaxElevation(axcs.max_sun_el);
+          xcs.addConstraint(sunx);
+        }
       }
         // Select access determination algorithm
       if (axs.getAccessModel() == eom::AccessModel::dbg) {
