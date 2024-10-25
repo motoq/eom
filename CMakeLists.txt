@@ -47,7 +47,7 @@ set(SOURCES
   src/parse_ground_point.cpp
   src/parse_orbit_def.cpp
   src/parse_rel_orbit_def.cpp
-  src/parse_slr_snx_stations.cpp
+  src/parse_sinex_stations.cpp
   src/parse_state_vector.cpp
   src/cal_greg_date.cpp
   src/cal_julian_date.cpp
@@ -64,6 +64,7 @@ set(SOURCES
   src/astro_gravity_jn.cpp
   src/astro_gravity_std.cpp
   src/astro_ground_point.cpp
+  src/astro_ground_station.cpp
   src/astro_hermite1_eph.cpp
   src/astro_hermite1_tc_eph.cpp
   src/astro_kepler.cpp

@@ -144,7 +144,7 @@ eom::GroundPoint
 parse_ground_point(std::deque<std::string>& tokens, const EomConfig& cfg);
 
 /**
- * Parse SNX formatted file of SLR (satellite laser ranging) stations.
+ * Parse SINEX formatted file of (tracking) station definitions.
  *
  * @param  tokens          Single token indicating the filename to be parsed.
  * @param  ground_points   Ground points
@@ -152,7 +152,7 @@ parse_ground_point(std::deque<std::string>& tokens, const EomConfig& cfg);
  * @throws  An invalid_argument exception if parsing fails.  No error is
  *          thrown if the list of tokens is not empty upon completion.
  */
-void parse_slr_snx_stations(
+void parse_sinex_stations(
     std::deque<std::string>& tokens,
     std::unordered_map<std::string,
                        std::shared_ptr<eom::GroundPoint>>& ground_points);

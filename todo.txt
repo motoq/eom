@@ -1,6 +1,12 @@
 Misc
 ----
 
+to_str() to to_string()
+
+snprintf() check
+
+Document azimuth is clockwise from north, 0 to 360
+
 Add doc on needing to update number of potential items to loop over
 
 Populate TLE in OrbitDef when initialized with non-tle

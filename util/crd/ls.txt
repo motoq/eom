@@ -1,8 +1,8 @@
 total 1536
--rw-------. 1 conan conan   26111 May  4 22:28 lageos2_20230101.np2
--rw-------. 1 conan conan    4971 May  4 22:43 README_CRD
--rw-------. 1 conan conan 1350133 May  5 01:21 lageos2_202301.np2
-drwx------. 2 conan conan    4096 May  5 06:12 include/
--rw-r--r--. 1 conan conan  172299 May  7 00:32 SLRF2020_POS+VEL_2023.10.02.snx
-drwx------. 2 conan conan    4096 Jul 28 15:56 src/
--rw-------. 1 conan conan       0 Jul 28 15:58 ls.txt
+ 26111 May  4 22:28 lageos2_20230101.np2
+  4971 May  4 22:43 README_CRD
+350133 May  5 01:21 lageos2_202301.np2
+  4096 May  5 06:12 include/
+172299 May  7 00:32 SLRF2020_POS+VEL_2023.10.02.snx
+  4096 Jul 28 15:56 src/
+     0 Jul 28 15:58 ls.txt

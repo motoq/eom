@@ -9,6 +9,13 @@ SimDuration Days 2;
 LeapSeconds 37;
 EcfEciRate Minutes 240;
 
+AngleUnits  Degrees;
+# 39,850 x 500 km alt, 1/2 deg/minute mean motion
+Orbit  heosat   Kepler1 GD 2021 11 12 17 00 00.0
+       KEP_T  GCRF  4.1632  0.741  63.4  230.0  270.0  0.0;
+# 36,000 km alt, 1/4 deg/minute mean motion
+Orbit  geosat   Kepler1  GD 2021 11 12 17 00 00.0
+       KEP_T  GCRF  6.61106  0.001  7.0  230.0  0.0  0.0;
 DistanceUnits Kilometers;
 TimeUnits Seconds;
 # 3022 x 550 km alt (0.151), 3 deg/minute mean motion
@@ -20,15 +27,24 @@ Orbit  leosat   SP  GD 2021 11 12 17 00 00.0
        GravityModel Jn 2;
 
 # From Vallado, 3rd edition
-AngleUnits  Degrees;
 DistanceUnits Meters;
 GroundPoint Eglin LLA  30.57 -86.21 34.7;
 
 Access  GroundPointAccess  Standard  leosat  Eglin
                            MinimumElevation 1.0
                            MaximumElevation 90.0
-                           SunConstraint MaximumElevation -5.0
-                           MinimumMaximumAzimuth 145.0 215.0;
+                           MinimumMaximumAzimuth 145.0 215.0
+                           SunConstraint MaximumElevation -5.0;
+Access  GroundPointAccess  Standard  heosat  Eglin
+                           MinimumElevation 1.0
+                           MaximumElevation 90.0
+                           MinimumMaximumAzimuth 145.0 215.0
+                           SunConstraint MaximumElevation -5.0;
+Access  GroundPointAccess  Standard  geosat  Eglin
+                           MinimumElevation 1.0
+                           MaximumElevation 90.0
+                           MinimumMaximumAzimuth 145.0 215.0
+                           SunConstraint MaximumElevation -5.0;
 
 end;
 #        tkr     attitude rate  tracked
