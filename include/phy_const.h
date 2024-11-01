@@ -84,7 +84,7 @@ namespace phy_const {
   constexpr double gm_sun {1.32712442099e20*du_per_m*du_per_m*du_per_m*
                                             sec_per_tu*sec_per_tu};
   /** Astronomical unit, TN36, DU */
-  constexpr double au {1.49597870700e11*du_per_m};
+  constexpr double du_per_au {1.49597870700e11*du_per_m};
 
   /** TN36 moon/earth mass ratio */
   constexpr double moon_per_earth_mass {1.0/81.3005690699};
