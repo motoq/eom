@@ -9,6 +9,7 @@
 #include <eom_parse.h>
 
 #include <algorithm>
+#include <cmath>
 #include <deque>
 #include <fstream>
 #include <sstream>
@@ -18,17 +19,28 @@
 
 #include <utl_const.h>
 #include <phy_const.h>
+#include <cal_greg_date.h>
 #include <cal_julian_date.h>
 #include <astro_ground_point.h>
 
 #include <iostream>
 
+/*
+ * @param  dts  Date time string, YY:doy:sssss, where YY is a 2 digit
+ *              year, doy is the day of the year (Jan 1 = 1), and sssss
+ *              is seconds into the day (0 to 86400).
+ */
+static eom::JulianDate get_sinex_date_time(std::string& dts);
+
 namespace {
-  constexpr double day_per_year {365.25};
+  constexpr double year_per_day {1.0/365.25};
+  constexpr double year_per_tu {year_per_day*phy_const::day_per_tu};
     // Uninitialized position is 1 AU
   constexpr double bad_pos {phy_const::m_per_du*phy_const::du_per_au};
+  constexpr double max_pos {0.1*bad_pos};
     // Uninitialized velocity is the circumference of the earth per year
   constexpr double bad_vel {utl_const::tpi*phy_const::m_per_du};
+  constexpr double max_vel {0.1*bad_vel};
 
   struct snx_rec {
     double x {bad_pos};
@@ -176,14 +188,16 @@ void parse_sinex_stations(
           snx_rec new_rec;
           new_rec.code = code;
           new_rec.soln = soln;
-          // Add date
+          new_rec.epoch = get_sinex_date_time(snx_tokens[epoch_ndx]);
+
           srec = new_rec;
         }
       } catch (const std::out_of_range& oor) {
         snx_rec new_rec;
         new_rec.code = code;
         new_rec.soln = soln;
-          // Add date
+        new_rec.epoch = get_sinex_date_time(snx_tokens[epoch_ndx]);
+
         station_recs[code] = new_rec;
       }
         // At this point, a record with "code" exists with soln and
@@ -191,28 +205,70 @@ void parse_sinex_stations(
         // if epoch is not the same.
       auto& srec = station_recs[code];
       if (srec.soln == soln) {
-          ;  // If epoch difference less than a TU
+        eom::JulianDate recJd = get_sinex_date_time(snx_tokens[epoch_ndx]);
+        if (std::abs(srec.epoch - recJd) > phy_const::epsdt_days) {
+          throw std::invalid_argument(" inconsistent epoch ");
+        }
+        auto component_type = snx_tokens[type_ndx];
+        if (component_type == "STAX") {
+          srec.x = phy_const::du_per_m*std::stod(snx_tokens[value_ndx]);
+        } else if (component_type == "STAY") {
+          srec.y = phy_const::du_per_m*std::stod(snx_tokens[value_ndx]);
+        } else if (component_type == "STAZ") {
+          srec.z = phy_const::du_per_m*std::stod(snx_tokens[value_ndx]);
+        } else if (component_type == "VELX") {
+          srec.dx = phy_const::du_per_m*std::stod(snx_tokens[value_ndx])*
+                               year_per_tu;
+        } else if (component_type == "VELY") {
+          srec.dy = phy_const::du_per_m*std::stod(snx_tokens[value_ndx])*
+                               year_per_tu;;
+        } else if (component_type == "VELZ") {
+          srec.dz = phy_const::du_per_m*std::stod(snx_tokens[value_ndx])*
+                               year_per_tu;
+        }
       }
     } catch (const std::invalid_argument& ia) {
-      throw std::invalid_argument("parse_slr_snx_stations(): " + input_line);
+      std::string estr(ia.what());
+      throw std::invalid_argument("parse_slr_snx_stations(): " +
+                                  estr + " " + input_line);
+    }
+  }
+  int num_bad_recs {0};
+  for (const auto& [k, v] : station_recs) {
+    if (std::abs(v.x) > max_pos  ||
+        std::abs(v.y) > max_pos  ||
+        std::abs(v.z) > max_pos  ||
+        std::abs(v.dx) > max_vel  ||
+        std::abs(v.dy) > max_vel  ||
+        std::abs(v.dz) > max_vel) {
+      num_bad_recs++;
     }
   }
   std::cout << "\nMade " << station_recs.size() << " entries";
+  std::cout << "  " << num_bad_recs << " bad entries";
 }
 
 
-
-
 }
 
-/*
-    double x {bad_pos};
-    double y {bad_pos};
-    double z {bad_pos};
-    double dx {bad_vel};
-    double dy {bad_vel};
-    double dz {bad_vel};
-    eom::JulianDate epoch;
-    int soln {0};
-    std::string code;
-*/
+static eom::JulianDate get_sinex_date_time(std::string& dts)
+{
+  std::string token;
+  std::vector<std::string> gd_tokens;
+  std::stringstream gd_stream(dts);
+  while (std::getline(gd_stream, token, ':')) {
+    gd_tokens.push_back(token);
+  }
+  if (gd_tokens.size() != 3) {
+    throw std::invalid_argument("Invalid number of tokens");
+  }
+  int year = eom::yy_to_yyyy(std::stoi(gd_tokens[0]));
+  int doy = std::stoi(gd_tokens[1]);
+  double sec = std::stod(gd_tokens[2]);
+  eom::GregDate gd(year, 1, 1);
+  eom::JulianDate jd(gd);
+  jd += sec/86400.0 - 1.0 + doy;
+
+  return jd;
+}
+

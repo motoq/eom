@@ -14,6 +14,21 @@
 namespace eom {
 
 /**
+ * Single location to handle the conversion of a two digit year
+ * to a four digit year, primarily to support older formats where
+ * a switchover date is used.
+ *
+ * @param  yy  Two digit year.  No error checking done
+ *    
+ * @return yyyy  yy + 1900 if before 1957.  Only valid if a valid yy
+ *               was entered.
+ */   
+constexpr int yy_to_yyyy(int yy) {
+  return  (yy < 57) ? (yy + 2000) : (yy + 1900);
+}
+
+
+/**
  * A simple Gregorian Date class primarily used to verify that a
  * year, month, and day are valid.
  *
