@@ -12,18 +12,19 @@
 #include <cmath>
 #include <deque>
 #include <fstream>
+#include <memory>
 #include <sstream>
 #include <string>
 #include <stdexcept>
 #include <unordered_map>
+
+#include <Eigen/Dense>
 
 #include <utl_const.h>
 #include <phy_const.h>
 #include <cal_greg_date.h>
 #include <cal_julian_date.h>
 #include <astro_ground_point.h>
-
-#include <iostream>
 
 /*
  * @param  dts  Date time string, YY:doy:sssss, where YY is a 2 digit
@@ -111,10 +112,6 @@ void parse_sinex_stations(
   while (header_stream >> token) {
     col_labels[token] = ndx++;
   }
-  std::cout << '\n' << col_labels.size();
-  for (const auto& [lbl, ndx2] : col_labels) {
-    std::cout << '\n' << ndx2 << ":" << lbl;
-  }
     // Resolve columns of interest
   unsigned int type_ndx;                         // Pos & vel components
   unsigned int code_ndx;                         // Station designator
@@ -184,6 +181,8 @@ void parse_sinex_stations(
       auto soln = std::stoi(snx_tokens[soln_ndx]);
       try {
         auto& srec = station_recs.at(code);
+          // Use latest solution.  Possibly better to use latest
+          // solution that is closest to epoch?
         if (srec.soln < soln) {
           snx_rec new_rec;
           new_rec.code = code;
@@ -210,21 +209,25 @@ void parse_sinex_stations(
           throw std::invalid_argument(" inconsistent epoch ");
         }
         auto component_type = snx_tokens[type_ndx];
-        if (component_type == "STAX") {
-          srec.x = phy_const::du_per_m*std::stod(snx_tokens[value_ndx]);
-        } else if (component_type == "STAY") {
-          srec.y = phy_const::du_per_m*std::stod(snx_tokens[value_ndx]);
-        } else if (component_type == "STAZ") {
-          srec.z = phy_const::du_per_m*std::stod(snx_tokens[value_ndx]);
-        } else if (component_type == "VELX") {
-          srec.dx = phy_const::du_per_m*std::stod(snx_tokens[value_ndx])*
-                               year_per_tu;
-        } else if (component_type == "VELY") {
-          srec.dy = phy_const::du_per_m*std::stod(snx_tokens[value_ndx])*
-                               year_per_tu;;
-        } else if (component_type == "VELZ") {
-          srec.dz = phy_const::du_per_m*std::stod(snx_tokens[value_ndx])*
-                               year_per_tu;
+        if (snx_tokens[unit_ndx] == "m"  ||  snx_tokens[unit_ndx] == "m/y") {
+          if (component_type == "STAX") {
+            srec.x = phy_const::du_per_m*std::stod(snx_tokens[value_ndx]);
+          } else if (component_type == "STAY") {
+            srec.y = phy_const::du_per_m*std::stod(snx_tokens[value_ndx]);
+          } else if (component_type == "STAZ") {
+            srec.z = phy_const::du_per_m*std::stod(snx_tokens[value_ndx]);
+          } else if (component_type == "VELX") {
+            srec.dx = phy_const::du_per_m*std::stod(snx_tokens[value_ndx])*
+                                 year_per_tu;
+          } else if (component_type == "VELY") {
+            srec.dy = phy_const::du_per_m*std::stod(snx_tokens[value_ndx])*
+                                 year_per_tu;;
+          } else if (component_type == "VELZ") {
+            srec.dz = phy_const::du_per_m*std::stod(snx_tokens[value_ndx])*
+                                 year_per_tu;
+          }
+        } else {
+          throw std::invalid_argument(" bad units ");
         }
       }
     } catch (const std::invalid_argument& ia) {
@@ -233,23 +236,37 @@ void parse_sinex_stations(
                                   estr + " " + input_line);
     }
   }
-  int num_bad_recs {0};
+
+    // Check that all ingested stations have complete coordinates
   for (const auto& [k, v] : station_recs) {
-    if (std::abs(v.x) > max_pos  ||
-        std::abs(v.y) > max_pos  ||
-        std::abs(v.z) > max_pos  ||
+    if (std::abs(v.x) > max_pos   ||
+        std::abs(v.y) > max_pos   ||
+        std::abs(v.z) > max_pos   ||
         std::abs(v.dx) > max_vel  ||
         std::abs(v.dy) > max_vel  ||
         std::abs(v.dz) > max_vel) {
-      num_bad_recs++;
+      std::string estr ("parse_slr_snx_stations(): ");
+      estr += "incomplete station definitions in ";
+      estr += file_name;
+      estr += " for ";
+      estr += v.code;
+      throw std::invalid_argument(estr);
     }
   }
-  std::cout << "\nMade " << station_recs.size() << " entries";
-  std::cout << "  " << num_bad_recs << " bad entries";
+
+    // Create and insert stations
+  for (const auto& [k, v] : station_recs) {
+    Eigen::Matrix<double, 3, 1> pos = {v.x, v.y, v.z};
+    Eigen::Matrix<double, 3, 1> vel = {v.dx, v.dy, v.dz};
+    auto dt = phy_const::tu_per_day*(jd - v.epoch);
+    pos += dt*vel;
+    ground_points[k] = std::make_shared<eom::GroundPoint>(pos, k);
+  }
 }
 
 
 }
+
 
 static eom::JulianDate get_sinex_date_time(std::string& dts)
 {
