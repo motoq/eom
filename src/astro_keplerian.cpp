@@ -285,8 +285,7 @@ void Keplerian::setWithMeanAnomaly(double ma)
   double e {oe[ie]};
     // Initial guess to E set to M modified by e
   double ea {ma + e};
-  if (ma > utl_const::pi  ||
-      ma > -utl_const::pi && ma < 0.0) {
+  if (ma > utl_const::pi  ||  (ma > -utl_const::pi  &&  ma < 0.0)) {
     ea = ma - e;
   }
 

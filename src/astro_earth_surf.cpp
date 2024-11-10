@@ -43,7 +43,7 @@ void EarthSurf::setEarthSurf(const Eigen::Matrix<double, 3, 1>& pos,
   double d {beta*beta - alpha*(gamma - 1.0)};
 
   if (m_mode == HorizonMode::horizon_always  ||
-      m_mode == HorizonMode::horizon_miss  &&  d < 0.0) {
+      (m_mode == HorizonMode::horizon_miss  &&  d < 0.0)) {
     double a1 {std::sqrt((gamma - 1.0)/(gamma*alpha - beta*beta))};
     double a0 {(1.0 - beta*a1)/gamma};
     m_xyz = a0*pos + a1*uhat;

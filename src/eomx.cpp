@@ -133,7 +133,7 @@ int main(int argc, char* argv[])
                  relOrbit.getTemplateOrbitName();
   }
     // Print all orbits as orbital elements
-  std::cout << "\nGenerated Orbits";
+  std::cout << "\n\nGenerated Orbits";
   for (const auto& [name, eph] : ephemerides) {
     std::cout << "\n  " << name;
     std::cout << "\n  " << eph->getEpoch().to_str() << "    GCRF";
@@ -157,7 +157,7 @@ int main(int argc, char* argv[])
     std::string key {axses.getGpName() + axses.getOrbitName()};
     try {
       std::shared_ptr<eom::GpAccess> axs = gp_accessors.at(key);
-      std::cout << "\n  Access for " << axs->getOrbitName() <<
+      std::cout << "\n\n  Access for " << axs->getOrbitName() <<
                          " against " << axs->getGpName();
       for (const eom::axs_interval& rise_set : (*axs)) {
         std::cout << '\n' << rise_set.rise.to_str() <<
