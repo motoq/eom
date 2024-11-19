@@ -54,7 +54,7 @@ Eigen::Matrix<double, 3, 1> GroundStation::getPosition(const JulianDate& jd,
   if (frame == EphemFrame::eci  &&
       (jd < m_jdStart  ||  m_jdStop < jd)) {
     throw std::out_of_range("GroundStation::getPosition() - bad time: " +
-                            jd.to_str());
+                            jd.to_string());
   }
 
   auto dt = phy_const::tu_per_day*(jd - m_jd0);

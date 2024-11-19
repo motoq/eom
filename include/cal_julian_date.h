@@ -12,8 +12,8 @@
 #include <string>
 
 #include <cal_const.h>
-#include <cal_greg_date.h>
 #include <cal_duration.h>
+#include <cal_greg_date.h>
 
 namespace eom {
 
@@ -198,10 +198,19 @@ public:
   }
 
   /**
+   * Returns a string representation of this Julian date in Gregorian
+   * date format:  yyyy/mm/dd hh:mm:ss.xx where xx deaults to 2 digits.
+   *
+   * @param  dp  Decimal places - the number of digits after the decimal
+   *             place.  Defaults to 2 (hundredths of a second).  No
+   *             fractional seconds (dp = 0) up to picoseconds (dp = 12)
+   *             are accepted.  If the bounds are exceeded, then the
+   *             limits will be used (0 if dp < 0, 12 if dp > 12).
+   *
    * @return   Gregorian Date and time as a string.  Time is
-   *           in base 24:60:60 format:  yyyy/mm/dd hh:mm:ss.00
+   *           in base 24:60:60 format:  yyyy/mm/dd hh:mm:ss.dp
    */
-  std::string to_str() const;
+  std::string to_string(int dp = 2) const;
 
     /**
      * @return   Gregorian Date and time as a string.  Time is

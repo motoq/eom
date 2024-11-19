@@ -312,7 +312,7 @@ std::ostream& operator<<(std::ostream& out, const Tle& tle)
   if (year < 1957) {
     year += 100;
   }
-  return out << tle.getEpoch().to_str() << '\n' <<
+  return out << tle.getEpoch().to_string() << '\n' <<
                 tle.getLineOne() << '\n' << tle.getLineTwo() << '\n' <<
                 "  Designator:    " << tle.getName() << '\n' <<
                 "  Year:DOY:      " << year << ':' <<

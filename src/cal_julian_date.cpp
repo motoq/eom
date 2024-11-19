@@ -8,12 +8,12 @@
 
 #include <cal_julian_date.h>
 
-#include <string>
 #include <cmath>
+#include <string>
 
 #include <cal_const.h>
-#include <cal_greg_date.h>
 #include <cal_duration.h>
+#include <cal_greg_date.h>
 
 static double gd2jd(int iyear, int imonth, int iday);
 
@@ -104,20 +104,32 @@ JulianDate JulianDate::operator+(const Duration& dur) const noexcept
 }
 
 
-/**
- * Note: Seconds are truncated to 1/100 th of a second
- */
-std::string JulianDate::to_str() const
+std::string JulianDate::to_string(int dp) const
 {
   int year, month, day, hour, minutes;
   double seconds; 
   jd2gd(year, month, day, hour, minutes, seconds);
 
+  if (dp < 0) {
+    dp = 0;
+  } else if (dp > 12) {
+    dp = 12;
+  }
+  double grow {std::pow(10.0, dp)};
+  double shrink {1.0/grow};
     // Stop *printf from rounding to silly values like xx:xx:60 sec
-  seconds = 0.01*static_cast<long>(100.0*seconds);
+  seconds = shrink*static_cast<long>(grow*seconds);
 
   char buf[32];
-  snprintf(buf, sizeof(buf), "%4i/%02i/%02i %02i:%02i:%05.2f",
+  std::string fmt = "";
+  if (dp < 10) {
+    fmt = "%4i/%02i/%02i %02i:%02i:%0";
+  } else {
+    fmt = "%4i/%02i/%02i %02i:%02i:%";
+  }
+  fmt += std::to_string(dp + 3) + "." + std::to_string(dp) + "f";
+  //snprintf(buf, sizeof(buf), "%4i/%02i/%02i %02i:%02i:%05.2f",
+  snprintf(buf, sizeof(buf), fmt.c_str(),
                               year, month, day, hour, minutes, seconds);
 
   std::string dts{buf};

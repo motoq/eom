@@ -202,9 +202,9 @@ std::ostream& operator<<(std::ostream& out, const EomConfig& cfg)
 {
   eom::LeapSeconds& ls = eom::LeapSeconds::getInstance();
   return out << "\nSimulation Start Time: " <<
-                cfg.getStartTime().to_str() <<
+                cfg.getStartTime().to_string() <<
                 "\nSimulation Stop Time:  " <<
-                cfg.getStopTime().to_str() <<
+                cfg.getStopTime().to_string() <<
                 "\nEcfEci Output Rate is " << 
                 cal_const::min_per_day*cfg.getEcfEciRate().getDays() <<
                 " minutes" <<

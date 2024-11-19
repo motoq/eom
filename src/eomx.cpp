@@ -136,7 +136,7 @@ int main(int argc, char* argv[])
   std::cout << "\n\nGenerated Orbits";
   for (const auto& [name, eph] : ephemerides) {
     std::cout << "\n  " << name;
-    std::cout << "\n  " << eph->getEpoch().to_str() << "    GCRF";
+    std::cout << "\n  " << eph->getEpoch().to_string() << "    GCRF";
     eom::Keplerian oeCart(eph->getStateVector(eph->getEpoch(),
                                               eom::EphemFrame::eci));
     std::cout << oeCart;
@@ -160,8 +160,8 @@ int main(int argc, char* argv[])
       std::cout << "\n\n  Access for " << axs->getOrbitName() <<
                          " against " << axs->getGpName();
       for (const eom::axs_interval& rise_set : (*axs)) {
-        std::cout << '\n' << rise_set.rise.to_str() <<
-            "  " << rise_set.set.to_str() << "    {" <<
+        std::cout << '\n' << rise_set.rise.to_string() <<
+            "  " << rise_set.set.to_string() << "    {" <<
             utl_const::deg_per_rad*std::asin(rise_set.rasel_rise.sinel) <<
             ", " <<
             utl_const::deg_per_rad*std::asin(rise_set.rasel_set.sinel) <<
