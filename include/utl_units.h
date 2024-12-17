@@ -9,6 +9,7 @@
 #ifndef UTL_UNITS_H
 #define UTL_UNITS_H
 
+#include <string>
 #include <unordered_map>
 
 #include <utl_const.h>
