@@ -6,7 +6,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+#include <algorithm>
 #include <array>
+#include <cmath>
 #include <iostream>
 #include <memory>
 #include <string>
@@ -70,6 +72,8 @@ int main()
   Duration dx {1.0, 0.1_sec};
   auto dx_days = dx.getDays();
   auto dx_tu = dx.getTu();
+  double max_rhat_dot_err {0.0};
+  double max_rhat_ddot_err {0.0};
   while (jd < jdStop) {
     Eigen::Matrix<double, 6, 1> pvf = eph->getStateVector(jd, EphemFrame::ecf);
     Eigen::Matrix<double, 3, 1> r_s_o_f = pvf.block<3,1>(0,0);
@@ -95,12 +99,19 @@ int main()
     Eigen::Matrix<double, 3, 1> rhat_ddot_num =
         derivative::second(dx_tu, rhatb, rhat, rhatf);
 
-    std::cout << '\n' << (rhat_dot - rhat_dot_num).norm();
-    std::cout << "  " << (rhat_ddot - rhat_ddot_num).norm();
-    std::cout << "    ("  << r_s_o_f.norm() << ")";
+    auto drdhd = -1.0*(rhat_dot - rhat_dot_num).norm();
+    auto drdhdd = -1.0*(rhat_ddot - rhat_ddot_num).norm();
+    if (drdhd < max_rhat_dot_err) {
+      max_rhat_dot_err = drdhd;
+    }
+    if (drdhdd < max_rhat_ddot_err) {
+      max_rhat_ddot_err = drdhdd;
+    }
 
     jd += dt;
   }
+  std::cout << "\nMax rhat_dot error:   " << -max_rhat_dot_err;
+  std::cout << "\nMax rhat_ddot error:  " << -max_rhat_ddot_err;
 
   std::cout << '\n';
   

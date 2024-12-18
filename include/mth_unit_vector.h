@@ -75,19 +75,18 @@ UnitVector<T,N>::UnitVector(const Eigen::Matrix<T, N, 1>& r,
                             const Eigen::Matrix<T, N, 1>& rddot)
 {
   T inv_rmag {1.0/r.norm()};
-  T inv_rmag2 {inv_rmag*inv_rmag};
   m_rhat = inv_rmag*r;
-    // Scaled projection onto normal of r
+    // Projection onto normal of r
   Eigen::Matrix<T, N, N> rhrht = m_rhat*m_rhat.transpose();
-  Eigen::Matrix<T, N, N> sproj = inv_rmag*
-                                 (Eigen::Matrix<T, N, N>::Identity() - rhrht);
+  Eigen::Matrix<T, N, N> proj = Eigen::Matrix<T, N, N>::Identity() - rhrht;
 
-  m_rhatdot = sproj*rdot;
-  m_rhatddot = sproj*rddot +
-               inv_rmag2*m_rhat.dot(rdot)*
-                   (3.0*rhrht - Eigen::Matrix<T, N, N>::Identity())*rdot -
-               inv_rmag2*(m_rhat*rdot.transpose() +
-                          rdot*m_rhat.transpose())*rdot;
+  m_rhatdot = inv_rmag*proj*rdot;
+  m_rhatddot = inv_rmag*(
+                 proj*rddot + inv_rmag*(
+                   m_rhat.dot(rdot)*(3.0*rhrht - 
+                                     Eigen::Matrix<T, N, N>::Identity())*rdot -
+                   (m_rhat*rdot.transpose() + rdot*m_rhat.transpose())*rdot));
+
 }
 
 
