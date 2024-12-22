@@ -118,7 +118,7 @@ UnitVector<T,N>::UnitVector(const Eigen::Matrix<T, N, 1>& r,
   m_rhatddot = inv_rmag*(proj*rddot + inv_rmag*(
                         rhat.dot(rdot)*(3.0*rhrht - 
                           Eigen::Matrix<T, N, N>::Identity())*rdot -
-                          (rhat*rdot.transpose() + rdot*rhat.transpose())*rdot
+                          rdot.dot(rdot)*rhat - rhat.dot(rdot)*rdot
                                                )
                         );
 }
