@@ -74,6 +74,7 @@ int main()
   auto dx_tu = dx.getTu();
   double max_rhat_dot_err {0.0};
   double max_rhat_ddot_err {0.0};
+  double max_rhat_dot_func_err {0.0};
   while (jd < jdStop) {
     Eigen::Matrix<double, 6, 1> pvf = eph->getStateVector(jd, EphemFrame::ecf);
     Eigen::Matrix<double, 3, 1> r_s_o_f = pvf.block<3,1>(0,0);
@@ -101,17 +102,22 @@ int main()
 
     auto drdhd = -1.0*(rhat_dot - rhat_dot_num).norm();
     auto drdhdd = -1.0*(rhat_ddot - rhat_ddot_num).norm();
+    auto drdhfd = -1.0*(rhat_dot - unit_vector_dot(r_s_o_f, v_s_f_f)).norm();
     if (drdhd < max_rhat_dot_err) {
       max_rhat_dot_err = drdhd;
     }
     if (drdhdd < max_rhat_ddot_err) {
       max_rhat_ddot_err = drdhdd;
     }
+    if (drdhfd < max_rhat_dot_func_err) {
+      max_rhat_dot_func_err = drdhfd;
+    }
 
     jd += dt;
   }
-  std::cout << "\nMax rhat_dot error:   " << -max_rhat_dot_err;
-  std::cout << "\nMax rhat_ddot error:  " << -max_rhat_ddot_err;
+  std::cout << "\nMax rhat_dot error:   " << std::abs(max_rhat_dot_err);
+  std::cout << "\nMax rhat_ddot error:  " << std::abs(max_rhat_ddot_err);
+  std::cout << "\nMax function diff:    " << std::abs(max_rhat_dot_func_err);
 
   std::cout << '\n';
   

@@ -5,9 +5,9 @@ LFLAGS = -L../../build -L../../../../../lib -leom -lgen -lsofa_c
 
 OBJECTS := $(patsubst %.cpp,%.o,$(wildcard *.cpp))
 
-rdot : $(OBJECTS)
-	$(CC) $(CFLAGS) -o rdot $(OBJECTS) $(LFLAGS)
+rhat_dot : $(OBJECTS)
+	$(CC) $(CFLAGS) -o rhat_dot $(OBJECTS) $(LFLAGS)
 
 .PHONY : clean
 clean :
-	rm rdot $(OBJECTS)
+	rm rhat_dot $(OBJECTS)
