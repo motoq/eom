@@ -53,6 +53,8 @@ int main()
   pcfg.setStartStopTime(jd1, jd2);
   pcfg.setGravityModel(GravityModel::jn);
   pcfg.setDegreeOrder(2, 0);
+  pcfg.setSunGravityModel(SunGravityModel::meeus);
+  pcfg.setMoonGravityModel(MoonGravityModel::meeus);
   pcfg.setPropagator(Propagator::adams4);
   pcfg.setStepSize({1.0, 1.0_min});
 
