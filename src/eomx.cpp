@@ -117,11 +117,11 @@ int main(int argc, char* argv[])
   }
 
     // Generate ephemerides
-  auto ephemerides = eomx_gen_ephemerides(cfg,
-                                          orbit_defs,
-                                          rel_orbit_defs,
-                                          eph_file_defs,
-                                          f2iSys);
+  const auto ephemerides = eomx_gen_ephemerides(cfg,
+                                                orbit_defs,
+                                                rel_orbit_defs,
+                                                eph_file_defs,
+                                                f2iSys);
 
     // Print derived orbit names
   if (rel_orbit_defs.size() > 0) {
@@ -143,11 +143,11 @@ int main(int argc, char* argv[])
   }
 
     // Generate access analysis
-  auto gp_accessors = eomx_gen_gp_accesses(cfg,
-                                           ground_points,
-                                           ephemerides,
-                                           gp_access_defs,
-                                           f2iSys);
+  const auto gp_accessors = eomx_gen_gp_accesses(cfg,
+                                                 ground_points,
+                                                 ephemerides,
+                                                 gp_access_defs,
+                                                 f2iSys);
 
     // Print access results here for now
   if (gp_access_defs.size() > 0) {
@@ -156,7 +156,7 @@ int main(int argc, char* argv[])
   for (const eom::GpAccessDef& axses : gp_access_defs) {
     std::string key {axses.getGpName() + axses.getOrbitName()};
     try {
-      std::shared_ptr<eom::GpAccess> axs = gp_accessors.at(key);
+      std::shared_ptr<const eom::GpAccess> axs = gp_accessors.at(key);
       std::cout << "\n\n  Access for " << axs->getOrbitName() <<
                          " against " << axs->getGpName();
       for (const eom::axs_interval& rise_set : (*axs)) {
