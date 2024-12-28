@@ -42,11 +42,10 @@ void eom_test_sun()
   auto jdStop = jdStart + 30.0;
 
   eom::Duration dt {1.0, phy_const::tu_per_day};
-  std::shared_ptr<eom::EcfEciSys> ecfeci =
-          std::make_shared<eom::EcfEciSys>(jdStart,
-                                           jdStop+1.0,
-                                           dt,
-                                           nullptr);
+  auto ecfeci = std::make_shared<const eom::EcfEciSys>(jdStart,
+                                                       jdStop+1.0,
+                                                       dt,
+                                                       nullptr);
 
   std::shared_ptr<const eom::Ephemeris> ephPtr =
           std::make_shared<eom::SunMeeus>(ecfeci);

@@ -37,7 +37,7 @@ eomx_gen_gp_accesses(
     const std::unordered_map<std::string,
                              std::shared_ptr<eom::Ephemeris>>& ephemerides,
     const std::vector<eom::GpAccessDef>& gp_access_defs,
-    const std::shared_ptr<eom::EcfEciSys>& f2iSys)
+    const std::shared_ptr<const eom::EcfEciSys>& f2iSys)
 {
 
     // Create access analysis objects with resources

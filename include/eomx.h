@@ -91,7 +91,7 @@ eomx_gen_ephemerides(const eom_app::EomConfig& cfg,
                      const std::vector<eom::OrbitDef>& orbit_defs,
                      const std::vector<eom::RelOrbitDef>& rel_orbit_defs,
                      const std::vector<eom::EphemerisFile>& eph_file_defs,
-                     const std::shared_ptr<eom::EcfEciSys>& f2iSys);
+                     const std::shared_ptr<const eom::EcfEciSys>& f2iSys);
 
 /**
  * Given access analysis definitions, assign resources and run analysis.
@@ -116,6 +116,6 @@ eomx_gen_gp_accesses(
     const std::unordered_map<std::string,
                              std::shared_ptr<eom::Ephemeris>>& ephemerides,
     const std::vector<eom::GpAccessDef>& gp_access_defs,
-    const std::shared_ptr<eom::EcfEciSys>& f2iSys);
+    const std::shared_ptr<const eom::EcfEciSys>& f2iSys);
 
 #endif

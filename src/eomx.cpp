@@ -99,7 +99,7 @@ int main(int argc, char* argv[])
 
     // Determine time span that must be supported by the simulation,
     // and generate ECF/ECI service
-  std::shared_ptr<eom::EcfEciSys> f2iSys {nullptr};
+  std::shared_ptr<const eom::EcfEciSys> f2iSys {nullptr};
   try {
     auto [minJd, maxJd] = eomx_simulation_time(cfg, orbit_defs);
 
@@ -107,10 +107,10 @@ int main(int argc, char* argv[])
     if (argc > 2) {
      eopSys = std::make_shared<eom::EopSys>(argv[2], minJd, maxJd);
     }
-    f2iSys = std::make_shared<eom::EcfEciSys>(minJd,
-                                              maxJd,
-                                              cfg.getEcfEciRate(),
-                                              eopSys);
+    f2iSys = std::make_shared<const eom::EcfEciSys>(minJd,
+                                                    maxJd,
+                                                    cfg.getEcfEciRate(),
+                                                    eopSys);
   } catch (const eom_app::EomXException& exe) {
     std::cerr << "\nSimulatio Time Error:  " << exe.what() << '\n';
     return 0;
