@@ -33,7 +33,7 @@ std::unordered_map<std::string,std::shared_ptr<eom::GpAccess>>
 eomx_gen_gp_accesses(
     const eom_app::EomConfig& cfg,
     const std::unordered_map<std::string,
-                             std::shared_ptr<eom::GroundPoint>>& ground_points,
+        std::shared_ptr<const eom::GroundPoint>>& ground_points,
     const std::unordered_map<std::string,
                              std::shared_ptr<eom::Ephemeris>>& ephemerides,
     const std::vector<eom::GpAccessDef>& gp_access_defs,

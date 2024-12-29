@@ -61,7 +61,7 @@ namespace eom_app {
 void parse_sinex_stations(
     std::deque<std::string>& tokens,
     std::unordered_map<std::string,
-                       std::shared_ptr<eom::GroundPoint>>& ground_points)
+                       std::shared_ptr<const eom::GroundPoint>>& ground_points)
 {
   using namespace std::string_literals;
     // Need at least the filename
@@ -260,7 +260,7 @@ void parse_sinex_stations(
     Eigen::Matrix<double, 3, 1> vel = {v.dx, v.dy, v.dz};
     auto dt = phy_const::tu_per_day*(jd - v.epoch);
     pos += dt*vel;
-    ground_points[k] = std::make_shared<eom::GroundPoint>(pos, k);
+    ground_points[k] = std::make_shared<const eom::GroundPoint>(pos, k);
   }
 }
 

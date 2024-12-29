@@ -155,7 +155,7 @@ parse_ground_point(std::deque<std::string>& tokens, const EomConfig& cfg);
 void parse_sinex_stations(
     std::deque<std::string>& tokens,
     std::unordered_map<std::string,
-                       std::shared_ptr<eom::GroundPoint>>& ground_points);
+                       std::shared_ptr<const eom::GroundPoint>>& ground_points);
 
 /**
  * Parses an orbit to ground point access definition.

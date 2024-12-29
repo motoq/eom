@@ -68,7 +68,7 @@ int main(int argc, char* argv[])
   std::vector<eom::EphemerisFile> eph_file_defs;
     // Earth fixed points (ground points)
   std::unordered_map<std::string,
-                     std::shared_ptr<eom::GroundPoint>> ground_points;
+                     std::shared_ptr<const eom::GroundPoint>> ground_points;
     // Definitions of orbit to ground access analysis requests and
     // access analysis producers
   std::vector<eom::GpAccessDef> gp_access_defs;

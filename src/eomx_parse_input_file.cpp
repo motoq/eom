@@ -37,8 +37,9 @@ void eomx_parse_input_file(const std::string& fname,
                            std::vector<eom::OrbitDef>& orbit_defs,
                            std::vector<eom::RelOrbitDef>& rel_orbit_defs,
                            std::vector<eom::EphemerisFile>& eph_file_defs,
-                           std::unordered_map<std::string,std::shared_ptr<
-                                              eom::GroundPoint>>& ground_points,
+                           std::unordered_map<std::string,
+                               std::shared_ptr<
+                                   const eom::GroundPoint>>& ground_points,
                            std::vector<eom::GpAccessDef>& gp_access_defs,
                            std::vector<
                                std::shared_ptr<eom_app::EomCommand>>& commands)
@@ -176,7 +177,7 @@ void eomx_parse_input_file(const std::string& fname,
               try {
                 eom::GroundPoint gp = eom_app::parse_ground_point(tokens, cfg);
                 ground_points[gp.getName()] =
-                    std::make_shared<eom::GroundPoint>(gp);
+                    std::make_shared<const eom::GroundPoint>(gp);
                 input_error = false;
               } catch (const std::invalid_argument& ia) {
                 std::string xerror = ia.what();

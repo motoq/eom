@@ -49,8 +49,9 @@ void eomx_parse_input_file(const std::string& fname,
                            std::vector<eom::OrbitDef>& orbit_defs,
                            std::vector<eom::RelOrbitDef>& rel_orbit_defs,
                            std::vector<eom::EphemerisFile>& eph_file_defs,
-                           std::unordered_map<std::string,std::shared_ptr<
-                                              eom::GroundPoint>>& ground_points,
+                           std::unordered_map<std::string,
+                               std::shared_ptr<
+                                   const eom::GroundPoint>>& ground_points,
                            std::vector<eom::GpAccessDef>& gp_access_defs,
                            std::vector<
                                std::shared_ptr<eom_app::EomCommand>>& commands);
@@ -112,7 +113,7 @@ std::unordered_map<std::string,std::shared_ptr<eom::GpAccess>>
 eomx_gen_gp_accesses(
     const eom_app::EomConfig& cfg,
     const std::unordered_map<std::string,
-                             std::shared_ptr<eom::GroundPoint>>& ground_points,
+        std::shared_ptr<const eom::GroundPoint>>& ground_points,
     const std::unordered_map<std::string,
                              std::shared_ptr<eom::Ephemeris>>& ephemerides,
     const std::vector<eom::GpAccessDef>& gp_access_defs,
