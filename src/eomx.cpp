@@ -55,37 +55,64 @@ int main(int argc, char* argv[])
     return 0;
   }
 
-    // General configuration parameter for the simulation
-  eom_app::EomConfig cfg;
+  /*
+   * Temporary containers/pointers that are mutable during build
+   * but will be moved to immutable states for thread safety
+   */
+
+    // General configuration parameters for the simulation
+  eom_app::EomConfig cfg_tmp;
     // Orbit definitions, used to initialize propagators and/or generate
     // classes with buffered ephemeris
-  std::vector<eom::OrbitDef> orbit_defs;
+  std::vector<eom::OrbitDef> orbit_defs_tmp;
     // Orbit definitions based on other orbits.  As with orbit_defs,
     // will be used to initialize propagators and/or generate classes
     // with buffered ephemeris
-  std::vector<eom::RelOrbitDef> rel_orbit_defs;
+  std::vector<eom::RelOrbitDef> rel_orbit_defs_tmp;
     // Ephemeris file definitions - not necessarily an orbit
-  std::vector<eom::EphemerisFile> eph_file_defs;
+  std::vector<eom::EphemerisFile> eph_file_defs_tmp;
     // Earth fixed points (ground points)
   std::unordered_map<std::string,
-                     std::shared_ptr<const eom::GroundPoint>> ground_points;
+                     std::shared_ptr<const eom::GroundPoint>> ground_points_tmp;
     // Definitions of orbit to ground access analysis requests and
     // access analysis producers
-  std::vector<eom::GpAccessDef> gp_access_defs;
+  std::vector<eom::GpAccessDef> gp_access_defs_tmp;
+
     // The commands populated by cmdBuilder
+    //
+    // Not moved to immutable state since many commands are not
+    // appropriate for parallel processing (e.g., many are writing
+    // files).  Commands are typically making use of existing data where
+    // the heavy lifting has already been done, not requiring parallel
+    // processing.
   std::vector<std::shared_ptr<eom_app::EomCommand>> commands;
 
     // Parse input file
   try {
     eomx_parse_input_file(argv[1],
-                          cfg,
-                          orbit_defs, rel_orbit_defs, eph_file_defs,
-                          ground_points, gp_access_defs,
+                          cfg_tmp,
+                          orbit_defs_tmp, rel_orbit_defs_tmp, eph_file_defs_tmp,
+                          ground_points_tmp, gp_access_defs_tmp,
                           commands);
   } catch (const eom_app::EomXException& exe) {
     std::cerr << "\nError parsing input file:  " << exe.what() << '\n';
     return 0;
   }
+
+    // Copy config to const
+  const eom_app::EomConfig cfg = cfg_tmp;;
+    // Transfer ownership to constant versions
+  const std::vector<eom::OrbitDef> orbit_defs = std::move(orbit_defs_tmp);
+  const std::vector<eom::RelOrbitDef> rel_orbit_defs =
+      std::move(rel_orbit_defs_tmp);
+  const std::vector<eom::EphemerisFile> eph_file_defs =
+      std::move(eph_file_defs_tmp);
+  const std::unordered_map<std::string,
+      std::shared_ptr<const eom::GroundPoint>> ground_points =
+          std::move(ground_points_tmp);
+  const std::vector<eom::GpAccessDef> gp_access_defs =
+      std::move(gp_access_defs_tmp);
+
     // ...and print scenario - print simulation components as created
   std::cout << cfg << '\n';
 
