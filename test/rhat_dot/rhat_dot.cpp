@@ -31,9 +31,16 @@
 #include <astro_orbit_def.h>
 #include <astro_propagator_config.h>
 
+/**
+ * Tests the algorithms for taking the 1st and 2nd derivatives of
+ * a unit vector as implemented in mth_unit_vector.h.  A HEO orbit is
+ * created and the earth fixed position, velocity, and acceleration
+ * vectors are used.  The primary weakness to this test is the majority
+ * of the acceleration is centripetal, therefore not rigorously testing
+ * a component of the 2nd derivative.
+ */
 int main()
 {
-
   using namespace eom;
   using namespace utl_units;
 
@@ -49,6 +56,7 @@ int main()
   Duration fi_dt {0.0, 1.0};
   auto f2i = std::make_shared<EcfEciSys>(jd1, jd2, fi_dt, nullptr);
 
+    // J2 gravity model plus sun/moon
   PropagatorConfig pcfg {PropagatorType::sp};
   pcfg.setStartStopTime(jd1, jd2);
   pcfg.setGravityModel(GravityModel::jn);
@@ -56,17 +64,21 @@ int main()
   pcfg.setSunGravityModel(SunGravityModel::meeus);
   pcfg.setMoonGravityModel(MoonGravityModel::meeus);
   pcfg.setPropagator(Propagator::adams4);
-  pcfg.setStepSize({1.0, 1.0_min});
+    // Tight integration step size for perigee - using simple integrator
+  pcfg.setStepSize({0.25, 1.0_min});
 
   OrbitDef odef {"heo_sat", pcfg, jd1, oe, 
                  CoordType::keplerian, FrameType::gcrf};
+    // Orbit builder requires source of external celestial ephemerides,
+    // even if not used
   std::unordered_map<std::string,
                      std::vector<state_vector_rec>> ceph;
-
   std::unique_ptr<Ephemeris> eph = build_orbit(odef, f2i, ceph);
+    // Separate gravity model since ephemeris services only
+    // provide position and velocity
   GravityJn j2Grav {2};
 
-  Duration dt {5.0, 1.0_min};
+  Duration dt {1.0, 1.0_min};
     // Make sure ephemeris covers time span that will be needed
     // to generate derivatives
   auto jd = jd1 + dt.getDays();
@@ -77,6 +89,7 @@ int main()
   double max_rhat_dot_err {0.0};
   double max_rhat_ddot_err {0.0};
   double max_rhat_dot_func_err {0.0};
+  int npts {0};
   while (jd < jdStop) {
     Eigen::Matrix<double, 6, 1> pvf = eph->getStateVector(jd, EphemFrame::ecf);
     Eigen::Matrix<double, 3, 1> r_s_o_f = pvf.block<3,1>(0,0);
@@ -115,12 +128,13 @@ int main()
       max_rhat_dot_func_err = drdhfd;
     }
 
+    npts++;
     jd += dt;
   }
+  std::cout << "\n  " << npts  << " test points";
   std::cout << "\nMax rhat_dot error:   " << std::abs(max_rhat_dot_err);
   std::cout << "\nMax rhat_ddot error:  " << std::abs(max_rhat_ddot_err);
   std::cout << "\nMax function diff:    " << std::abs(max_rhat_dot_func_err);
 
   std::cout << '\n';
-  
 }

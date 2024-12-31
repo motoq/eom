@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023 Kurt Motekew
+ * Copyright 2021-2025 Kurt Motekew
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -80,11 +80,13 @@ int main(int argc, char* argv[])
 
     // The commands populated by cmdBuilder
     //
-    // Not moved to immutable state since many commands are not
-    // appropriate for parallel processing (e.g., many are writing
-    // files).  Commands are typically making use of existing data where
-    // the heavy lifting has already been done, not requiring parallel
-    // processing.
+    // Commands are not moved to an immutable state.  Further validation
+    // and modification to commands is necessary after inputs are parsed.
+    // In addition, commands are to processed sequentially.  Each
+    // command may involve opening multiple files or benefit from invoking
+    // parallel processing itself if necessary.  Other commands make use
+    // of existing data (e.g., writing ephemeris to a file), so no heavy
+    // lifting is required.
   std::vector<std::shared_ptr<eom_app::EomCommand>> commands;
 
     // Parse input file
