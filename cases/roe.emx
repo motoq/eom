@@ -17,6 +17,6 @@ Orbit  chiefv  Vinti6  GD 2021 11 12 17 00 00.0
        CART  GCRF  -5552.0  -2563.0  3258.0   2.149  -7.539  -2.186;
 RelativeOrbit  deputyk  chiefk  RTCT  5.0  0.0  5.0  0.0;
 RelativeOrbit  deputyv  chiefv  RTCT  5.0  0.0  5.0  0.0;
-OutputRate Minutes 10;
+OutputRate Minutes 5;
 Command PrintRTC chiefk deputyk roe_rtc_kepler;
 Command PrintRTC chiefv deputyv roe_rtc_vinti;

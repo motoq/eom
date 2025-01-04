@@ -9,8 +9,8 @@
 #ifndef ASTRO_REL_ORBIT_DEF_H
 #define ASTRO_REL_ORBIT_DEF_H
 
-#include <string>
 #include <array>
+#include <string>
 
 #include <cal_julian_date.h>
 
@@ -42,7 +42,8 @@ public:
   /**
    * Create an orbit definition based on a another orbit definition.
    *
-   * @param  orbit_name     Name (string identifieer) associated with orbit
+   * @param  orbit_name     Name (string identifieer) associated with
+   *                        new orbit
    * @param  template_name  Name of orbit used to define this orbit
    * @param  rel_state      Parameters defining the state of this orbit
    *                        relative to the template orbit.  Unlike a
@@ -59,31 +60,31 @@ public:
               RelCoordType coord_type);
 
   /**
-   * @return  Name (string identifieer) associated with orbit
+   * @return  Name (string identifieer) associated with new orbit
    */
-  std::string getOrbitName() const noexcept { return name; }
+  std::string getOrbitName() const noexcept;
 
   /**
    * @return  Name of template orbit
    */
-  std::string getTemplateOrbitName() const noexcept { return ref_name; }
+  std::string getTemplateOrbitName() const noexcept;
 
   /**
    * @return  Relative orbit parameters or state vector, DU, TU,
    *          and/or radians
    */
-  std::array<double, 6> getInitialState() const noexcept { return dx0; }
+  std::array<double, 6> getInitialState() const noexcept;
 
   /**
    * @return  State vector coordinate system type
    */
-  RelCoordType getRelCoordinateType() const noexcept { return coord; }
+  RelCoordType getRelCoordinateType() const noexcept;
 
 private:
-  std::string name {""};
-  std::string ref_name {""};
-  RelCoordType coord;
-  std::array<double, 6> dx0;
+  std::string m_name {""};
+  std::string m_template_name {""};
+  RelCoordType m_coord;
+  std::array<double, 6> m_dx0;
 };
 
 

@@ -8,8 +8,8 @@
 
 #include <astro_rel_orbit_def.h>
 
-#include <string>
 #include <array>
+#include <string>
 
 namespace eom {
 
@@ -18,10 +18,34 @@ RelOrbitDef::RelOrbitDef(const std::string& orbit_name,
                          const std::array<double, 6>& rel_state, 
                          RelCoordType coord_type)
 {
-  name = orbit_name;
-  ref_name = template_name;
-  dx0 = rel_state;
-  coord = coord_type;
+  m_name = orbit_name;
+  m_template_name = template_name;
+  m_dx0 = rel_state;
+  m_coord = coord_type;
+}
+
+
+std::string RelOrbitDef::getOrbitName() const noexcept
+{
+  return m_name;
+}
+
+
+std::string RelOrbitDef::getTemplateOrbitName() const noexcept
+{
+  return m_template_name;
+}
+
+
+std::array<double, 6> RelOrbitDef::getInitialState() const noexcept
+{
+  return m_dx0;
+}
+
+
+RelCoordType RelOrbitDef::getRelCoordinateType() const noexcept 
+{
+  return m_coord;
 }
 
 

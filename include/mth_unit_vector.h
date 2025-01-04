@@ -14,6 +14,58 @@
 namespace eom {
 
 /**
+ * Given a vector, compute the partial derivative of its unit vector
+ * w.r.t. itself.
+ *
+ * @tparam  T  Vector component data type
+ * @tparam  N  Dimension of input vectors
+ *
+ * @param  r  Position vector
+ * 
+ * @return  Partials of the unit vector w.r.t. the vector, drhat/dr
+ */
+template<typename T, int N>
+Eigen::Matrix<T, N, N> unit_vector_partials(const Eigen::Matrix<T, N, 1>& r)
+{
+  T one {static_cast<T>(1.0)};
+  T inv_rmag {one/r.norm()};
+  Eigen::Matrix<T, N, 1> rhat = inv_rmag*r;
+
+    // Scaled projection onto normal of r
+  return inv_rmag*(Eigen::Matrix<T, N, N>::Identity() - rhat*rhat.transpose());
+}
+
+
+/**
+ * Given a vector and its derivative, return the first derivative of the
+ * associated unit vector unit vector.  This function is more convenient
+ * and efficient compared to using the UnitVector class  when only the first
+ * derivative of the unit vector is needed.
+ *
+ * @tparam  T  Vector component data type
+ * @tparam  N  Dimension of input vectors
+ *
+ * @param  r      Position vector
+ * @param  rdot   Rate of change (velocity) of position vector
+ * 
+ * @return  First derivative of unit vector
+ */
+template<typename T, int N>
+Eigen::Matrix<T, N, 1> unit_vector_dot(const Eigen::Matrix<T, N, 1>& r,
+                                       const Eigen::Matrix<T, N, 1>& rdot)
+{
+  T one {static_cast<T>(1.0)};
+  T inv_rmag {one/r.norm()};
+  Eigen::Matrix<T, N, 1> rhat = inv_rmag*r;
+    // Projection onto normal of r
+  Eigen::Matrix<T, N, N> proj = Eigen::Matrix<T, N, N>::Identity() - 
+                                rhat*rhat.transpose();
+
+  return inv_rmag*proj*rdot;
+}
+
+
+/**
  * Class and functionality to generate unit vectors and their first two
  * derivatives.  Note, the derivatives of the unit vectors are
  * generated, not the trivial case of normalizing the derivatives of the
@@ -74,31 +126,6 @@ private:
   Eigen::Matrix<T, N, 1> m_rhatddot {Eigen::Matrix<T, N, 1>::Zero()};
 };
 
-
-/**
- * Given a vector and its derivative, return the first derivative of the
- * associated unit vector unit vector.  This function is more convenient
- * and efficient when only the first derivative of the unit vector is
- * needed.
- *
- * @param  r      Position vector
- * @param  rdot   Rate of change (velocity) of position vector
- * 
- * @return  First derivative of unit vector
- */
-template<typename T, int N>
-Eigen::Matrix<T, N, 1> unit_vector_dot(const Eigen::Matrix<T, N, 1>& r,
-                                       const Eigen::Matrix<T, N, 1>& rdot)
-{
-  T inv_rmag {1.0/r.norm()};
-  Eigen::Matrix<T, N, 1> rhat = inv_rmag*r;
-    // Projection onto normal of r
-  Eigen::Matrix<T, N, N> proj = Eigen::Matrix<T, N, N>::Identity() - 
-                                rhat*rhat.transpose();
-
-  return inv_rmag*proj*rdot;
-}
-
 /*
  * Constructor generating rhat, rhat_dot, and rhat_ddot
  */
@@ -107,7 +134,10 @@ UnitVector<T,N>::UnitVector(const Eigen::Matrix<T, N, 1>& r,
                             const Eigen::Matrix<T, N, 1>& rdot,
                             const Eigen::Matrix<T, N, 1>& rddot)
 {
-  T inv_rmag {1.0/r.norm()};
+  T one {static_cast<T>(1.0)};
+  T two {static_cast<T>(2.0)};
+  T three_halves {static_cast<T>(1.5)};
+  T inv_rmag {one/r.norm()};
   Eigen::Matrix<T, N, 1> rhat = inv_rmag*r;
     // Projection onto normal of r
   Eigen::Matrix<T, N, N> rhrht = rhat*rhat.transpose();
@@ -115,9 +145,9 @@ UnitVector<T,N>::UnitVector(const Eigen::Matrix<T, N, 1>& r,
 
   m_rhat = rhat;
   m_rhatdot = inv_rmag*proj*rdot;
-  m_rhatddot = inv_rmag*(proj*rddot - inv_rmag*2.0*rdot.dot(rhat)*
+  m_rhatddot = inv_rmag*(proj*rddot - inv_rmag*two*rdot.dot(rhat)*
                                       (Eigen::Matrix<T, N, N>::Identity() -
-                                      1.5*rhrht)*rdot -
+                                      three_halves*rhrht)*rdot -
                          inv_rmag*rdot.dot(rdot)*rhat);
 }
 
