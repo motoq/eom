@@ -215,6 +215,7 @@ int main(int argc, char* argv[])
   for (auto& cmd : commands) {
     try {
       cmd->validate(ephemerides);
+      cmd->validate(ephemerides, orbit_defs, f2iSys);
     } catch (const eom_app::CmdValidateException& cve) {
       std::cerr << "\n\nError Validating Command: " << cve.what() << '\n';
       return 0;

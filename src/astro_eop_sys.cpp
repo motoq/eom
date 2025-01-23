@@ -8,12 +8,12 @@
 
 #include <astro_eop_sys.h>
 
-#include <string>
 #include <fstream>
 #include <sstream>
-#include <vector>
-#include <unordered_map>
 #include <stdexcept>
+#include <string>
+#include <unordered_map>
+#include <vector>
 
 #include <Eigen/Dense>
 
@@ -186,6 +186,24 @@ eop_record EopSys::getEop(const JulianDate& jd) const
   eop.dy      = p(5);
 
   return eop;
+}
+
+
+auto EopSys::cbegin() const
+{
+  return eopData.cbegin();
+}
+
+
+auto EopSys::cend() const
+{
+  return eopData.cend();
+}
+
+
+auto EopSys::size() const
+{
+  return eopData.size();
 }
 
 

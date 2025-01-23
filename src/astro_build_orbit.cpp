@@ -300,7 +300,7 @@ build_orbit(const OrbitDef& orbitParams,
 std::unique_ptr<Ephemeris>
 build_orbit(const RelOrbitDef& relOrbit,
             const OrbitDef& refOrbit,
-            const std::shared_ptr<eom::Ephemeris>& refEph,
+            const eom::Ephemeris& refEph,
             const std::shared_ptr<const EcfEciSys>& ecfeciSys,
             const std::unordered_map<std::string,
                                      std::vector<eom::state_vector_rec>>& ceph)
@@ -314,8 +314,8 @@ build_orbit(const RelOrbitDef& relOrbit,
     // defining a bounding box and offset automatically guarantees the
     // energy matching constraint.
   //if (relOrbit.getRelCoordType == rtct)
-  Keplerian refOe(refEph->getStateVector(refEph->getEpoch(),
-                                         eom::EphemFrame::eci));
+  Keplerian refOe(refEph.getStateVector(refEph.getEpoch(),
+                                        eom::EphemFrame::eci));
   std::array<double, 6> oe = refOe.getOrbitalElements();
     // Update OE with distance offsets
   double h {refOe.getAngularMomentum()};
@@ -337,7 +337,7 @@ build_orbit(const RelOrbitDef& relOrbit,
                                 xvec(3), xvec(4), xvec(5)};
   OrbitDef newOrbit(relOrbit.getOrbitName(),
                     refOrbit.getPropagatorConfig(),
-                    refEph->getEpoch(),
+                    refEph.getEpoch(),
                     xarr,
                     eom::CoordType::cartesian, eom::FrameType::gcrf);
   return build_orbit(newOrbit, ecfeciSys, ceph);

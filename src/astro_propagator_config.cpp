@@ -50,6 +50,12 @@ void  PropagatorConfig::enableOtherGravityModels() noexcept
 }
 
 
+void  PropagatorConfig::disableOtherGravityModels() noexcept
+{
+  m_other_gravity = false;
+}
+
+
 void PropagatorConfig::setDegreeOrder(int degree, int order)
 {
   m_degree = degree;

@@ -59,10 +59,28 @@ public:
          const JulianDate& startTime, const JulianDate& stopTime);
 
   /**
+   * @param  jd  Time for which to return EOP data, UTC
+   *
    * @return  EOP for the requested time.  Daily published values are
    *          interpolated.  Continuity is guaranteed.
    */
   eop_record getEop(const JulianDate& jd) const;
+
+  /**
+   * @return iterator pointing to beginning of EOP data
+   */
+  auto cbegin() const;
+
+  /**
+   * @return iterator pointing to just after the last EOP data
+   *         structure
+   */
+  auto cend() const;
+
+  /**
+   * @return  The number of eop records
+   */
+  auto size() const;
 
 private:
   unsigned long mjd_first {0UL};

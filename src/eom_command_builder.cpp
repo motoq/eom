@@ -19,6 +19,7 @@
 #include <eom_orbit_printer.h>
 #include <eom_range_printer.h>
 #include <eom_rtc_printer.h>
+#include <eom_xfer_orbit.h>
 
 #include <astro_orbit_def.h>
 
@@ -51,6 +52,10 @@ std::unique_ptr<EomCommand> buildCommand(std::deque<std::string>& tokens,
   } else if (command_str == "PrintRTC") {
     std::unique_ptr<EomCommand> command =
         std::make_unique<EomRtcPrinter>(tokens, cfg);
+    return command;
+  } else if (command_str == "TransferOrbit") {
+    std::unique_ptr<EomCommand> command =
+        std::make_unique<EomXferOrbit>(tokens, cfg);
     return command;
   } else {
     throw std::invalid_argument(

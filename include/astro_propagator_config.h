@@ -206,6 +206,12 @@ public:
   void enableOtherGravityModels() noexcept;
 
   /**
+   * When called, disables other gravity models based on celestial bodies
+   * initialized via external ephemerides
+   */
+  void disableOtherGravityModels() noexcept;
+
+  /**
    * @return  true if planetary, etc., gravity models are enabled
    */
   bool otherGravityModelsEnabled() const noexcept

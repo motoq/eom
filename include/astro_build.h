@@ -66,7 +66,7 @@ build_orbit(const OrbitDef& orbitParams,
 std::unique_ptr<Ephemeris>
 build_orbit(const RelOrbitDef& relOrbit,
             const OrbitDef& refOrbit,
-            const std::shared_ptr<eom::Ephemeris>& refEph,
+            const eom::Ephemeris& refEph,
             const std::shared_ptr<const EcfEciSys>& ecfeciSys,
             const std::unordered_map<std::string,
                                      std::vector<eom::state_vector_rec>>& ceph);

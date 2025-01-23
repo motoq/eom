@@ -40,6 +40,7 @@ set(SOURCES
   src/eom_test_earth_xt.cpp
   src/eom_test_moon.cpp
   src/eom_test_sun.cpp
+  src/eom_xfer_orbit.cpp
   src/parse_datetime.cpp
   src/parse_duration.cpp
   src/parse_ephem_file_def.cpp
@@ -61,6 +62,7 @@ set(SOURCES
   src/astro_earth_xt.cpp
   src/astro_ecfeci_sys.cpp
   src/astro_eop_sys.cpp
+  src/astro_generate_xfer_orbit.cpp
   src/astro_gravity_jn.cpp
   src/astro_gravity_std.cpp
   src/astro_ground_point.cpp

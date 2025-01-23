@@ -91,7 +91,7 @@ eomx_gen_ephemerides(const eom_app::EomConfig& cfg,
                                ephemerides.at(templateOrbit.getOrbitName());
           eph = eom::build_orbit(relOrbit,
                                  templateOrbit,
-                                 templateEph,
+                                 *templateEph,
                                  f2iSys, celestials);
         }
       }

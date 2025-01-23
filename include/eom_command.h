@@ -15,7 +15,9 @@
 #include <unordered_map>
 #include <stdexcept>
 
+#include <astro_ecfeci_sys.h>
 #include <astro_ephemeris.h>
+#include <astro_orbit_def.h>
 
 #include <eom_config.h>
 
@@ -57,6 +59,15 @@ public:
   virtual void validate(
       const std::unordered_map<
           std::string, std::shared_ptr<eom::Ephemeris>>& ephemerides) = 0;
+
+  virtual void validate(
+      const std::unordered_map<
+          std::string, std::shared_ptr<eom::Ephemeris>>&,
+          const std::vector<eom::OrbitDef>&,
+          std::shared_ptr<const eom::EcfEciSys>)
+  {
+    ;
+  }
 
   /**
    * Carry out the functionality of the implementing class
