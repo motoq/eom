@@ -9,15 +9,15 @@
 #ifndef ASTRO_ECFECI_SYS_H
 #define ASTRO_ECFECI_SYS_H
 
-#include <cal_duration.h>
-#include <cal_julian_date.h>
-#include <astro_eop_sys.h>
+#include <memory>
+#include <vector>
 
 #include <Eigen/Dense>
 #include <Eigen/Geometry>
 
-#include <memory>
-#include <vector>
+#include <cal_duration.h>
+#include <cal_julian_date.h>
+#include <astro_eop_sys.h>
 
 namespace eom {
 

@@ -2,3 +2,4 @@
 
 rm *.m
 rm *.e
+rm *.lis

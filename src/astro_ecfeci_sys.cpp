@@ -8,6 +8,16 @@
 
 #include <astro_ecfeci_sys.h>
 
+#include <cmath>
+#include <memory>
+#include <stdexcept>
+
+#include <Eigen/Dense>
+#include <Eigen/Geometry>
+
+#include <sofa.h>
+#include <sofam.h>
+
 #include <utl_const.h>
 #include <phy_const.h>
 #include <cal_duration.h>
@@ -15,15 +25,6 @@
 #include <cal_julian_date.h>
 #include <cal_leap_seconds.h>
 #include <astro_eop_sys.h>
-
-#include <sofa.h>
-#include <sofam.h>
-
-#include <Eigen/Dense>
-#include <Eigen/Geometry>
-
-#include <memory>
-#include <stdexcept>
 
 /*
  * Local utility for converting a C double[3][3] to an Eigen Matrix3d.
@@ -96,15 +97,20 @@ EcfEciSys::EcfEciSys(const JulianDate& startTime,
     i2i.mjd2000 = f2i.mjd2000;
     eop_record eop;
     auto jdTT = ls.utc2tt(jd);
-      // Pole locations for BPN
+      // Pole locations for BPN (sine space)
+      // From xys06a.c:
+      // 2) The Celestial Intermediate Pole coordinates are the x,y components
+      //    of the unit vector in the Geocentric Celestial Reference System.
+      // 3) The CIO locator s (in radians) positions the Celestial
+      //    Intermediate Origin on the equator of the CIP.
     iauXys06a(jdTT.getJdHigh(), jdTT.getJdLow(), &x, &y, &s);
       // Get EOP data is available
     if (eopSys != nullptr) {
       eop = eopSys->getEop(jd);
       f2i.ut1mutc = phy_const::tu_per_sec*eop.ut1mutc;
       f2i.lod = phy_const::tu_per_sec*0.001*eop.lod;       // TU per msec
-      x += utl_const::rad_per_mas*eop.dx;
-      y += utl_const::rad_per_mas*eop.dy;
+      x += std::sin(utl_const::rad_per_mas*eop.dx);
+      y += std::sin(utl_const::rad_per_mas*eop.dy);
     }
       // Transpose of BPN, to BPN
     iauC2ixys(x, y, s, cirf2gcrf); 

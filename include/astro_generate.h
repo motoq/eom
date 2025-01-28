@@ -11,6 +11,7 @@
 
 #include <memory>
 #include <string>
+#include <utility>
 
 #include <cal_julian_date.h>
 #include <cal_duration.h>
@@ -43,14 +44,9 @@ namespace eom {
  * @param  ecfeciSys      Ecf/Eci utility service pointer that will be
  *                        copied into the Ephemeris object.
  *
- * @throws  std::invalid_argument  When incompatible arguments are
- *                                 provided, such as ephemeris services
- *                                 that are not valid over required time
- *                                 spans.
- *
  * @return  Transfer orbit
  */
-std::unique_ptr<Ephemeris>
+std::pair<std::unique_ptr<Ephemeris>, int>
 generate_xfer_orbit(const std::string& orbit_name,
                     const Ephemeris& startOrbit,
                     const Ephemeris& endOrbit,

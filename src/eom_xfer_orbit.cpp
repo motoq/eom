@@ -9,24 +9,24 @@
 #include <eom_xfer_orbit.h>
 
 #include <deque>
+#include <fstream>
 #include <iostream>
 #include <memory>
 #include <stdexcept>
 #include <string>
 #include <unordered_map>
 
-/*
-#include <fstream>
-
 #include <Eigen/Dense>
+/*
 
-#include <phy_const.h>
-#include <astro_ephemeris.h>
+
+#include <cal_julian_date.h>
 #include <astro_attitude.h>
 */
 
-#include <cal_julian_date.h>
+#include <phy_const.h>
 #include <astro_ecfeci_sys.h>
+#include <astro_ephemeris.h>
 #include <astro_generate.h>
 
 #include <eom_config.h>
@@ -119,6 +119,22 @@ void EomXferOrbit::validate(const std::unordered_map<
         m_start_eph->getName() +
         "\n  Ensure start orbit is neither a derived orbit nor ephemeris");
   }
+
+    // Check that supplied ephemerides cover transfer orbit time span
+  auto xfer_end = m_xfer_start + m_xfer_dur;
+  if (m_xfer_start < m_start_eph->getBeginTime() ||
+      m_start_eph->getEndTime() < xfer_end) {
+    throw CmdValidateException("EomXferOrbit::validate() "s +
+                               m_start_eph->getName() +
+                               " does not cover transfer orbit duration"s);
+  }
+  if (m_xfer_start < m_end_eph->getBeginTime() ||
+      m_end_eph->getEndTime() < xfer_end) {
+    throw CmdValidateException("EomXferOrbit::validate() "s +
+                               m_end_eph->getName() +
+                               " does not cover transfer orbit duration"s);
+  }
+
 }
 
 
@@ -126,7 +142,8 @@ void EomXferOrbit::execute() const
 {
   using namespace std::string_literals;
 
-  std::unique_ptr<eom::Ephemeris> xfer_eph = eom::generate_xfer_orbit(
+  //std::unique_ptr<eom::Ephemeris> xfer_eph = eom::generate_xfer_orbit(
+  auto [xfer_eph, nitr] = eom::generate_xfer_orbit(
       m_start_orbit_name + "_to_"s + m_end_orbit_name,
       *m_start_eph,
       *m_end_eph,
@@ -135,15 +152,39 @@ void EomXferOrbit::execute() const
       m_propCfg,
       m_f2i);
 
-/*
-
-  auto file_name = m_func_name + ".m"s;
+  auto file_name = m_func_name + ".lis"s;
   std::ofstream fout(file_name);
-
   if (fout.is_open()) {
-    auto jdStart = m_xfer_start + -1.0*m_xfer_dur;
-    auto jdStop = m_xfer_start + m_xfer_dur;
+    if (nitr < 0) {
+      fout << "\nNo solution found for transfer orbit\n";
+      return;
+    }
+    auto xfer_end = m_xfer_start + m_xfer_dur;
 
+    fout  << "\nTransfer converged in " << nitr << " iterations";
+    Eigen::Matrix<double, 6, 1> x1 =
+        m_start_eph->getStateVector(m_xfer_start, eom::EphemFrame::eci);
+    Eigen::Matrix<double, 6, 1> x1t =
+        xfer_eph->getStateVector(m_xfer_start, eom::EphemFrame::eci);
+    Eigen::Matrix<double, 6, 1> x2 =
+        m_end_eph->getStateVector(xfer_end, eom::EphemFrame::eci);
+    Eigen::Matrix<double, 6, 1> x2t =
+        xfer_eph->getStateVector(xfer_end, eom::EphemFrame::eci);
+    Eigen::Matrix<double, 3, 1> dv1 = x1t.block<3,1>(3,0) -
+                                       x1.block<3,1>(3,0);
+    Eigen::Matrix<double, 3, 1> dv2 = x2t.block<3,1>(3,0) -
+                                       x2.block<3,1>(3,0);
+    fout << "\nEntry DeltaV:  " << phy_const::m_per_du*
+                                   phy_const::tu_per_sec*dv1.norm() <<
+                                        " m/sec";
+    fout << "\nExit DeltaV:   " << phy_const::m_per_du*
+                                   phy_const::tu_per_sec*dv2.norm() << " m/sec";
+
+    
+
+
+
+/*
     double tot_time {m_to_time_units*phy_const::tu_per_day*(m_jdStop -
                                                             m_jdStart)};
     double dt {m_to_time_units*m_dtOut.getTu()};
@@ -201,12 +242,13 @@ void EomXferOrbit::execute() const
     fout << "\naxis equal;";
     fout << "\nend\n";
     fout.close();
+*/
+    fout << '\n';
   } else {
     std::cerr << "\nCan't open " << file_name << '\n';
   }
 
 
-*/
 }
 
 }
