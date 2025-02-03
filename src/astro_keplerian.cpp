@@ -35,7 +35,7 @@ namespace {
     // Convergence
   constexpr int niter {100};
   constexpr double eps {1.e-10};
-    // oe_eps {
+    // oe_eps
   constexpr double oe_eps {1.0e-6};
 }
 
@@ -208,6 +208,12 @@ void Keplerian::set(const std::array<double, 6>& oe)
 }
 
 
+double Keplerian::getSemimajorAxis() const
+{
+  return m_oe[ia];
+}
+
+
 double Keplerian::getEccentricity() const
 {
   return m_oe[ie];
@@ -310,6 +316,33 @@ void Keplerian::setWithMeanAnomaly(double ma)
 
   oe[iv] = std::atan2(sv, cv);
   this->set(oe);
+}
+
+
+Eigen::Matrix<double, 3, 3> Keplerian::getEciToPerifocal() const
+{
+  Eigen::Matrix<double, 3, 1> rvec {m_cart.block<3,1>(0,0)};
+  Eigen::Matrix<double, 3, 1> vvec {m_cart.block<3,1>(3,0)};
+
+    // Angular momentum
+  Eigen::Matrix<double, 3, 1> hvec {rvec.cross(vvec)};
+  hvec.normalize();
+    // Eccentricity
+  double v2 {vvec.dot(vvec)};
+  double muor {gm/rvec.norm()};
+  double rdotv {rvec.dot(vvec)};
+  Eigen::Matrix<double, 3, 1> evec {((v2 - muor)*rvec - rdotv*vvec)/gm};
+  evec.normalize();
+    // y-axis
+  Eigen::Matrix<double, 3, 1> fvec {hvec.cross(evec)};
+  fvec.normalize();
+    // eci to pef
+  Eigen::Matrix<double, 3, 3> c_pi;
+  c_pi.row(0) = evec;
+  c_pi.row(1) = fvec;
+  c_pi.row(2) = hvec;
+
+  return c_pi;
 }
 
 

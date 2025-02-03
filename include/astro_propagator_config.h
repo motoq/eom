@@ -27,6 +27,7 @@ enum class PropagatorType {
   vinti_j2,                       ///< Gim J. Der version with J3 = 0
   kepler1mod,                     ///< Experimental, modified Gim J. Der version
   vinti6mod,                      ///< Experimental, modified Gim J. Der version
+  fandg,                          ///< BMW f and g method
   sgp4,                           ///< Based on Vallado's version
   sp                              ///< Special Pert with more config options
 };

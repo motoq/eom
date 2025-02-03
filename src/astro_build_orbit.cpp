@@ -24,6 +24,7 @@
 #include <astro_deq.h>
 #include <astro_ecfeci_sys.h>
 #include <astro_ephemeris.h>
+#include <astro_fandg.h>
 #include <astro_force_model.h>
 #include <astro_gravity.h>
 #include <astro_gravity_jn.h>
@@ -244,6 +245,13 @@ build_orbit(const OrbitDef& orbitParams,
                                         orbitParams.getEpoch(),
                                         xeciVec,
                                         ecfeciSys);
+    return orbit;
+  } else if (pCfg.getPropagatorType() == PropagatorType::fandg) {
+    std::unique_ptr<Ephemeris> orbit =
+           std::make_unique<FandG>(orbitParams.getOrbitName(),
+                                   orbitParams.getEpoch(),
+                                   xeciVec,
+                                   ecfeciSys);
     return orbit;
   } else if (pCfg.getPropagatorType() == PropagatorType::vinti6) {
     std::unique_ptr<Ephemeris> orbit =

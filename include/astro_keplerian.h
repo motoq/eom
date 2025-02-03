@@ -102,6 +102,11 @@ public:
   }
 
   /*
+   * @return orbit semimajor axis length, DU
+   */
+  double getSemimajorAxis() const;
+
+  /*
    * @return orbit eccentricity
    */
   double getEccentricity() const;
@@ -176,6 +181,11 @@ public:
    *          radius, DU/TU
    */
   double getSpeed(double r) const;
+
+  /**
+   * @return  ECI to perifocal reference frame transformation
+   */
+  Eigen::Matrix<double, 3, 3> getEciToPerifocal() const;
 
 private:
   void set(const std::array<double, 6>& oe);
