@@ -1,0 +1,23 @@
+#
+# Vinti based two-body vs. BMW f and g
+# 2025/2/3
+#
+
+SimStart GD 2021 11 12 17 00 00.0;     # Gregorian date, UTC
+SimDuration Days 1;
+LeapSeconds 37;
+EcfEciRate Minutes 240;
+AngleUnits  Degrees;
+Orbit  kep     Kepler1 GD 2021 11 12 17 00 00.0
+       KEP_T  GCRF  4.1632  0.741  63.4  345.0  270.0  0.0;
+Orbit  fng     FandG GD 2021 11 12 17 00 00.0
+       KEP_T  GCRF  4.1632  0.741  63.4  345.0  270.0  0.0;
+#DistanceUnits  Kilometers;             # Sticky distance and time settings
+#TimeUnits Seconds;                     # For inputs without unit specifications
+#Orbit  kep      Kepler1  GD 2021 11 12 17 00 00.0
+#       CART  GCRF  -5552.0  -2563.0  3258.0   2.149  -7.539  -2.186;
+#Orbit  fng      FandG  GD 2021 11 12 17 00 00.0
+#       CART  GCRF  -5552.0  -2563.0  3258.0   2.149  -7.539  -2.186;
+OutputRate Minutes .5;
+Command PrintRange kep fng kep_rng;
+#Command PrintRTC vinti spj3 vinti_rtc_vsp;

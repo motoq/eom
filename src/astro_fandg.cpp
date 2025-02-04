@@ -36,8 +36,8 @@ namespace {
   constexpr double f8inv {1.0/static_cast<double>(mth_util::factorial(8))};
   constexpr double f9inv {1.0/static_cast<double>(mth_util::factorial(9))};
 
-  constexpr double xtol {1.0e-8};
-  constexpr int maxitr {100};
+  constexpr double xtol {1.0e-10};
+  constexpr int maxitr {15};
 }
 
 namespace eom {
@@ -55,12 +55,14 @@ FandG::FandG(const std::string& orbit_name,
   m_a = kep.getSemimajorAxis();
   m_r0_mag = xeci.block<3,1>(0,0).norm();
 
+    // 2-body problem solved in plane spanned by r & v
   Eigen::Matrix<double, 3, 3> c_pi = kep.getEciToPerifocal();
   Eigen::Matrix<double, 3, 1> r0 = c_pi*xeci.block<3,1>(0,0);
   Eigen::Matrix<double, 3, 1> v0 = c_pi*xeci.block<3,1>(3,0);
   m_r0 = r0.block<2,1>(0,0);
   m_v0 = v0.block<2,1>(0,0);
-
+    // Only need to convert from perifocal back to
+    // computational ECI frame after initialization
   m_c_ip = c_pi.transpose();
 }
 
@@ -89,6 +91,14 @@ JulianDate FandG::getEndTime() const
 }
 
 
+/*
+ * Universal variable based solution to Kepler's Problem,
+ * f and g implementation from Fundamentals of Astrodynamics,
+ * Bate, Mueller, & White - simply known as BMW in the community...
+ *
+ * Implemented with elliptical orbits in mind only at this time as
+ * eom is focused on earth gravity bound problems.
+ */
 Eigen::Matrix<double, 6, 1> FandG::getStateVector(const JulianDate& jd,
                                                    EphemFrame frame) const 
 {
@@ -98,7 +108,7 @@ Eigen::Matrix<double, 6, 1> FandG::getStateVector(const JulianDate& jd,
   const double dt {phy_const::tu_per_day*(jd - m_jd0)};
   const double ainv {1.0/m_a};
 
-    // Universal variable - initial guess is GM*dt/smaj
+    // Universal variable - initial guess for elliptical is GM*dt/smaj
   double xx {dt*ainv};
 
     // Refine guess of x via Newton's method
@@ -133,7 +143,6 @@ Eigen::Matrix<double, 6, 1> FandG::getStateVector(const JulianDate& jd,
   auto rmag = r.norm();
   auto gdot = 1.0 - xx2*cz/rmag;
   auto fdot = xx*(zz*sz - 1.0)/(r0mag*rmag);
-  //std::cerr << "\n  ::fg eqn " << f*gdot - fdot*g;
   Eigen::Matrix<double, 2, 1> v = fdot*m_r0 + gdot*m_v0;
 
   Eigen::Matrix<double, 3, 1> rpef = Eigen::Matrix<double, 3, 1>::Zero();
