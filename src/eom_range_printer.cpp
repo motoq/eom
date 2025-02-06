@@ -96,18 +96,22 @@ void EomRangePrinter::execute() const
 
       // Function header
     fout << "function [gxh, time_range] = " << m_func_name;
-    fout << "(detrend_opt)";
-    fout << "\n% RNG is an EOM generated Matlab/Octave function that";
-    fout << "\n% plots range as a function of time.";
     if (m_spectrum) {
-      fout << " The amplitude";
-      fout << "\n% spectrum is also plotted.";
+      fout << "(detrend_opt)";
+    }
+    fout << "\n% RNG is an EOM generated Matlab/Octave function that";
+    fout << "\n% plots range and range rate of two objects.";
+    if (m_spectrum) {
+      fout << "  The range";
+      fout << "\n% amplitude spectrum is also plotted.";
     }
     fout << "\n%";
-    fout << "\n% Input:";
-    fout << "\n%   detrend_opt  If > 0, perform indicated detrend on fft";
-    fout << "\n%                operation.  Optional input, no detrend by";
-    fout << "\n%                default";
+    if (m_spectrum) {
+      fout << "\n% Input:";
+      fout << "\n%   detrend_opt  If > 0, perform indicated detrend on fft";
+      fout << "\n%                operation.  Optional input, no detrend by";
+      fout << "\n%                default";
+    }
     fout << "\n% Outputs:";
     fout << "\n%   gxh         Graphics handle to new image";
     fout << "\n%   time_range  Nx2 matrix of time and range values";
@@ -125,15 +129,18 @@ void EomRangePrinter::execute() const
       fout << "\n  " << dtnow << " ";
       eom::JulianDate jdNow {m_jdStart +
                              phy_const::day_per_tu*(dtnow/m_to_time_units)};
-      Eigen::Matrix<double, 3, 1> r1 =
-          m_eph[0]->getPosition(jdNow, eom::EphemFrame::eci);
-      Eigen::Matrix<double, 3, 1> r2 =
-          m_eph[1]->getPosition(jdNow, eom::EphemFrame::eci);
-      Eigen::Matrix<double, 3, 1> dr = r1 - r2;
+      Eigen::Matrix<double, 6, 1> x1 =
+          m_eph[0]->getStateVector(jdNow, eom::EphemFrame::eci);
+      Eigen::Matrix<double, 6, 1> x2 =
+          m_eph[1]->getStateVector(jdNow, eom::EphemFrame::eci);
+      Eigen::Matrix<double, 3, 1> dr = x1.block<3,1>(0,0) - x2.block<3,1>(0,0);
+      Eigen::Matrix<double, 3, 1> dv = x1.block<3,1>(3,0) - x2.block<3,1>(3,0);
       double range = dr.norm();
+      double relvel = dv.norm();
       fout << " " << m_to_distance_units*range;
+      fout << " " << m_to_distance_units*relvel/m_to_time_units;
     }
-      // Make the plot and annotate
+      // Make the range plot and annotate
     fout << "\n];";
     fout << "\ngxh = figure; hold on;";
     fout << "\nplot(time_range(:,1), time_range(:,2));";
@@ -141,6 +148,15 @@ void EomRangePrinter::execute() const
     fout << "\nylabel('" << m_distanceUnitsLbl << "');";
     fout << "\ntitle('" << m_orbit_names[0] << '-' << m_orbit_names[1] <<
             " Range on " << m_jdStart.to_dmy_str() << "');";
+    fout << "\naxis tight";
+      // Velocity
+    fout << "\ngxh = figure; hold on;";
+    fout << "\nplot(time_range(:,1), time_range(:,3));";
+    fout << "\nxlabel('" << m_timeUnitsLbl << "');";
+    fout << "\nylabel('" << m_distanceUnitsLbl << "/" <<
+                            m_timeUnitsLbl << "');";
+    fout << "\ntitle('" << m_orbit_names[0] << '-' << m_orbit_names[1] <<
+            " Relative Velocity on " << m_jdStart.to_dmy_str() << "');";
     fout << "\naxis tight";
 
       // Create and plot amplitude spectrum using Matlab/Octave fft
