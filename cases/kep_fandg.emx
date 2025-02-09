@@ -20,4 +20,4 @@ Orbit  fng     FandG GD 2021 11 12 17 00 00.0
 #       CART  GCRF  -5552.0  -2563.0  3258.0   2.149  -7.539  -2.186;
 OutputRate Minutes .5;
 Command PrintRange kep fng kep_rng;
-#Command PrintRTC vinti spj3 vinti_rtc_vsp;
+Command PrintRTC kep fng kep_rtc;

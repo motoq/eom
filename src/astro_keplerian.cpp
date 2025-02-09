@@ -353,7 +353,8 @@ std::ostream& operator<<(std::ostream& out, const Keplerian& kep)
   return out << std::fixed <<
                 std::setprecision(2) <<
                 "    (" <<
-                phy_const::tu_per_day/kep.getPeriod() << " rev/day)" <<
+                phy_const::tu_per_day/kep.getPeriod() << " rev/day, " <<
+                phy_const::min_per_tu*kep.getPeriod() << " minutes)" <<
                 std::setprecision(3) <<
                 "\n  a: " << phy_const::km_per_du*oe[0] << " km" <<
                std::setprecision(6) <<

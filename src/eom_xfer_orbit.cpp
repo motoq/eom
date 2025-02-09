@@ -17,17 +17,12 @@
 #include <unordered_map>
 
 #include <Eigen/Dense>
-/*
-
-
-#include <cal_julian_date.h>
-#include <astro_attitude.h>
-*/
 
 #include <phy_const.h>
 #include <astro_ecfeci_sys.h>
 #include <astro_ephemeris.h>
 #include <astro_generate.h>
+#include <astro_keplerian.h>
 
 #include <eom_config.h>
 #include <eom_parse.h>
@@ -159,9 +154,9 @@ void EomXferOrbit::execute() const
       fout << "\nNo solution found for transfer orbit\n";
       return;
     }
-    auto xfer_end = m_xfer_start + m_xfer_dur;
-
     fout  << "\nTransfer converged in " << nitr << " iterations";
+
+    auto xfer_end = m_xfer_start + m_xfer_dur;
     Eigen::Matrix<double, 6, 1> x1 =
         m_start_eph->getStateVector(m_xfer_start, eom::EphemFrame::eci);
     Eigen::Matrix<double, 6, 1> x1t =
@@ -174,12 +169,21 @@ void EomXferOrbit::execute() const
                                        x1.block<3,1>(3,0);
     Eigen::Matrix<double, 3, 1> dv2 = x2t.block<3,1>(3,0) -
                                        x2.block<3,1>(3,0);
+
+    try {
+      eom::Keplerian kep {x1t};
+      fout << "\nTransfer Orbit:\n" << kep;
+    } catch (const std::invalid_argument& ia) {
+      fout << "\n\nCan't form elliptical orbit:  " << ia.what();
+    }
+
     fout << "\nEntry DeltaV:  " << phy_const::m_per_du*
                                    phy_const::tu_per_sec*dv1.norm() <<
                                         " m/sec";
     fout << "\nExit DeltaV:   " << phy_const::m_per_du*
                                    phy_const::tu_per_sec*dv2.norm() << " m/sec";
 
+    
     
 
 
