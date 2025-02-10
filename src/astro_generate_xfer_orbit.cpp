@@ -9,6 +9,7 @@
 #include <iostream>
 
 #include <array>
+#include <cmath>
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -23,6 +24,8 @@
 #include <cal_duration.h>
 #include <astro_ecfeci_sys.h>
 #include <astro_ephemeris.h>
+#include <astro_fandg.h>
+#include <astro_keplerian.h>
 #include <astro_orbit_def.h>
 #include <astro_propagator_config.h>
 
@@ -33,6 +36,68 @@ namespace {
 }
 
 namespace eom {
+
+/*
+ * BMW Gauss problem via universal variables
+ */
+Eigen::Matrix<double, 6, 1>
+generate_gauss_fg_xfer(const Eigen::Matrix<double, 2, 1>& r1,
+                       const Eigen::Matrix<double, 2, 1>& r2,
+                       const Duration& dur)
+{
+  // Units of DU and TU
+  //   GM = 1.0
+
+    // Short way around placeholder
+  constexpr double dm {1.0};
+
+  Eigen::Matrix<double, 6, 1> pv {Eigen::Matrix<double, 6, 1>::Zero()};
+
+  auto r1mag = r1.norm();
+  auto r2mag = r2.norm();
+  auto r1dotr2 = r1.dot(r2);
+  auto avar = dm*std::sqrt(r1mag*r2mag + r1dotr2);
+
+  double zvar {0.0};
+  for (int ii=0; ii<10; ++ii) {
+    auto [cz, sz] = astro_fg_cands(zvar);
+    auto yvar = r1mag + r2mag - avar*(1.0 - zvar*sz)/std::sqrt(cz);
+    if (yvar < 0.0) {
+      std::cerr << "\n\nNegative yvar";
+      return pv;
+    }
+    auto sqrty = std::sqrt(yvar);
+    auto xvar = sqrty/std::sqrt(cz);
+    auto xxx = xvar*xvar*xvar;
+  
+      // Transfer time vs. computed time
+    auto dt = dur.getTu();
+    auto dtc = xxx*sz + avar*sqrty;
+    auto [dcdz, dsdz] = astro_fg_dcands_dz(zvar);
+    auto cinv = 1.0/cz;
+    auto dtdz = xxx*(dsdz - 1.5*sz*dcdz*cinv) +
+                0.125*avar*(3.0*sz*sqrty*cinv + avar/xvar);
+    auto dz = (dt - dtc)/dtdz;
+    zvar += dz;
+    std::cerr << "\ndz  " << dz;
+
+    if (std::abs(dz) < 1.0e-6) {
+      std::cerr << "\n\nFound zvar,  dt:  " << dt << "  dtc:  " << dtc;
+      break;
+    }
+  }
+  std::cerr << "\nzvar  " << zvar;
+
+  auto [cz, sz] = astro_fg_cands(zvar);
+  auto yvar = r1mag + r2mag - avar*(1.0 - zvar*sz)/std::sqrt(cz);
+  double f = {1.0 - yvar/r1mag};
+  double g = {avar*std::sqrt(yvar)};
+
+  pv.block<2,1>(0,0) = r1;
+  pv.block<2,1>(3,0) = (r2 - f*r1)/g;
+
+  return pv;
+}
 
 /*
  * Based on William E. Wiesel's "Modern Astrodynamics", 2nd Ed.,
@@ -94,6 +159,30 @@ generate_xfer_orbit(const std::string& orbit_name,
     // Initial guess is state vector at start time
   Eigen::Matrix<double, 6, 1> rv = startOrbit.getStateVector(xferStartTime,
                                                              EphemFrame::eci);
+
+
+    // r1 to r2
+  Eigen::Matrix<double, 3, 1> ihat {rv.block<3,1>(0,0)};
+  Eigen::Matrix<double, 3, 1> khat {ihat.cross(r2)};
+  Eigen::Matrix<double, 3, 1> jhat {khat.cross(ihat)};
+  ihat.normalize();
+  jhat.normalize();
+  khat.normalize();
+  Eigen::Matrix<double, 3, 3> cp;
+  cp.row(0) = ihat;
+  cp.row(1) = jhat;
+  cp.row(2) = khat;
+  Eigen::Matrix<double, 3, 1> r1p = cp*rv.block<3,1>(0,0);
+  Eigen::Matrix<double, 3, 1> r2p = cp*r2;
+  Eigen::Matrix<double, 6, 1> rv2d = generate_gauss_fg_xfer(r1p.block<2,1>(0,0),
+                                                            r2p.block<2,1>(0,0),
+                                                            xferDur);
+  cp.transposeInPlace();
+  rv.block<3,1>(0,0) = cp*rv2d.block<3,1>(0,0);
+  rv.block<3,1>(3,0) = cp*rv2d.block<3,1>(3,0);
+
+
+
     // Dummy parameter
   std::unordered_map<std::string, std::vector<eom::state_vector_rec>> ceph;
     // Transfer ephemeris to determine

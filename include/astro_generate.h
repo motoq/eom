@@ -13,6 +13,8 @@
 #include <string>
 #include <utility>
 
+#include <Eigen/Dense>
+
 #include <cal_julian_date.h>
 #include <cal_duration.h>
 #include <astro_ecfeci_sys.h>
@@ -20,6 +22,11 @@
 #include <astro_propagator_config.h>
 
 namespace eom {
+
+Eigen::Matrix<double, 6, 1>
+generate_gauss_fg_xfer(const Eigen::Matrix<double, 2, 1>& r1,
+                       const Eigen::Matrix<double, 2, 1>& r2,
+                       const Duration& dur);
 
 /**
  * Creates an ephemeris "service" for a transfer orbit defined

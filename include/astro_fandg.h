@@ -23,9 +23,39 @@
 
 namespace eom {
 
+//
+// General purpose functions
+//
+
 /**
- * Implementation f and g method of Kepler's problem as
- * presented in BMW, limited to elliptical orbits.
+ * Compute Cosine and Sine terms associated with f and g
+ * universal variable approach to Kepler's problem.
+ *
+ * @param  z  x^2/a, always positive for elliptical orbits
+ *
+ * @return  [C(z), S(z)]
+ */
+std::pair<double, double> astro_fg_cands(double z);
+
+/**
+ * Compute derivative of Cosine and Sine terms w.r.t. z
+ *
+ * @param  z  x^2/a
+ *
+ * @return  [dC(z)/dz, dS(z)/d]
+ */
+std::pair<double, double> astro_fg_dcands_dz(double z);
+
+//
+// Class definition
+//
+
+/**
+ * Universal variable implementation f and g method
+ * of Kepler's problem as presented in BMW, limited
+ * to elliptical orbits.
+ *
+ * @author  Kurt Motekew  2025/02/08
  *
  * Fundamentals of Astrodynamics
  * Bate, Mueller, & White

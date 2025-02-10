@@ -24,8 +24,6 @@
 
 #include <iostream>
 
-static std::pair<double, double> cands(double z);
-
 namespace {
   constexpr double f2inv {1.0/static_cast<double>(mth_util::factorial(2))};
   constexpr double f3inv {1.0/static_cast<double>(mth_util::factorial(3))};
@@ -35,6 +33,9 @@ namespace {
   constexpr double f7inv {1.0/static_cast<double>(mth_util::factorial(7))};
   constexpr double f8inv {1.0/static_cast<double>(mth_util::factorial(8))};
   constexpr double f9inv {1.0/static_cast<double>(mth_util::factorial(9))};
+    // Used only for d/dz
+  constexpr double f10inv {1.0/static_cast<double>(mth_util::factorial(10))};
+  constexpr double f11inv {1.0/static_cast<double>(mth_util::factorial(11))};
 
   constexpr double xtol {1.0e-10};
   constexpr int maxitr {15};
@@ -118,7 +119,7 @@ Eigen::Matrix<double, 6, 1> FandG::getStateVector(const JulianDate& jd,
   for (int ii=0; ii<maxitr; ++ii) {
     auto xx2 = xx*xx;
     auto zz = xx2*ainv;
-    auto [cz, sz] = cands(zz);
+    auto [cz, sz] = astro_fg_cands(zz);
     auto dtn = xx*xx2*sz + r0dotv0*xx2*cz + r0mag*xx*(1.0 - zz*sz);
     auto dtdx = xx2*cz + r0dotv0*xx*(1.0 - zz*sz) + r0mag*(1.0 - zz*cz);
     auto dx = (dt - dtn)/dtdx;
@@ -136,7 +137,7 @@ Eigen::Matrix<double, 6, 1> FandG::getStateVector(const JulianDate& jd,
 
   auto xx2 = xx*xx;
   double zz {xx2*ainv};
-  auto [cz, sz] = cands(zz);
+  auto [cz, sz] = astro_fg_cands(zz);
   auto f = 1.0 - xx2*cz/r0mag;
   auto g = dt - xx*xx2*sz;
   Eigen::Matrix<double, 2, 1> r = f*m_r0 + g*m_v0;
@@ -173,13 +174,11 @@ Eigen::Matrix<double, 3, 1> FandG::getPosition(const JulianDate& jd,
   return xeci.block<3,1>(0,0);
 }
 
-}
-
-
 /*
- * @param  z  x^2/a, always positive for elliptical orbits
+ * BMW implementation including use of series expansion for small
+ * values of z to avoid division by zero.
  */
-static std::pair<double, double> cands(double z)
+std::pair<double, double> astro_fg_cands(double z)
 {
   if (z > 0.1) {
     auto sqrtz = std::sqrt(z);
@@ -189,5 +188,21 @@ static std::pair<double, double> cands(double z)
 
   return std::make_pair(f2inv - z*(f4inv - z*(f6inv - z*f8inv)),
                         f3inv - z*(f5inv - z*(f7inv - z*f9inv)));
+}
+
+std::pair<double, double> astro_fg_dcands_dz(double z)
+{
+  auto [cz, sz] = astro_fg_cands(z);
+  if (z > 0.1) {
+    auto twozinv = 0.5/z;
+    return std::make_pair(twozinv*(1.0 - z*sz - 2.0*cz),
+                          twozinv*(cz - 3.0*sz));
+  }
+
+  return std::make_pair(f4inv + z*(2*f6inv - z*(3*f8inv - z*4*f10inv)),
+                        f5inv + z*(2*f7inv - z*(3*f9inv - z*4*f11inv)));
+}
+
+
 }
 
