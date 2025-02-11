@@ -41,8 +41,8 @@ namespace eom {
  * BMW Gauss problem via universal variables
  */
 Eigen::Matrix<double, 6, 1>
-generate_gauss_fg_xfer(const Eigen::Matrix<double, 2, 1>& r1,
-                       const Eigen::Matrix<double, 2, 1>& r2,
+generate_gauss_fg_xfer(const Eigen::Matrix<double, 3, 1>& r1,
+                       const Eigen::Matrix<double, 3, 1>& r2,
                        const Duration& dur)
 {
   // Units of DU and TU
@@ -93,8 +93,8 @@ generate_gauss_fg_xfer(const Eigen::Matrix<double, 2, 1>& r1,
   double f = {1.0 - yvar/r1mag};
   double g = {avar*std::sqrt(yvar)};
 
-  pv.block<2,1>(0,0) = r1;
-  pv.block<2,1>(3,0) = (r2 - f*r1)/g;
+  pv.block<3,1>(0,0) = r1;
+  pv.block<3,1>(3,0) = (r2 - f*r1)/g;
 
   return pv;
 }
@@ -161,25 +161,8 @@ generate_xfer_orbit(const std::string& orbit_name,
                                                              EphemFrame::eci);
 
 
-    // r1 to r2
-  Eigen::Matrix<double, 3, 1> ihat {rv.block<3,1>(0,0)};
-  Eigen::Matrix<double, 3, 1> khat {ihat.cross(r2)};
-  Eigen::Matrix<double, 3, 1> jhat {khat.cross(ihat)};
-  ihat.normalize();
-  jhat.normalize();
-  khat.normalize();
-  Eigen::Matrix<double, 3, 3> cp;
-  cp.row(0) = ihat;
-  cp.row(1) = jhat;
-  cp.row(2) = khat;
-  Eigen::Matrix<double, 3, 1> r1p = cp*rv.block<3,1>(0,0);
-  Eigen::Matrix<double, 3, 1> r2p = cp*r2;
-  Eigen::Matrix<double, 6, 1> rv2d = generate_gauss_fg_xfer(r1p.block<2,1>(0,0),
-                                                            r2p.block<2,1>(0,0),
-                                                            xferDur);
-  cp.transposeInPlace();
-  rv.block<3,1>(0,0) = cp*rv2d.block<3,1>(0,0);
-  rv.block<3,1>(3,0) = cp*rv2d.block<3,1>(3,0);
+  Eigen::Matrix<double, 3, 1> r1 = rv.block<3,1>(0,0);
+  rv = generate_gauss_fg_xfer(r1, r2, xferDur);
 
 
 

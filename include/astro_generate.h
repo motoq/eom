@@ -24,8 +24,8 @@
 namespace eom {
 
 Eigen::Matrix<double, 6, 1>
-generate_gauss_fg_xfer(const Eigen::Matrix<double, 2, 1>& r1,
-                       const Eigen::Matrix<double, 2, 1>& r2,
+generate_gauss_fg_xfer(const Eigen::Matrix<double, 3, 1>& r1,
+                       const Eigen::Matrix<double, 3, 1>& r2,
                        const Duration& dur);
 
 /**
