@@ -10,8 +10,9 @@ EcfEciRate Minutes 240;
 DistanceUnits  Kilometers;
 TimeUnits Seconds;
 Orbit  chief  Vinti6  GD 2021 11 12 17 00 00.0
+#Orbit  chief  Kepler1  GD 2021 11 12 17 00 00.0
        CART  GCRF  -5552.0  -2563.0  3258.0   2.149  -7.539  -2.186;
-RelativeOrbit  deputy  chief  RTCT  5.0  0.0  5.0  0.0;
+RelativeOrbit  deputy  chief  RTCT  5.0  0.0  5.0  100.0;
 OutputRate Minutes 10;
 Command TransferOrbit chief deputy
         GD 2021 11 12 19 00 00.0 Minutes 35  roe_xfer;

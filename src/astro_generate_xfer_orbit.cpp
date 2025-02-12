@@ -12,12 +12,14 @@
 #include <cmath>
 #include <memory>
 #include <string>
+#include <stdexcept>
 #include <unordered_map>
 #include <utility>
 #include <vector>
 
 #include <Eigen/Dense>
 
+#include <utl_nonconvergence_exception.h>
 #include <phy_const.h>
 #include <astro_build.h>
 #include <cal_julian_date.h>
@@ -38,7 +40,11 @@ namespace {
 namespace eom {
 
 /*
- * BMW Gauss problem via universal variables
+ * BMW universal variable implementation of Gauss IOD.  Short way around
+ * approach.
+ *
+ * Fundamentals of Astrodynamics
+ * Bate, Mueller, & White
  */
 Eigen::Matrix<double, 6, 1>
 generate_gauss_fg_xfer(const Eigen::Matrix<double, 3, 1>& r1,
@@ -51,48 +57,50 @@ generate_gauss_fg_xfer(const Eigen::Matrix<double, 3, 1>& r1,
     // Short way around placeholder
   constexpr double dm {1.0};
 
-  Eigen::Matrix<double, 6, 1> pv {Eigen::Matrix<double, 6, 1>::Zero()};
-
   auto r1mag = r1.norm();
   auto r2mag = r2.norm();
   auto r1dotr2 = r1.dot(r2);
   auto avar = dm*std::sqrt(r1mag*r2mag + r1dotr2);
 
+  const auto dt = dur.getTu();
   double zvar {0.0};
-  for (int ii=0; ii<10; ++ii) {
+  bool converged {false};
+  for (int ii=0; ii<maxitr; ++ii) {
     auto [cz, sz] = astro_fg_cands(zvar);
     auto yvar = r1mag + r2mag - avar*(1.0 - zvar*sz)/std::sqrt(cz);
     if (yvar < 0.0) {
-      std::cerr << "\n\nNegative yvar";
-      return pv;
+      throw std::invalid_argument(
+        "generate_gauss_fg_xfer(): y less than zero");
     }
     auto sqrty = std::sqrt(yvar);
     auto xvar = sqrty/std::sqrt(cz);
     auto xxx = xvar*xvar*xvar;
   
       // Transfer time vs. computed time
-    auto dt = dur.getTu();
     auto dtc = xxx*sz + avar*sqrty;
+    auto delta_dt = dt - dtc;
+    std::cerr << "\ndelta_dt  " << delta_dt;
+    if (std::abs(delta_dt) < 1.0e-3*phy_const::tu_per_sec) {
+      converged = true;
+      break;
+    }
     auto [dcdz, dsdz] = astro_fg_dcands_dz(zvar);
     auto cinv = 1.0/cz;
     auto dtdz = xxx*(dsdz - 1.5*sz*dcdz*cinv) +
                 0.125*avar*(3.0*sz*sqrty*cinv + avar/xvar);
-    auto dz = (dt - dtc)/dtdz;
+    auto dz = delta_dt/dtdz;
     zvar += dz;
-    std::cerr << "\ndz  " << dz;
-
-    if (std::abs(dz) < 1.0e-6) {
-      std::cerr << "\n\nFound zvar,  dt:  " << dt << "  dtc:  " << dtc;
-      break;
-    }
   }
-  std::cerr << "\nzvar  " << zvar;
+  if (!converged) {
+    throw NonconvergenceException("generate_gauss_fg_xfer()()");
+  }
 
   auto [cz, sz] = astro_fg_cands(zvar);
   auto yvar = r1mag + r2mag - avar*(1.0 - zvar*sz)/std::sqrt(cz);
   double f = {1.0 - yvar/r1mag};
   double g = {avar*std::sqrt(yvar)};
 
+  Eigen::Matrix<double, 6, 1> pv;
   pv.block<3,1>(0,0) = r1;
   pv.block<3,1>(3,0) = (r2 - f*r1)/g;
 
@@ -155,16 +163,26 @@ generate_xfer_orbit(const std::string& orbit_name,
   auto xferEndTime = xferStartTime + xferDur;
   Eigen::Matrix<double, 3, 1> r2 = endOrbit.getPosition(xferEndTime,
                                                         EphemFrame::eci);
+  {
+    // Quick check on init with 2-body
+    Eigen::Matrix<double, 3, 1> r1 = startOrbit.getPosition(xferEndTime,
+                                                            EphemFrame::eci);
+    std::cerr << "\nDR0:  " << phy_const::km_per_du*(r1 - r2).norm() << " km";
+  }
 
-    // Initial guess is state vector at start time
+    // Initial guess is state vector at start time - use 2-body
+    // Gauss IOD for first refinement
   Eigen::Matrix<double, 6, 1> rv = startOrbit.getStateVector(xferStartTime,
                                                              EphemFrame::eci);
-
-
-  Eigen::Matrix<double, 3, 1> r1 = rv.block<3,1>(0,0);
-  rv = generate_gauss_fg_xfer(r1, r2, xferDur);
-
-
+  try {
+    rv = generate_gauss_fg_xfer(rv.block<3,1>(0,0), r2, xferDur);
+  } catch (const NonconvergenceException& nce) {
+    std::cerr << "\n  XXX generate_gauss_fg_xfer() did not converg XXX" <<
+                 " defaulting to r1 to init shooting method\n";
+  } catch (const std::invalid_argument& ia) {
+    std::cerr << "\n  XXX generate_gauss_fg_xfer() had a bad solution XXX" <<
+                 " defaulting to r1 to init shooting method\n";
+  }
 
     // Dummy parameter
   std::unordered_map<std::string, std::vector<eom::state_vector_rec>> ceph;
@@ -189,6 +207,7 @@ generate_xfer_orbit(const std::string& orbit_name,
       // Update
     Eigen::Matrix<double, 3, 1> dr2 = r2 - r2x;
     double miss {dr2.norm()};
+    std::cerr << "\nDRi:  " << phy_const::km_per_du*miss << " km";
     if (miss < 1.0*phy_const::du_per_m) {
       nitr = ii + 1;
       break;
@@ -197,7 +216,6 @@ generate_xfer_orbit(const std::string& orbit_name,
     } else {
       old_miss = miss;
       bnds *= 1.5;
-      //bnds = bnds > 0.75 ? 0.75 : bnds;
       bnds = bnds > 1.0 ? 1.0 : bnds;
     }
     Eigen::Matrix<double, 3, 1> dv1 = bnds*dv1_dr2*dr2;

@@ -8,19 +8,19 @@
 
 #include <astro_keplerian.h>
 
-#include <utl_const.h>
-#include <utl_nonconvergence_exception.h>
-#include <mth_angle.h>
-#include <phy_const.h>
-
-#include <Eigen/Dense>
-#include <Eigen/Geometry>
-
 #include <array>
 #include <cmath>
 #include <iomanip>
 #include <ostream>
 #include <stdexcept>
+
+#include <Eigen/Dense>
+#include <Eigen/Geometry>
+
+#include <utl_const.h>
+#include <utl_nonconvergence_exception.h>
+#include <mth_angle.h>
+#include <phy_const.h>
 
 namespace {
     // Gravitational parameter

@@ -23,6 +23,15 @@
 
 namespace eom {
 
+/**
+ * BMW universal variable implementation of Gauss IOD
+ *
+ * @param  r1   First ECI position vector
+ * @param  r2   Second ECI position vector
+ * @param  dur  Time between r1 and r2.  This is the "short way around"
+ *              implementation, requiring a duration of less than half
+ *              the period of the orbit defined by r1, r2, and dur.
+ */
 Eigen::Matrix<double, 6, 1>
 generate_gauss_fg_xfer(const Eigen::Matrix<double, 3, 1>& r1,
                        const Eigen::Matrix<double, 3, 1>& r2,

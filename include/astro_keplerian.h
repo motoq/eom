@@ -11,10 +11,10 @@
 
 #include <astro_orbital_elements.h>
 
-#include <Eigen/Dense>
-
 #include <array>
 #include <ostream>
+
+#include <Eigen/Dense>
 
 namespace eom {
 
