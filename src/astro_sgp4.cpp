@@ -20,10 +20,9 @@
 
 #include <utl_const.h>
 #include <phy_const.h>
-#include <cal_const.h>
 #include <cal_julian_date.h>
-#include <astro_ephemeris.h>
 #include <astro_ecfeci_sys.h>
+#include <astro_ephemeris.h>
 #include <astro_tle.h>
 
 namespace eom {
@@ -91,7 +90,7 @@ std::string Sgp4::getName() const
 Eigen::Matrix<double, 6, 1> Sgp4::getStateVector(const JulianDate& jd,
                                                   EphemFrame frame) const
 {
-  double delta_t {cal_const::min_per_day*(jd - m_jd0)};
+  double delta_t {utl_const::min_per_day*(jd - m_jd0)};
   std::array<double, 3> pos;
   std::array<double, 3> vel;
   elsetrec satrec = m_satrec;
@@ -118,7 +117,7 @@ Eigen::Matrix<double, 6, 1> Sgp4::getStateVector(const JulianDate& jd,
 Eigen::Matrix<double, 3, 1> Sgp4::getPosition(const JulianDate& jd,
                                                EphemFrame frame) const
 {
-  double delta_t {cal_const::min_per_day*(jd - m_jd0)};
+  double delta_t {utl_const::min_per_day*(jd - m_jd0)};
   std::array<double, 3> pos;
   std::array<double, 3> vel;
   elsetrec satrec = m_satrec;

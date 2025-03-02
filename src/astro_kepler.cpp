@@ -8,18 +8,18 @@
 
 #include <astro_kepler.h>
 
-#include <string>
 #include <array>
-#include <utility>
 #include <memory>
+#include <string>
+#include <utility>
 
 #include <Eigen/Dense>
 
-#include <cal_const.h>
-#include <cal_julian_date.h>
+#include <utl_const.h>
 #include <phy_const.h>
-#include <astro_ephemeris.h>
+#include <cal_julian_date.h>
 #include <astro_ecfeci_sys.h>
+#include <astro_ephemeris.h>
 
 #include <Vinti.h>
 
@@ -48,7 +48,7 @@ Eigen::Matrix<double, 6, 1> Kepler::getStateVector(const JulianDate& jd,
 {
   double x {0.0};
   std::array<double, 6> x1;
-  double t1 {cal_const::sec_per_day*(jd - m_jd0)};
+  double t1 {utl_const::sec_per_day*(jd - m_jd0)};
   Kepler1(m_planet.data(), 0.0, m_x0.data(), t1, x1.data(), &x);
 
   Eigen::Matrix<double, 6, 1> xeci;
@@ -71,7 +71,7 @@ Eigen::Matrix<double, 3, 1> Kepler::getPosition(const JulianDate& jd,
 {
   double x {0.0};
   std::array<double, 6> x1;
-  double t1 {cal_const::sec_per_day*(jd - m_jd0)};
+  double t1 {utl_const::sec_per_day*(jd - m_jd0)};
   Kepler1(m_planet.data(), 0.0, m_x0.data(), t1, x1.data(), &x);
 
   Eigen::Matrix<double, 3, 1> xeci;

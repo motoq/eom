@@ -11,6 +11,7 @@
 #include <cmath>
 #include <string>
 
+#include <utl_const.h>
 #include <cal_const.h>
 #include <cal_duration.h>
 #include <cal_greg_date.h>
@@ -23,7 +24,7 @@ namespace {
     // For conversions to Gregorian Date, use 1 nsec to push
     // past truncation issues leading to 24 hours or 60 mintues
     // (1d 24:60:60.0 vs. 2d 00:01:00)
-  constexpr double gd_tol {cal_const::day_per_sec*1.0e-9};
+  constexpr double gd_tol {utl_const::day_per_sec*1.0e-9};
 }
 
 namespace eom {
@@ -37,7 +38,7 @@ JulianDate::JulianDate(const GregDate& gd, int hr, int min, double sec)
 void JulianDate::set(const GregDate& gd, int hr, int min, double sec)
 {
   jdHi = gd2jd(gd.getYear(), gd.getMonth(), gd.getDay());
-  jdLo = cal_const::day_per_min*(60*hr + min + cal_const::min_per_sec*sec);
+  jdLo = utl_const::day_per_min*(60*hr + min + utl_const::min_per_sec*sec);
 
   if (jdLo != 0.0) {
     double more_days = static_cast<long>(jdLo);
@@ -225,7 +226,7 @@ void JulianDate::jd2gd(int& year, int& month, int& day,
 
     // Compute hours, minutes, and seconds first to check that
     // truncation does not occur on 24 hours, 60 minutes, etc.
-  double hours_left {cal_const::hr_per_day*tmpJd.jdLo};
+  double hours_left {utl_const::hr_per_day*tmpJd.jdLo};
   hour = static_cast<int>(hours_left);
 
   double minutes_left {60.0*(hours_left - hour)};

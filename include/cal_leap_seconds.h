@@ -9,6 +9,7 @@
 #ifndef CAL_LEAP_SECONDS_H
 #define CAL_LEAP_SECONDS_H
 
+#include <utl_const.h>
 #include <cal_const.h>
 #include <cal_julian_date.h>
 
@@ -69,7 +70,7 @@ public:
    * @return  TT time
    */
   JulianDate utc2tt(const JulianDate& utc) const noexcept {
-    return utc + (taimutc + cal_const::ttmtai)*cal_const::day_per_sec;
+    return utc + (taimutc + cal_const::ttmtai)*utl_const::day_per_sec;
   }
 
   /**
@@ -80,7 +81,7 @@ public:
    * @return  UTC time
    */
   JulianDate tt2utc(const JulianDate& tt) const noexcept {
-    return tt + -1.0*(taimutc + cal_const::ttmtai)*cal_const::day_per_sec;
+    return tt + -1.0*(taimutc + cal_const::ttmtai)*utl_const::day_per_sec;
   }
 
 private:

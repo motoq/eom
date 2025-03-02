@@ -25,7 +25,7 @@
 namespace {
   constexpr int max_itr {10};
   constexpr double tol {1.0e-6};
-  constexpr double ep {std::sqrt(1.0 - phy_const::ecc2)};
+  const double ep {std::sqrt(1.0 - phy_const::ecc2)};
 }
 
 namespace eom {

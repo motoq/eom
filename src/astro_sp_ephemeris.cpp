@@ -8,22 +8,22 @@
 
 #include <astro_sp_ephemeris.h>
 
-#include <string>
-#include <vector>
-#include <utility>
 #include <memory>
 #include <stdexcept>
+#include <string>
+#include <utility>
+#include <vector>
 
 #include <Eigen/Dense>
 
 #include <utl_const.h>
+#include <mth_hermite2.h>
+#include <mth_index_mapper.h>
+#include <mth_ode_solver.h>
 #include <phy_const.h>
 #include <cal_duration.h>
 #include <cal_julian_date.h>
-#include <mth_hermite2.h>
-#include <mth_ode_solver.h>
 #include <astro_ephemeris.h>
-#include <mth_index_mapper.h>
 
 namespace eom {
 

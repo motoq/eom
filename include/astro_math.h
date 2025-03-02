@@ -30,7 +30,7 @@ namespace astro_math {
  * @return  Normalization factor
  */
 template<typename T>
-constexpr double kaula_norm(T n, T m)
+double kaula_norm(T n, T m)
 {
   return std::sqrt(mth_util::factorial(n + m, n-m)/(((m == 0) ? 1.0 : 2.0)*
                                                     (2.0*n + 1.0))

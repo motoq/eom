@@ -9,15 +9,15 @@
 #ifndef ASTRO_SECJ2_H
 #define ASTRO_SECJ2_H
 
-#include <string>
 #include <array>
 #include <memory>
+#include <string>
 
 #include <Eigen/Dense>
 
 #include <cal_julian_date.h>
-#include <astro_ephemeris.h>
 #include <astro_ecfeci_sys.h>
+#include <astro_ephemeris.h>
 
 
 namespace eom {

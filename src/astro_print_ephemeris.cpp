@@ -8,16 +8,16 @@
 
 #include <astro_print.h>
 
-#include <string>
 #include <iostream>
 #include <fstream>
+#include <string>
 
 #include <Eigen/Dense>
 
-#include <cal_const.h>
+#include <utl_const.h>
+#include <phy_const.h>
 #include <cal_duration.h>
 #include <cal_julian_date.h>
-#include <phy_const.h>
 #include <astro_ephemeris.h>
 
 namespace eom {
@@ -29,7 +29,7 @@ void print_ephemeris(std::string file_name,
 {
   std::ofstream fout(file_name);
   if (fout.is_open()) {
-    double seconds {cal_const::sec_per_day*(jdStop - jdStart)};
+    double seconds {utl_const::sec_per_day*(jdStop - jdStart)};
     double dtsec   {phy_const::sec_per_tu*dtout.getTu()};
 
     unsigned long int nrec {static_cast<unsigned long int>(seconds/dtsec)};
@@ -59,7 +59,7 @@ void print_ephemeris(std::string file_name,
     for (unsigned long int ii=0UL; ii<nrec; ++ii) {
       double tsec {ii*dtsec};
       fout << "\n " << tsec << " ";
-      JulianDate jdNow {jdStart + cal_const::day_per_sec*tsec};
+      JulianDate jdNow {jdStart + utl_const::day_per_sec*tsec};
       Eigen::Matrix<double, 6, 1> pv = orbit.getStateVector(jdNow, frame);
       for (int jj=0; jj<3; ++jj) {
         fout << phy_const::m_per_du*pv(jj) << "  ";

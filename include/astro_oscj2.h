@@ -16,8 +16,8 @@
 #include <Eigen/Dense>
 
 #include <cal_julian_date.h>
-#include <astro_ephemeris.h>
 #include <astro_ecfeci_sys.h>
+#include <astro_ephemeris.h>
 
 
 namespace eom {

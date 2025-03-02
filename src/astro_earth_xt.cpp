@@ -28,7 +28,7 @@ EarthXt::EarthXt(HorizonMode mode, double alt)
 {
   m_mode = mode;
 
-    // Initialize transformatino matrices
+    // Initialize transformation matrices
   if (alt == 0) {
     t_ac(0,0) = ainv;
     t_ac(1,1) = ainv;

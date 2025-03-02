@@ -8,18 +8,18 @@
 
 #include <astro_vinti.h>
 
-#include <string>
 #include <array>
-#include <utility>
 #include <memory>
+#include <string>
+#include <utility>
 
 #include <Eigen/Dense>
 
 #include <Vinti.h>
 
-#include <cal_const.h>
-#include <cal_julian_date.h>
+#include <utl_const.h>
 #include <phy_const.h>
+#include <cal_julian_date.h>
 #include <astro_ephemeris.h>
 #include <astro_ecfeci_sys.h>
 
@@ -59,7 +59,7 @@ Eigen::Matrix<double, 6, 1> Vinti::getStateVector(const JulianDate& jd,
 {
   std::array<double, 6> oe;
   std::array<double, 6> x1;
-  double t1 {cal_const::sec_per_day*(jd - m_jd0)};
+  double t1 {utl_const::sec_per_day*(jd - m_jd0)};
   Vinti6(m_planet.data(), 0.0, m_x0.data(), t1, x1.data(), oe.data());
 
   Eigen::Matrix<double, 6, 1> xteme;
@@ -85,7 +85,7 @@ Eigen::Matrix<double, 3, 1> Vinti::getPosition(const JulianDate& jd,
 {
   std::array<double, 6> oe;
   std::array<double, 6> x1;
-  double t1 {cal_const::sec_per_day*(jd - m_jd0)};
+  double t1 {utl_const::sec_per_day*(jd - m_jd0)};
   Vinti6(m_planet.data(), 0.0, m_x0.data(), t1, x1.data(), oe.data());
 
   Eigen::Matrix<double, 3, 1> xteme;

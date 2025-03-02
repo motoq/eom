@@ -10,13 +10,12 @@
 #define CAL_CONST_H
 
 /**
- * Constants relating to dates and standard (non-canonical) time
- * transformations.
+ * Constants relating to dates and time scales
  *
  * @author  Kurt Motekew
+ *          Kurt Motekew  2025/02/17  Moved redundant values to utl_const.h
  */
 namespace cal_const {
-
     // Useful Julian dates
   constexpr double j2000 {2451545.0};       ///< Jan 1, 2000 12:00:00 TT
   constexpr double j1900 {2415021.0};       ///< Jan 1, 1900 12:00:00 UT1
@@ -24,16 +23,6 @@ namespace cal_const {
   constexpr double mjd   {2400000.5};       ///< Subtract from JD to get MJD
     // Time scale conversions
   constexpr double ttmtai {32.184};         ///< TT - TAI, seconds
-    // Time unit conversions
-  constexpr double hr_per_day  {24.0};
-  constexpr double day_per_hr  {1.0/hr_per_day};
-  constexpr double min_per_day {1440.0};
-  constexpr double day_per_min {1.0/min_per_day};
-  constexpr double sec_per_day {86400.0};
-  constexpr double day_per_sec {1.0/sec_per_day};
-  constexpr double sec_per_min {60.0};
-  constexpr double min_per_sec {1.0/sec_per_min};
-
 }
 
 #endif

@@ -9,18 +9,18 @@
 #ifndef ASTRO_SP_EPHEMERIS_H
 #define ASTRO_SP_EPHEMERIS_H
 
+#include <memory>
 #include <string>
 #include <vector>
-#include <memory>
 
 #include <Eigen/Dense>
 
-#include <cal_julian_date.h>
 #include <mth_hermite2.h>
-#include <astro_ephemeris.h>
-#include <astro_ecfeci_sys.h>
-#include <mth_ode_solver.h>
 #include <mth_index_mapper.h>
+#include <mth_ode_solver.h>
+#include <cal_julian_date.h>
+#include <astro_ecfeci_sys.h>
+#include <astro_ephemeris.h>
 
 namespace eom {
 

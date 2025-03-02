@@ -90,8 +90,8 @@ Eigen::Matrix<T, 2, 1> tangent(const Eigen::Matrix<T, 2, 1>& pos,
   T rmag {std::sqrt(r2)};
   Eigen::Matrix<T, 2, 1> rhat {pos/rmag};
 
-  T zero {static_cast<T>(0)};
-  T one {static_cast<T>(1)};
+  constexpr T zero {static_cast<T>(0)};
+  constexpr T one {static_cast<T>(1)};
 
     // Inside or on the circle
   T s2 {r2 - one};
@@ -102,7 +102,7 @@ Eigen::Matrix<T, 2, 1> tangent(const Eigen::Matrix<T, 2, 1>& pos,
     // Sine and Cosine of angle between position vector and tangent
     // pointing vector
   T s {std::sqrt(s2)};
-  T sa {1/rmag};
+  T sa {one/rmag};
   T ca {s*sa};
     // Orthogonal to rhat - used to form linear combo to tangent point
   Eigen::Matrix<T, 2, 1> rhat_orth = {-rhat(1), rhat(0)};

@@ -17,11 +17,11 @@
 
 #include <Eigen/Dense>
 
-#include <cal_const.h>
+#include <utl_const.h>
 #include <cal_julian_date.h>
 
 namespace {
-  constexpr double nsec {1.0e-9*cal_const::day_per_sec};
+  constexpr double nsec {1.0e-9*utl_const::day_per_sec};
 }
 
 namespace eom {

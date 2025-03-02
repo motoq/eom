@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Kurt Motekew
+ * Copyright 2021, 2025 Kurt Motekew
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,8 @@
 
 #include <cmath>
 
-#include <cal_const.h>
+#include <utl_const.h>
+#include <utl_cpp_tmp.h>
 
 /**
  * Constants and functions related physical properties.  Units defined
@@ -49,7 +50,7 @@ namespace phy_const {
   
     // Square of ellipsoid eccentricity and eccentricity
   constexpr double ecc2 {flat*(2.0 - flat)};
-  constexpr double ecc {std::sqrt(ecc2)};
+  constexpr double ecc {utl_cpp_tmp::constexpr_sqrt(ecc2)};
 
     // distance units
   constexpr double er_per_km {1.0/km_per_er};
@@ -67,10 +68,10 @@ namespace phy_const {
   constexpr double earth_smin {earth_smaj*(1.0 - flat)};
 
   /** Time unit definition */
-  constexpr double sec_per_tu {std::sqrt(km_per_du*
-                                         ((km_per_du*km_per_du)/gm_km3_sec2))};
-  constexpr double min_per_tu {cal_const::min_per_sec*sec_per_tu};
-  constexpr double day_per_tu {cal_const::day_per_sec*sec_per_tu};
+  constexpr double sec_per_tu {utl_cpp_tmp::constexpr_sqrt(km_per_du*
+                                   ((km_per_du*km_per_du)/gm_km3_sec2))};
+  constexpr double min_per_tu {utl_const::min_per_sec*sec_per_tu};
+  constexpr double day_per_tu {utl_const::day_per_sec*sec_per_tu};
     //
   constexpr double tu_per_sec {1.0/sec_per_tu};
   constexpr double tu_per_min {1.0/min_per_tu};
@@ -120,7 +121,7 @@ namespace phy_const {
 
   /** 1 mm movement at a sea level orbital altitude */
   constexpr double epsdt {1.0e-6*du_per_km};
-  constexpr double epsdt_days {epsdt*phy_const::day_per_tu};
+  constexpr double epsdt_days {epsdt*day_per_tu};
 
   /**
    * Computes the angular velocity of the earth w.r.t. inertial space.

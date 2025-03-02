@@ -14,6 +14,7 @@
 #include <stdexcept>
 #include <string>
 
+#include <utl_const.h>
 #include <utl_units.h>
 #include <phy_const.h>
 #include <cal_leap_seconds.h>
@@ -206,7 +207,7 @@ std::ostream& operator<<(std::ostream& out, const EomConfig& cfg)
                 "\nSimulation Stop Time:  " <<
                 cfg.getStopTime().to_string() <<
                 "\nEcfEci Output Rate is " << 
-                cal_const::min_per_day*cfg.getEcfEciRate().getDays() <<
+                utl_const::min_per_day*cfg.getEcfEciRate().getDays() <<
                 " minutes" <<
                 "\nLeap Seconds (TAI - UTC): " << ls.getTai_Utc() <<
                 "\nUsing dt eps: " <<
