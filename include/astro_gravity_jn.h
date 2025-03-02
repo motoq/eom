@@ -26,12 +26,6 @@ namespace eom {
  */
 class GravityJn : public Gravity {
 public:
-  ~GravityJn() = default;
-  GravityJn(const GravityJn&) = default;
-  GravityJn& operator=(const GravityJn&) = default;
-  GravityJn(GravityJn&&) = default;
-  GravityJn& operator=(GravityJn&&) = default;
-
   /**
    * Initialize with desired degree.
    *

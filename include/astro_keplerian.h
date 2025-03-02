@@ -31,12 +31,6 @@ namespace eom {
  */
 class Keplerian : public OrbitalElements {
 public:
-  ~Keplerian() = default;
-  Keplerian(const Keplerian&) = default;
-  Keplerian& operator=(const Keplerian&) = default;
-  Keplerian(Keplerian&&) = default;
-  Keplerian& operator=(Keplerian&&) = default;
-
   /**
    * Initialize with Keplerian orbital elements.
    *

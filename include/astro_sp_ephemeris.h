@@ -70,12 +70,6 @@ struct interp_record {
  */
 class SpEphemeris : public Ephemeris {
 public:
-  ~SpEphemeris() = default;
-  SpEphemeris(const SpEphemeris&) = delete;
-  SpEphemeris& operator=(const SpEphemeris&) = delete;
-  SpEphemeris(SpEphemeris&&) = default;                  // move constructor
-  SpEphemeris& operator=(SpEphemeris&&) = default;       // move assignment
-
   /**
    * Initialize with orbital state and model/integrator.  Generate
    * ephemeris from jdStart to jdStop.

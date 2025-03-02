@@ -44,12 +44,6 @@ namespace eom {
  */
 class KeplerProp : public Ephemeris {
 public:
-  ~KeplerProp() = default;
-  KeplerProp(const KeplerProp&) = default;
-  KeplerProp& operator=(const KeplerProp&) = default;
-  KeplerProp(KeplerProp&&) = default;
-  KeplerProp& operator=(KeplerProp&&) = default;
-
   /**
    * Initialize for propagation calls.
    *

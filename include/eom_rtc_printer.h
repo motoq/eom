@@ -35,12 +35,6 @@ namespace eom_app {
  */
 class EomRtcPrinter : public EomCommand {
 public:
-  ~EomRtcPrinter() = default;
-  EomRtcPrinter(const EomRtcPrinter&) = default;
-  EomRtcPrinter& operator=(const EomRtcPrinter&) = default;
-  EomRtcPrinter(EomRtcPrinter&&) = default;
-  EomRtcPrinter& operator=(EomRtcPrinter&&) = default;
-
   /**
    * Converts string tokens into a command computing the position of a
    * deputy satellite w.r.t. a chief satellite using the RTC reference

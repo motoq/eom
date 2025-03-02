@@ -32,12 +32,6 @@ namespace eom {
  */
 class Hermite1TcEph : public Ephemeris {
 public:
-  ~Hermite1TcEph() = default;
-  Hermite1TcEph(const Hermite1TcEph&) = delete;
-  Hermite1TcEph& operator=(const Hermite1TcEph&) = delete;
-  Hermite1TcEph(Hermite1TcEph&&) = default;
-  Hermite1TcEph& operator=(Hermite1TcEph&&) = default;
-
   /**
    * Initialize central body and target ephemerides.
    *

@@ -41,12 +41,6 @@ enum class Sgp4Mode {
  */
 class Sgp4 : public Ephemeris {
 public:
-  ~Sgp4() = default;
-  Sgp4(const Sgp4&) = default;
-  Sgp4& operator=(const Sgp4&) = default;
-  Sgp4(Sgp4&&) = default;
-  Sgp4& operator=(Sgp4&&) = default;
-
   /**
    * Initialize SGP4 propagator.  Kozai mean elements sets (Eph Type = 0)
    * expected.

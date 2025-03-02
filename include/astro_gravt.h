@@ -29,12 +29,6 @@ namespace eom {
  */
 class Gravt : public Gravity {
 public:
-  ~Gravt() = default;
-  Gravt(const Gravt&) = delete;
-  Gravt& operator=(const Gravt&) = delete;
-  Gravt(Gravt&&) = default;
-  Gravt& operator=(Gravt&&) = default;
-
   /**
    * Initialize with desired degree and order.
    *

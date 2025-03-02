@@ -22,12 +22,6 @@ namespace eom {
  */
 class GaussJackson : public OdeSolver<JulianDate, double, 6> {
 public:
-  ~GaussJackson() = default;
-  GaussJackson(const GaussJackson&) = delete;
-  GaussJackson& operator=(const GaussJackson&) = delete;
-  GaussJackson(GaussJackson&&) = default;
-  GaussJackson& operator=(GaussJackson&&) = default;
-
   /**
    * Initialize with equations of motion and initial state
    * of the system.

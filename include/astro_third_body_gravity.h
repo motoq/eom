@@ -29,12 +29,6 @@ namespace eom {
  */
 class ThirdBodyGravity : public ForceModel {
 public:
-  ~ThirdBodyGravity() = default;
-  ThirdBodyGravity(const ThirdBodyGravity&) = delete;
-  ThirdBodyGravity& operator=(const ThirdBodyGravity&) = delete;
-  ThirdBodyGravity(ThirdBodyGravity&&) = default;
-  ThirdBodyGravity& operator=(ThirdBodyGravity&&) = default;
-
   /**
    * Initialize with third body gravitational parameter and
    * ephemeris source.

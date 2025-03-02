@@ -74,11 +74,6 @@ public:
               const GroundPoint& gp,
               const GpConstraints& xcs,
               std::shared_ptr<const Ephemeris> eph);
-  ~GpAccessStd() = default;
-  GpAccessStd(const GpAccessStd&) = default;
-  GpAccessStd& operator=(const GpAccessStd&) = default;
-  GpAccessStd(GpAccessStd&&) = default;
-  GpAccessStd& operator=(GpAccessStd&&) = default;
 
   /**
    * Locates and stores the next access interval

@@ -31,12 +31,6 @@ namespace eom {
  */
 class Adams4th : public OdeSolver<JulianDate, double, 6> {
 public:
-  ~Adams4th() = default;
-  Adams4th(const Adams4th&) = delete;
-  Adams4th& operator=(const Adams4th&) = delete;
-  Adams4th(Adams4th&&) = default;
-  Adams4th& operator=(Adams4th&&) = default;
-
   /**
    * Initialize with equations of motion, fixed step size,
    * and initial state of the system to be integrated.

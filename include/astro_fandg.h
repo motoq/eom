@@ -62,12 +62,6 @@ std::pair<double, double> astro_fg_dcands_dz(double z);
  */
 class FandG : public Ephemeris {
 public:
-  ~FandG() = default;
-  FandG(const FandG&) = default;             // copy constructor
-  FandG& operator=(const FandG&) = default;  // copy assignment
-  FandG(FandG&&) = default;                  // move constructor
-  FandG& operator=(FandG&&) = default;       // move assignment
-
   /**
    * Initialize Keppler1
    *

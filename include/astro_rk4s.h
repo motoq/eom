@@ -31,12 +31,6 @@ namespace eom {
  */
 class Rk4s : public OdeSolver<JulianDate, double, 6> {
 public:
-  ~Rk4s() = default;
-  Rk4s(const Rk4s&) = delete;
-  Rk4s& operator=(const Rk4s&) = delete;
-  Rk4s(Rk4s&&) = default;
-  Rk4s& operator=(Rk4s&&) = default;
-
   /**
    * Initialize with equations of motion, fixed step size,
    * and initial state of the system to be integrated.

@@ -42,12 +42,6 @@ enum class VintiPertModel {
  */
 class Vinti : public Ephemeris {
 public:
-  ~Vinti() = default;
-  Vinti(const Vinti&) = default;
-  Vinti& operator=(const Vinti&) = default;
-  Vinti(Vinti&&) = default;
-  Vinti& operator=(Vinti&&) = default;
-
   /**
    * Initialize Vinti6
    *

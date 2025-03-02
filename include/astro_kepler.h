@@ -37,12 +37,6 @@ namespace eom {
  */
 class Kepler : public Ephemeris {
 public:
-  ~Kepler() = default;
-  Kepler(const Kepler&) = default;             // copy constructor
-  Kepler& operator=(const Kepler&) = default;  // copy assignment
-  Kepler(Kepler&&) = default;                  // move constructor
-  Kepler& operator=(Kepler&&) = default;       // move assignment
-
   /**
    * Initialize Keppler1
    *

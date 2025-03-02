@@ -52,12 +52,6 @@ struct hermite1_eph_rec {
  */
 class Hermite1Eph : public Ephemeris {
 public:
-  ~Hermite1Eph() = default;
-  Hermite1Eph(const Hermite1Eph&) = delete;
-  Hermite1Eph& operator=(const Hermite1Eph&) = delete;
-  Hermite1Eph(Hermite1Eph&&) = default;
-  Hermite1Eph& operator=(Hermite1Eph&&) = default;
-
   /**
    * Initialize with ECI position/velocity based ephemeris records.
    *

@@ -28,12 +28,6 @@ namespace eom {
  */
 class GpSunConstraint : public ConstraintFunction<JulianDate> {
 public:
-  ~GpSunConstraint() = default;
-  GpSunConstraint(const GpSunConstraint&) = delete;
-  GpSunConstraint& operator=(const GpSunConstraint&) = delete;
-  GpSunConstraint(GpSunConstraint&&) = default;
-  GpSunConstraint& operator=(GpSunConstraint&&) = default;
-
   /**
    * Initialize parameters needed to compute constraints based on a
    * ground point and the sun.

@@ -43,12 +43,6 @@ namespace eom {
  */
 class SunMeeus : public Ephemeris {
 public:
-  ~SunMeeus() = default;
-  SunMeeus(const SunMeeus&) = default;             // copy constructor
-  SunMeeus& operator=(const SunMeeus&) = default;  // copy assignment
-  SunMeeus(SunMeeus&&) = default;                  // move constructor
-  SunMeeus& operator=(SunMeeus&&) = default;       // move assignment
-
   /**
    * Initialize with ECF/ECI service and optional ID
    *

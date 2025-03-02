@@ -56,12 +56,6 @@ struct sp3_granule {
  */
 class Sp3Chebyshev : public Ephemeris {
 public:
-  ~Sp3Chebyshev() = default;
-  Sp3Chebyshev(const Sp3Chebyshev&) = delete;
-  Sp3Chebyshev& operator=(const Sp3Chebyshev&) = delete;
-  Sp3Chebyshev(Sp3Chebyshev&&) = default;
-  Sp3Chebyshev& operator=(Sp3Chebyshev&&) = default;
-
   /**
    * Initialize with SP3 compatible format ephemeris.
    *

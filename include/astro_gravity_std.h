@@ -51,12 +51,6 @@ namespace eom {
  */
 class GravityStd : public Gravity {
 public:
-  ~GravityStd() = default;
-  GravityStd(const GravityStd&) = delete;
-  GravityStd& operator=(const GravityStd&) = delete;
-  GravityStd(GravityStd&&) = default;
-  GravityStd& operator=(GravityStd&&) = default;
-
   /**
    * Initialize with desired degree and order.
    *

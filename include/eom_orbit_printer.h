@@ -31,12 +31,6 @@ namespace eom_app {
  */
 class EomOrbitPrinter : public EomCommand {
 public:
-  ~EomOrbitPrinter() = default;
-  EomOrbitPrinter(const EomOrbitPrinter&) = default;
-  EomOrbitPrinter& operator=(const EomOrbitPrinter&) = default;
-  EomOrbitPrinter(EomOrbitPrinter&&) = default;
-  EomOrbitPrinter& operator=(EomOrbitPrinter&&) = default;
-
   /**
    * Converts string tokens into a command
    *

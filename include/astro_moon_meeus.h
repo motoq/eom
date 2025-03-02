@@ -42,12 +42,6 @@ namespace eom {
  */
 class MoonMeeus : public Ephemeris {
 public:
-  ~MoonMeeus() = default;
-  MoonMeeus(const MoonMeeus&) = default;             // copy constructor
-  MoonMeeus& operator=(const MoonMeeus&) = default;  // copy assignment
-  MoonMeeus(MoonMeeus&&) = default;                  // move constructor
-  MoonMeeus& operator=(MoonMeeus&&) = default;       // move assignment
-
   /**
    * Initialize with ECF/ECI service and optional ID
    *

@@ -36,12 +36,6 @@ namespace eom {
  */
 class GroundStation : public Ephemeris {
 public:
-  ~GroundStation() = default;
-  GroundStation(const GroundStation&) = default;
-  GroundStation& operator=(const GroundStation&) = default;
-  GroundStation(GroundStation&&) = default;
-  GroundStation& operator=(GroundStation&&) = default;
-
   /**
    * Initialize with initial state, ECF/ECI services, and optional ID
    *

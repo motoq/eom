@@ -45,12 +45,6 @@ namespace eom {
  */
 class VintiProp : public Ephemeris {
 public:
-  ~VintiProp() = default;
-  VintiProp(const VintiProp&) = default;
-  VintiProp& operator=(const VintiProp&) = default;
-  VintiProp(VintiProp&&) = default;
-  VintiProp& operator=(VintiProp&&) = default;
-
   /**
    * Initialize VintiProp
    *
@@ -143,9 +137,6 @@ private:
 
   std::string name {""};
   std::shared_ptr<const EcfEciSys> ecfeci {nullptr};
-  std::array<double, 4> planet = {phy_const::re,
-                                  phy_const::gm,
-                                  phy_const::j2, 0.0};
   JulianDate jd0;
   std::array<double, 3> pin;
   std::array<double, 3> vin;

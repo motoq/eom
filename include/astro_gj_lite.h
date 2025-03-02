@@ -22,12 +22,6 @@ namespace eom {
  */
 class GjLite : public OdeSolver<JulianDate, double, 6> {
 public:
-  ~GjLite() = default;
-  GjLite(const GjLite&) = delete;
-  GjLite& operator=(const GjLite&) = delete;
-  GjLite(GjLite&&) = default;
-  GjLite& operator=(GjLite&&) = default;
-
   /**
    * Initialize with equations of motion and initial state
    * of the system.

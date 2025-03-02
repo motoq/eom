@@ -27,12 +27,6 @@ namespace eom {
  */
 class SecJ2 : public Ephemeris {
 public:
-  ~SecJ2() = default;
-  SecJ2(const SecJ2&) = default;
-  SecJ2& operator=(const SecJ2&) = default;
-  SecJ2(SecJ2&&) = default;
-  SecJ2& operator=(SecJ2&&) = default;
-
   /**
    * Initialize SecJ2
    *

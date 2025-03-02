@@ -33,12 +33,6 @@ namespace eom_app {
  */
 class EomXferOrbit : public EomCommand {
 public:
-  ~EomXferOrbit() = default;
-  EomXferOrbit(const EomXferOrbit&) = default;
-  EomXferOrbit& operator=(const EomXferOrbit&) = default;
-  EomXferOrbit(EomXferOrbit&&) = default;
-  EomXferOrbit& operator=(EomXferOrbit&&) = default;
-
   /**
    * Converts string tokens into a command computing generating a
    * transfer orbit based on initial and destination orbits.
