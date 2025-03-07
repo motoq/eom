@@ -8,20 +8,20 @@
 
 #include <astro_sp3_chebyshev.h>
 
-#include <string>
 #include <array>
-#include <vector>
 #include <memory>
+#include <string>
 #include <utility>
+#include <vector>
 #include <stdexcept>
 
 #include <Eigen/Dense>
 
+#include <mth_index_mapper.h>
 #include <phy_const.h>
 #include <cal_julian_date.h>
-#include <astro_granule.h>
 #include <astro_ephemeris.h>
-#include <mth_index_mapper.h>
+#include <astro_granule.h>
 
 namespace eom {
 

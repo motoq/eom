@@ -25,11 +25,6 @@ namespace eom {
 class NullEphemeris : public Ephemeris {
 public:
   NullEphemeris() = default;
-  ~NullEphemeris() = default;
-  NullEphemeris(const NullEphemeris&) = default;             // copy constructor
-  NullEphemeris& operator=(const NullEphemeris&) = default;  // copy assignment
-  NullEphemeris(NullEphemeris&&) = default;                  // move constructor
-  NullEphemeris& operator=(NullEphemeris&&) = default;       // move assignment
 
   /**
    * @return  Empty string

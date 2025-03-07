@@ -9,16 +9,16 @@
 #ifndef ASTRO_HERMITE1_TC_EPH_H
 #define ASTRO_HERMITE1_TC_EPH_H
 
+#include <memory>
 #include <string>
 #include <vector>
-#include <memory>
 
 #include <Eigen/Dense>
 
-#include <cal_julian_date.h>
 #include <mth_hermite1.h>
-#include <astro_ephemeris.h>
+#include <cal_julian_date.h>
 #include <astro_ecfeci_sys.h>
+#include <astro_ephemeris.h>
 
 namespace eom {
 

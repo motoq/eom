@@ -57,6 +57,7 @@ set(SOURCES
   src/astro_build_celestial.cpp
   src/astro_build_ephemeris.cpp
   src/astro_build_orbit.cpp
+  src/astro_composite_ephemeris.cpp
   src/astro_deq.cpp
   src/astro_earth_surf.cpp
   src/astro_earth_xt.cpp

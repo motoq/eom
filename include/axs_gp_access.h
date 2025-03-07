@@ -28,7 +28,7 @@ class GpAccess {
 public:
   virtual ~GpAccess() = default;
   GpAccess() = default;
-  GpAccess(const GpAccess&) = default;
+  GpAccess(const GpAccess&) = delete;
   GpAccess& operator=(const GpAccess&) = delete;
   GpAccess(GpAccess&&) = delete;
   GpAccess& operator=(GpAccess&&) = delete;

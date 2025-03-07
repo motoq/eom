@@ -89,6 +89,14 @@ IndexMapper<T>::IndexMapper(std::vector<std::pair<T, T>> blocks)
   }
   m_n = static_cast<unsigned long>(m_range/m_bsize);
 
+    // Ensure there are not gaps
+  for (unsigned int ii=1; ii<m_blocks.size(); ++ii) {
+    if (m_blocks[ii-1].second <m_blocks[ii].first) {
+      throw std::invalid_argument(
+          "IndexMapper::IndexMapper(): Disjoint blocks");
+    }
+  }
+
   m_val0 = m_blocks.front().first;
   auto val = m_val0 + m_bsize;
   unsigned long ii {0};
