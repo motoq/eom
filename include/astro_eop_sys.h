@@ -69,18 +69,27 @@ public:
   /**
    * @return iterator pointing to beginning of EOP data
    */
-  auto cbegin() const;
+  auto cbegin() const
+  {
+    return eopData.cbegin(); 
+  }
 
   /**
    * @return iterator pointing to just after the last EOP data
    *         structure
    */
-  auto cend() const;
+  auto cend() const
+  {
+    return eopData.cend();
+  }
 
   /**
    * @return  The number of eop records
    */
-  auto size() const;
+  auto size() const
+  {  
+    return eopData.size();
+  }
 
 private:
   unsigned long mjd_first {0UL};

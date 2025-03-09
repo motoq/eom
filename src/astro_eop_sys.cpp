@@ -189,24 +189,6 @@ eop_record EopSys::getEop(const JulianDate& jd) const
 }
 
 
-auto EopSys::cbegin() const
-{
-  return eopData.cbegin();
-}
-
-
-auto EopSys::cend() const
-{
-  return eopData.cend();
-}
-
-
-auto EopSys::size() const
-{
-  return eopData.size();
-}
-
-
 }
 
 
