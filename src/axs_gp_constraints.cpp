@@ -17,9 +17,10 @@
 
 #include <utl_const.h>
 #include <utl_constraint_function.h>
+#include <utl_constraint_vector.h>
 #include <cal_julian_date.h>
-#include <obs_rng_az_sinel.h>
 #include <astro_ground_point.h>
+#include <obs_rng_az_sinel.h>
 
 namespace eom {
 
@@ -73,6 +74,13 @@ void GpConstraints::addConstraint(
 }
 
 
+void GpConstraints::addConstraint(
+    std::shared_ptr<const ConstraintVector<double, 3>> constraint)
+{
+  m_constraint_vectors.push_back(std::move(constraint));
+}
+
+
 bool GpConstraints::isVisible(const JulianDate& jd, 
                               const GroundPoint& gp,
                               const Eigen::Matrix<double, 3, 1>& pos) const
@@ -94,6 +102,14 @@ bool GpConstraints::isVisible(const JulianDate& jd,
     // If visible, further refine access with time dependent
     // constraints.  Exit on first failure
   if (axs_good) {
+      // Static geometric constraint definitions should typically
+      // be less computationally intensive - evaluate first for failure
+    for (const auto& cnst : m_constraint_vectors) {
+      if (!cnst->isSatisfied(pos)) {
+        return false;
+      }
+    }
+      // Now dynamic constraints
     for (const auto& cnst : m_constraints) {
       if (!cnst->isSatisfied(jd)) {
         return false;

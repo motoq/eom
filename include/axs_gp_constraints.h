@@ -17,6 +17,7 @@
 
 #include <utl_const.h>
 #include <utl_constraint_function.h>
+#include <utl_constraint_vector.h>
 #include <cal_julian_date.h>
 #include <astro_ground_point.h>
 
@@ -128,11 +129,20 @@ public:
       std::shared_ptr<const ConstraintFunction<JulianDate>> constraint);
 
   /**
+   * Add a vector based constraint to be evaluated during access analysis.
+   *
+   * @param  constraint  Earth fixed position vector to be used to
+   *                     evaluate static geometric constraints, DU
+   */
+  void addConstraint(
+      std::shared_ptr<const ConstraintVector<double, 3>> constraint);
+
+  /**
    * Check for satisfaction of all geometric and time dependent constraints.
    *
    * @param  jd   Time of interest
-   * @param  gp   Ground poin
-   * @param  pos  Satellite position
+   * @param  gp   Ground point
+   * @param  pos  Satellite position, DU, ecf
    *
    * @return  If visible, return true
    */
@@ -150,6 +160,8 @@ private:
 
   std::vector<
       std::shared_ptr<const ConstraintFunction<JulianDate>>> m_constraints;
+  std::vector<
+      std::shared_ptr<const ConstraintVector<double, 3>>> m_constraint_vectors;
 };
 
 

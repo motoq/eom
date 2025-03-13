@@ -152,7 +152,9 @@ if (${USE_GENPL})
     PRIVATE Eigen3::Eigen
     PRIVATE sofalib
     PRIVATE genlib
-    PRIVATE eom)
+    PRIVATE eom
+    #PRIVATE tbb
+  )
 else()
   target_include_directories(${PROJECT_NAME}
     PRIVATE ~/include
@@ -169,5 +171,7 @@ else()
   target_link_libraries(${PROJECT_NAME}
     PRIVATE Eigen3::Eigen
     PRIVATE sofalib
-    PRIVATE eom)
+    PRIVATE eom
+    #PRIVATE tbb
+  )
 endif()
