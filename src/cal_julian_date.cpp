@@ -105,6 +105,16 @@ JulianDate JulianDate::operator+(const Duration& dur) const noexcept
 }
 
 
+JulianDate JulianDate::operator-(const Duration& dur) const noexcept
+{
+  JulianDate jd {*this};
+  double days {-1.0*dur.getDays()};
+  jd += days;
+
+  return jd;
+}
+
+
 std::string JulianDate::to_string(int dp) const
 {
   int year, month, day, hour, minutes;

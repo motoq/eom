@@ -1,6 +1,8 @@
 Misc
 ----
 
+geo orbit def
+
 use move for ecfeci in orbit builder functions
 
 Better accessibility of celestial ephemerides for commands (possibly
@@ -8,8 +10,6 @@ just reload as necessary).  astro_generate switches to Meeus' methods
 for now.
 
 astro_build_orbit - directly return orbit vs. assign first
-
-to_str() to to_string()
 
 snprintf() check
 

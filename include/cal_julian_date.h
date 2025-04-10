@@ -167,6 +167,15 @@ public:
   JulianDate operator+(const Duration& dur) const noexcept;
 
   /**
+   * Return a Julian date adjusted by the given duration.
+   *
+   * @param   dur  Duration to subtract (or add, if negative)
+   *
+   * @return   Copy of this JulianDate - the input Duration
+   */
+  JulianDate operator-(const Duration& dur) const noexcept;
+
+  /**
    * @param  Julian date to subtract
    *
    * @return  The time difference, in days, between this JD and the

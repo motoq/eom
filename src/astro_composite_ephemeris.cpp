@@ -51,13 +51,13 @@ CompositeEphemeris::CompositeEphemeris(
   }
     // Create time blocks - IndexMapper with further validate
   std::vector<std::pair<JulianDate, JulianDate>> time_blocks;
-  auto jd_share = handover_times.front();
-  time_blocks.emplace_back(jdMin, jd_share);
+  auto jd_share = jdMin;
   for (const auto& jd : handover_times) {
     time_blocks.emplace_back(jd_share, jd);
     jd_share = jd;
   }
   time_blocks.emplace_back(jd_share, jdMax);
+
   m_ndxr = std::make_unique<IndexMapper<JulianDate>>(time_blocks);
 }
 

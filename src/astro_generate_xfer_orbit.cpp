@@ -6,8 +6,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <iostream>
-
 #include <array>
 #include <cmath>
 #include <memory>
@@ -79,7 +77,6 @@ generate_gauss_fg_xfer(const Eigen::Matrix<double, 3, 1>& r1,
       // Transfer time vs. computed time
     auto dtc = xxx*sz + avar*sqrty;
     auto delta_dt = dt - dtc;
-    std::cerr << "\ndelta_dt  " << delta_dt;
     if (std::abs(delta_dt) < 1.0e-3*phy_const::tu_per_sec) {
       converged = true;
       break;
@@ -163,31 +160,40 @@ generate_xfer_orbit(const std::string& orbit_name,
   auto xferEndTime = xferStartTime + xferDur;
   Eigen::Matrix<double, 3, 1> r2 = endOrbit.getPosition(xferEndTime,
                                                         EphemFrame::eci);
-  {
-    // Quick check on init with 2-body
-    Eigen::Matrix<double, 3, 1> r1 = startOrbit.getPosition(xferEndTime,
-                                                            EphemFrame::eci);
-    std::cerr << "\nDR0:  " << phy_const::km_per_du*(r1 - r2).norm() << " km";
-  }
-
     // Initial guess is state vector at start time - use 2-body
     // Gauss IOD for first refinement
   Eigen::Matrix<double, 6, 1> rv = startOrbit.getStateVector(xferStartTime,
                                                              EphemFrame::eci);
-  try {
-    rv = generate_gauss_fg_xfer(rv.block<3,1>(0,0), r2, xferDur);
-  } catch (const NonconvergenceException& nce) {
-    std::cerr << "\n  XXX generate_gauss_fg_xfer() did not converg XXX" <<
-                 " defaulting to r1 to init shooting method\n";
-  } catch (const std::invalid_argument& ia) {
-    std::cerr << "\n  XXX generate_gauss_fg_xfer() had a bad solution XXX" <<
-                 " defaulting to r1 to init shooting method\n";
-  }
 
     // Dummy parameter
   std::unordered_map<std::string, std::vector<eom::state_vector_rec>> ceph;
     // Transfer ephemeris to determine
   std::unique_ptr<Ephemeris> xeph {nullptr};
+    // Use 2-body solution for initial guess unless an error occurs
+  try {
+    Eigen::Matrix<double, 6, 1> rv0x =
+        generate_gauss_fg_xfer(rv.block<3,1>(0,0), r2, xferDur);
+    std::array<double, 6> x1 = {rv(0), rv(1), rv(2), rv(3), rv(4), rv(5)};
+    OrbitDef orbit {orbit_name,
+                    xferPropCfg,
+                    xferStartTime,
+                    x1,
+                    CoordType::cartesian,
+                    FrameType::gcrf};
+    xeph = build_orbit(orbit, ecfeciSys, ceph);
+
+    Eigen::Matrix<double, 3, 1> r20 = startOrbit.getPosition(xferEndTime,
+                                                             EphemFrame::eci);
+    Eigen::Matrix<double, 3, 1> r2x = xeph->getPosition(xferEndTime,
+                                                        EphemFrame::eci);
+    if ((r2 - r2x).norm() < (r2 - r20).norm()) {
+      rv = rv0x;
+    }
+  } catch (const NonconvergenceException& nce) {
+    ; // Did not converg - stick to current initial guess
+  } catch (const std::invalid_argument& ia) {
+    ; // Bad solution - stick to current initial guess
+  }
     // Use aggressive scaling of initial correction on first go
   double bnds {.25};
   double old_miss {1.0};
@@ -207,7 +213,6 @@ generate_xfer_orbit(const std::string& orbit_name,
       // Update
     Eigen::Matrix<double, 3, 1> dr2 = r2 - r2x;
     double miss {dr2.norm()};
-    std::cerr << "\nDRi:  " << phy_const::km_per_du*miss << " km";
     if (miss < 1.0*phy_const::du_per_m) {
       nitr = ii + 1;
       break;

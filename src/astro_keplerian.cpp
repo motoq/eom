@@ -36,7 +36,7 @@ namespace {
   constexpr int niter {100};
   constexpr double eps {1.e-10};
     // oe_eps
-  constexpr double oe_eps {1.0e-6};
+  constexpr double oe_eps {1.0e-5};
 }
 
 namespace eom {

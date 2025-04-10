@@ -73,8 +73,8 @@ private:
     // Initialization
   std::string m_start_orbit_name {""};
   std::string m_end_orbit_name {""};
-  eom::JulianDate m_xfer_start;
-  eom::Duration m_xfer_dur;
+  eom::JulianDate m_xferStart;
+  eom::Duration m_xferDur;
   std::string m_func_name;
   eom::Duration m_dtOut;
   std::string m_distanceUnitsLbl;
