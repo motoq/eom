@@ -64,8 +64,6 @@ EomXferOrbit::EomXferOrbit(std::deque<std::string>& tokens,
 
   m_dtOut = cfg.getOutputRate();
   m_distanceUnitsLbl = cfg.getIoDistansUnits();
-  m_to_time_units = cfg.getIoPerTu();
-  m_to_distance_units = cfg.getIoPerDu();
 }
 
 
@@ -156,6 +154,18 @@ void EomXferOrbit::execute() const
       fout << "\n%  No solution found for transfer orbit\n";
       return;
     }
+      // Function header
+    fout << "function [gxh, tpv] = " << m_func_name;
+    fout << "\n% Orbit is an EOM generated Matlab/Octave function that";
+    fout << "\n% plots a 3D orbit trace in ECI coordinates based on";
+    fout << "\n% composite ephemerides";
+    fout << "\n%";
+    fout << "\n% Outputs:";
+    fout << "\n%   gxh  Graphics handle to new image";
+    fout << "\n%   tpv  Nx7 matrix of time, pos, vel, in ECI";
+    fout << "\n%        coordinates, units of DU and DU/TU";
+    fout << "\n%";
+
     fout  << "\n%  Transfer converged in " << nitr << " iterations";
 
     auto xferEnd = m_xferStart + m_xferDur;
@@ -187,6 +197,7 @@ void EomXferOrbit::execute() const
     fout << "\n%  Exit DeltaV:   " << phy_const::m_per_du*
                                       phy_const::tu_per_sec*dv2.norm() <<
                                       " m/sec";
+    fout << '\n';
 
       // Composite ephemeris for plotting
     std::vector<eom::JulianDate> ho_times = {m_xferStart, xferEnd};
@@ -197,21 +208,10 @@ void EomXferOrbit::execute() const
 
     auto jdStart = m_xferStart - m_xferDur;
     auto jdStop = xferEnd + m_xferDur;
-    double tot_time {m_to_time_units*phy_const::tu_per_day*(jdStop - jdStart)};
-    double dt {m_to_time_units*m_dtOut.getTu()};
+    double tot_time {phy_const::tu_per_day*(jdStop - jdStart)};
+    double dt {m_dtOut.getTu()};
     long int nrec {static_cast<long int>(tot_time/dt) + 1L};
 
-      // Function header
-    fout << "function [gxh, tpv] = " << m_func_name;
-    fout << "\n% Orbit is an EOM generated Matlab/Octave function that";
-    fout << "\n% plots a 3D orbit trace in ECI coordinates based on";
-    fout << "\n% composite ephemerides";
-    fout << "\n%";
-    fout << "\n% Outputs:";
-    fout << "\n%   gxh  Graphics handle to new image";
-    fout << "\n%   tpv  Nx7 matrix of time, pos, vel, in ECI";
-    fout << "\n%        coordinates, units of DU and DU/TU";
-    fout << '\n';
 
       // Create time and range data
     fout << "\ntpv = [";
@@ -223,8 +223,7 @@ void EomXferOrbit::execute() const
       }
       double dtnow {ii*dt};
       fout << "\n  " << dtnow << " ";
-      eom::JulianDate jdNow {jdStart +
-                             phy_const::day_per_tu*(dtnow/m_to_time_units)};
+      eom::JulianDate jdNow {jdStart + phy_const::day_per_tu*dtnow};
       std::cout << "   "  << jdNow.to_string();
       Eigen::Matrix<double, 6, 1> pv =
           ceph.getStateVector(jdNow, eom::EphemFrame::eci);
@@ -232,22 +231,27 @@ void EomXferOrbit::execute() const
         fout << " " << pv(jj);
       }
     }
+    fout << "\n];";
 
+    Eigen::Matrix<double, 3, 1> xp1 = ceph.getPosition(m_xferStart,
+                                                       eom::EphemFrame::eci);
+    Eigen::Matrix<double, 3, 1> xp2 = ceph.getPosition(xferEnd,
+                                                       eom::EphemFrame::eci);
+    fout << "\nxp1 = [" << xp1(0) << " " << xp1(1) << " " << xp1(2) << "];";
+    fout << "\nxp2 = [" << xp2(0) << " " << xp2(1) << " " << xp2(2) << "];";
       // Make the plot and annotate
     std::string coords = "ECI";
-    fout << "\n];";
     fout << "\nn = size(tpv,1);";
     fout << "\ngxh = figure; hold on;";
-    fout << "\nplot3(tpv(:,2), tpv(:,3), tpv(:,4), '.b');";
+    fout << "\nplot3(tpv(:,2), tpv(:,3), tpv(:,4), '-b');";
     fout << "\nscatter3(tpv(1,2), tpv(1,3), tpv(1,4), 'g');";
     fout << "\nscatter3(tpv(n,2), tpv(n,3), tpv(n,4), 'r');";
+    fout << "\nscatter3(xp1(1), xp1(2), xp1(3), 'k');";
+    fout << "\nscatter3(xp2(1), xp2(2), xp2(3), 'k');";
     fout << "\nscatter3(0, 0, 0, 'b');";
-    fout << "\nplot3(tpv(:,5), tpv(:,6), tpv(:,7), '.m');";
-    fout << "\nscatter3(tpv(1,5), tpv(1,6), tpv(1,7), 'g');";
-    fout << "\nscatter3(tpv(n,5), tpv(n,6), tpv(n,7), 'r');";
-    fout << "\nxlabel('X, dX/dT');";
-    fout << "\nylabel('Y, dY/dT');";
-    fout << "\nzlabel('Z, dZ/dT');";
+    fout << "\nxlabel('X');";
+    fout << "\nylabel('Y');";
+    fout << "\nzlabel('Z');";
     fout << "\ntitle('" << coords << " " << ceph.getName() <<
             " on " << jdStart.to_dmy_str() << "');";
     fout << "\naxis equal;";

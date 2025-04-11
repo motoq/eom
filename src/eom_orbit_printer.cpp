@@ -88,8 +88,7 @@ void EomOrbitPrinter::execute() const
   if (fout.is_open()) {
     double tot_time {phy_const::tu_per_day*(m_jdStop - m_jdStart)};
     double dt {m_dtOut.getTu()};
-    unsigned long int nrec {static_cast<unsigned long int>(tot_time/dt)};
-    nrec++;
+    unsigned long int nrec {static_cast<unsigned long int>(tot_time/dt) + 1L};
 
       // Function header
     fout << "function [gxh, tpv] = " << m_func_name;

@@ -78,8 +78,6 @@ private:
   std::string m_func_name;
   eom::Duration m_dtOut;
   std::string m_distanceUnitsLbl;
-  double m_to_time_units;
-  double m_to_distance_units;
     // Set during validate
   std::shared_ptr<const eom::EcfEciSys> m_f2i {nullptr};
   std::shared_ptr<eom::Ephemeris> m_start_eph;
