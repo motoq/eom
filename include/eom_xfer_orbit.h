@@ -80,8 +80,8 @@ private:
   std::string m_distanceUnitsLbl;
     // Set during validate
   std::shared_ptr<const eom::EcfEciSys> m_f2i {nullptr};
-  std::shared_ptr<eom::Ephemeris> m_start_eph;
-  std::shared_ptr<eom::Ephemeris> m_end_eph;
+  std::shared_ptr<eom::Ephemeris> m_startEph;
+  std::shared_ptr<eom::Ephemeris> m_endEph;
   eom::PropagatorConfig m_propCfg;
 };
 

@@ -90,8 +90,8 @@ void EomXferOrbit::validate(const std::unordered_map<
 
     // Connect with ephemeris resources
   try {
-    m_start_eph = ephemerides.at(m_start_orbit_name);
-    m_end_eph = ephemerides.at(m_end_orbit_name);
+    m_startEph = ephemerides.at(m_start_orbit_name);
+    m_endEph = ephemerides.at(m_end_orbit_name);
   } catch (const std::out_of_range& oor) {
     throw CmdValidateException("EomXferOrbit::validate() "s +
                                "Invalid orbit name in TransferOrbit Cmd: "s +
@@ -101,7 +101,7 @@ void EomXferOrbit::validate(const std::unordered_map<
     // Use orbit propagator for start orbit to reach end orbit state
   bool found_propagator {false};
   for (const auto& odef : orbits) {
-    if (odef.getOrbitName() == m_start_eph->getName()) {
+    if (odef.getOrbitName() == m_startEph->getName()) {
       m_propCfg = odef.getPropagatorConfig();
       found_propagator = true;
       break;
@@ -111,22 +111,22 @@ void EomXferOrbit::validate(const std::unordered_map<
     throw CmdValidateException(
         "EomXferOrbit::validate()"s +
         "\n  Propagator not found in TransferOrbit Cmd for: "s +
-        m_start_eph->getName() +
+        m_startEph->getName() +
         "\n  Ensure start orbit is neither a derived orbit nor ephemeris");
   }
 
     // Check that supplied ephemerides cover transfer orbit time span
   auto xferEnd = m_xferStart + m_xferDur;
-  if (m_xferStart < m_start_eph->getBeginTime() ||
-      m_start_eph->getEndTime() < xferEnd) {
+  if (m_xferStart < m_startEph->getBeginTime() ||
+      m_startEph->getEndTime() < xferEnd) {
     throw CmdValidateException("EomXferOrbit::validate() "s +
-                               m_start_eph->getName() +
+                               m_startEph->getName() +
                                " does not cover transfer orbit duration"s);
   }
-  if (m_xferStart < m_end_eph->getBeginTime() ||
-      m_end_eph->getEndTime() < xferEnd) {
+  if (m_xferStart < m_endEph->getBeginTime() ||
+      m_endEph->getEndTime() < xferEnd) {
     throw CmdValidateException("EomXferOrbit::validate() "s +
-                               m_end_eph->getName() +
+                               m_endEph->getName() +
                                " does not cover transfer orbit duration"s);
   }
 
@@ -140,8 +140,8 @@ void EomXferOrbit::execute() const
   //std::unique_ptr<eom::Ephemeris> xfer_eph = eom::generate_xfer_orbit(
   auto [xfer_eph, nitr] = eom::generate_xfer_orbit(
       m_start_orbit_name + "_to_"s + m_end_orbit_name,
-      *m_start_eph,
-      *m_end_eph,
+      *m_startEph,
+      *m_endEph,
       m_xferStart,
       m_xferDur,
       m_propCfg,
@@ -170,11 +170,11 @@ void EomXferOrbit::execute() const
 
     auto xferEnd = m_xferStart + m_xferDur;
     Eigen::Matrix<double, 6, 1> x1 =
-        m_start_eph->getStateVector(m_xferStart, eom::EphemFrame::eci);
+        m_startEph->getStateVector(m_xferStart, eom::EphemFrame::eci);
     Eigen::Matrix<double, 6, 1> x1t =
         xfer_eph->getStateVector(m_xferStart, eom::EphemFrame::eci);
     Eigen::Matrix<double, 6, 1> x2 =
-        m_end_eph->getStateVector(xferEnd, eom::EphemFrame::eci);
+        m_endEph->getStateVector(xferEnd, eom::EphemFrame::eci);
     Eigen::Matrix<double, 6, 1> x2t =
         xfer_eph->getStateVector(xferEnd, eom::EphemFrame::eci);
     Eigen::Matrix<double, 3, 1> dv1 = x1t.block<3,1>(3,0) -
@@ -201,9 +201,9 @@ void EomXferOrbit::execute() const
 
       // Composite ephemeris for plotting
     std::vector<eom::JulianDate> ho_times = {m_xferStart, xferEnd};
-    std::vector<std::shared_ptr<eom::Ephemeris>> veph = {m_start_eph,
+    std::vector<std::shared_ptr<eom::Ephemeris>> veph = {m_startEph,
                                                          std::move(xfer_eph),
-                                                         m_end_eph};
+                                                         m_endEph};
     eom::CompositeEphemeris ceph {"composite", ho_times, veph};
 
     auto jdStart = m_xferStart - m_xferDur;
@@ -212,6 +212,25 @@ void EomXferOrbit::execute() const
     double dt {m_dtOut.getTu()};
     long int nrec {static_cast<long int>(tot_time/dt) + 1L};
 
+
+      // Create time and range data original orbit
+    fout << "\notp = [";
+    fout << std::scientific;
+    fout.precision(16);
+    for (long int ii=0L; ii<nrec; ++ii) {
+      if (ii > 0L) {
+        fout << ';';
+      }
+      double dtnow {ii*dt};
+      fout << "\n  " << dtnow << " ";
+      eom::JulianDate jdNow {jdStart + phy_const::day_per_tu*dtnow};
+      Eigen::Matrix<double, 6, 1> pos =
+          m_startEph->getStateVector(jdNow, eom::EphemFrame::eci);
+      for (int jj=0; jj<3; ++jj) {
+        fout << " " << pos(jj);
+      }
+    }
+    fout << "\n];";
 
       // Create time and range data
     fout << "\ntpv = [";
@@ -224,7 +243,6 @@ void EomXferOrbit::execute() const
       double dtnow {ii*dt};
       fout << "\n  " << dtnow << " ";
       eom::JulianDate jdNow {jdStart + phy_const::day_per_tu*dtnow};
-      std::cout << "   "  << jdNow.to_string();
       Eigen::Matrix<double, 6, 1> pv =
           ceph.getStateVector(jdNow, eom::EphemFrame::eci);
       for (int jj=0; jj<6; ++jj) {
@@ -243,15 +261,16 @@ void EomXferOrbit::execute() const
     std::string coords = "ECI";
     fout << "\nn = size(tpv,1);";
     fout << "\ngxh = figure; hold on;";
+    fout << "\nplot3(otp(:,2), otp(:,3), otp(:,4), '-k');";
     fout << "\nplot3(tpv(:,2), tpv(:,3), tpv(:,4), '-b');";
     fout << "\nscatter3(tpv(1,2), tpv(1,3), tpv(1,4), 'g');";
     fout << "\nscatter3(tpv(n,2), tpv(n,3), tpv(n,4), 'r');";
     fout << "\nscatter3(xp1(1), xp1(2), xp1(3), 'k');";
     fout << "\nscatter3(xp2(1), xp2(2), xp2(3), 'k');";
     fout << "\nscatter3(0, 0, 0, 'b');";
-    fout << "\nxlabel('X');";
-    fout << "\nylabel('Y');";
-    fout << "\nzlabel('Z');";
+    fout << "\nxlabel('X (DU)');";
+    fout << "\nylabel('Y (DU)');";
+    fout << "\nzlabel('Z (DU)');";
     fout << "\ntitle('" << coords << " " << ceph.getName() <<
             " on " << jdStart.to_dmy_str() << "');";
     fout << "\naxis equal;";
