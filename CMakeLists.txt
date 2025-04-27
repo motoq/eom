@@ -46,6 +46,7 @@ set(SOURCES
   src/parse_ephem_file_def.cpp
   src/parse_gp_access_def.cpp
   src/parse_ground_point.cpp
+  src/parse_propagator_config.cpp
   src/parse_orbit_def.cpp
   src/parse_rel_orbit_def.cpp
   src/parse_sinex_stations.cpp

@@ -16,9 +16,11 @@
 #include <unordered_map>
 #include <execution>
 
-#include <astro_orbit_def.h>
-#include <astro_rel_orbit_def.h>
 #include <astro_ephemeris_file.h>
+#include <astro_ground_point.h>
+#include <astro_orbit_def.h>
+#include <astro_propagator_config.h>
+#include <astro_rel_orbit_def.h>
 #include <axs_gp_access_def.h>
 
 #include <eom_config.h>
@@ -51,6 +53,9 @@ void eomx_parse_input_file(const std::string& fname,
   }
   std::cout << "\nOpened " << fname << '\n';
 
+    // SP propagator configuration options to be applied to orbit
+    // definitions
+  std::unordered_map<std::string, eom::PropagatorConfig> prop_cfgs;
 
     // Read each line and pass to parser while tracking line number
     // Keep track of line number for error messages
@@ -123,9 +128,21 @@ void eomx_parse_input_file(const std::string& fname,
                 other_error =
                     "CelestialEphemerides:  No Celestial Bodies Listed";
               }
+            } else if (make == "PropagatorConfig") {
+              try {
+                auto [name, pcfg] = eom_app::parse_propagator_config(tokens,
+                                                                     cfg);
+                prop_cfgs[name] = pcfg;
+                input_error = false;
+              } catch (const std::invalid_argument& ia) {
+                std::string xerror = ia.what();
+                other_error = "Invalid Propagator definition: " + xerror;
+              }
             } else if (make == "Orbit") {
               try {
-                orbit_defs.push_back(eom_app::parse_orbit_def(tokens, cfg));
+                orbit_defs.push_back(eom_app::parse_orbit_def(tokens,
+                                                              cfg,
+                                                              prop_cfgs));
                 cfg.addPendingOrbit(orbit_defs.back().getOrbitName());
                 input_error = false;
               } catch (const std::invalid_argument& ia) {

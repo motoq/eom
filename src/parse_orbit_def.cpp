@@ -8,10 +8,11 @@
 
 #include <eom_parse.h>
 
-#include <stdexcept>
 #include <array>
-#include <string>
 #include <deque>
+#include <stdexcept>
+#include <string>
+#include <unordered_map>
 
 #include <cal_julian_date.h>
 #include <astro_propagator_config.h>
@@ -33,7 +34,9 @@ static void parse_other_model(std::deque<std::string>&,
 namespace eom_app {
 
 eom::OrbitDef parse_orbit_def(std::deque<std::string>& tokens,
-                              const EomConfig& cfg)
+                              const EomConfig& cfg,
+                              const std::unordered_map<
+                                  std::string, eom::PropagatorConfig>& pcfgs)
 {
   using namespace std::string_literals;
     // Need at least the name and type of orbit
@@ -50,12 +53,31 @@ eom::OrbitDef parse_orbit_def(std::deque<std::string>& tokens,
   eom::CoordType coord_type {eom::CoordType::cartesian};
   eom::FrameType frame_type {eom::FrameType::gcrf};
 
-  if (model == "SP"  &&  tokens.size() > 0 ) {
+  if (model == "SP"  &&  tokens.size() > 1) {
     eom::PropagatorConfig propCfg {eom::PropagatorType::sp};
     propCfg.setStartStopTime(cfg.getStartTime(), cfg.getStopTime());
     eom::JulianDate epoch = parse_datetime(tokens);
     std::array<double, 6> state = parse_state_vector(tokens, cfg, coord_type,
                                                                   frame_type);
+    if (tokens[0] == "Propagator") {
+      tokens.pop_front();
+      try {
+        eom::PropagatorConfig propCfg = pcfgs.at(tokens[0]);
+        propCfg.setStartStopTime(cfg.getStartTime(), cfg.getStopTime());
+        tokens.pop_front();
+        return eom::OrbitDef {name,
+                              propCfg,
+                              epoch,
+                              state,
+                              coord_type,
+                              frame_type};
+      } catch (const std::out_of_range& oor) {
+        throw std::invalid_argument("eom_app::parse_orbit_def() "s +
+                                    "Invalid PropagatorConfig: "s +
+                                    tokens[0]);
+      }
+      propCfg.setStartStopTime(cfg.getStartTime(), cfg.getStopTime());
+    }
       // Loop through enough times to support finding all
       // supported options:
       //   1. Earth gravity model

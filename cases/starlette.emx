@@ -13,16 +13,17 @@ EcfEciRate Minutes 240;
 
 DistanceUnits  Kilometers;
 TimeUnits Seconds;
+PropagatorConfig  grav_only  GravityModel  Standard 40 40
+#                            GravityModel  Gravt 40 40
+                             MoonGravity  Meeus
+                             SunGravity   Meeus
+#                            Integrator  RK4 Seconds 10;
+#                            Integrator  GJ Seconds 0;
+                             Integrator  Adams4 Seconds 8.0;
 Orbit  starlette  SP  GD 2022  2  8  0  0  0.00
        CART  ITRF  -5742.304959   2727.319108   3934.171919
                    0.1162318900 -5.6156839000  3.9837925000
-#                  GravityModel  Gravt 40 40
-                   GravityModel  Standard 40 40
-                   MoonGravity  Meeus
-                   SunGravity   Meeus
-#                  Propagator  GJ Seconds 0;
-                   Propagator  Adams4 Seconds 8.0;
-#                  Propagator  RK4 Seconds 10;
+                   Propagator grav_only;
 Orbit  vinti_starlette  OscJ2 GD  2022  2  8  0  0  00.0
        CART  ITRF  -5742.304959   2727.319108   3934.171919
                    0.1162318900 -5.6156839000  3.9837925000;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, 2022 Kurt Motekew
+ * Copyright 2021-2025 Kurt Motekew
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,12 +14,14 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
+#include <utility>
 
 #include <cal_duration.h>
 #include <cal_julian_date.h>
 #include <astro_ephemeris_file.h>
 #include <astro_ground_point.h>
 #include <astro_orbit_def.h>
+#include <astro_propagator_config.h>
 #include <astro_rel_orbit_def.h>
 #include <axs_gp_access_def.h>
 
@@ -63,12 +65,25 @@ eom::JulianDate parse_datetime(std::deque<std::string>& tokens);
 eom::Duration parse_duration(std::deque<std::string>& tokens);
 
 /**
+ * @param  tokens  Two or more tokens to parse, the first a string the name
+ *                 to assign to the parsed object, and the remainder
+ *                 configuration options.
+ * @param  cfg     Scenario configuration parameters
+ *
+ * @return  Propagator configuration with assigned name
+ */
+std::pair<std::string, eom::PropagatorConfig>
+parse_propagator_config(std::deque<std::string>& tokens,
+                        const EomConfig& cfg);
+
+/**
  * Parses an orbit definition
  *
  * @param  tokens  Tokens consisting of an orbit name, type, epoch, and
  *                 state vector.  This list is modified such that all
  *                 parsed values are consumedi (pop_front()).
  * @param  cfg     Scenario configuration parameters
+ * @param  pcfgs   Propagator configurations
  *
  * @return  An orbit definition, used in the generation of an orbit
  *          model
@@ -77,7 +92,9 @@ eom::Duration parse_duration(std::deque<std::string>& tokens);
  *          thrown if the list of tokens is not empty upon completion.
  */
 eom::OrbitDef parse_orbit_def(std::deque<std::string>& tokens,
-                              const EomConfig& cfg);
+                              const EomConfig& cfg,
+                              const std::unordered_map<
+                                  std::string, eom::PropagatorConfig>& pcfgs);
 
 /**
  * Parses an orbit definition based on another orbit
