@@ -12,20 +12,22 @@ EcfEciRate Minutes 240;
 
 DistanceUnits  Kilometers;
 TimeUnits Seconds;
+PropagatorConfig  gj  GravityModel  Gravt 40 40
+                      MoonGravity  Meeus
+                      SunGravity   Meeus
+                      Integrator  GJ Seconds 0;
+PropagatorConfig  gjs GravityModel  Gravt 40 40
+                      MoonGravity  Meeus
+                      SunGravity   Meeus
+                      Integrator  GJs Seconds 0;
 Orbit  gj_sat  SP  GD 2022  2  8  0  0  0.00
        CART  ITRF  -5742.304959   2727.319108   3934.171919
                    0.1162318900 -5.6156839000  3.9837925000
-                   GravityModel  Gravt 40 40
-                   MoonGravity  Meeus
-                   SunGravity   Meeus
-                   Propagator  GJ Seconds 0;
+                   Propagator gj;
 Orbit  gjs_sat  SP  GD 2022  2  8  0  0  0.00
        CART  ITRF  -5742.304959   2727.319108   3934.171919
                    0.1162318900 -5.6156839000  3.9837925000
-                   GravityModel  Gravt 40 40
-                   MoonGravity  Meeus
-                   SunGravity   Meeus
-                   Propagator  GJs Seconds 0;
+                   Propagator  gjs;
 EphemerisFile slr_sat  SP3c Hermite nsgf.orb.starlette.220212.v00.sp3;
 Orbit  vinti_sat  VintiMod  GD 2022  2  8  0  0  0.00
        CART  ITRF  -5742.304959   2727.319108   3934.171919

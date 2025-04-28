@@ -225,82 +225,61 @@ build_orbit(const OrbitDef& orbitParams,
                                  xeciVec);
     }
       // Ready to generate ephemeris
-    std::unique_ptr<Ephemeris> orbit =
-        std::make_unique<SpEphemeris>(orbitParams.getOrbitName(),
-                                      pCfg.getStartTime(),
-                                      pCfg.getStopTime(),
-                                      ecfeciSys,
-                                      std::move(sp));
-    return orbit;
+    return std::make_unique<SpEphemeris>(orbitParams.getOrbitName(),
+                                         pCfg.getStartTime(),
+                                         pCfg.getStopTime(),
+                                         ecfeciSys,
+                                         std::move(sp));
   } else if (pCfg.getPropagatorType() == PropagatorType::kepler1) {
-    std::unique_ptr<Ephemeris> orbit =
-           std::make_unique<Kepler>(orbitParams.getOrbitName(),
+    return std::make_unique<Kepler>(orbitParams.getOrbitName(),
                                     orbitParams.getEpoch(),
                                     xeciVec,
                                     ecfeciSys);
-    return orbit;
   } else if (pCfg.getPropagatorType() == PropagatorType::kepler1mod) {
-    std::unique_ptr<Ephemeris> orbit =
-           std::make_unique<KeplerProp>(orbitParams.getOrbitName(),
+    return std::make_unique<KeplerProp>(orbitParams.getOrbitName(),
                                         orbitParams.getEpoch(),
                                         xeciVec,
                                         ecfeciSys);
-    return orbit;
   } else if (pCfg.getPropagatorType() == PropagatorType::fandg) {
-    std::unique_ptr<Ephemeris> orbit =
-           std::make_unique<FandG>(orbitParams.getOrbitName(),
+    return std::make_unique<FandG>(orbitParams.getOrbitName(),
                                    orbitParams.getEpoch(),
                                    xeciVec,
                                    ecfeciSys);
-    return orbit;
   } else if (pCfg.getPropagatorType() == PropagatorType::vinti6) {
-    std::unique_ptr<Ephemeris> orbit =
-           std::make_unique<Vinti>(orbitParams.getOrbitName(),
+    return std::make_unique<Vinti>(orbitParams.getOrbitName(),
                                    orbitParams.getEpoch(),
                                    xeciVec,
                                    ecfeciSys);
-    return orbit;
   } else if (pCfg.getPropagatorType() == PropagatorType::vinti_j2) {
-    std::unique_ptr<Ephemeris> orbit =
-         std::make_unique<Vinti>(orbitParams.getOrbitName(),
-                                 orbitParams.getEpoch(),
-                                 xeciVec,
-                                 ecfeciSys,
-                                 VintiPertModel::J2_ONLY);
-    return orbit;
+    return std::make_unique<Vinti>(orbitParams.getOrbitName(),
+                                   orbitParams.getEpoch(),
+                                   xeciVec,
+                                   ecfeciSys,
+                                   VintiPertModel::J2_ONLY);
   } else if (pCfg.getPropagatorType() == PropagatorType::vinti6mod) {
-    std::unique_ptr<Ephemeris> orbit =
-           std::make_unique<VintiProp>(orbitParams.getOrbitName(),
+    return std::make_unique<VintiProp>(orbitParams.getOrbitName(),
                                        orbitParams.getEpoch(),
                                        xeciVec,
                                        ecfeciSys);
-    return orbit;
   } else if (pCfg.getPropagatorType() == PropagatorType::sgp4) {
-    std::unique_ptr<Ephemeris> orbit =
-           std::make_unique<Sgp4>(orbitParams.getOrbitName(),
+    return std::make_unique<Sgp4>(orbitParams.getOrbitName(),
                                   orbitParams.getTle(),
                                   ecfeciSys);
-    return orbit;
 #ifdef GENPL
   } else if (pCfg.getPropagatorType() == PropagatorType::sec_j2) {
-    std::unique_ptr<Ephemeris> orbit =
-           std::make_unique<SecJ2>(orbitParams.getOrbitName(),
+    return std::make_unique<SecJ2>(orbitParams.getOrbitName(),
                                    orbitParams.getEpoch(),
                                    xeciVec,
                                    ecfeciSys);
-    return orbit;
   } else if (pCfg.getPropagatorType() == PropagatorType::osc_j2) {
-    std::unique_ptr<Ephemeris> orbit =
-           std::make_unique<OscJ2>(orbitParams.getOrbitName(),
+    return std::make_unique<OscJ2>(orbitParams.getOrbitName(),
                                    orbitParams.getEpoch(),
                                    xeciVec,
                                    ecfeciSys);
-    return orbit;
 #endif
   } else {
     throw std::invalid_argument("Invalid Propagator Type");
   }
-
 }
 
 

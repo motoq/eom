@@ -1,15 +1,13 @@
 Misc
 ----
 
-geo orbit def
-
 use move for ecfeci in orbit builder functions
+
+geo orbit def
 
 Better accessibility of celestial ephemerides for commands (possibly
 just reload as necessary).  astro_generate switches to Meeus' methods
 for now.
-
-astro_build_orbit - directly return orbit vs. assign first
 
 snprintf() check
 
@@ -32,6 +30,7 @@ Return number of messages from ecfeci_sys that were atually created
 Does a zero Duration break ECFECI generation?
 
 Rename LeapSecond.setUtc_Ut1 to setUtcMinuxUt1
+setTai_Utc
 
 Check defaults for derived
 
@@ -59,7 +58,6 @@ Order of init = order of declaration
 
 Add default constructors
 
-Remove Printable and move to traditional ostream friend operator
 
 Access
 ------

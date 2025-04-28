@@ -2,7 +2,7 @@
 #
 # Loads ephemeris for LAGEOS-2 from an SP3 format file and compare to
 # propagated ephemeris.
-# (requires GENPL option if using GJs propagator)
+# (requires GENPL option if using GJs integrator)
 #
 # 2023/01/16
 #
@@ -14,14 +14,15 @@ EcfEciRate Minutes 240;
 
 DistanceUnits  Kilometers;
 TimeUnits Seconds;
+PropagatorConfig  grav_only  GravityModel  Standard 40 40
+                             MoonGravity  Meeus
+                             SunGravity   Meeus
+                             Integrator  GJs Seconds 0;
+#                            Integrator  Adams4 Seconds 15.0;
 Orbit  lageos2  SP  GD 2021  6 20  0  0  0.00
        CART  ITRF  3755.000640  -8255.568135  -8261.039865
                    2.7492729000  3.6003699000 -2.4422898000
-                   GravityModel  Standard 40 40
-                   MoonGravity  Meeus
-                   SunGravity   Meeus
-#                   Propagator  Adams4 Seconds 15.0;
-                   Propagator  GJs Seconds 0;
+                   Propagator grav_only;
 EphemerisFile nsgf_lageos2h SP3c Hermite nsgf.orb.lageos2.210626.v70.sp3;
 EphemerisFile nsgf_lageos2t  SP3c Chebyshev nsgf.orb.lageos2.210626.v70.sp3;
 TimeUnits Minutes;

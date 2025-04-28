@@ -21,10 +21,11 @@ TimeUnits Seconds;
 # 3022 x 550 km alt (0.151), 3 deg/minute mean motion
 #Orbit  leosat   VintiMod GD 2021 11 12 17 00 00.0
 #       CART   GCRF  -5552.0  -2563.0  3258.0   2.149  -7.539  -2.186;
+PropagatorConfig  j2  Integrator  RK4 Minutes 0.0
+                      GravityModel Jn 2;
 Orbit  leosat   SP  GD 2021 11 12 17 00 00.0
        CART   GCRF  -5552.0  -2563.0  3258.0   2.149  -7.539  -2.186
-       Propagator  RK4 Minutes 0.0
-       GravityModel Jn 2;
+       Propagator  j2;
 
 # From Vallado, 3rd edition
 DistanceUnits Meters;

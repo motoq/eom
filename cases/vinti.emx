@@ -15,10 +15,11 @@ Orbit  vinti    Vinti6   GD 2021 11 12 17 00 00.0
        CART  GCRF  -5552.0  -2563.0  3258.0   2.149  -7.539  -2.186;
 Orbit  vintij2  VintiJ2  GD 2021 11 12 17 00 00.0
        CART  GCRF  -5552.0  -2563.0  3258.0   2.149  -7.539  -2.186;
+PropagatorConfig jn3 GravityModel  Jn 3
+                     Integrator  RK4 Minutes 0.0;
 Orbit  spj3     SP       GD 2021 11 12 17 00 00.0
        CART  GCRF  -5552.0  -2563.0  3258.0   2.149  -7.539  -2.186
-       GravityModel  Jn 3
-       Propagator  RK4 Minutes 0.0;
+       Propagator  jn3;
 OutputRate Minutes 5;
 Command PrintRange vinti kep vinti_rng_vk;
 Command PrintRange vinti vintij2 vinti_rng_vvj2;
