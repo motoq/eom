@@ -36,4 +36,5 @@ OutputRate Minutes 5;
 Command PrintRangeSpectrum nsgf_starlette starlette starlette_rs;
 Command PrintRangeSpectrum nsgf_starlette vinti_starlette starlette_vinti_rs;
 Command PrintRangeSpectrum nsgf_starlette sgp4_starlette starlette_sgp4_rs;
-
+OutputRate Minutes 1;
+Command PrintRTC  nsgf_starlette starlette starlette_rtc;

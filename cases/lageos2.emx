@@ -29,4 +29,4 @@ TimeUnits Minutes;
 OutputRate Minutes 5;
 Command PrintRangeSpectrum  nsgf_lageos2h lageos2 lageos2h_rngfft;
 Command PrintRange lageos2 nsgf_lageos2t lageos2t_rng;
-
+Command PrintRTC nsgf_lageos2t lageos2 lageos2_rtc;

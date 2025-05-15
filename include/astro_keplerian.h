@@ -82,46 +82,60 @@ public:
   /**
    * @return  Orbit energy, negative for elliptical orbits, DU^2/TU^2
    */
-  double getEnergy() const override
-  {
-    return m_sme;
-  }
+  double getEnergy() const override;
 
   /**
    * @return  Orbit angular momentum, DU^2/TU
    */
-  double getAngularMomentum() const override
-  {
-    return m_hmag;
-  }
+  double getAngularMomentum() const override;
 
   /*
-   * @return orbit semimajor axis length, DU
+   * @return Semimajor axis length, DU
    */
   double getSemimajorAxis() const;
 
   /*
-   * @return orbit eccentricity
+   * @return Eccentricity
    */
   double getEccentricity() const;
 
   /*
-   * @return the eccentric anomaly, radians
+   * @return Inclination, radians
+   */
+  double getInclination() const;
+
+  /*
+   * @return Right ascension of the ascending node (RAAN), radians
+   */
+  double getRaan() const;
+
+  /*
+   * @return Argument of perigee, radians
+   */
+  double getArgumentOfPerigee() const;
+
+  /*
+   * @return True anomaly, radians
+   */
+  double getTrueAnomaly() const;
+
+  /*
+   * @return Eccentric anomaly, radians
    */
   double getEccentricAnomaly() const;
 
   /*
-   * @return the mean anomaly, radians
+   * @return Mean anomaly, radians
    */
   double getMeanAnomaly() const;
 
   /*
-   * @return the mean motion, radians/TU
+   * @return Mean motion, radians/TU
    */
   double getMeanMotion() const;
 
   /*
-   * @return the orbit period, TU
+   * @return Orbit period, TU
    */
   double getPeriod() const;
 

@@ -32,4 +32,4 @@ TimeUnits Minutes;
 OutputRate Minutes 5;
 Command PrintRange etalon2 nsgf_etalon2t etalon2t_rng;
 Command PrintRangeSpectrum nsgf_etalon2h etalon2 etalon2h_rngfft;
-
+Command PrintRTC nsgf_etalon2h etalon2 etalon2h_rtc;

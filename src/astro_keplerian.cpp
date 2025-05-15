@@ -208,6 +208,18 @@ void Keplerian::set(const std::array<double, 6>& oe)
 }
 
 
+double Keplerian::getEnergy() const
+{
+  return m_sme;
+}
+
+
+double Keplerian::getAngularMomentum() const
+{
+  return m_hmag;
+}
+
+
 double Keplerian::getSemimajorAxis() const
 {
   return m_oe[ia];
@@ -217,6 +229,30 @@ double Keplerian::getSemimajorAxis() const
 double Keplerian::getEccentricity() const
 {
   return m_oe[ie];
+}
+
+
+double Keplerian::getInclination() const
+{
+  return m_oe[ii];
+}
+
+
+double Keplerian::getRaan() const
+{
+  return m_oe[io];
+}
+
+
+double Keplerian::getArgumentOfPerigee() const
+{
+  return m_oe[iw];
+}
+
+
+double Keplerian::getTrueAnomaly() const
+{
+  return m_oe[iv];
 }
 
 
