@@ -11,6 +11,7 @@
 #include <cmath>
 #include <memory>
 
+#include <cal_julian_date.h>
 #include <astro_ecfeci_sys.h>
 #include <astro_ground_point.h>
 #include <astro_sun_meeus.h>

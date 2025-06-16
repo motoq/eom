@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Kurt Motekew
+ * Copyright 2021, 2025 Kurt Motekew
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,8 +9,8 @@
 #ifndef ASTRO_PROPAGATOR_CONFIG_H
 #define ASTRO_PROPAGATOR_CONFIG_H
 
-#include <cal_julian_date.h>
 #include <cal_duration.h>
+#include <cal_julian_date.h>
 
 namespace eom {
 
@@ -74,6 +74,14 @@ enum class MoonGravityModel {
   eph                             ///< moon.emb file
 };
 
+/**
+ * Solar radiation pressure model options
+ */
+enum class SrpModel {
+  none,
+  spherical                       ///< Two parameter spherical
+};
+
 
 /**
  * Contains propagator configuration parameters
@@ -83,23 +91,19 @@ public:
   /**
    * Initilize with default propagator
    */
-  PropagatorConfig()
-  {
-  }
+  PropagatorConfig();
 
   /**
    * Initialize with only the propagator type.  Most general
    * perturbation propagators should use this version.  Special
    * perturbation propagators will be initialized with default values.
    */
-  PropagatorConfig(PropagatorType prop_type) : m_prop_type {prop_type}
-  {
-  }
+  PropagatorConfig(PropagatorType prop_type);
 
   /*
    * @return  The propagator type
    */
-  PropagatorType getPropagatorType() const noexcept { return m_prop_type; }
+  PropagatorType getPropagatorType() const noexcept;
 
   /**
    * Set time span over which ephemeris should be valid - typically
@@ -115,19 +119,13 @@ public:
    * @return  Required ephemeris start time when generated via SP
    *          methods, UTC
    */
-  JulianDate getStartTime() const noexcept
-  {
-    return m_jdStart;
-  }
+  JulianDate getStartTime() const noexcept;
 
   /**
    * @return  Required ephemeris stop time when generated via SP
    *          methods, UTC
    */
-  JulianDate getStopTime() const noexcept
-  {
-    return m_jdStop;
-  }
+  JulianDate getStopTime() const noexcept;
 
   /**
    * @param  Set the integration method to use
@@ -137,29 +135,20 @@ public:
   /**
    * @return  Integration method to use
    */
-  Propagator getPropagator() const noexcept
-  {
-    return  m_propagator;
-  }
+  Propagator getPropagator() const noexcept;
 
   /**
    * @return  Suggessted (starting) integration step size.  Defaults
    *          to zero if not explicitly set.
    */
-  void setStepSize(const Duration& dt)
-  {
-    m_dt = dt;
-  }
+  void setStepSize(const Duration& dt);
 
   /**
    * @return  Suggested integration step size.  Default value of
    *          zero typically interpreted as indicator to use
    *          default or self determined integration step size.
    */
-  Duration getStepSize() const noexcept
-  {
-    return  m_dt;
-  }
+  Duration getStepSize() const noexcept;
 
   /**
    * @param  Set the gravity model to use
@@ -169,10 +158,7 @@ public:
   /**
    * @return  Gravity model to use
    */
-  GravityModel getGravityModel() const noexcept
-  {
-    return m_gravity_model;
-  }
+  GravityModel getGravityModel() const noexcept;
 
   /**
    * @param  Set the solar gravity model to use
@@ -182,10 +168,7 @@ public:
   /**
    * @return  Solar gravity model to use
    */
-  SunGravityModel getSunGravityModel() const noexcept
-  {
-    return m_sun_gravity;
-  }
+  SunGravityModel getSunGravityModel() const noexcept;
 
   /**
    * @param  Set the lunar gravity model to use
@@ -195,10 +178,7 @@ public:
   /**
    * @return  Lunar gravity model to use
    */
-  MoonGravityModel getMoonGravityModel() const noexcept
-  {
-    return m_moon_gravity;
-  }
+  MoonGravityModel getMoonGravityModel() const noexcept;
 
   /**
    * When called, enables other gravity models based on celestial bodies
@@ -215,10 +195,7 @@ public:
   /**
    * @return  true if planetary, etc., gravity models are enabled
    */
-  bool otherGravityModelsEnabled() const noexcept
-  {
-    return m_other_gravity;
-  }
+  bool otherGravityModelsEnabled() const noexcept;
 
   /**
    * Order <= Degree
@@ -231,18 +208,42 @@ public:
   /**
    * @return  Degree of gravity model
    */
-  int getDegree() const noexcept
-  {
-    return m_degree;
-  }
+  int getDegree() const noexcept;
 
   /**
    * @return  Order of gravity model
    */
-  int getOrder() const noexcept
-  {
-    return m_order;
-  }
+  int getOrder() const noexcept;
+
+  /**
+   * @param  Set the SRP model to use
+   */
+  void setSrpModel(SrpModel srp_model);
+
+  /**
+   * @return  Selected SRP model
+   */
+  SrpModel getSrpModel();
+
+  /**
+   * @param  Set reflectivity for fixed value SRP models
+   */
+  void setReflectivity(double cr);
+
+  /**
+   * @return  Reflectivity for fixed value SRP models
+   */
+  double getReflectivity();
+
+  /**
+   * @param  Set fixed plate area over mass for SRP models.
+   */
+  void setAreaOverMass(double aom);
+
+  /**
+   * @param  Fixed plate area over mass for SRP models.
+   */
+  double getAreaOverMass();
 
 private:
     // Required for all propagators
@@ -258,6 +259,10 @@ private:
   SunGravityModel m_sun_gravity {SunGravityModel::none};
   MoonGravityModel m_moon_gravity {MoonGravityModel::none};
   bool m_other_gravity {false};
+    // Non-conservative forces
+  SrpModel m_srp_model {SrpModel::none};
+  double m_cr {0.0};                        // Reflectivity
+  double m_aom {0.0};                       // Area over Mass
 
   int m_degree {0};
   int m_order {0};

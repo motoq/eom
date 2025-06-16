@@ -41,6 +41,7 @@
 #include <astro_rk4s.h>
 #include <astro_sgp4.h>
 #include <astro_sp_ephemeris.h>
+#include <astro_srp_spherical.h>
 #include <astro_sun_meeus.h>
 #include <astro_third_body_gravity.h>
 #include <astro_vinti.h>
@@ -191,6 +192,14 @@ build_orbit(const OrbitDef& orbitParams,
                                                std::move(planetEph));
         deq->addForceModel(std::move(planetGrav));
       }
+    }
+    if (pCfg.getSrpModel() == SrpModel::spherical) {
+      std::unique_ptr<Ephemeris> sunEph = std::make_unique<SunMeeus>(ecfeciSys);
+      std::unique_ptr<ForceModel> srp =
+          std::make_unique<SrpSpherical>(pCfg.getReflectivity(),
+                                         pCfg.getAreaOverMass(),
+                                         std::move(sunEph));
+      deq->addForceModel(std::move(srp));
     }
       // Integrator
     std::unique_ptr<OdeSolver<JulianDate, double, 6>> sp {nullptr};

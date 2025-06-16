@@ -8,8 +8,8 @@
 
 #include <astro_third_body_gravity.h>
 
-#include <utility>
 #include <memory>
+#include <utility>
 
 #include <Eigen/Dense>
 

@@ -87,6 +87,7 @@ set(SOURCES
   src/astro_sp3_hermite.cpp
   src/astro_sgp4.cpp
   src/astro_sp_ephemeris.cpp
+  src/astro_srp_spherical.cpp
   src/astro_sun_meeus.cpp
   src/astro_third_body_gravity.cpp
   src/astro_tle.cpp

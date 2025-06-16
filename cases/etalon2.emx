@@ -20,6 +20,9 @@ PropagatorConfig  grav_only  GravityModel  Standard 40 40
                              MoonGravity  Ephemeris
                              SunGravity   Ephemeris
                              OtherGravity
+                             SRP Spherical 1.5 0.000025
+                             #SRP Spherical 1.5 0.000025
+                             #SRP Spherical 1.0 0.00004
 #                            Integrator  GJ Seconds 0;
                              Integrator  Adams4 Seconds 0;
 Orbit  etalon2  SP  GD 2019  2 3  0  0  0.00

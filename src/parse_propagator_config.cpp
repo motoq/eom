@@ -27,6 +27,8 @@ static void parse_moon_model(std::deque<std::string>&,
                              eom::PropagatorConfig&);
 static void parse_other_model(std::deque<std::string>&,
                               eom::PropagatorConfig&);
+static void parse_srp_model(std::deque<std::string>&,
+                            eom::PropagatorConfig&);
 
 namespace eom_app {
 
@@ -52,13 +54,15 @@ parse_propagator_config(std::deque<std::string>& tokens,
     //   2. Sun gravity model
     //   3. Moon gravity model
     //   4. Other gravity (planets)
-    //   5. Integrator options
-  int sp_options {5};
+    //   5. SRP
+    //   6. Integrator options
+  int sp_options {6};
   for (int ii=0; ii<sp_options; ++ii) {
     parse_gravity_model(tokens, propCfg);
     parse_sun_model(tokens, propCfg);
     parse_moon_model(tokens, propCfg);
     parse_other_model(tokens, propCfg);
+    parse_srp_model(tokens, propCfg);
     parse_propagator(tokens, propCfg);
     if (tokens.size() == 0) {
       break;
@@ -197,5 +201,29 @@ static void parse_other_model(std::deque<std::string>& other_toks,
   if (other_toks.size() > 0  &&  other_toks[0] == "OtherGravity") {
     other_toks.pop_front();
     pCfg.enableOtherGravityModels();
+  }
+}
+
+
+static void parse_srp_model(std::deque<std::string>& srp_toks,
+                            eom::PropagatorConfig& pCfg)
+{
+    // "SRP  Model"
+  if (srp_toks.size() > 3  &&  srp_toks[0] == "SRP") {
+    srp_toks.pop_front();
+    if (srp_toks[0] == "Spherical") {
+      srp_toks.pop_front();
+      try {
+        double cr {std::stod(srp_toks[0])};
+        srp_toks.pop_front();
+        pCfg.setReflectivity(cr);
+        double aom {std::stod(srp_toks[0])};
+        srp_toks.pop_front();
+        pCfg.setAreaOverMass(aom);
+      } catch (const std::invalid_argument& ia) {
+        ;
+      }
+      pCfg.setSrpModel(eom::SrpModel::spherical);
+    }
   }
 }
