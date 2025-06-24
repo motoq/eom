@@ -13,6 +13,7 @@
 
 #include <Eigen/Dense>
 
+#include <mth_angle.h>
 #include <cal_julian_date.h>
 #include <astro_ephemeris.h>
 
@@ -35,9 +36,29 @@ SrpSpherical::getAcceleration(const JulianDate& jd,
   Eigen::Matrix<double, 3, 1> r_sat_o = state.block<3,1>(0,0);
   Eigen::Matrix<double, 3, 1> r_sun_o = m_sun_eph->getPosition(jd,
                                                                EphemFrame::eci);
+
+  Eigen::Matrix<double, 3, 1> rhat_sat_o = r_sat_o.normalized();
+  Eigen::Matrix<double, 3, 1> rhat_sun_o = r_sun_o.normalized();
+  if (r_sat_o.dot(r_sun_o) > 0.0) {
+    auto angle = mth_angle::unit_vec_angle<double>(rhat_sat_o, rhat_sun_o);
+    if (angle*r_sat_o.norm() < 1.0) {
+      return Eigen::Matrix<double, 3, 1>::Zero();
+    }
+  }
+
   Eigen::Matrix<double, 3, 1> rhat_sat_sun = (r_sat_o - r_sun_o).normalized();
 
-  return 4.57e-6*m_cr*m_aom*rhat_sat_sun;
+  double cr_i {0.0};
+  double cr_r {m_cr - 1.0};
+  if (cr_r > 0.0) {
+    cr_i = m_cr - cr_r;
+  } else {
+    cr_i = m_cr;
+    cr_r = 0.0;
+  }
+
+  return 4.57e-6*m_aom*(cr_r*rhat_sat_sun - 
+                        cr_i*rhat_sat_o);
 }
 
 
