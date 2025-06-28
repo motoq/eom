@@ -53,12 +53,12 @@ SrpSpherical::getAcceleration(const JulianDate& jd,
   if (cr_r > 0.0) {
     cr_i = m_cr - cr_r;
   } else {
-    cr_i = m_cr;
-    cr_r = 0.0;
+    cr_r = m_cr;
+    cr_i = 0.0;
   }
 
-  return 4.57e-6*m_aom*(cr_r*rhat_sat_sun - 
-                        cr_i*rhat_sat_o);
+  return 4.57e-6*m_aom*(cr_i*rhat_sat_sun - 
+                        cr_r*rhat_sat_o);
 }
 
 
