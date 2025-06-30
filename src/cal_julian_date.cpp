@@ -9,6 +9,7 @@
 #include <cal_julian_date.h>
 
 #include <cmath>
+#include <ostream>
 #include <string>
 
 #include <utl_const.h>
@@ -269,6 +270,12 @@ void JulianDate::jd2gd(int& year, int& month, int& day,
   year  = i;
   month = j;
   day   = k;
+}
+
+
+std::ostream& operator<<(std::ostream& out, const JulianDate& jd)
+{
+  return out << jd.to_string();
 }
 
 

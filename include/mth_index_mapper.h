@@ -103,7 +103,7 @@ IndexMapper<T>::IndexMapper(std::vector<std::pair<T, T>> blocks)
   while (val <= m_blocks.back().second) {
     bool outside {false};
     while (!outside) {
-      if (val <= m_blocks[ii].second) {
+      if (m_blocks.size() <= ii  ||  val <= m_blocks[ii].second) {
         outside = true;
         imap.push_back(ii);
       }

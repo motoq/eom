@@ -9,6 +9,7 @@
 #ifndef CAL_JULIAN_DATE_H
 #define CAL_JULIAN_DATE_H
 
+#include <ostream>
 #include <string>
 
 #include <cal_const.h>
@@ -247,6 +248,12 @@ private:
   double jdHi {cal_const::j2000};           // Days
   double jdLo {0.0};                        // Fraction of a day
 };
+
+
+/**
+ * Override output stream as non-member function.
+ */
+std::ostream& operator<<(std::ostream& out, const JulianDate& jd);
 
 
 }

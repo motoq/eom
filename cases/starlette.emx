@@ -7,7 +7,7 @@
 #
 
 SimStart GD 2022  2  8  0  0  0.00;
-SimDuration Days 2;
+SimDuration Days 3.75;
 LeapSeconds 37;
 EcfEciRate Minutes 240;
 
