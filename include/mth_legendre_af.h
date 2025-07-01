@@ -9,7 +9,7 @@
 #ifndef MTH_LEGENDRE_AF_H
 #define MTH_LEGENDRE_AF_H
 
-#include <eigen3/Eigen/Core>
+#include <Eigen/Core>
 
 namespace eom {
 
