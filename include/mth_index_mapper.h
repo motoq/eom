@@ -69,7 +69,7 @@ private:
   T m_val0;
 
   std::vector<std::pair<T, T>> m_blocks;
-  std::vector<unsigned long> imap;
+  std::vector<unsigned long> m_imap;
 };
 
 
@@ -97,6 +97,7 @@ IndexMapper<T>::IndexMapper(std::vector<std::pair<T, T>> blocks)
     }
   }
 
+    // Assign lookup indexing based on maximum block size
   m_val0 = m_blocks.front().first;
   auto val = m_val0 + m_bsize;
   unsigned long ii {0};
@@ -105,7 +106,7 @@ IndexMapper<T>::IndexMapper(std::vector<std::pair<T, T>> blocks)
     while (!outside) {
       if (m_blocks.size() <= ii  ||  val <= m_blocks[ii].second) {
         outside = true;
-        imap.push_back(ii);
+        m_imap.push_back(ii);
       }
       ii++;
     }
@@ -121,10 +122,10 @@ unsigned long IndexMapper<T>::getIndex(const T& val) const
     // on percentage of the total number of values
   auto range = val - m_val0;
   unsigned long ndx = static_cast<unsigned long>(m_n*(range/m_range));
-  if (imap.size() <= ndx) {
-    ndx = imap.back();
+  if (m_imap.size() <= ndx) {
+    ndx = m_imap.back();
   } else {
-    ndx = imap[ndx];
+    ndx = m_imap[ndx];
   }
 
     // Now retrieve interval index based on initial estimate
