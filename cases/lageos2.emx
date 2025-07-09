@@ -17,6 +17,7 @@ TimeUnits Seconds;
 PropagatorConfig  grav_only  GravityModel  Standard 40 40
                              MoonGravity  Meeus
                              SunGravity   Meeus
+                             SRP Spherical 1.1 0.00007
                              Integrator  GJs Seconds 0;
 #                            Integrator  Adams4 Seconds 15.0;
 Orbit  lageos2  SP  GD 2021  6 20  0  0  0.00

@@ -33,21 +33,28 @@ Eigen::Matrix<double, 3, 1>
 SrpSpherical::getAcceleration(const JulianDate& jd,
                               const Eigen::Matrix<double, 6, 1>& state)
 {
+    // Get basic geometry
   Eigen::Matrix<double, 3, 1> r_sat_o = state.block<3,1>(0,0);
   Eigen::Matrix<double, 3, 1> r_sun_o = m_sun_eph->getPosition(jd,
                                                                EphemFrame::eci);
-
   Eigen::Matrix<double, 3, 1> rhat_sat_o = r_sat_o.normalized();
   Eigen::Matrix<double, 3, 1> rhat_sun_o = r_sun_o.normalized();
-  if (r_sat_o.dot(r_sun_o) > 0.0) {
-    auto angle = mth_angle::unit_vec_angle<double>(rhat_sat_o, rhat_sun_o);
-    if (angle*r_sat_o.norm() < 1.0) {
+  Eigen::Matrix<double, 3, 1> rhat_sat_sun = (r_sat_o - r_sun_o).normalized();
+    // Simple penumbra shadow model for now - check sat and sun are
+    // on opposite sides of the earth first
+  if (rhat_sat_o.dot(rhat_sun_o) < 0.0) {
+      // rhat_o_sun = -rhat_sun_o
+    auto angle = mth_angle::unit_vec_angle<double>(rhat_sat_sun, -rhat_sun_o);
+      // Lever arm is sun to earth distance - 1 ER or less is geometric
+      // penumbra
+    if (angle*r_sun_o.norm() < 1.0) {
       return Eigen::Matrix<double, 3, 1>::Zero();
     }
   }
 
-  Eigen::Matrix<double, 3, 1> rhat_sat_sun = (r_sat_o - r_sun_o).normalized();
-
+    // Absorption portion of coefficient (incident) is <= 1.0
+    // Reflection/dispersion combo adjusts vector direction
+    // via linear combination
   double cr_i {0.0};
   double cr_r {m_cr - 1.0};
   if (cr_r > 0.0) {
