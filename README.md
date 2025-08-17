@@ -34,10 +34,10 @@ STK compatible **.e** file formats.  Other outputs are written as Matlab
 the data with appropriate formatting while optionally returning the
 handle to the figure along with the raw data.  For example, the range as
 a function of time between two orbits can be generated and displayed in
-a 2D plot.  Likewise, relative orbits can be output in an RTC
+a 2D plot.  Likewise, relative orbits can be output in RTC
 coordinates for a 3D plot.
 
-The IAU 2000A and IAU 2006 precession-nutation theories are supported,
+The IAU IAU 2006 precession-nutation theories are supported,
 including parsing of IERS EOP data.  In addition to the GCRF and ITRF
 reference frames, internal support for TEME (true equator, mean equinox,
 GMST 1980) exists.  This ECI reference frame is included for use with
@@ -123,16 +123,20 @@ tbb, enable the two lines containing:
 
 *PRIVATE tbb*
 
-At this point, the standard CMake build process can be followed.  Change
-to the *build* directory.  Type,
+At this point, the standard CMake build process can be followed.  First
+create a *build* directory within eom's root directory (the eom root
+directory contains the *include* and *src* directories).  Change to the
+*build* directory and run cmake and make:
 
-*cmake ..*
+*$ cd build*
 
-*make*
+*$ cmake ..*
 
-to build both the **eom** library and the **eomx** application.  To
+*$ make*
+
+This builds both the **eom** library and the **eomx** application.  To
 build only the library,
 
-*make eom*
+*$ make eom*
 
 
