@@ -75,6 +75,9 @@ void EomConfig::setLeapSeconds(std::deque<std::string>& tokens)
   }
   try {
     auto seconds = std::stod(tokens[0]);
+    if (seconds < 0.0) {
+      throw std::invalid_argument("Leap Seconds should be positive (TAI-UTC)");
+    }
     tokens.pop_front();
     eom::LeapSeconds& ls = eom::LeapSeconds::getInstance();
     ls.setTai_Utc(seconds);

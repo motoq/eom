@@ -60,7 +60,7 @@ public:
 
   /**
    * @param  tokens  Tokenized parameters indicating the number of assumed leap
-   *                 seconds
+   *                 seconds (TAI-UTC, positive values)
    */
   void setLeapSeconds(std::deque<std::string>& tokens);
 

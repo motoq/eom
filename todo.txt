@@ -1,6 +1,14 @@
 Misc
 ----
 
+SOFA::dtdb.c
+SOFA::gc2gde.c
+
+Default step size for 0 integration Duration
+
+Remove Duration for GJ and GJs unless intent is to add this as an
+option.
+
 use move for ecfeci in orbit builder functions
 
 geo orbit def
@@ -57,6 +65,8 @@ Review use of initialization at declaration and within constructor
 Order of init = order of declaration
 
 Add default constructors
+
+What default ECI frame to use for orbital elements
 
 
 Access

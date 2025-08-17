@@ -25,9 +25,9 @@ based modeling language.  The library allows rapid development of custom
 applications.
 
 Current functionality includes orbit propagation and access analysis to
-earth fixed ground points.  General perturbation (GP, "analytic") and
-special perturbation (SP, numerical integration) orbit propagation
-techniques are supported.  Externally generated SP3 formatted
+earth fixed ground points.  General perturbation (GP, "analytic", such
+as SGP4) and special perturbation (SP, numerical integration) orbit
+propagation techniques are supported.  Externally generated SP3 formatted
 ephemerides (CDDIS) can also be ingested.  Ephemerides can be saved in
 STK compatible **.e** file formats.  Other outputs are written as Matlab
 (Octave compatible) functions.  When run, these **.m** files will plot
@@ -116,6 +116,12 @@ external astrodynamics library that is not included with this repository.
 It is often left uncommented (enabled).  The *GENPL* keyword also serves
 as an example within both the build file and source code w.r.t.
 including 3rd party libraries within **eom** and **eomx**.
+
+It may also be necessary to enable **tbb** within CMakeLists.txt for the
+target system.  If the build fails during the link process and mentions
+tbb, enable the two lines containing:
+
+*PRIVATE tbb*
 
 At this point, the standard CMake build process can be followed.  Change
 to the *build* directory.  Type,
