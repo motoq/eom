@@ -301,6 +301,18 @@ build_orbit(const RelOrbitDef& relOrbit,
             const std::unordered_map<std::string,
                                      std::vector<eom::state_vector_rec>>& ceph)
 {
+    // Ephemeris files rejected during input file parsing any before
+    // real processing (eomx_parse_input_file) because an OrbitDef is
+    // needed to define the propagation method.  Could possibly allow
+    // non-propagation based offsets if the need arises.
+    //
+    // TLE based relative orbits are rejected here for now,
+    // unfortunately after potentially time consuming processing has
+    // occured.  One option is to attempt to reject earlier - or just
+    // allow an offset TLE to be created.
+  if (refOrbit.getCoordinateType() == CoordType::tle) {
+    throw std::invalid_argument("Relative Orbit not compatible with TLE");
+  }
     // Only a single relative orbit definition in RelCoordType exists so
     // no decisions to make.
     // Algorithm for computing orbital elements given radial,

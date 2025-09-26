@@ -4,6 +4,8 @@ Misc
 SOFA::dtdb.c
 SOFA::gc2gde.c
 
+TLE checksum warning (not error)
+
 Default step size for 0 integration Duration
 
 Remove Duration for GJ and GJs unless intent is to add this as an

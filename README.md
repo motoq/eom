@@ -37,7 +37,7 @@ a function of time between two orbits can be generated and displayed in
 a 2D plot.  Likewise, relative orbits can be output in RTC
 coordinates for a 3D plot.
 
-The IAU IAU 2006 precession-nutation theories are supported,
+The IAU IAU 2000A nutation and 2006 precession theories are enabled,
 including parsing of IERS EOP data.  In addition to the GCRF and ITRF
 reference frames, internal support for TEME (true equator, mean equinox,
 GMST 1980) exists.  This ECI reference frame is included for use with
