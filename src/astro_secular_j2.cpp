@@ -1,3 +1,11 @@
+/*
+ * Copyright 2025 Kurt Motekew
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 #include <astro_secular_j2.h>
 
 #include <array>
@@ -21,14 +29,29 @@ namespace {
 
 namespace eom {
 
+/*
+ * Kepler's problem augemented by J2 perturbation effects to the mean
+ * motion, RAAN, and argument of perigee.  Equations are outlined in
+ * Vallado's Fundamentals of Astrodynamics and Applications.  For the
+ * 3rd edition, Section 9.6, Linearized Perturbations and Effects.  One
+ * enhancement has been made.  Mean motiion subject to J2 is computed by
+ * equating the mean anomaly:
+ *
+ * M = M0 + Mdot*dt + n*dt = M0 + nbar*dt
+ *       -> nbar = (n/n)(Mdot + n) = n((Mdot/n + 1)
+ *
+ * The modified version of mean motion, nbar is used to propagate the
+ * mean anomaly.  RAAN and argument of perigee rates also use nbar
+ * instead of the 2-body mean motion.
+ */
 SecularJ2::SecularJ2(const std::string& orbit_name,
                      const JulianDate& epoch,
                      const Eigen::Matrix<double, 6, 1>& xeci,
-                     std::shared_ptr<const EcfEciSys> ecfeciSys)
+                     std::shared_ptr<const EcfEciSys> ecfeciSys) :
+                     m_name {orbit_name},
+                     m_jd0 {epoch},
+                     m_ecfeci {std::move(ecfeciSys)}
 {
-  m_name = orbit_name;
-  m_jd0 = epoch;
-  m_ecfeci = std::move(ecfeciSys);
     // A true equator ECI frame is required for propagation
   Eigen::Matrix<double, 6, 1> xecf = m_ecfeci->eci2ecf(m_jd0,
                                                        xeci.block<3,1>(0,0),
@@ -41,6 +64,7 @@ SecularJ2::SecularJ2(const std::string& orbit_name,
   m_oe0 = kep.getOrbitalElements();
   m_m0 = kep.getMeanAnomaly();
 
+    // Compute effective mean motion
   const double ecc {kep.getEccentricity()};
   const double slr {kep.getSemilatusRectum()};
   const double p2 {slr*slr};
@@ -48,13 +72,36 @@ SecularJ2::SecularJ2(const std::string& orbit_name,
   const double inc {kep.getInclination()};
   const double si {std::sin(inc)};
   const double si2 {si*si};
-
   const double m0dot_n {1.5*re2j2_p2*std::sqrt(1.0 - ecc*ecc)*(1.0 - 1.5*si2)};
   m_nbar = (1.0 + m0dot_n)*kep.getMeanMotion();
-
+    // RAAN and argument of perigee rates
   const double xx_x {m_nbar*re2j2_p2};
   m_odot = -1.5*xx_x*std::cos(inc);
   m_wdot =  1.5*xx_x*(2.0 - 2.5*si2);
+}
+
+
+std::string SecularJ2::getName() const
+{
+  return m_name;
+}
+
+
+JulianDate SecularJ2::getEpoch() const
+{
+  return m_jd0;
+}
+
+
+JulianDate SecularJ2::getBeginTime() const
+{
+  return m_ecfeci->getBeginTime();
+}
+
+
+JulianDate SecularJ2::getEndTime() const
+{
+  return m_ecfeci->getEndTime();
 }
 
 
@@ -71,7 +118,7 @@ Eigen::Matrix<double, 6, 1> SecularJ2::getStateVector(const JulianDate& jd,
 
   Keplerian kep {oe};
     // Update fast parameter
-  kep.setWithMeanAnomaly(m_m0 + m_nbar*dt);
+  kep.setWithMeanAnomaly(std::fmod(m_m0 + m_nbar*dt, utl_const::tpi));
     // Cartesian - TEME to earth fixed
   Eigen::Matrix<double, 6, 1> xteme {kep.getCartesian()};
   Eigen::Matrix<double, 6, 1> xecf = m_ecfeci->teme2ecf(jd,

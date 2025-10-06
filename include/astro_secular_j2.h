@@ -24,7 +24,7 @@ namespace eom {
 /*
  * J2 propagator incorporating secular effects on mean motion, RAAN, and
  * argument of perigee.  Ideally, this propagator option should be
- * initialized with a mean element set.
+ * initialized with a mean element set.  See implementation for details.
  */
 class SecularJ2 : public Ephemeris {
 public:
@@ -46,34 +46,22 @@ public:
   /**
    * @return  Unique ephemeris identifier
    */
-  std::string getName() const override
-  {
-    return m_name;
-  }
+  std::string getName() const override;
 
   /**
    * @return  Orbit epoch
    */
-  JulianDate getEpoch() const override
-  {
-    return m_jd0;
-  }
+  JulianDate getEpoch() const override;
 
   /**
    * @return  Earliest time for which ephemeris can be retrieved
    */
-  JulianDate getBeginTime() const override
-  {
-    return m_ecfeci->getBeginTime();
-  }
+  JulianDate getBeginTime() const override;
 
   /**
    * @return  Latest time for which ephemeris can be retrieved
    */
-  JulianDate getEndTime() const override
-  {
-    return m_ecfeci->getEndTime();
-  }
+  JulianDate getEndTime() const override;
 
   /**
    * Compute state vector given a time
@@ -108,15 +96,15 @@ public:
 
 private:
   std::string m_name;
-  std::shared_ptr<const EcfEciSys> m_ecfeci {nullptr};
-    // Epoch
+    // Orbit definition epoch
   JulianDate m_jd0;
-    // Epoch Keplerian, true anomaly
+  std::shared_ptr<const EcfEciSys> m_ecfeci {nullptr};
+    // Orbital elements at epoch (true anomaly fast variable)
   std::array<double, 6> m_oe0;
-    // Epoch mean anomaly
+    // Mean anomaly at epoch
   double m_m0 {0.0};
 
-    // Secular variations
+    // Secular variations, mean motion, RAAN_dot, arg perigee rate
   double m_nbar {1.0};
   double m_odot {0.0};
   double m_wdot {0.0};

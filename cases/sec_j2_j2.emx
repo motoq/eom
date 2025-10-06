@@ -1,0 +1,18 @@
+#
+# 2025/10/05
+#
+
+SimStart GD 2021 11 12 17 00 00.0;
+SimDuration Days 1;
+LeapSeconds 37;
+EcfEciRate Minutes 240;
+AngleUnits  Degrees;
+Orbit  secj2  SecJ2 GD 2021 11 12 17 00 00.0
+       KEP_T  GCRF  4.1632  0.741  63.4  345.0  270.0  0.0;
+Orbit  secular_j2  SecularJ2 GD 2021 11 12 17 00 00.0
+       KEP_T  GCRF  4.1632  0.741  63.4  345.0  270.0  0.0;
+DistanceUnits  Kilometers;             # Sticky distance and time settings
+TimeUnits Seconds;                     # For inputs without unit specifications
+OutputRate Minutes .5;
+Command PrintRange secj2 secular_j2 rng;
+Command PrintRTC secj2 secular_j2 rtc;
