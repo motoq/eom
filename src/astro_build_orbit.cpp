@@ -39,6 +39,7 @@
 #include <astro_propagator_config.h>
 #include <astro_rk4.h>
 #include <astro_rk4s.h>
+#include <astro_secular_j2.h>
 #include <astro_sgp4.h>
 #include <astro_sp_ephemeris.h>
 #include <astro_srp_spherical.h>
@@ -239,6 +240,16 @@ build_orbit(const OrbitDef& orbitParams,
                                          pCfg.getStopTime(),
                                          ecfeciSys,
                                          std::move(sp));
+  } else if (pCfg.getPropagatorType() == PropagatorType::fandg) {
+    return std::make_unique<FandG>(orbitParams.getOrbitName(),
+                                   orbitParams.getEpoch(),
+                                   xeciVec,
+                                   ecfeciSys);
+  } else if (pCfg.getPropagatorType() == PropagatorType::secular_j2) {
+    return std::make_unique<SecularJ2>(orbitParams.getOrbitName(),
+                                       orbitParams.getEpoch(),
+                                       xeciVec,
+                                       ecfeciSys);
   } else if (pCfg.getPropagatorType() == PropagatorType::kepler1) {
     return std::make_unique<Kepler>(orbitParams.getOrbitName(),
                                     orbitParams.getEpoch(),
@@ -249,11 +260,6 @@ build_orbit(const OrbitDef& orbitParams,
                                         orbitParams.getEpoch(),
                                         xeciVec,
                                         ecfeciSys);
-  } else if (pCfg.getPropagatorType() == PropagatorType::fandg) {
-    return std::make_unique<FandG>(orbitParams.getOrbitName(),
-                                   orbitParams.getEpoch(),
-                                   xeciVec,
-                                   ecfeciSys);
   } else if (pCfg.getPropagatorType() == PropagatorType::vinti6) {
     return std::make_unique<Vinti>(orbitParams.getOrbitName(),
                                    orbitParams.getEpoch(),

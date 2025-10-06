@@ -29,8 +29,6 @@ Populate TLE in OrbitDef when initialized with non-tle
 
 Document access analysis.
 
-Document TLE/SGP4 inputs
-
 Document reading of SLR sites when finished
 
 When creating ecfeci_sys in eomx.cpp, pull ecfeci_sys out of bracket

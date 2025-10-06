@@ -41,10 +41,19 @@ namespace {
 
 namespace eom {
 
+Keplerian::Keplerian()
+{
+    // Create default placeholder orbit
+  std::array<double, 6> oe = {7.5, 0.75, 1.1, 0.5, 4.7, 0.0};
+  this->set(oe);
+}
+
+
 Keplerian::Keplerian(const std::array<double, 6>& oe)
 {
   this->set(oe);
 }
+
 
 /*
  * Based on Vallado's "Fundamentals of Astrodynamics and Applications",

@@ -80,6 +80,9 @@ namespace phy_const {
   /** Gravitation parameter and scaling */
   constexpr double gm {1.0};
   constexpr double re {1.0};
+  
+  /** Recurring parameter */
+  constexpr double re2j2 {re*re*j2};
 
   /** Solar gravitational parameter, TN36, TCB-compatible value, DU^3/TU^2 */
   constexpr double gm_sun {1.32712442099e20*du_per_m*du_per_m*du_per_m*

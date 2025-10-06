@@ -32,6 +32,11 @@ namespace eom {
 class Keplerian : public OrbitalElements {
 public:
   /**
+   * Default orbit
+   */
+  Keplerian();
+
+  /**
    * Initialize with Keplerian orbital elements.
    *
    * @param  oe  Keplarian orbital elements

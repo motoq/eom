@@ -62,6 +62,18 @@ eom::OrbitDef parse_orbit_def(std::deque<std::string>& tokens,
     }
     propCfg.setStartStopTime(cfg.getStartTime(), cfg.getStopTime());
     return eom::OrbitDef {name, propCfg, epoch, state, coord_type, frame_type};
+  } else if (model == "FandG"  &&  tokens.size() > 0 ) {
+    eom::PropagatorConfig propCfg {eom::PropagatorType::fandg};
+    eom::JulianDate epoch = parse_datetime(tokens);
+    std::array<double, 6> state = parse_state_vector(tokens, cfg, coord_type,
+                                                                  frame_type);
+    return eom::OrbitDef {name, propCfg, epoch, state, coord_type, frame_type};
+  } else if (model == "SecularJ2"  &&  tokens.size() > 0 ) {
+    eom::PropagatorConfig propCfg {eom::PropagatorType::secular_j2};
+    eom::JulianDate epoch = parse_datetime(tokens);
+    std::array<double, 6> state = parse_state_vector(tokens, cfg, coord_type,
+                                                                  frame_type);
+    return eom::OrbitDef {name, propCfg, epoch, state, coord_type, frame_type};
   } else if (model == "Kepler1"  &&  tokens.size() > 0 ) {
     eom::PropagatorConfig propCfg {eom::PropagatorType::kepler1};
     eom::JulianDate epoch = parse_datetime(tokens);
@@ -70,12 +82,6 @@ eom::OrbitDef parse_orbit_def(std::deque<std::string>& tokens,
     return eom::OrbitDef {name, propCfg, epoch, state, coord_type, frame_type};
   } else if (model == "KeplerMod"  &&  tokens.size() > 0 ) {
     eom::PropagatorConfig propCfg {eom::PropagatorType::kepler1mod};
-    eom::JulianDate epoch = parse_datetime(tokens);
-    std::array<double, 6> state = parse_state_vector(tokens, cfg, coord_type,
-                                                                  frame_type);
-    return eom::OrbitDef {name, propCfg, epoch, state, coord_type, frame_type};
-  } else if (model == "FandG"  &&  tokens.size() > 0 ) {
-    eom::PropagatorConfig propCfg {eom::PropagatorType::fandg};
     eom::JulianDate epoch = parse_datetime(tokens);
     std::array<double, 6> state = parse_state_vector(tokens, cfg, coord_type,
                                                                   frame_type);

@@ -22,12 +22,13 @@ enum class PropagatorType {
   sec_j2,
   osc_j2,
 #endif
+  fandg,                          ///< BMW f and g method
+  secular_j2,                     ///< J2 Secular effects
   kepler1,                        ///< Gim J. Der version
   vinti6,                         ///< Gim J. Der version
   vinti_j2,                       ///< Gim J. Der version with J3 = 0
   kepler1mod,                     ///< Experimental, modified Gim J. Der version
   vinti6mod,                      ///< Experimental, modified Gim J. Der version
-  fandg,                          ///< BMW f and g method
   sgp4,                           ///< Based on Vallado's version
   sp                              ///< Special Pert with more config options
 };
