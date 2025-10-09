@@ -40,6 +40,7 @@
 #include <astro_rk4.h>
 #include <astro_rk4s.h>
 #include <astro_secular_j2.h>
+#include <astro_gpx.h>
 #include <astro_sgp4.h>
 #include <astro_sp_ephemeris.h>
 #include <astro_srp_spherical.h>
@@ -250,6 +251,11 @@ build_orbit(const OrbitDef& orbitParams,
                                        orbitParams.getEpoch(),
                                        xeciVec,
                                        ecfeciSys);
+  } else if (pCfg.getPropagatorType() == PropagatorType::gpx) {
+    return std::make_unique<GpX>(orbitParams.getOrbitName(),
+                                 orbitParams.getEpoch(),
+                                 xeciVec,
+                                 ecfeciSys);
   } else if (pCfg.getPropagatorType() == PropagatorType::kepler1) {
     return std::make_unique<Kepler>(orbitParams.getOrbitName(),
                                     orbitParams.getEpoch(),

@@ -24,6 +24,7 @@ enum class PropagatorType {
 #endif
   fandg,                          ///< BMW f and g method
   secular_j2,                     ///< J2 Secular effects
+  gpx,                            ///< Testing ground for GP propagation
   kepler1,                        ///< Gim J. Der version
   vinti6,                         ///< Gim J. Der version
   vinti_j2,                       ///< Gim J. Der version with J3 = 0

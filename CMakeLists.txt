@@ -84,6 +84,7 @@ set(SOURCES
   src/astro_rk4.cpp
   src/astro_rk4s.cpp
   src/astro_secular_j2.cpp
+  src/astro_gpx.cpp
   src/astro_sp3_chebyshev.cpp
   src/astro_sp3_hermite.cpp
   src/astro_sgp4.cpp

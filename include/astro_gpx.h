@@ -6,75 +6,38 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef ASTRO_FANDG_H
-#define ASTRO_FANDG_H
+#ifndef ASTRO_GPX_H
+#define ASTRO_GPX_H
 
 #include <array>
 #include <memory>
 #include <string>
-#include <utility>
 
 #include <Eigen/Dense>
 
-#include <phy_const.h>
 #include <cal_julian_date.h>
 #include <astro_ecfeci_sys.h>
 #include <astro_ephemeris.h>
 
-
 namespace eom {
 
-//
-// General purpose functions
-//
-
-/**
- * Compute Cosine and Sine terms associated with f and g
- * universal variable approach to Kepler's problem.
- *
- * @param  z  x^2/a, always positive for elliptical orbits
- *
- * @return  [C(z), S(z)]
+/*
+ * Experimental GP propagators testing ground.
  */
-std::pair<double, double> astro_fg_cands(double z);
-
-/**
- * Compute derivative of Cosine and Sine terms w.r.t. z
- *
- * @param  z  x^2/a
- *
- * @return  [dC(z)/dz, dS(z)/d]
- */
-std::pair<double, double> astro_fg_dcands_dz(double z);
-
-//
-// Class definition
-//
-
-/**
- * Universal variable implementation f and g method
- * of Kepler's problem as presented in BMW, limited
- * to elliptical orbits.
- *
- * @author  Kurt Motekew  2025/02/08
- *
- * Fundamentals of Astrodynamics
- * Bate, Mueller, & White
- */
-class FandG : public Ephemeris {
+class GpX : public Ephemeris {
 public:
   /**
-   * Initialize Keppler1
+   * Initialize GpX
    *
-   * @param  orbit_name  Name (string identifier) associated with orbit
+   * @param  orbit_name  Name (string identifieer) associated with orbit
    * @param  epoch       Orbit state vector epoch, UTC
    * @param  xeci        Cartesian GCRF state vector, DU and DU/TU
    * @param  ecfeciSys   ECF/ECI conversion resource
    */
-  FandG(const std::string& orbit_name,
-        const JulianDate& epoch,
-        const Eigen::Matrix<double, 6, 1>& xeci,
-        std::shared_ptr<const EcfEciSys> ecfeciSys);
+  GpX(const std::string& orbit_name,
+      const JulianDate& epoch,
+      const Eigen::Matrix<double, 6, 1>& xeci,
+      std::shared_ptr<const EcfEciSys> ecfeciSys);
 
   /**
    * @return  Unique ephemeris identifier
@@ -129,17 +92,19 @@ public:
 
 private:
   std::string m_name;
+    // Orbit definition epoch
   JulianDate m_jd0;
   std::shared_ptr<const EcfEciSys> m_ecfeci {nullptr};
-  Eigen::Matrix<double, 2, 1> m_r0;
-  Eigen::Matrix<double, 2, 1> m_v0;
+    // Orbital elements at epoch (true anomaly fast variable)
+  std::array<double, 6> m_oe0;
+    // Mean anomaly at epoch
+  double m_m0 {0.0};
 
-  double m_r0_mag {0.0};
-    // Semimajor axis
-  double m_a {0.0};
-    // Perifocal to ECI reference frame transformation;
-  Eigen::Matrix<double, 3, 3> m_c_ip {Eigen::Matrix<double, 3, 3>::Identity()};
-  
+    // Secular variations, mean motion, RAAN_dot, arg perigee rate
+  double m_n {1.0};
+  double m_mdot {0.0};
+  double m_odot {0.0};
+  double m_wdot {0.0};
 };
 
 
