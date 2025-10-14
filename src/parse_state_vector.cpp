@@ -48,6 +48,12 @@ std::array<double, 6> parse_state_vector(std::deque<std::string>& tokens,
   } else if (tokens[0] == "ITRF") {
     frame_type = eom::FrameType::itrf;
     tokens.pop_front();
+  } else if (tokens[0] == "J2000") {
+    frame_type = eom::FrameType::j2000;
+    tokens.pop_front();
+  } else if (tokens[0] == "TEME") {
+    frame_type = eom::FrameType::teme;
+    tokens.pop_front();
   } else {
     throw std::invalid_argument("eom_app::parse_state_vector() "s +
                                 "Invalid reference frame type: "s +

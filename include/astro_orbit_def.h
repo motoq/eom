@@ -34,6 +34,7 @@ enum class CoordType {
 enum class FrameType {
   itrf,                           ///< WGS 84 compatible
   gcrf,                           ///< GCRF (IAU 2000A/2006)
+  j2000,                          ///< With corrections, not IAU 76/80
   teme                            ///< True Equator, Mean Equinox
 };
 

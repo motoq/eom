@@ -25,7 +25,6 @@
 #include <astro_ephemeris.h>
 #include <astro_ephemeris_file.h>
 #include <astro_ground_point.h>
-#include <astro_keplerian.h>
 #include <astro_orbit_def.h>
 #include <astro_rel_orbit_def.h>
 #include <axs_gp_access_def.h>
@@ -161,15 +160,8 @@ int main(int argc, char* argv[])
                  "  derived from:  " <<
                  relOrbit.getTemplateOrbitName();
   }
-    // Print all orbits as orbital elements
-  std::cout << "\n\nGenerated Orbits";
-  for (const auto& [name, eph] : ephemerides) {
-    std::cout << "\n  " << name;
-    std::cout << "\n  " << eph->getEpoch().to_string() << "    GCRF";
-    eom::Keplerian oeCart(eph->getStateVector(eph->getEpoch(),
-                                              eom::EphemFrame::eci));
-    std::cout << oeCart;
-  }
+    // Print all orbit definitions to stdout and to file if activated
+  eomx_print_orbits(ephemerides, cfg.getOrbitsSummaryFilename(), f2iSys);
 
     // Generate access analysis
   const auto gp_accessors = eomx_gen_gp_accesses(cfg,

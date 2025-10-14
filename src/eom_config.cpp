@@ -191,6 +191,18 @@ void EomConfig::addPendingOrbit(const std::string& orbit_name)
 }
 
 
+void EomConfig::setOrbitsSummaryFilename(const std::string& osf)
+{
+  orbits_summary_filename = osf;
+}
+
+
+std::string EomConfig::getOrbitsSummaryFilename() const
+{
+  return orbits_summary_filename;
+}
+
+
 void EomConfig::addCelestial(const std::string& name)
 {
   m_celestial_names.push_back(name);

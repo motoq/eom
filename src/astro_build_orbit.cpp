@@ -73,23 +73,30 @@ build_orbit(const OrbitDef& orbitParams,
     throw std::invalid_argument("Orbital elements not compatible with ITRF");
   }
   std::array<double, 6> xeci_array = orbitParams.getInitialState();
+    // This state vector will end up as GCRF, but initially may be
+    // populated with J2000, TEME, or ITRF
   Eigen::Matrix<double, 6, 1> xeciVec;
     // Keplerian to Cartesian - ensured not ITRF above...
   if (orbitParams.getCoordinateType() == CoordType::keplerian) {
     Keplerian kep(xeci_array);
-    xeciVec = kep.getCartesian();
+    xeciVec = kep.getCartesian();      // GCRF, J2000, or TEME
   } else {
     for (int ii=0; ii<6; ++ii) {
-      xeciVec(ii) = xeci_array[ii];
+      xeciVec(ii) = xeci_array[ii];    // GCRF, J2000, TEME, or ITRF
     }
   }
-    // TEME to ITRF (then to GCRF)
+    // TEME to ITRF (then to GCRF) or J2000 to GCRF
   bool teme2itrf {false};
   if (orbitParams.getReferenceFrameType() == FrameType::teme) {
     teme2itrf = true;
     xeciVec = ecfeciSys->teme2ecf(orbitParams.getEpoch(),
                                   xeciVec.block<3, 1>(0, 0),
                                   xeciVec.block<3, 1>(3, 0));
+  } else if (orbitParams.getReferenceFrameType() == FrameType::j2000) {
+    xeciVec.block<3, 1>(0, 0) =
+        ecfeciSys->j20002gcrf(xeciVec.block<3, 1>(0, 0));
+    xeciVec.block<3, 1>(3, 0) =
+        ecfeciSys->j20002gcrf(xeciVec.block<3, 1>(3, 0));
   }
     // ITRF to GCRF - everything is Cartesian by this point unless
     // working with some form of xLE (e.g., a TLE that will be parsed
@@ -100,6 +107,7 @@ build_orbit(const OrbitDef& orbitParams,
                                  xeciVec.block<3, 1>(0, 0),
                                  xeciVec.block<3, 1>(3, 0));
   }
+  // xeciVec is now Cartesian GCRF
 
     // Build orbit definition based on propagator configuration
     // Default options are two-body systems if PropagatorConfig

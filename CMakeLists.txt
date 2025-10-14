@@ -103,6 +103,7 @@ set(SOURCES
   src/eomx_gen_gp_accesses.cpp
   src/eomx_gen_ephemerides.cpp
   src/eomx_parse_input_file.cpp
+  src/eomx_print_orbits.cpp
   src/eomx_simulation_time.cpp
 )
 

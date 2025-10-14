@@ -118,6 +118,12 @@ void eomx_parse_input_file(const std::string& fname,
             } else if (make == "OutputRate") {
               cfg.setOutputRate(tokens);
               input_error = !cfg.isValid();
+            } else if (make == "OrbitSummaryFile") {
+              if (tokens.size() > 0) {
+                cfg.setOrbitsSummaryFilename(tokens[0]);
+                tokens.pop_front();
+                input_error = false;
+              }
             } else if (make == "CelestialEphemerides") {
               while (!tokens.empty()) {
                 cfg.addCelestial(tokens[0]);

@@ -153,6 +153,19 @@ public:
     return m_orbit_names.count(orbit_name) > 0;
   }
 
+  /**
+   * Sets the name of the file to be written summarizing the input orbit
+   * definitions.  If not set, this file will not be written.
+   *
+   * @param  osf  Orbit summary filename to use
+   */
+  void setOrbitsSummaryFilename(const std::string& osf);
+
+  /**
+   * @return  Name of file to write orbit definitions summary.  Zero
+   *          length indicates no file to write.
+   */
+  std::string getOrbitsSummaryFilename() const;
 
   /**
    * @param  name  Name of celestial object for which ephemeris should
@@ -181,6 +194,7 @@ private:
   std::string units_angle {"Radians"};
   std::string units_distance {"DU"};
   std::string units_time {"TU"};
+  std::string orbits_summary_filename {""};
   double io_per_rad {1.0};
   double io_per_du {1.0};
   double io_per_tu {1.0};
