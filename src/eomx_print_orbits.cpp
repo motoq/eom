@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <iomanip>
 #include <memory>
 #include <string>
 #include <vector>
@@ -15,6 +16,7 @@
 
 #include <Eigen/Dense>
 
+#include <phy_const.h>
 #include <astro_ecfeci_sys.h>
 #include <astro_keplerian.h>
 
@@ -41,41 +43,42 @@ void eomx_print_orbits(const std::unordered_map<std::string,
   if (file_name.length() > 0) {
     std::ofstream fout(file_name);
     if (fout.is_open()) {
-      fout << "ITRF";
-      fout << "\n----";
       for (const auto& [name, eph] : ephemerides) {
-        fout << "\n  " << name;
-        fout << "\n  " << eph->getEpoch().to_string() << "    ITRF";
-        Eigen::Matrix<double, 6, 1> xef =
+        fout << "\n\n  " << name << "  " << eph->getEpoch().to_string();
+        fout << "\nITRF";
+        Eigen::Matrix<double, 6, 1> itrf =
             eph->getStateVector(eph->getEpoch(), eom::EphemFrame::ecf);
-        fout << xef;
-      }
+        fout << std::fixed <<
+                std::setprecision(3) <<
+                "\n    {" << phy_const::km_per_du*itrf(0) << "  " <<
+                             phy_const::km_per_du*itrf(1) << "  " <<
+                             phy_const::km_per_du*itrf(2) << "} km" <<
+                std::setprecision(6) <<
+                "\n    {" <<
+                phy_const::km_per_du*itrf(3)*phy_const::tu_per_sec << "  " <<
+                phy_const::km_per_du*itrf(4)*phy_const::tu_per_sec << "  " <<
+                phy_const::km_per_du*itrf(5)*phy_const::tu_per_sec <<
+                "} km/sec";
 
-      fout << "\nGCRF";
-      fout << "\n----";
-      for (const auto& [name, eph] : ephemerides) {
-        fout << "\n  " << name;
-        fout << "\n  " << eph->getEpoch().to_string();
-        eom::Keplerian oeCart(eph->getStateVector(eph->getEpoch(),
-                                                  eom::EphemFrame::eci));
-        fout << oeCart;
-      }
-
-      fout << "\nJ2000";
-      fout << "\n----";
-      for (const auto& [name, eph] : ephemerides) {
-        fout << "\n  " << name;
-        fout << "\n  " << eph->getEpoch().to_string();
-        Eigen::Matrix<double, 6, 1> xeci = 
+        fout << "\nGCRF";
+        Eigen::Matrix<double, 6, 1> gcrf = 
             eph->getStateVector(eph->getEpoch(), eom::EphemFrame::eci);
-        xeci.block<3,1>(0,0) = f2iSys->gcrf2j2000(xeci.block<3,1>(0,0));
-        xeci.block<3,1>(3,0) = f2iSys->gcrf2j2000(xeci.block<3,1>(3,0));
-        eom::Keplerian oeCart(xeci);
-        fout << oeCart;
+        eom::Keplerian gcrfE(gcrf);
+        fout << gcrfE;
+        fout << "\nJ2000";
+        Eigen::Matrix<double, 6, 1> j2000;
+        j2000.block<3,1>(0,0) = f2iSys->gcrf2j2000(gcrf.block<3,1>(0,0));
+        j2000.block<3,1>(3,0) = f2iSys->gcrf2j2000(gcrf.block<3,1>(3,0));
+        eom::Keplerian j2000E(j2000);
+        fout << j2000E;
+
+        fout << "\nteme";
+        Eigen::Matrix<double, 6, 1> teme =
+            f2iSys->ecf2teme(eph->getEpoch(), itrf.block<3,1>(0,0),
+                                              itrf.block<3,1>(3,0));
+        eom::Keplerian temeE(teme);
+        fout << temeE;
       }
-
-
-      fout << '\n';
     } else {
       std::cerr << "\n\n  Invalid Orbit Summary Filename:  " <<
                    file_name << '\n';
