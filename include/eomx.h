@@ -98,17 +98,16 @@ eomx_gen_ephemerides(const eom_app::EomConfig& cfg,
  * Print GCRF orbit defs to stdout.  If file_name is valid, write
  * orbit definitions to a file in multiple reference frames.
  *
+ * @param  ephemerides  Available ephemeris resources
  * @param  file_name    If a valid filename, the file to which
  *                      orbit defs in multiple reference frames
  *                      will be written.
- * @param  ephemerides  Available ephemeris resources
- * @param  f2iSys       ECF/ECI transformation service that will be
- *                      copied into each ephemeris type created.
+ * @param  f2iSys       ECF/ECI transformation service
  */
 void eomx_print_orbits(const std::unordered_map<std::string,
                              std::shared_ptr<eom::Ephemeris>>& ephemerides,
                        const std::string& file_name,
-                       const std::shared_ptr<const eom::EcfEciSys>& f2iSys);
+                       const eom::EcfEciSys& f2iSys);
 
 /**
  * Given access analysis definitions, assign resources and run analysis.

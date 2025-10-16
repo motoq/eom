@@ -161,7 +161,7 @@ int main(int argc, char* argv[])
                  relOrbit.getTemplateOrbitName();
   }
     // Print all orbit definitions to stdout and to file if activated
-  eomx_print_orbits(ephemerides, cfg.getOrbitsSummaryFilename(), f2iSys);
+  eomx_print_orbits(ephemerides, cfg.getOrbitsSummaryFilename(), *f2iSys);
 
     // Generate access analysis
   const auto gp_accessors = eomx_gen_gp_accesses(cfg,
