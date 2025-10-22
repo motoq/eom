@@ -66,8 +66,6 @@ Order of init = order of declaration
 
 Add default constructors
 
-What default ECI frame to use for orbital elements
-
 
 Access
 ------

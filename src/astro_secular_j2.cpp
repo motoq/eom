@@ -32,17 +32,11 @@ namespace eom {
 /*
  * Kepler's problem augemented by J2 perturbation effects to the mean
  * motion, RAAN, and argument of perigee.  Equations are outlined in
- * Vallado's Fundamentals of Astrodynamics and Applications.  For the
- * 3rd edition, Section 9.6, Linearized Perturbations and Effects.  One
- * enhancement has been made.  Mean motiion subject to J2 is computed by
- * equating the mean anomaly:
- *
- * M = M0 + Mdot*dt + n*dt = M0 + nbar*dt
- *       -> nbar = (n/n)(Mdot + n) = n((Mdot/n + 1)
- *
- * The modified version of mean motion, nbar is used to propagate the
- * mean anomaly.  RAAN and argument of perigee rates also use nbar
- * instead of the 2-body mean motion.
+ * Escobal's Methods of Orbit Determination.  For the 2nd edition, see
+ * Section 10.2.6, Compendium of the first order J2 secular variation
+ * equations.  A modified version of the mean motion, the anomalistic
+ * mean motion (nbar), is determined.  RAAN and the argument of perigee
+ * rates are computed using nbar.
  */
 SecularJ2::SecularJ2(const std::string& orbit_name,
                      const JulianDate& epoch,
@@ -105,6 +99,11 @@ JulianDate SecularJ2::getEndTime() const
 }
 
 
+/*
+ * The anomalistic mean motion is used to compute the mean anomaly and
+ * solve Kepler's equation.  RAAN and argument of perigee rates are used
+ * to propagate these orbital elements.
+ */
 Eigen::Matrix<double, 6, 1> SecularJ2::getStateVector(const JulianDate& jd,
                                                       EphemFrame frame) const
 {
