@@ -1,6 +1,8 @@
 #include <iostream>
+#include <limits>
 #include <string>
 
+#include <utl_numeric.h>
 #include <mth_util.h>
 
 template <typename T>
@@ -26,6 +28,23 @@ void print_fact(T n, T d)
  */
 int main(int argc, char* argv[])
 {
+
+  std::cout << "\nmachin<short>:        " << utl_numeric::machin<short>();
+  std::cout << "\nmachin<int>:          " << utl_numeric::machin<int>();
+  std::cout << "\nmachin<long>:         " << utl_numeric::machin<long>();
+  std::cout << '\n';
+  std::cout << "\nmachin<float>:        " << utl_numeric::machin<float>();
+  std::cout << "\nmachin<double>:       " << utl_numeric::machin<double>();
+  std::cout << "\nmachin<long double>:  " << utl_numeric::machin<double>();
+  std::cout << '\n';
+  std::cout << "\nlimits<float>:        " <<
+      std::numeric_limits<float>::min() + std::numeric_limits<float>::min();
+  std::cout << "\nlimits<double>:        " <<
+      std::numeric_limits<double>::min() + std::numeric_limits<double>::min();
+  std::cout << "\nlimits<long double>:  " <<
+      std::numeric_limits<long double>::min() +
+      std::numeric_limits<long double>::min();
+  std::cout << '\n';
 
   if (argc != 3) {
     std::cerr << "\nProper use is:  " << argv[0] << " n d\n";
