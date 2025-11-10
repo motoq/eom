@@ -100,6 +100,9 @@ int main(int argc, char* argv[])
     return 0;
   }
 
+  auto [minJd, maxJd] = eomx_simulation_time(cfg_tmp, orbit_defs_tmp);
+  cfg_tmp.setDataInterval(minJd, maxJd);
+
     // Copy config to const
   const eom_app::EomConfig cfg = cfg_tmp;;
     // Transfer ownership to constant versions
@@ -129,14 +132,14 @@ int main(int argc, char* argv[])
     // and generate ECF/ECI service
   std::shared_ptr<const eom::EcfEciSys> f2iSys {nullptr};
   try {
-    auto [minJd, maxJd] = eomx_simulation_time(cfg, orbit_defs);
-
     std::shared_ptr<eom::EopSys> eopSys = nullptr;
     if (argc > 2) {
-     eopSys = std::make_shared<eom::EopSys>(argv[2], minJd, maxJd);
+     eopSys = std::make_shared<eom::EopSys>(argv[2],
+                                            cfg.getDataStartTime(),
+                                            cfg.getDataStopTime());
     }
-    f2iSys = std::make_shared<const eom::EcfEciSys>(minJd,
-                                                    maxJd,
+    f2iSys = std::make_shared<const eom::EcfEciSys>(cfg.getDataStartTime(),
+                                                    cfg.getDataStopTime(),
                                                     cfg.getEcfEciRate(),
                                                     eopSys);
   } catch (const eom_app::EomXException& exe) {

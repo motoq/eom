@@ -13,6 +13,11 @@
 
 namespace eom {
 
+enum class StepDirection {
+  forward,                        ///< Forward propagation
+  reverse                         ///< Backwards propagation
+};
+
 /**
  * Interface defining functionality that solves ordinatry differential
  * equations through numerical integration.
@@ -57,6 +62,24 @@ public:
    * @return   Time associated with updated state vector.
    */
   virtual T step() = 0;
+
+  /**
+   * Reset the integrator to the orginal state (the state it was
+   * upon instantiation) with the current integration direction
+   * (StepDirection remains the same)
+   */
+  virtual void reset() = 0;
+
+  /**
+   * Reset the integrator and reverse the direction of integration.
+   */
+  virtual void resetAndReverse() = 0;
+
+  /*
+   * @return  Direction of integration
+   */
+  [[nodiscard]]
+  virtual StepDirection getStepDirection() const noexcept = 0;
 
 };
 

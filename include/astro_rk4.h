@@ -65,9 +65,32 @@ public:
    */
   JulianDate step() override;
 
+  /**
+   * Reset the integrator to the orginal state (the state it was
+   * upon instantiation) with the current integration direction
+   * (StepDirection remains the same)
+   */
+  void reset() override;
+
+  /**
+   * Reset the integrator and reverse the direction of integration.
+   */
+  void resetAndReverse() override;
+
+  /*
+   * @return  Direction of integration
+   */
+  [[nodiscard]]
+  StepDirection getStepDirection() const noexcept override;
+
 private:
+  StepDirection m_prop_dir {StepDirection::forward};
   std::unique_ptr<Ode<JulianDate, double, 6>> m_deq {nullptr};
   Duration m_dt;
+    // Initial conditions
+  JulianDate m_jd0;
+  Eigen::Matrix<double, 6, 1> m_x0;
+    // Time varying state
   JulianDate m_jd;
   Eigen::Matrix<double, 6, 1> m_x;
   Eigen::Matrix<double, 6, 1> m_dx;

@@ -8,6 +8,7 @@
 
 #include <astro_sp_ephemeris.h>
 
+#include <algorithm>
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -44,12 +45,45 @@ SpEphemeris::SpEphemeris(const std::string& name,
 
     // Pad stop time
   JulianDate jdEndProp {m_jdStop + utl_const::day_per_min};
-  JulianDate jdNow = c_sp->getT();
+  JulianDate jdNow {m_jdEpoch};
 
     // Forward ephemeris
   std::vector<eph_record> fwd_eph;
-  Eigen::Matrix<double, 6, 1> c_x = c_sp->getX();
-  Eigen::Matrix<double, 6, 1> c_dx = c_sp->getXdot();
+  Eigen::Matrix<double, 6, 1> c_x;
+  Eigen::Matrix<double, 6, 1> c_dx;
+
+    // Backwards ephemeris
+  if (m_jdStart < m_jdEpoch) {
+    // Check direction although should be init for forward propagation
+    if (c_sp->getStepDirection() == StepDirection::forward) {
+      c_sp->resetAndReverse();
+    } else {
+      c_sp->reset();
+    }
+      // Need to propagate to at least state vector epoch
+      // for bookeeping related info to be available
+    if (jdEndProp < m_jdEpoch) {
+      jdEndProp = m_jdEpoch + utl_const::day_per_min;
+    }
+      // No need to insert record at jdEpoch because this will
+      // be done for forward propagation
+    while (m_jdStart <= jdNow) {
+      jdNow = c_sp->step();
+      c_x = c_sp->getX();
+      c_dx = c_sp->getXdot();
+      fwd_eph.emplace_back(jdNow, c_x.block<3, 1>(0, 0),
+                                  c_x.block<3, 1>(3, 0),
+                                  c_dx.block<3, 1>(3, 0));
+    }
+    std::reverse(fwd_eph.begin(), fwd_eph.end());
+      // Prep for forward propagation
+    c_sp->resetAndReverse();
+    jdNow = m_jdEpoch;
+  }
+
+    // Set state at state vector and forward propagate
+  c_x = c_sp->getX();
+  c_dx = c_sp->getXdot();
   fwd_eph.emplace_back(jdNow, c_x.block<3, 1>(0, 0),
                               c_x.block<3, 1>(3, 0),
                               c_dx.block<3, 1>(3, 0));

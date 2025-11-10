@@ -48,7 +48,7 @@ Adams::Adams(std::unique_ptr<Ode<JulianDate, double, 6>> deq,
   Duration rk4dt(m_dt.getTu()/ir, 1.0);
   for (int ii=1; ii<order; ++ii) {
     for (int jj=0; jj<ir; ++jj) {
-      rk4_step(m_deq.get(), rk4dt, m_jd, m_x, m_dx);
+      mth_rk4::rk4_step(m_deq.get(), rk4dt, m_jd, m_x, m_dx);
     }
     m_jdW[ii] = m_jd;
     m_w[ii]   = m_x;

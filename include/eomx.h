@@ -65,8 +65,6 @@ void eomx_parse_input_file(const std::string& fname,
  *
  * @return  [Minimum, Maximum] required Julian dates to support the
  *          simulation.
- * @throws  eom_app::EomXException if the simulation time can't be
- *          supported
  */
 std::pair<eom::JulianDate, eom::JulianDate>
 eomx_simulation_time(const eom_app::EomConfig& cfg,

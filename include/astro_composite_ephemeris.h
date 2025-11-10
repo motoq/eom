@@ -53,7 +53,7 @@ public:
   CompositeEphemeris(
       const std::string& name,
       const std::vector<JulianDate>& handover_times,
-      const std::vector<std::shared_ptr<eom::Ephemeris>>& ephems);
+      const std::vector<std::shared_ptr<Ephemeris>>& ephems);
 
   /**
    * @return  Ephemeris identifier
@@ -100,7 +100,7 @@ public:
 
 private:
   std::string m_name;
-  std::vector<std::shared_ptr<eom::Ephemeris>> m_ephemerides;
+  std::vector<std::shared_ptr<Ephemeris>> m_ephemerides;
   std::unique_ptr<IndexMapper<JulianDate>> m_ndxr {nullptr};
 };
 

@@ -13,7 +13,6 @@
 #include <cal_julian_date.h>
 
 #include <eom_config.h>
-#include <eomx_exception.h>
 #include <eomx.h>
 
 /**
@@ -33,15 +32,6 @@ eomx_simulation_time(const eom_app::EomConfig& cfg,
     }
     if (maxJd < orbit.getEpoch()) {
       maxJd = orbit.getEpoch();
-    }
-      // Backwards propagation for SP methods not currently supported
-    if (orbit.getPropagatorConfig().getPropagatorType() ==
-                                  eom::PropagatorType::sp) {
-      if (!(orbit.getEpoch() - cfg.getStartTime()  <  phy_const::epsdt_days)) {
-        throw eom_app::EomXException(
-            "eomx:: SP orbit eopch for  " + orbit.getOrbitName() +
-            " must occur on or before the simulation start time.");
-      }
     }
   }
 

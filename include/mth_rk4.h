@@ -13,7 +13,7 @@
 
 #include <mth_ode.h>
 
-namespace eom {
+namespace mth_rk4 {
 
 /**
  * Integrates a 1st order ordinary differential equation using
@@ -41,12 +41,12 @@ namespace eom {
  *                    an output for Hermite interpolation.
  */
 template<typename T, typename DT, typename F, int DIM>
-void rk4_step(Ode<T, F, DIM>* deq,
+void rk4_step(eom::Ode<T, F, DIM>* deq,
               const DT& dt,
               T& time,
               Eigen::Matrix<F, DIM, 1>& x,
               Eigen::Matrix<F, DIM, 1>& dx,
-              OdeEvalMethod dx_method = OdeEvalMethod::predictor)
+              eom::OdeEvalMethod dx_method = eom::OdeEvalMethod::predictor)
 {
   constexpr F half {static_cast<F>(0.5)};
   constexpr F sixth {static_cast<F>(1.0/6.0)};

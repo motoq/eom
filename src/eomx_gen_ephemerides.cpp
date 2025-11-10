@@ -37,8 +37,8 @@ eomx_gen_ephemerides(const eom_app::EomConfig& cfg,
                      std::vector<eom::state_vector_rec>> celestials;
   std::vector<std::string> celestial_names = cfg.getCelestials();
   for (const auto& name : celestial_names) {
-    celestials[name] = eom::build_celestial(name, cfg.getStartTime(),
-                                                  cfg.getStopTime());
+    celestials[name] = eom::build_celestial(name, cfg.getDataStartTime(),
+                                                  cfg.getDataStopTime());
   }
 
     // Ephemeris objects - build file based, then initial state based,

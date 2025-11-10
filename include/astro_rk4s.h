@@ -74,6 +74,31 @@ public:
    */
   JulianDate step() override;
 
+  /**
+   * Reset the integrator to the orginal state (the state it was
+   * upon instantiation) with the current integration direction
+   * (StepDirection remains the same)
+   */
+  void reset() override
+  {
+  }
+
+  /**
+   * Reset the integrator and reverse the direction of integration.
+   */
+  void resetAndReverse() override
+  {
+  }
+
+  /*
+   * @return  Direction of integration
+   */
+  [[nodiscard]]
+  StepDirection getStepDirection() const noexcept override
+  {
+    return StepDirection::forward;
+  }
+
 private:
   std::unique_ptr<Ode<JulianDate, double, 6>> m_deq {nullptr};
   std::unique_ptr<Regularize> m_reg {nullptr};

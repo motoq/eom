@@ -53,6 +53,28 @@ public:
   eom::JulianDate getStopTime() const noexcept { return jdStop; }
 
   /**
+   * Data that may be needed to propagate orbits may exist outside the
+   * simulation start and stop times.  For example, if the epoch of a
+   * state vector is outside the simulation time, EOP data, celestial
+   * ephemerides, etc., will be required.  This is the time span for
+   * which all such data needs to be available.
+   *
+   * @param  dataStart  Time from which auxiliary data must be available
+   * @param  dataStop   Time until which auxiliary data must be available
+   */
+  void setDataInterval(eom::JulianDate& dataStart, eom::JulianDate& datastop);
+
+  /**
+   * @return  Beginning of time when auxiliary astro data may be needed
+   */
+  eom::JulianDate getDataStartTime() const noexcept;
+
+  /**
+   * @return  End of time when auxiliary astro data may be needed
+   */
+  eom::JulianDate getDataStopTime() const noexcept;
+
+  /**
    * @param  tokens  Tokenized parameters indicating the duration of the
    *                 scenario
    */
@@ -205,6 +227,8 @@ private:
   std::string error_string {""};
   eom::JulianDate jdStart;
   eom::JulianDate jdStop;
+  eom::JulianDate jdDataStart;
+  eom::JulianDate jdDataStop;
   eom::Duration dtEcfEci;
   eom::Duration dtOut;
 

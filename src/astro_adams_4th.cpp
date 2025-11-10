@@ -28,37 +28,13 @@ namespace eom {
 Adams4th::Adams4th(std::unique_ptr<Ode<JulianDate, double, 6>> deq,
                    const Duration& dt,
                    const JulianDate& jd,
-                   const Eigen::Matrix<double, 6, 1>& x)
+                   const Eigen::Matrix<double, 6, 1>& x) :
+                       m_deq {std::move(deq)},
+                       m_dt {dt},
+                       m_jd0 {jd},
+                       m_x0 {x}
 {
-  m_deq = std::move(deq);
-  m_dt = dt;
-  m_jd = jd;
-  m_x = x;
-  m_dx = m_deq->getXdot(jd, m_x);
-    // Default integration step size if not explicitly set
-  if (m_dt.getTu() == 0.0) {
-    Duration dt_default(0.3, phy_const::tu_per_min);
-    m_dt = dt_default;
-  }
-
-  int ir {2};
-  m_jdW[0] = m_jd;
-  m_w[0]   = m_x;
-  m_dw[0]  = m_dx;
-  Duration rk4dt(m_dt.getTu()/ir, 1.0);
-  for (int ii=1; ii<order; ++ii) {
-    for (int jj=0; jj<ir; ++jj) {
-      rk4_step(m_deq.get(), rk4dt, m_jd, m_x, m_dx);
-    }
-    m_jdW[ii] = m_jd;
-    m_w[ii]   = m_x;
-    m_dw[ii]  = m_dx;
-  }
-
-  istep = 0;
-  m_jd = m_jdW[istep];
-  m_x = m_w[istep];
-  m_dx = m_dw[istep];
+  reset();
 }
 
 
@@ -111,6 +87,61 @@ JulianDate Adams4th::step()
   m_dx = m_dw[iir];
 
   return m_jd;
+}
+
+
+void Adams4th::reset()
+{
+    // Reset state vector
+  m_jd = m_jd0;
+  m_x = m_x0;
+
+    // Default integration step size if not explicitly set
+  if (m_dt.getTu() == 0.0) {
+    Duration dt_default(0.3, phy_const::tu_per_min);
+    m_dt = dt_default;
+  }
+    // Update integration direction
+  if (m_dt.getTu() < 0.0) {
+    m_prop_dir = StepDirection::reverse;
+  } else {
+    m_prop_dir = StepDirection::forward;
+  }
+
+    // Acceleration at jd
+  m_dx = m_deq->getXdot(m_jd, m_x);
+
+  int ir {2};
+  m_jdW[0] = m_jd;
+  m_w[0]   = m_x;
+  m_dw[0]  = m_dx;
+  Duration rk4dt(m_dt.getTu()/ir, 1.0);
+  for (int ii=1; ii<order; ++ii) {
+    for (int jj=0; jj<ir; ++jj) {
+      mth_rk4::rk4_step(m_deq.get(), rk4dt, m_jd, m_x, m_dx);
+    }
+    m_jdW[ii] = m_jd;
+    m_w[ii]   = m_x;
+    m_dw[ii]  = m_dx;
+  }
+
+  istep = 0;
+  m_jd = m_jdW[istep];
+  m_x = m_w[istep];
+  m_dx = m_dw[istep];
+}
+
+
+void Adams4th::resetAndReverse()
+{
+  m_dt = m_dt*(-1.0);
+  reset();
+}
+
+
+StepDirection Adams4th::getStepDirection() const noexcept
+{
+  return m_prop_dir;
 }
 
 

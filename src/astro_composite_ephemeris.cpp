@@ -25,9 +25,9 @@ namespace eom {
 CompositeEphemeris::CompositeEphemeris(
     const std::string& name,
     const std::vector<JulianDate>& handover_times,
-    const std::vector<std::shared_ptr<eom::Ephemeris>>& ephems) :
-                                       m_name {name},
-                                       m_ephemerides {ephems}
+    const std::vector<std::shared_ptr<Ephemeris>>& ephems) :
+                                      m_name {name},
+                                      m_ephemerides {ephems}
 {
   using namespace std::string_literals;
     // Ensure number of handover times corresponds to number

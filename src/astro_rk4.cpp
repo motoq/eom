@@ -16,6 +16,7 @@
 #include <cal_julian_date.h>
 #include <cal_duration.h>
 #include <mth_ode.h>
+#include <mth_ode_solver.h>
 #include <mth_rk4.h>
 
 namespace eom {
@@ -24,19 +25,12 @@ namespace eom {
 Rk4::Rk4(std::unique_ptr<Ode<JulianDate, double, 6>> deq,
          const Duration& dt,
          const JulianDate& jd,
-         const Eigen::Matrix<double, 6, 1>& x)
+         const Eigen::Matrix<double, 6, 1>& x) : m_deq {std::move(deq)},
+                                                 m_dt {dt},
+                                                 m_jd0 {jd},
+                                                 m_x0 {x}
 {
-  m_deq = std::move(deq);
-  m_dt = dt;
-  m_jd = jd;
-  m_x = x;
-    // Default integration step size if not explicitly set
-  if (m_dt.getTu() == 0.0) {
-    Duration dt_default(0.3, phy_const::tu_per_min);
-    m_dt = dt_default;
-  }
-    // Acceleration at jd
-  m_dx = m_deq->getXdot(m_jd, m_x);
+  reset();
 }
 
 
@@ -60,9 +54,46 @@ Eigen::Matrix<double, 6, 1> Rk4::getXdot() const noexcept
 
 JulianDate Rk4::step()
 {
-  rk4_step(m_deq.get(), m_dt, m_jd, m_x, m_dx, OdeEvalMethod::corrector);
+  mth_rk4::rk4_step(m_deq.get(), m_dt, m_jd,
+                    m_x, m_dx, OdeEvalMethod::corrector);
 
   return m_jd;
+}
+
+
+void Rk4::reset()
+{
+    // Reset state vector
+  m_jd = m_jd0;
+  m_x = m_x0;
+
+    // Default integration step size if not explicitly set
+  if (m_dt.getTu() == 0.0) {
+    Duration dt_default(0.3, phy_const::tu_per_min);
+    m_dt = dt_default;
+  }
+    // Update integration direction
+  if (m_dt.getTu() < 0.0) {
+    m_prop_dir = StepDirection::reverse;
+  } else {
+    m_prop_dir = StepDirection::forward;
+  }
+
+    // Acceleration at jd
+  m_dx = m_deq->getXdot(m_jd, m_x);
+}
+
+
+void Rk4::resetAndReverse()
+{
+  m_dt = m_dt*(-1.0);
+  reset();
+}
+
+
+StepDirection Rk4::getStepDirection() const noexcept
+{
+  return m_prop_dir;
 }
 
 

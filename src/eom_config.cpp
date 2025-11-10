@@ -17,6 +17,7 @@
 #include <utl_const.h>
 #include <utl_units.h>
 #include <phy_const.h>
+#include <cal_julian_date.h>
 #include <cal_leap_seconds.h>
 
 #include <eom_parse.h>
@@ -45,6 +46,26 @@ void EomConfig::setStartTime(std::deque<std::string>& tokens)
     error_string = ia.what();
     return;
   }
+}
+
+
+void EomConfig::setDataInterval(eom::JulianDate& dataStart,
+                                eom::JulianDate& dataStop)
+{
+  jdDataStart = dataStart;
+  jdDataStop = dataStop;
+}
+
+
+eom::JulianDate EomConfig::getDataStartTime() const noexcept
+{
+  return jdDataStart;
+}
+
+
+eom::JulianDate EomConfig::getDataStopTime() const noexcept
+{
+  return jdDataStop;
 }
 
 
