@@ -79,28 +79,27 @@ public:
    * upon instantiation) with the current integration direction
    * (StepDirection remains the same)
    */
-  void reset() override
-  {
-  }
+  void reset() override;
 
   /**
    * Reset the integrator and reverse the direction of integration.
    */
-  void resetAndReverse() override
-  {
-  }
+  void resetAndReverse() override;
 
   /*
    * @return  Direction of integration
    */
   [[nodiscard]]
-  StepDirection getStepDirection() const noexcept override
-  {
-    return StepDirection::forward;
-  }
+  StepDirection getStepDirection() const noexcept override;
 
 private:
+  StepDirection m_prop_dir {StepDirection::forward};
   std::unique_ptr<Ode<JulianDate, double, 6>> m_deq {nullptr};
+    // Initial conditions
+  JulianDate m_jd00;
+  Eigen::Matrix<double, 6, 1> m_x00;
+
+    // Time varying state
   std::unique_ptr<Regularize> m_reg {nullptr};
   JulianDate m_jd0;
   double m_ds;

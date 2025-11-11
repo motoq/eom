@@ -22,16 +22,11 @@ namespace eom {
 
 Rk4s::Rk4s(std::unique_ptr<Ode<JulianDate, double, 6>> deq,
            const JulianDate& jd,
-           const Eigen::Matrix<double, 6, 1>& x)
+           const Eigen::Matrix<double, 6, 1>& x) : m_deq {std::move(deq)},
+                                                   m_jd00 {jd},
+                                                   m_x00 {x}
 {
-  m_deq = std::move(deq);
-  m_jd0 = jd;
-  Eigen::Matrix<double, 6, 1> dx = m_deq->getXdot(m_jd0, x,
-                                                  OdeEvalMethod::predictor);
-    // Initialize regularization
-  m_reg = std::make_unique<Regularize>(x, dx);
-  m_ds = m_reg->getDsMax();
-  m_reg->setTimeState({0.0, phy_const::tu_per_min}, x, dx);
+  reset();
 }
 
 
@@ -88,6 +83,39 @@ JulianDate Rk4s::step()
   m_reg->setRegularizedState(yy, yd);                      // yd ??
 
   return jd0 + m_reg->getTime().getDays();
+}
+
+
+void Rk4s::reset()
+{
+  m_jd0 = m_jd00;
+  Eigen::Matrix<double, 6, 1> dx = m_deq->getXdot(m_jd0, m_x00,
+                                                  OdeEvalMethod::predictor);
+    // Initialize regularization
+  m_reg = std::make_unique<Regularize>(m_x00, dx);
+  if (m_prop_dir == StepDirection::forward) {
+    m_ds = std::fabs(m_reg->getDsMax());
+  } else {
+    m_ds = -1.0*std::fabs(m_reg->getDsMax());
+  }
+  m_reg->setTimeState({0.0, phy_const::tu_per_min}, m_x00, dx);
+}
+
+
+void Rk4s::resetAndReverse()
+{
+  if (m_prop_dir == StepDirection::forward) {
+    m_prop_dir = StepDirection::reverse;
+  } else {
+    m_prop_dir = StepDirection::forward;
+  }
+  reset();
+}
+
+
+StepDirection Rk4s::getStepDirection() const noexcept
+{
+  return m_prop_dir;
 }
 
 

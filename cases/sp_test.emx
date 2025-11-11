@@ -23,12 +23,12 @@ TimeUnits Seconds;
 PropagatorConfig  gj      GravityModel  Standard 12 12
                           MoonGravity  Ephemeris
                           SunGravity   Ephemeris
-                          SRP Spherical 2.225 0.000125
+                          SRP Spherical 0.8 0.000125
                           Integrator  GJ Seconds 0;
 PropagatorConfig  gjs     GravityModel  Standard 12 12
                           MoonGravity  Ephemeris
                           SunGravity   Ephemeris
-                          SRP Spherical 2.225 0.000125
+                          SRP Spherical 0.8 0.000125
                           Integrator  GJs Seconds 0;
 PropagatorConfig  adams4  GravityModel  Standard 12 12
                           MoonGravity  Ephemeris
@@ -65,7 +65,3 @@ Command PrintRange sp3_sat gjs_sat    gjs_rng;
 
 end;
 
-
-
-
-Command PrintRange sp3_sat gjs_sat    gjs_rng;
