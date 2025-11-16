@@ -1,4 +1,7 @@
 #
+# Compares two implementations of the secular J2 GP propagator along
+# with whatever happens to be the GpX propagator at the time
+#
 # 2025/10/05
 #
 
