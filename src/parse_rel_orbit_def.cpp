@@ -13,6 +13,8 @@
 #include <array>
 #include <deque>
 
+#include <cal_duration.h>
+#include <phy_const.h>
 #include <astro_rel_orbit_def.h>
 
 #include <eom_config.h>
@@ -20,8 +22,14 @@
 namespace eom_app {
 
 eom::RelOrbitDef parse_rel_orbit_def(std::deque<std::string>& tokens,
-                                     const EomConfig& cfg)
+                                     const EomConfig& cfg,
+                                     bool sync_orbit)
 {
+  eom::Duration sdur {0.0};
+  if (sync_orbit) {
+    sdur.set(cfg.getStopTime() - cfg.getStartTime(), phy_const::tu_per_day);
+  }
+
   using namespace std::string_literals;
     // Need at least the name, template name, and type of definition
   if (tokens.size() < 3) {
@@ -50,7 +58,11 @@ eom::RelOrbitDef parse_rel_orbit_def(std::deque<std::string>& tokens,
       throw std::invalid_argument("eom_app::parse_rel_orbit_def() "s +
                                   "invalid relative orbit parameter type"s);
     }
-    eom::RelOrbitDef orbit {name, template_name, dx, eom::RelCoordType::rtct};
+    eom::RelOrbitDef orbit {name,
+                            template_name,
+                            dx,
+                            eom::RelCoordType::rtct,
+                            sdur};
     return orbit;
   }
 

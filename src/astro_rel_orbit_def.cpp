@@ -11,17 +11,21 @@
 #include <array>
 #include <string>
 
+#include <cal_duration.h>
+
 namespace eom {
 
 RelOrbitDef::RelOrbitDef(const std::string& orbit_name, 
                          const std::string& template_name,
                          const std::array<double, 6>& rel_state, 
-                         RelCoordType coord_type)
+                         RelCoordType coord_type,
+                         Duration syncDuration) :
+                         m_name {orbit_name},
+                         m_template_name {template_name},
+                         m_dx0 {rel_state},
+                         m_coord {coord_type},
+                         m_syncDur {syncDuration}
 {
-  m_name = orbit_name;
-  m_template_name = template_name;
-  m_dx0 = rel_state;
-  m_coord = coord_type;
 }
 
 
@@ -46,6 +50,18 @@ std::array<double, 6> RelOrbitDef::getInitialState() const noexcept
 RelCoordType RelOrbitDef::getRelCoordinateType() const noexcept 
 {
   return m_coord;
+}
+
+
+bool RelOrbitDef::syncOrbit() const noexcept
+{
+  return 0.0 == m_syncDur.getTu();
+}
+
+
+Duration RelOrbitDef::getSyncDuration() const noexcept
+{
+  return m_syncDur;
 }
 
 

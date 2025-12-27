@@ -12,6 +12,7 @@
 #include <array>
 #include <string>
 
+#include <cal_duration.h>
 #include <cal_julian_date.h>
 
 namespace eom {
@@ -53,11 +54,18 @@ public:
    *                        Typically state vector or orbital element
    *                        differences.  Differences are added to the
    *                        template orbit.
+   * @param  syncDuration   Duration over which to tune relative orbit
+   *                        semimajor axis for which the derived orbit
+   *                        is to stay in sync with the template orbit.
+   *                        This would be zero with a 2-body or J2
+   *                        secular propagator, but would need to be
+   *                        nonzero for higher fidelity propagators.
    */
   RelOrbitDef(const std::string& orbit_name,
               const std::string& template_name,
               const std::array<double, 6>& rel_state,
-              RelCoordType coord_type);
+              RelCoordType coord_type,
+              Duration syncDuration);
 
   /**
    * @return  Name (string identifieer) associated with new orbit
@@ -80,11 +88,23 @@ public:
    */
   RelCoordType getRelCoordinateType() const noexcept;
 
+  /**
+   * @return  If true, sync the relative orbit to the reference orbit.
+   */
+  bool syncOrbit() const noexcept;
+
+  /**
+   * @return  Duration over which to fit the relative orbit to be
+   *          in sync with its reference orbit.
+   */
+  Duration getSyncDuration() const noexcept;
+
 private:
   std::string m_name {""};
   std::string m_template_name {""};
-  RelCoordType m_coord;
   std::array<double, 6> m_dx0;
+  RelCoordType m_coord;
+  Duration m_syncDur;
 };
 
 

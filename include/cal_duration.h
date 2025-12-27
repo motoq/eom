@@ -39,8 +39,8 @@ public:
    * @param  to_tu  Converts dur to TU.  Note utl_units.h has
    *                useful operators, e.g., 5 minutes: Duration(5.0, 1.0_min)
    */
-  Duration(double dur, double to_tu) : tu {dur*to_tu},
-                                       days {dur*to_tu*phy_const::day_per_tu}
+  Duration(double dur, double to_tu = 1.0) :
+           tu {dur*to_tu}, days {dur*to_tu*phy_const::day_per_tu}
   {
   }
 

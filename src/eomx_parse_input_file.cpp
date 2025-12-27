@@ -177,10 +177,22 @@ void eomx_parse_input_file(const std::string& fname,
               } else {
                 other_error = "TLE command provided with no arguments";
               }
-            } else if (make == "RelativeOrbit") {
+            } else if (make == "RelativedOrbit") {
               try {
                 rel_orbit_defs.push_back(eom_app::parse_rel_orbit_def(tokens,
-                                                                      cfg));
+                                                                      cfg,
+                                                                      false));
+                cfg.addPendingOrbit(rel_orbit_defs.back().getOrbitName());
+                input_error = false;
+              } catch (const std::invalid_argument& ia) {
+                std::string xerror = ia.what();
+                other_error = "Invalid Relative Orbit definition: " + xerror;
+              }
+            } else if (make == "RelativeSyncedOrbit") {
+              try {
+                rel_orbit_defs.push_back(eom_app::parse_rel_orbit_def(tokens,
+                                                                      cfg,
+                                                                      true));
                 cfg.addPendingOrbit(rel_orbit_defs.back().getOrbitName());
                 input_error = false;
               } catch (const std::invalid_argument& ia) {

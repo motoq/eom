@@ -99,9 +99,14 @@ eom::OrbitDef parse_orbit_def(std::deque<std::string>& tokens,
 /**
  * Parses an orbit definition based on another orbit
  *
- * @param  tokens  Tokens consisting of an orbit name, template orbit,
- *                 type of relative orbit definition, and defining parameters.
- * @param  cfg     Scenario configuration parameters
+ * @param  tokens      Tokens consisting of an orbit name, template orbit,
+ *                     type of relative orbit definition, and defining
+ *                     parameters.
+ * @param  cfg         Scenario configuration parameters
+ * @param  sync_orbit  If true, adjust relative orbit semimajor axis to
+ *                     ensure it stays in sync with the template orbit
+ *                     based on the propagator type and scenario duration.
+ *                     Defaults to false.
  *
  * @return  A relative orbit definition, used in the generation of an orbit
  *          model
@@ -110,7 +115,8 @@ eom::OrbitDef parse_orbit_def(std::deque<std::string>& tokens,
  *          thrown if the list of tokens is not empty upon completion.
  */
 eom::RelOrbitDef parse_rel_orbit_def(std::deque<std::string>& tokens,
-                                     const EomConfig& cfg);
+                                     const EomConfig& cfg,
+                                     bool sync_orbit = false);
 
 /**
  * Parses an ephemeris file definition (not the ephemeris file).

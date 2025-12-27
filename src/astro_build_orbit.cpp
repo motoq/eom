@@ -368,6 +368,11 @@ build_orbit(const RelOrbitDef& relOrbit,
                     refEph.getEpoch(),
                     xarr,
                     eom::CoordType::cartesian, eom::FrameType::gcrf);
+
+  if (relOrbit.syncOrbit()) {
+     //newOrbit = sync_rel_orbit(refOrbit, newOrbit, relOrbit.getSyncDuration());
+  }
+
   return build_orbit(newOrbit, ecfeciSys, ceph);
 }
 
