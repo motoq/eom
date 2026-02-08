@@ -237,6 +237,13 @@ std::vector<std::string>EomConfig::getCelestials() const
 
 std::ostream& operator<<(std::ostream& out, const EomConfig& cfg)
 {
+
+#ifdef EXECUTION_PAR
+  out << "\nParallel Processing Enabled (std::execution::par in effect)\n";
+#else
+  out << "\nParallel Processing Disabled (std::execution::par not supported)\n";
+#endif
+
   eom::LeapSeconds& ls = eom::LeapSeconds::getInstance();
   return out << "\nSimulation Start Time: " <<
                 cfg.getStartTime().to_string() <<

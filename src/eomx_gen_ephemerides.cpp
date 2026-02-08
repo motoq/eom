@@ -57,6 +57,7 @@ eomx_gen_ephemerides(const eom_app::EomConfig& cfg,
 
   {//==>
     // Generate orbit definitions in parallel 
+#ifdef EXECUTION_PAR
   std::vector<std::unique_ptr<eom::Ephemeris>> ephvec(orbit_defs.size());
   std::transform(std::execution::par,
                  orbit_defs.begin(), orbit_defs.end(), ephvec.begin(),
@@ -64,6 +65,12 @@ eomx_gen_ephemerides(const eom_app::EomConfig& cfg,
                    return eom::build_orbit(orbit, f2iSys, celestials);
                  }
   );
+#else
+  std::vector<std::unique_ptr<eom::Ephemeris>> ephvec;
+  for (const auto& orbit : orbit_defs) {
+    ephvec.push_back(eom::build_orbit(orbit, f2iSys, celestials));
+  }
+#endif
     // Move ephemerides from temporary vector to ephemeris map
   for (unsigned int ii=0; ii<ephvec.size(); ++ii) {
     auto name = ephvec[ii]->getName();
@@ -76,6 +83,7 @@ eomx_gen_ephemerides(const eom_app::EomConfig& cfg,
     // Relative orbit definitions are based on primary orbit
     // definitions, not other relative orbit definitions (only
     // orbit_defs, not other rel_orbit_defs).
+#ifdef EXECUTION_PAR
   std::vector<std::unique_ptr<eom::Ephemeris>> ephvec(rel_orbit_defs.size());
   std::transform(std::execution::par,
                  rel_orbit_defs.begin(), rel_orbit_defs.end(), ephvec.begin(),
@@ -98,6 +106,21 @@ eomx_gen_ephemerides(const eom_app::EomConfig& cfg,
       return eph;
     }
   );
+#else
+  std::vector<std::unique_ptr<eom::Ephemeris>> ephvec;
+  for (const auto& relOrbit : rel_orbit_defs) {
+    for (const auto& templateOrbit : orbit_defs) {
+      if (templateOrbit.getOrbitName() == relOrbit.getTemplateOrbitName()) {
+        std::shared_ptr<eom::Ephemeris> templateEph =
+                             ephemerides.at(templateOrbit.getOrbitName());
+        ephvec.push_back(eom::build_orbit(relOrbit,
+                                          templateOrbit,
+                                          *templateEph,
+                                          f2iSys, celestials));
+      }
+    }
+  }
+#endif
     // Move ephemerides from temporary vector to ephemeris map
   for (unsigned int ii=0; ii<ephvec.size(); ++ii) {
     auto name = ephvec[ii]->getName();

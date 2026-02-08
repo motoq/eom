@@ -14,9 +14,14 @@ project (eomx)
 # out:
 
 set(USE_GENPL TRUE)
+set(EXECUTION_PAR TRUE)
 
 if (${USE_GENPL})
   add_definitions(-DGENPL)
+endif()
+
+if (${EXECUTION_PAR})
+  add_definitions(-DEXECUTION_PAR)
 endif()
 
 set(CMAKE_BUILD_TYPE Debug)
@@ -111,7 +116,7 @@ set(SOURCES
 # Set path to SOFA library here
 add_library(sofalib STATIC IMPORTED)
 set_property(TARGET sofalib
-             PROPERTY IMPORTED_LOCATION "/home/library/libsofa_c.a")
+             PROPERTY IMPORTED_LOCATION "/home/lib/libsofa_c.a")
 
 # Optional GENPL library settings
 if (${USE_GENPL})

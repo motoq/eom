@@ -90,10 +90,16 @@ eomx_gen_gp_accesses(
 
   //==>
     // Generate access times in parallel 
+#ifdef EXECUTION_PAR
   std::for_each(std::execution::par,
                 gp_accessors.begin(),
                 gp_accessors.end(),
                 [](auto& accessor) { accessor.second->findAllAccesses(); });
+#else
+  std::for_each(gp_accessors.begin(),
+                gp_accessors.end(),
+                [](auto& accessor) { accessor.second->findAllAccesses(); });
+#endif
   //<==
 
   return gp_accessors;
