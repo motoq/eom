@@ -16,6 +16,7 @@
 
 #include <eom_config.h>
 #include <eom_ephem_printer.h>
+#include <eom_f2i_msg_cmd.h>
 #include <eom_orbit_printer.h>
 #include <eom_range_printer.h>
 #include <eom_rtc_printer.h>
@@ -36,6 +37,10 @@ std::unique_ptr<EomCommand> buildCommand(std::deque<std::string>& tokens,
   if (command_str == "PrintEphemeris") {
     std::unique_ptr<EomCommand> command =
         std::make_unique<EomEphemPrinter>(tokens, cfg);
+    return command;
+  } else if (command_str == "F2IMsg") {
+    std::unique_ptr<EomCommand> command =
+        std::make_unique<EomF2iMsgCmd>(tokens, cfg);
     return command;
   } else if (command_str == "PrintOrbit") {
     std::unique_ptr<EomCommand> command =

@@ -177,7 +177,7 @@ void eomx_parse_input_file(const std::string& fname,
               } else {
                 other_error = "TLE command provided with no arguments";
               }
-            } else if (make == "RelativedOrbit") {
+            } else if (make == "RelativeOrbit") {
               try {
                 rel_orbit_defs.push_back(eom_app::parse_rel_orbit_def(tokens,
                                                                       cfg,

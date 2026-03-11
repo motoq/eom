@@ -38,6 +38,7 @@ set(SOURCES
   src/eom_config.cpp
   src/eom_command_builder.cpp
   src/eom_ephem_printer.cpp
+  src/eom_f2i_msg_cmd.cpp
   src/eom_orbit_printer.cpp
   src/eom_range_printer.cpp
   src/eom_rtc_printer.cpp

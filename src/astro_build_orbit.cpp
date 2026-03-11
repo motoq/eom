@@ -58,6 +58,14 @@
 
 #include <astro_build.h>
 
+/*
+ * Adjust semimajor axis of relOrbit to minimize drift from refOrbit
+ * over the syncDuration.
+ */
+static eom::OrbitDef sync_rel_orbit(const eom::OrbitDef& refOrbit,
+                                    const eom::OrbitDef& relOrbit,
+                                    const eom::Duration syncDuration);
+
 namespace eom {
 
 std::unique_ptr<Ephemeris> 
@@ -370,7 +378,7 @@ build_orbit(const RelOrbitDef& relOrbit,
                     eom::CoordType::cartesian, eom::FrameType::gcrf);
 
   if (relOrbit.syncOrbit()) {
-     //newOrbit = sync_rel_orbit(refOrbit, newOrbit, relOrbit.getSyncDuration());
+     newOrbit = sync_rel_orbit(refOrbit, newOrbit, relOrbit.getSyncDuration());
   }
 
   return build_orbit(newOrbit, ecfeciSys, ceph);
@@ -379,3 +387,15 @@ build_orbit(const RelOrbitDef& relOrbit,
 
 }
 
+/*
+ * The relOrbit is assumed to be a deviation of the refOrbit with the
+ * 2-body energy matching constraint (same semimajor axes).  A semimajor
+ * axis will be found for relOrbit to keep it in formation with refOrbit
+ * over the synDuration.
+ */
+static eom::OrbitDef sync_rel_orbit(const eom::OrbitDef&,
+                                    const eom::OrbitDef& relOrbit,
+                                    const eom::Duration)
+{
+  return relOrbit;
+}
