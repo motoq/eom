@@ -18,17 +18,15 @@
 #include <vector>
 
 #include <Eigen/Dense>
-#include <Eigen/Geometry>
 
-#include <phy_const.h>
-#include <astro_composite_ephemeris.h>
 #include <astro_ecfeci_sys.h>
 #include <astro_ephemeris.h>
-#include <astro_generate.h>
-#include <astro_keplerian.h>
 
 #include <eom_config.h>
 #include <eom_parse.h>
+
+/* local utility */
+static void write_dcm(std::ofstream& fout, const Eigen::Quaterniond& q);
 
 namespace eom_app {
 
@@ -59,7 +57,7 @@ void EomF2iMsgCmd::validate(const std::unordered_map<
 
 
 /*
- * Set ephemeris pointers using orbit_names from initialization
+ * Get a copy of the ECF2ECI service
  */
 void EomF2iMsgCmd::validate(const std::unordered_map<
     std::string, std::shared_ptr<eom::Ephemeris>>&,
@@ -78,6 +76,9 @@ void EomF2iMsgCmd::validate(const std::unordered_map<
 }
 
 
+/*
+ * Open and write ECFECI data to a file for the requested time
+ */
 void EomF2iMsgCmd::execute() const
 {
   using namespace std::string_literals;
@@ -86,16 +87,12 @@ void EomF2iMsgCmd::execute() const
   if (fout.is_open()) {
     fout << '\n' << m_time;
     eom::ecf_eci f2i_msg = m_f2i->getEcfEciData(m_time);
-    Eigen::Matrix<double, 3, 3> bpn(f2i_msg.bpn);
-    fout << std::scientific;                                                    
-    fout.precision(16);
-    fout << "\nIAU 2000A CIO BPN";
-    for (int ii=0; ii<3; ++ii) {
-      fout << '\n';
-      for (int jj=0; jj<3; ++jj) {
-        fout << "   " << bpn(ii,jj);
-      }
-    }
+    fout << "\nIAU 2000A CIO ITRF to TIRS (W)";
+    write_dcm(fout, f2i_msg.pm);
+    fout << "\nIAU 2000A CIO TIRS to CIRS (ERA)";
+    fout << "\n    " << utl_const::deg_per_rad*m_f2i->getEra(m_time) << " deg";
+    fout << "\nIAU 2000A CIO CIRS to GCRF (BPN)";
+    write_dcm(fout, f2i_msg.bpn);
     fout << '\n';
   } else {
     std::cerr << "\nCan't open " << m_filename << '\n';
@@ -104,4 +101,16 @@ void EomF2iMsgCmd::execute() const
 
 }
 
+}
+
+static void write_dcm(std::ofstream& fout, const Eigen::Quaterniond& q) {
+  Eigen::Matrix<double, 3, 3> dcm(q);
+  fout << std::scientific;
+  fout.precision(16);
+  for (int ii=0; ii<3; ++ii) {
+    fout << '\n';
+    for (int jj=0; jj<3; ++jj) {
+      fout << "    " << dcm(ii,jj);
+    }
+  }
 }

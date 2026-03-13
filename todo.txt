@@ -4,6 +4,11 @@ Misc
 SOFA::dtdb.c
 SOFA::gc2gde.c
 
+For f2imsg and xfer orbit cmds, don't check for exact argument size -
+let datetime do the work.
+
+Rename all cmd types to have cmd in the name
+
 TLE checksum warning (not error)
 
 Default step size for 0 integration Duration

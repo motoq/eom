@@ -193,6 +193,14 @@ ecf_eci EcfEciSys::getEcfEciData(const JulianDate& utc) const
 }
 
 
+double EcfEciSys::getEra(const JulianDate& utc) const
+{
+  ecf_eci f2i {this->getEcfEciData(utc)};
+  auto ut1 {utc + phy_const::day_per_tu*f2i.ut1mutc};
+  return iauEra00(ut1.getJdHigh(), ut1.getJdLow());
+}
+
+
 Eigen::Matrix<double, 3, 1>
 EcfEciSys::ecf2eci(const JulianDate& utc,
                    const Eigen::Matrix<double, 3, 1>& posf) const

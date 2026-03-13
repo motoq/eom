@@ -106,6 +106,13 @@ public:
   ecf_eci getEcfEciData(const JulianDate& utc) const;
 
   /**
+   * @param  utc  Time for which to return and ecf_eci structure
+   *
+   * @return  ERA, earth rotatikon angle, TIRS to CIRS (ECF to ECI), radians
+   */
+  double getEra(const JulianDate& utc) const;
+
+  /**
    * Convert an ECF position vector to ECI.
    *
    * @param  utc   UTC time of position vector
