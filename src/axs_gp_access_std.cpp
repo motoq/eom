@@ -96,7 +96,7 @@ GpAccessStd::GpAccessStd(const JulianDate& jdStart,
     }
   } catch (const std::invalid_argument& ia) {
     throw std::invalid_argument("Non-orbital Ephemeris Sent to GpAccessStd: " +
-                                m_eph->getName());
+                                m_eph->getName() + ia.what());
   }
 }
 

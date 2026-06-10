@@ -13,6 +13,7 @@
 #include <iomanip>
 #include <ostream>
 #include <stdexcept>
+#include <string>
 
 #include <Eigen/Dense>
 #include <Eigen/Geometry>
@@ -37,6 +38,7 @@ namespace {
   constexpr double eps {1.e-10};
     // oe_eps
   constexpr double oe_eps {1.0e-5};
+  constexpr double ecc_eps {1.0e-6};
 }
 
 namespace eom {
@@ -87,17 +89,20 @@ Keplerian::Keplerian(const Eigen::Matrix<double, 6, 1>& cart)
   m_sme = v2/2.0 - muor;
 
     // Some initial error checking
-  if (emag < oe_eps) {
+  if (emag < ecc_eps) {
     throw std::invalid_argument(
-        "Keplerian::Keplerian(): Eccentricity too close to zero");
+        "Keplerian::Keplerian(): Eccentricity too close to zero: " +
+        std::to_string(emag));
   }
   if (nmag < oe_eps) {
     throw std::invalid_argument(
-        "Keplerian::Keplerian(): Inclination too close to zero");
+        "Keplerian::Keplerian(): Inclination too close to zero: " +
+        std::to_string(nmag));
   }
   if (m_sme >= 0.0) {
     throw std::invalid_argument(
-        "Keplerian::Keplerian(): Orbit must be elliptical");
+        "Keplerian::Keplerian(): Orbit must be elliptical - Energy: " +
+        std::to_string(m_sme));
   }
     // Semimajor axis, perigee radius, final error check
   double sma {-0.5*gm/m_sme};
@@ -105,7 +110,8 @@ Keplerian::Keplerian(const Eigen::Matrix<double, 6, 1>& cart)
   m_ra = sma*(1.0 + emag);
   if (m_rp < phy_const::re) {
     throw std::invalid_argument(
-        "Keplerian::set(): Perigee distance less than 1 DU");
+        "Keplerian::set(): Perigee distance less than 1 DU: " +
+        std::to_string(m_rp));
   }
 
     // Inclination
@@ -177,15 +183,18 @@ void Keplerian::set(const std::array<double, 6>& oe)
     // Etc...
   if (m_rp < phy_const::re) {
     throw std::invalid_argument(
-        "Keplerian::set(): Perigee distance less than 1 DU");
+        "Keplerian::set(): Perigee distance less than 1 DU: " +
+        std::to_string(m_rp));
   }
-  if (e < oe_eps) {
+  if (e < ecc_eps) {
     throw std::invalid_argument(
-        "Keplerian::set(): Eccentricity too close to zero or negative");
+        "Keplerian::set(): Eccentricity too close to zero or negative: " +
+        std::to_string(e));
   }
   if (i < oe_eps) {
     throw std::invalid_argument(
-        "Keplerian::set(): Inclination too close to zero");
+        "Keplerian::set(): Inclination too close to zero: " +
+        std::to_string(i));
   }
 
   double semip {a*(1.0 - e*e)};
